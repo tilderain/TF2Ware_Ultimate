@@ -1,0 +1,12 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "mariokart/mario_bricks02"
+      	"%keywords" "mario"
+	"$bumpmap"	"mariokart/mario_bricks_n"
+	"$envmap" "env_cubemap"
+	"$parallaxmapscale" 		"1"
+	"$normalmapalphaenvmapmask" 	"1"
+	"$envmapcontrast" 		"1"
+	"$envmapsaturation" 		".3"
+	"$envmaptint"			"[.25 .25 .25]"
+}

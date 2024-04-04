@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "thw_mario/bowser"
+	"$surfaceprop" "Boulder"
+	"$translucent" 1
+}

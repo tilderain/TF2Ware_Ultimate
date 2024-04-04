@@ -1,0 +1,13 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "mariokart/mario_chrome"
+      	"$surfaceprop" "metal"
+	"$bumpmap" 	"mariokart/mario_chrome_n"
+      	"%keywords" "arch" 
+	"$envmap" "env_cubemap"
+	"$parallaxmapscale" 		"1"
+	"$normalmapalphaenvmapmask" 	"1"
+	"$envmapcontrast" 		"1"
+	"$envmapsaturation" 		"1"
+	"$envmaptint"			"[.9 .9 .9]"
+}

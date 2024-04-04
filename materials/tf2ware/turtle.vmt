@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "tf2ware/turtle"
+	$translucent 1
+}

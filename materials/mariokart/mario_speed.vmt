@@ -1,0 +1,27 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "mariokart/mario_speed"
+      	"%keywords" "mario"
+
+"Proxies" 
+
+	{
+
+		
+
+	 "TextureScroll"
+
+	{
+
+	"texturescrollvar" "$basetexturetransform"
+
+	"texturescrollrate" 2
+
+	"texturescrollangle" 90
+
+	} 
+
+
+
+	}
+}
