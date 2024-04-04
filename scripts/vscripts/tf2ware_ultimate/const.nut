@@ -25,6 +25,11 @@ const TF_AMMO_GRENADES2 = 5
 const TF_AMMO_GRENADES3 = 6
 const TF_AMMO_COUNT 	= 7 
 
+const OBJ_DISPENSER         = 0
+const OBJ_TELEPORTER        = 1
+const OBJ_SENTRYGUN         = 2
+const OBJ_ATTACHMENT_SAPPER = 3
+
 const TFCOLLISION_GROUP_COMBATOBJECT = 23
 
 const COLOR_RED        = "FF0000"

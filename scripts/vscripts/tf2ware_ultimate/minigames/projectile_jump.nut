@@ -96,7 +96,7 @@ else if (mode == 3)
 			
 		SetPropInt(building, "m_nDefaultUpgradeLevel", 2);
 		
-		if (params.object == 2)
+		if (params.object == OBJ_SENTRYGUN)
 		{
 			local player = GetPlayerFromUserID(params.userid);
 			if (player)
