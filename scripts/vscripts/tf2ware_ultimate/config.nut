@@ -9,6 +9,7 @@ Ware_Minigames <-
 	[1, "bullseye"        ],
 	[1, "bumpers"         ],
 	[1, "caber_king"      ],
+	[1, "count_bombs"     ],
 	[1, "flood"           ],
 	[1, "goomba"          ],
 	[1, "headshot"        ],

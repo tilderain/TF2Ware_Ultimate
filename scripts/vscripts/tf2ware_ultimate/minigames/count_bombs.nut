@@ -26,8 +26,8 @@ function OnStart()
 			model = prop_model,
 			origin = pos,
 			massscale = 0.015,
-			rendermode = kRenderTransColor,
-			renderamt = 0
+			rendermode = kRenderNone,
+			modelscale = 2.0,
 		});
 		prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT);
 		
