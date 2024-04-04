@@ -1,0 +1,62 @@
+local target_names = ["Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy"];
+foreach (name in target_names)
+	PrecacheModel(format("models/props_training/target_%s.mdl", name.tolower()));
+
+local target_class = target_names[RandomInt(0, target_names.len() - 1)];
+
+minigame <- Ware_MinigameData();
+minigame.name = "Shoot Target";
+minigame.duration = 4.0;
+minigame.location = "targetrange";
+minigame.no_collisions = true;
+minigame.music = "cheerful";
+minigame.description = format("Shoot the %s target!", target_class);
+minigame.custom_overlay = "shoot_target_" + target_class.tolower();
+
+function OnStart()
+{
+	if (RandomInt(0, 1) == 1)
+		Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Sniper Rifle");	
+	else
+		Ware_SetGlobalLoadout(TF_CLASS_SPY, "Revolver");
+		
+	local indices = [0, 1, 2, 3, 4];
+	Shuffle(indices);
+	
+	local target_count = RandomInt(1, 5);
+	for (local i = 0; i < target_count; i++)
+	{
+		local line = Ware_MinigameLocation.lines[indices[i]];
+		local name = i == 0 ? target_class : target_names[RandomInt(0, target_names.len() - 1)];
+		Ware_SpawnEntity("prop_dynamic",
+		{
+			model  = format("models/props_training/target_%s.mdl", name.tolower()),
+			origin = Lerp(RandomFloat(0.0, 1.0), line[0], line[1]),
+			angles = QAngle(0, -90, 0),
+			solid  = SOLID_VPHYSICS,
+			skin   = RandomInt(0, 1),
+			health = 99999,
+		});
+	}
+}
+
+function OnTakeDamage(params)
+{
+	local victim = params.const_entity;
+	if (victim.GetClassname() == "prop_dynamic")
+	{
+		local attacker = params.attacker;
+		if (attacker && attacker.IsPlayer())	
+		{
+			local class_name = victim.GetModelName().slice(29);
+			class_name = class_name.slice(0, class_name.find(".mdl"));
+			
+			if (class_name == target_class.tolower())
+				Ware_PassPlayer(attacker, true);
+			else
+				attacker.TakeDamageCustom(victim, victim, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_SUICIDE);
+			
+			EmitSoundOnClient(class_name + ".PainSevere01", attacker);			
+		}
+	}
+}

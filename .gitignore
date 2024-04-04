@@ -1,4 +1,5 @@
 # Hammer
+*.bsp
 *.vmx
 *.log
 *.prt

@@ -3,7 +3,8 @@ Ware_LocationParent <-
 	function DebugDraw()
 	{
 		DebugDrawLine(center, center + Vector(0, 0, 32), 0, 0, 255, true, 10.0);
-		DebugDrawBox(Vector(), mins, maxs, 255, 0, 0, 50, 10.0);
+		if ("mins" in this && "maxs" in this)
+			DebugDrawBox(Vector(), mins, maxs, 255, 0, 0, 50, 10.0);
 	}
 };
 
@@ -49,8 +50,6 @@ Ware_Location.home_big <-
 Ware_Location.circlepit <-
 {
 	center   = Vector(-1952, -872, 720),
-	mins     = Vector(),
-	maxs     = Vector(),
 	radius   = 288.0,
 	Teleport = function()
 	{
@@ -73,8 +72,6 @@ Ware_Location.circlepit <-
 Ware_Location.circlepit_big <-
 {
 	center   = Vector(-3304, 2400, 1056),
-	mins     = Vector(),
-	maxs     = Vector(),
 	radius   = 512.0,
 	Teleport = Ware_Location.circlepit.Teleport,
 };
@@ -82,8 +79,6 @@ Ware_Location.circlepit_big <-
 Ware_Location.sawrun <-
 {
 	center   = Vector(4480, -3900, -4495),
-	mins     = Vector(),
-	maxs     = Vector(),
 	Teleport = function()
 	{
 		local width = 576;
@@ -104,6 +99,37 @@ Ware_Location.sawrun <-
 			pos.x = center.x - (width * 0.5) + (row * offset);
 			data.player.Teleport(true, pos, true, ang, true, Vector());
 			row++;
+		}
+	}
+};
+
+Ware_Location.targetrange <-
+{
+	center   = Vector(2303, -5340, -3999),
+	lines	 = 
+	[
+		[Vector(1535, -4023, -3999), Vector(2080, -4023, -3999)],
+		[Vector(1535, -3735, -3999), Vector(2080, -3735, -3999)],
+		[Vector(2015, -3896, -3999), Vector(2560, -3896, -3999)],
+		[Vector(2400, -4023, -3999), Vector(2944, -4023, -3999)],
+		[Vector(2495, -3656, -3999), Vector(3040, -3656, -3999)],
+	],
+	Teleport = function()
+	{
+		local offset = 64.0;
+		local pos = center * 1.0;
+		local ang = QAngle(0, 90, 0);
+		local x = 0;
+		foreach (data in Ware_Players)
+		{
+			if (++x > 21)
+			{
+				pos.y += offset;
+				x = 1;
+			}
+			
+			pos.x = center.x + (x / 2) * ((x & 1) ? offset : -offset);
+			data.player.Teleport(true, pos, true, ang, true, Vector());
 		}
 	}
 };

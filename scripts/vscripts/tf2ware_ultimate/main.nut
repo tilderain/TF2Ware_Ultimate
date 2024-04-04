@@ -135,6 +135,7 @@ class Ware_PlayerData
 
 Ware_Started			  <- false;
 Ware_TimeScale			  <- 1.0;
+Ware_DebugStop			  <- false;
 
 Ware_TextManagerQueue     <- null;
 Ware_TextManager          <- null;
@@ -712,6 +713,9 @@ function Ware_CheckHomeLocation(player_count)
 
 function Ware_BeginIntermission()
 {
+	if (Ware_DebugStop)
+		return;
+	
 	for (local i = 1; i <= MAX_CLIENTS; i++)
 	{
 		local player = PlayerInstanceFromIndex(i);
@@ -775,7 +779,7 @@ function Ware_StartMinigame(minigame)
 			
 		EntFireByHandle(ClientCmd, "Command", "r_cleardecals", -1, player, null);
 		
-		if (!(player.GetTeam() & 2))
+		if (!(player.GetTeam() & 2) || !IsEntityAlive(player))
 			continue;
 		
 		if (Ware_Minigame.no_collisions)

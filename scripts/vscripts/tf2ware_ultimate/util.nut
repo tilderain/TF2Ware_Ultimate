@@ -8,6 +8,22 @@ FindByName      <- Entities.FindByName.bindenv(Entities);
 SetConvarValue  <- Convars.SetValue.bindenv(Convars);
 GetConvarValue  <- Convars.GetStr.bindenv(Convars);
 
+function Lerp(t, A, B)
+{
+    return A + (B - A) * t;
+}
+
+function Shuffle(arr)
+{
+	for (local i = arr.len() - 1; i > 0; i--)
+	{
+		local j = RandomInt(0, i);
+		local t = arr[j]; 
+		arr[j] = arr[i];
+		arr[i] = t;
+	}
+}
+
 function RunDelayedCode(code, delay)
 {
 	EntFireByHandle(World, "RunScriptCode", code, delay, null, null);
