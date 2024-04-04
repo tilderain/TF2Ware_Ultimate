@@ -101,11 +101,12 @@ class Ware_MinigameData
 	// Entity names to delete after minigame ends (e.g. projectiles)
 	cleanup_names	= null;
 	
-	cb_on_take_damage	= null;
-	cb_on_player_attack	= null;
-	cb_on_player_death	= null;
-	cb_on_player_say	= null;
-	cb_on_update		= null;
+	cb_on_take_damage		= null;
+	cb_on_player_attack		= null;
+	cb_on_player_death		= null;
+	cb_on_player_say		= null;
+	cb_on_player_voiceline	= null;
+	cb_on_update			= null;
 };
 
 class Ware_PlayerData
@@ -807,11 +808,12 @@ function Ware_StartMinigame(minigame)
 	if ("OnStart" in Ware_MinigameScope)
 		Ware_MinigameScope.OnStart();
 		
-	Ware_Minigame.cb_on_take_damage		= Ware_MinigameCallback("OnTakeDamage");
-	Ware_Minigame.cb_on_player_attack	= Ware_MinigameCallback("OnPlayerAttack");
-	Ware_Minigame.cb_on_player_death	= Ware_MinigameCallback("OnPlayerDeath");
-	Ware_Minigame.cb_on_player_say		= Ware_MinigameCallback("OnPlayerSay");
-	Ware_Minigame.cb_on_update			= Ware_MinigameCallback("OnUpdate");
+	Ware_Minigame.cb_on_take_damage			= Ware_MinigameCallback("OnTakeDamage");
+	Ware_Minigame.cb_on_player_attack		= Ware_MinigameCallback("OnPlayerAttack");
+	Ware_Minigame.cb_on_player_death		= Ware_MinigameCallback("OnPlayerDeath");
+	Ware_Minigame.cb_on_player_say			= Ware_MinigameCallback("OnPlayerSay");
+	Ware_Minigame.cb_on_player_voiceline	= Ware_MinigameCallback("OnPlayerVoiceline");
+	Ware_Minigame.cb_on_update				= Ware_MinigameCallback("OnUpdate");
 	
 	local event_prefix = "OnGameEvent_";
 	local event_prefix_len = event_prefix.len();
@@ -1026,6 +1028,22 @@ function Ware_OnUpdate()
 					Ware_Minigame.cb_on_player_attack(player);
 					scope.last_fire_time = fire_time;
 				}
+			}
+		}
+	}
+	
+	if (Ware_Minigame.cb_on_player_voiceline.func)
+	{
+		for (local scene; scene = FindByClassname(scene, "instanced_scripted_scene");)
+		{
+			scene.KeyValueFromString("classname", "ware_voiceline");
+			MarkForPurge(scene);
+			
+			local player = GetPropEntity(scene, "m_hOwner");	
+			if (player)
+			{
+				local name = GetPropString(scene, "m_szInstanceFilename");
+				Ware_Minigame.cb_on_player_voiceline(player, name.tolower());
 			}
 		}
 	}

@@ -21,6 +21,7 @@ Ware_Minigames <-
 	[1, "rocket_rain"     ],
 	[1, "sawrun"          ],
 	[1, "say_word"        ],
+	[1, "simon_says"      ],
 	[1, "spycrab"         ],
 	[1, "stand_near"      ],
 	[1, "stay_ground"     ],
