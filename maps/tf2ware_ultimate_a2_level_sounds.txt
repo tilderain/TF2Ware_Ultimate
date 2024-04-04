@@ -1,7 +1,7 @@
 Croc.SwimBurst
 {
 	channel			CHAN_STATIC
-	volume			0.5
+	volume			0.25
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_60dB
 	wave			)ambient/lair/crocs_swim_burst.wav
