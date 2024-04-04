@@ -18,7 +18,7 @@ PrecacheModel(prop_model);
 function CreateBomb(sprite_model, chosen)
 {
 	local pos = Ware_MinigameLocation.center;
-	pos += Vector(RandomFloat(-400, 400), RandomFloat(-400, 400), RandomFloat(80, 400));
+	pos += Vector(RandomFloat(-380, 380), RandomFloat(-380, 380), RandomFloat(80, 400));
 	
 	local prop = Ware_SpawnEntity("prop_physics_override", 
 	{
@@ -98,7 +98,12 @@ function OnTakeDamage(params)
 
 function OnEnd()
 {
-	Ware_ChatPrint(null, "{color}The correct color was {color}{str}", TF_COLOR_DEFAULT, colors_text[color], colors[color].toupper());
+	local fmt;
+	if (mode == 0)
+		fmt = "{color}The correct color to shoot was {color}{str}";
+	else
+		fmt = "{color}The correct color to say was {color}{str}";
+	Ware_ChatPrint(null, fmt, TF_COLOR_DEFAULT, colors_text[color], colors[color].toupper());
 }
 
 function OnPlayerSay(player, text)
