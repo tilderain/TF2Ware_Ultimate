@@ -1,3 +1,6 @@
+kill_sound <- "Halloween.skeleton_break";
+PrecacheScriptSound(kill_sound);
+
 minigame <- Ware_MinigameData();
 minigame.name = "Avoid the Props";
 minigame.description = "Look out for the props!"
@@ -48,6 +51,8 @@ function OnPropTouch()
 		999.9, 
 		DMG_CRUSH|DMG_CRIT
 	);
+	
+	EmitSoundOnClient(Ware_MinigameScope.kill_sound, activator);
 	
 	local ragdoll = GetPropEntity(activator, "m_hRagdoll");
 	if (ragdoll)
