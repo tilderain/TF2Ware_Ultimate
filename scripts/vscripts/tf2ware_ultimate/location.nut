@@ -14,6 +14,7 @@ Ware_Location.home <-
 	maxs       = Vector(-128, 1144, 3550),
 	spawns     = [],
 	spawn_name = "home_spawns",
+	spawn_idx  = 0,
 	Init       = function()
 	{
 		for (local spawn; spawn = FindByName(spawn, spawn_name);)
@@ -24,12 +25,11 @@ Ware_Location.home <-
 	}
 	Teleport   = function()
 	{
-		local idx = 0;
 		local spawn_len = spawns.len();
 		foreach (data in Ware_Players)
 		{
-			local spawn = spawns[idx];
-			idx = (idx + 1) % spawn_len;
+			local spawn = spawns[spawn_idx];
+			spawn_idx = (spawn_idx + 1) % spawn_len;
 			data.player.Teleport(true, spawn.GetOrigin(), true, spawn.GetAbsAngles(), true, Vector());
 		}
 	}
