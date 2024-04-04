@@ -27,6 +27,7 @@ Ware_Minigames <-
 	[1, "stand_near"      ],
 	[1, "stay_ground"     ],
 	[1, "swim_up"         ],
+	[1, "touch_sky"       ],
 	[1, "type_color"      ],
 ];
 
@@ -55,6 +56,7 @@ Ware_MinigameMusic <-
 	"falling",
 	"getmoving",
 	"getready",
+	"golden",
 	"goodtimes",
 	"heat",
 	"ohno",

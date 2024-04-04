@@ -41,6 +41,8 @@ function OnUpdate()
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
+		if (!IsEntityAlive(player))
+			continue;			
 		if (Ware_GetPlayerHeight(player) > 250.0)
 			Ware_SuicidePlayer(player);
 	}

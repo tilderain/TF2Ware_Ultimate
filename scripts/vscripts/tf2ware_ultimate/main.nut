@@ -113,24 +113,26 @@ class Ware_PlayerData
 {
 	function constructor(entity)
 	{
-		player         = entity;
-		scope          = entity.GetScriptScope();
-		team           = entity.GetTeam();
-		passed         = false;
-		mission        = 0;
-		attributes     = [];
-		start_sound    = false;
+		player           = entity;
+		scope            = entity.GetScriptScope();
+		team             = entity.GetTeam();
+		passed           = false;
+		mission          = 0;
+		attributes       = [];
+		melee_attributes = [];
+		start_sound      = false;
 	}
 	
-	player		   = null;
-	scope		   = null;
-	team		   = null;
-	passed		   = null;
-	mission		   = null;
-	melee		   = null;
-	melee_index    = null;
-	attributes	   = null;
-	start_sound    = null;
+	player		     = null;
+	scope		     = null;
+	team		     = null;
+	passed		     = null;
+	mission		     = null;
+	melee		     = null;
+	melee_index      = null;
+	attributes	     = null;
+	melee_attributes = null;
+	start_sound      = null;
 };
 
 Ware_Started			  <- false;
@@ -164,6 +166,7 @@ function Ware_FindStandardEntities()
 	WaterLOD  <- FindByClassname(null, "water_lod_control");
 	ClientCmd <- CreateEntitySafe("point_clientcommand");
 	
+	MarkForPurge(WaterLOD);
 	AddThinkToEnt(World, "Ware_OnUpdate");
 	
 	Ware_TextManagerQueue <- [];
@@ -431,7 +434,7 @@ function Ware_ParseLoadout(player)
 	return melee;
 }
 
-function Ware_SetGlobalLoadout(player_class, items, player_attributes = {})
+function Ware_SetGlobalLoadout(player_class, items, item_attributes = {})
 {
 	local is_list = typeof(items) == "array";
 	foreach (data in Ware_MinigamePlayers)
@@ -451,13 +454,23 @@ function Ware_SetGlobalLoadout(player_class, items, player_attributes = {})
 			}
 			else
 			{
-				Ware_GivePlayerWeapon(player, items, {});
+				Ware_GivePlayerWeapon(player, items, item_attributes);
 			}
 		}
 		else
 		{
-			if (data.melee != null)
-				player.Weapon_Switch(data.melee);
+			local melee = data.melee;
+			if (melee)
+			{
+				if (item_attributes.len() > 0)
+				{
+					foreach (attribute, value in item_attributes)
+						melee.AddAttribute(attribute, value, -1.0);
+					data.melee_attributes = clone(item_attributes);
+				}
+				
+				player.Weapon_Switch(melee);
+			}
 		}
 	}	
 }
@@ -903,6 +916,15 @@ function Ware_EndMinigame(minigame)
 		if (IsEntityAlive(player))
 		{
 			local data = player.GetScriptScope().ware_data;
+			
+			local melee = data.melee;
+			if (melee)
+			{
+				foreach (attribute, value in data.melee_attributes)
+					melee.RemoveAttribute(attribute);
+			}
+			data.melee_attributes.clear();
+			
 			foreach (attribute in data.attributes)
 				player.RemoveCustomAttribute(attribute);
 			data.attributes.clear();
@@ -1153,6 +1175,8 @@ function OnGameEvent_player_spawn(params)
 	}
 	
 	data.attributes.clear();
+	data.melee_attributes.clear();
+	
 	data.team = params.team;
 }
 

@@ -67,10 +67,10 @@ function OnUpdate()
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
+		if (!IsEntityAlive(player))
+			continue;		
 		if (Ware_GetPlayerHeight(player) > 512.0)
-		{
 			Ware_PassPlayer(player, true);
-		}
 	}
 }
 
