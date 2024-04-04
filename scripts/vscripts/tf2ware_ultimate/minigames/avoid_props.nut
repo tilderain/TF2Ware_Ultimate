@@ -1,6 +1,3 @@
-kill_sound <- "Halloween.skeleton_break";
-PrecacheScriptSound(kill_sound);
-
 minigame <- Ware_MinigameData();
 minigame.name = "Avoid the Props";
 minigame.description = "Look out for the props!"
@@ -10,18 +7,38 @@ minigame.start_pass = true;
 minigame.allow_damage = true;
 minigame.fail_on_death = true;
 
-local prop_model =  "models/props_gameplay/ball001.mdl";
+local prop_models =
+[
+	"models/props_gameplay/ball001.mdl",
+	"models/props_hydro/barrel_crate_half.mdl",
+	"models/props_gameplay/orange_cone001.mdl",
+	"models/props_gameplay/haybale.mdl",
+	"models/props_forest/wheelbarrow.mdl", 
+	"models/props_forest/saw_blade_large.mdl", 
+	"models/props_spytech/computer_printer.mdl", 
+	"models/props_mvm/oildrum.mdl", 
+	"models/props_mining/sign001.mdl", 
+	"models/props_trainyard/train_billboard001_sm.mdl", 
+	"models/props_well/hand_truck01.mdl", 
+];
+local prop_model = prop_models[RandomInt(0, prop_models.len()-1)];
 PrecacheModel(prop_model);
+
+is_sawblade <- prop_model.find("saw_blade") != null;
+
+kill_sound <- is_sawblade ? "SawMill.BladeImpact" : "Halloween.skeleton_break";
+PrecacheScriptSound(kill_sound);
 
 function OnStart()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local origin = data.player.GetOrigin() + Vector(0, 0, 650);
+		local origin = data.player.GetOrigin() + Vector(0, 0, 1000);
 		local prop = Ware_SpawnEntity("prop_physics_override", 
 		{
 			origin = origin,
 			model = prop_model,
+			skin = RandomInt(0, 1),
 		});
 		local trigger = Ware_SpawnEntity("trigger_multiple",
 		{
@@ -49,10 +66,10 @@ function OnPropTouch()
 		Vector(RandomFloat(19999, -19999), RandomFloat(19999, -19999), -999999),
 		self.GetOrigin(), 
 		999.9, 
-		DMG_CRUSH|DMG_CRIT
+		Ware_MinigameScope.is_sawblade ? (DMG_SAWBLADE) : (DMG_CRUSH|DMG_CRIT)
 	);
 	
-	EmitSoundOnClient(Ware_MinigameScope.kill_sound, activator);
+	activator.EmitSound(Ware_MinigameScope.kill_sound);
 	
 	local ragdoll = GetPropEntity(activator, "m_hRagdoll");
 	if (ragdoll)
