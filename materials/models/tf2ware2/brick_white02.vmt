@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "TF2Ware2/map/brick_white02"
+	"%keywords" "tf,tf2ware"
+	"$surfaceprop" "concrete"
+}

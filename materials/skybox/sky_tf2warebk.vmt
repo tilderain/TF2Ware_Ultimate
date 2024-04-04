@@ -1,0 +1,8 @@
+"sky"
+{
+    "$hdrcompressedTexture" "skybox/sky_tf2ware_hdrside"	
+	"$nofog" "1"
+	"$ignorez" "1"
+	"$basetexture" "skybox/sky_tf2ware_side"
+    "$basetexturetransform" "center 0 0 scale 1 1 rotate 0 translate 0 0"
+}

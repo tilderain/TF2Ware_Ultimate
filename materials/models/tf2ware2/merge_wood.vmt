@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "TF2Ware2/map/merge_wood"
+	"%keywords" "tf,tf2ware"
+	"$surfaceprop" "wood"
+}

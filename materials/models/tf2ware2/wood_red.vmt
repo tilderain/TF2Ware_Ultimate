@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "TF2Ware2/map/wood_red"
+	"%keywords" "tf,tf2ware"
+	"$surfaceprop" "wood"
+}

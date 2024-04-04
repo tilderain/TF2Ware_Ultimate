@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "TF2Ware2/map/dirt_light"
+	"%keywords" "tf,tf2ware"
+	"$surfaceprop" "dirt"
+}
