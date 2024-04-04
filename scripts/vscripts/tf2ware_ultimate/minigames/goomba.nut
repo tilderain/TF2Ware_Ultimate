@@ -17,7 +17,7 @@ function OnStart()
 {
 	jump_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE);
 	
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
 					
@@ -37,7 +37,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		if (data.team == jump_team)
 		{

@@ -12,7 +12,7 @@ PrecacheModel(prop_model);
 
 function OnStart()
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local origin = data.player.GetOrigin() + Vector(0, 0, 650);
 		local prop = Ware_SpawnEntity("prop_physics_override", 

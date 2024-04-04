@@ -19,7 +19,7 @@ minigame.convars =
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS, null);
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		data.player.AddCond(TF_COND_SPEED_BOOST);
 }
 
@@ -35,7 +35,7 @@ function OnUpdate()
 	local bloat_maxs = Vector(0.05, 0.05, 0.05);
 	local bloat_mins = bloat_maxs * -1.0;
 	
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
 		if (IsEntityAlive(player))
@@ -84,6 +84,6 @@ function OnUpdate()
 
 function OnEnd()
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		data.player.RemoveCond(TF_COND_SPEED_BOOST);
 }

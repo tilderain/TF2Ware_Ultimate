@@ -48,7 +48,7 @@ function OnStart()
 	}
 	
 	local text = Ware_Format("%d %s %d = ?", a, operator, b);
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		Ware_ShowMinigameText(data.player, text);
 }
 

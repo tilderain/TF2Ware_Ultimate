@@ -64,7 +64,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
 		if (Ware_GetPlayerHeight(player) > 512.0)
@@ -117,7 +117,7 @@ else if (mode == 3)
 		
 	function OnEnd()
 	{
-		foreach (data in Ware_Players)
+		foreach (data in Ware_MinigamePlayers)
 			data.player.RemoveAllObjects(false);
 	}
 }

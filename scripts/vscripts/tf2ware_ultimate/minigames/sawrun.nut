@@ -15,7 +15,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
 		if (IsEntityAlive(player) && player.GetOrigin().y > -3056) // TODO don't hardcode this here

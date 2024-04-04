@@ -25,7 +25,7 @@ function OnStart()
 
 function OnEnd()
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
 		if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))

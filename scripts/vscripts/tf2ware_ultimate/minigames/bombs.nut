@@ -16,7 +16,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		Ware_DisablePlayerPrimaryFire(data.player);
 }
 
@@ -25,7 +25,7 @@ function SpawnBombs()
 	local mins = Ware_MinigameLocation.mins;
 	local maxs = Ware_MinigameLocation.maxs;
 	
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local pipe = Ware_CreateEntity("tf_projectile_pipe");
 		

@@ -153,7 +153,8 @@ Ware_MinigamesPlayed	  <- 0;
 
 if (!("Ware_Players" in this))
 {
-	Ware_Players              <- [];
+	Ware_Players         <- [];
+	Ware_MinigamePlayers <- [];
 }
 
 function Ware_FindStandardEntities()
@@ -194,15 +195,7 @@ function Ware_SetupLocations()
 			location.Init();
 	}
 
-	local player_count = 0;
-	for (local i = 1; i <= MAX_CLIENTS; i++)
-	{
-		local player = PlayerInstanceFromIndex(i);
-		if (player)
-			player_count++;
-	}
-		
-	Ware_CheckHomeLocation(player_count);
+	Ware_CheckHomeLocation(Ware_Players.len());
 	Ware_MinigameLocation = Ware_MinigameHomeLocation;
 }
 
@@ -211,7 +204,7 @@ function Ware_SetTimeScale(timescale)
 	SendToConsole(format("host_timescale %g", timescale));
 	Ware_TimeScale = timescale;
 	
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		data.player.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1);
 }
 
@@ -441,7 +434,7 @@ function Ware_ParseLoadout(player)
 function Ware_SetGlobalLoadout(player_class, items, player_attributes = {})
 {
 	local is_list = typeof(items) == "array";
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
 		Ware_SetPlayerClass(player, player_class, false);
@@ -603,7 +596,7 @@ function Ware_AddPlayerAttribute(player, name, value, duration)
 
 function Ware_SetGlobalAttribute(name, value, duration)
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		Ware_AddPlayerAttribute(data.player, name, value, duration);
 }
 
@@ -672,7 +665,7 @@ function Ware_SuicidePlayer(player)
 
 function Ware_SuicideFailedPlayers()
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
 		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
@@ -716,11 +709,8 @@ function Ware_BeginIntermission()
 	if (Ware_DebugStop)
 		return;
 	
-	for (local i = 1; i <= MAX_CLIENTS; i++)
+	foreach (player in Ware_Players)
 	{
-		local player = PlayerInstanceFromIndex(i);
-		if (player == null)
-			continue;
 		Ware_PlayGameSound(player, "intro");
 		Ware_ShowScreenOverlay(player, null);
 		Ware_ShowScreenOverlay2(player, null);
@@ -743,12 +733,8 @@ function Ware_Speedup()
 {
 	Ware_SetTimeScale(Ware_TimeScale + 0.25);
 	
-	for (local i = 1; i <= MAX_CLIENTS; i++)
+	foreach (player in Ware_Players)
 	{
-		local player = PlayerInstanceFromIndex(i);
-		if (!player)
-			continue;
-		
 		Ware_PlayGameSound(player, "speedup");
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed");
 		Ware_ShowScreenOverlay2(player, null);
@@ -770,13 +756,9 @@ function Ware_StartMinigame(minigame)
 		SetConvarValue(name, value);
 	}
 	
-	Ware_Players.clear();
-	for (local i = 1; i <= MAX_CLIENTS; i++)
+	Ware_MinigamePlayers.clear();
+	foreach (player in Ware_Players)
 	{
-		local player = PlayerInstanceFromIndex(i);
-		if (player == null)
-			continue;
-			
 		EntFireByHandle(ClientCmd, "Command", "r_cleardecals", -1, player, null);
 		
 		if (!(player.GetTeam() & 2) || !IsEntityAlive(player))
@@ -790,10 +772,10 @@ function Ware_StartMinigame(minigame)
 		scope.ware_minidata.clear();
 		data.passed = Ware_Minigame.start_pass;
 		data.mission = 0;
-		Ware_Players.append(data);
+		Ware_MinigamePlayers.append(data);
 	}
 	
-	local player_count = Ware_Players.len();
+	local player_count = Ware_MinigamePlayers.len();
 	local location;
 	if (player_count > 12 && ((Ware_Minigame.location + "_big") in Ware_Location))
 		location = Ware_Location[Ware_Minigame.location + "_big"];
@@ -870,7 +852,7 @@ function Ware_StartMinigame(minigame)
 		Ware_MinigameOverlay2Set = true;
 	}
 
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{	
 		local player = data.player;
 		local mission = data.mission;
@@ -910,11 +892,8 @@ function Ware_EndMinigame(minigame)
 	
 	local player_count = 0;
 	local respawn_players = [];
-	for (local i = 1; i <= MAX_CLIENTS; i++)
+	foreach (player in Ware_Players)
 	{
-		local player = PlayerInstanceFromIndex(i);
-		if (player == null)
-			continue;
 		if (!(player.GetTeam() & 2))
 			continue;
 			
@@ -956,7 +935,7 @@ function Ware_EndMinigame(minigame)
 	local all_passed = true;
 	local all_failed = true;
 	
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		if (data.passed)
 			all_failed = false;
@@ -968,7 +947,7 @@ function Ware_EndMinigame(minigame)
 	{
 		local overlay = all_passed ? "hud/tf2ware_ultimate/default_victory_all" : "hud/tf2ware_ultimate/default_failure_all";
 		local sound = all_passed ? "victory" : "failure_all";
-		foreach (data in Ware_Players)
+		foreach (data in Ware_MinigamePlayers)
 		{
 			local player = data.player;
 			Ware_PlayGameSound(player, sound);
@@ -979,7 +958,7 @@ function Ware_EndMinigame(minigame)
 	}
 	else
 	{
-		foreach (data in Ware_Players)
+		foreach (data in Ware_MinigamePlayers)
 		{
 			local player = data.player;
 			Ware_PlayGameSound(player,  data.passed ? "victory" : "failure");
@@ -1019,7 +998,7 @@ function Ware_OnUpdate()
 	
 	if (Ware_Minigame.cb_on_player_attack.func)
 	{
-		foreach (data in Ware_Players)
+		foreach (data in Ware_MinigamePlayers)
 		{
 			local player = data.player;
 			local weapon = player.GetActiveWeapon();
@@ -1153,7 +1132,7 @@ function OnGameEvent_player_spawn(params)
 		local scope = player.GetScriptScope();
 		scope.ware_data <- Ware_PlayerData(player);
 		scope.ware_minidata <- {};
-		
+		Ware_Players.append(player);
 		return;
 	}
 	
@@ -1216,7 +1195,11 @@ function OnGameEvent_player_disconnect(params)
 		return;
 		
 	local data = player.GetScriptScope().ware_data;
-	local idx = Ware_Players.find(data);
+	local idx = Ware_MinigamePlayers.find(data);
+	if (idx != null)
+		Ware_MinigamePlayers.remove(idx);
+		
+	idx = Ware_Players.find(player);
 	if (idx != null)
 		Ware_Players.remove(idx);
 }

@@ -36,7 +36,7 @@ function OnStart()
 	
 	SetEntityParent(sprite, prop);
 	
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		Ware_GetPlayerMiniData(data.player).points <- 0;
 }
 

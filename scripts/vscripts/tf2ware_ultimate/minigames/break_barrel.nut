@@ -11,7 +11,7 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null);
 	
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local barrel = Ware_SpawnEntity("prop_physics_override", 
 		{

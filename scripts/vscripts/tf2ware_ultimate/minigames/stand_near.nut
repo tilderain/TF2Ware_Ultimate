@@ -22,7 +22,7 @@ function OnEnd()
 	local threshold = 75.0;
 	
 	local targets = [];
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
 		if (!IsEntityAlive(player))

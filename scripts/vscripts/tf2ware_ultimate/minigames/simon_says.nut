@@ -71,7 +71,7 @@ else
 			return;
 				
 		local pass = simon == 0;
-		foreach (data in Ware_Players)
+		foreach (data in Ware_MinigamePlayers)
 		{
 			local player = data.player;
 			if (Ware_IsPlayerPassed(data.player) != pass)
@@ -106,7 +106,7 @@ function OnEnd()
 {
 	if (mode == 4 || mode == 5)
 	{
-		foreach (data in Ware_Players)
+		foreach (data in Ware_MinigamePlayers)
 		{
 			data.player.RemoveCond(TF_COND_PHASE);
 			data.player.RemoveCond(TF_COND_ENERGY_BUFF);

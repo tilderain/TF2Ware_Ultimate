@@ -15,7 +15,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		Ware_DisablePlayerPrimaryFire(data.player);
 }
 
@@ -94,6 +94,6 @@ function SpawnRockets()
 	spawner.SetTeam(TEAM_SPECTATOR);
 	SetInputHook(spawner, "FireOnce", OnFireRocketPre, OnFireRocketPost);
 	
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		EntFireByHandle(spawner, "FireOnce", "", -1.0, data.player, data.player);
 }

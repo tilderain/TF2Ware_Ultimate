@@ -27,7 +27,7 @@ Ware_Location.home <-
 	Teleport   = function()
 	{
 		local spawn_len = spawns.len();
-		foreach (data in Ware_Players)
+		foreach (data in Ware_MinigamePlayers)
 		{
 			local spawn = spawns[spawn_idx];
 			spawn_idx = (spawn_idx + 1) % spawn_len;
@@ -53,9 +53,9 @@ Ware_Location.circlepit <-
 	radius   = 288.0,
 	Teleport = function()
 	{
-		local inv = 360.0 / Ware_Players.len().tofloat();
+		local inv = 360.0 / Ware_MinigamePlayers.len().tofloat();
 		local i = 0;
-		foreach (data in Ware_Players)
+		foreach (data in Ware_MinigamePlayers)
 		{
 			local angle = i++ * inv;
 			local pos = Vector(
@@ -88,7 +88,7 @@ Ware_Location.sawrun <-
 		local row = 0;
 		local max_row = 7;
 
-		foreach (i, data in Ware_Players)
+		foreach (i, data in Ware_MinigamePlayers)
 		{
 			if (row > max_row)
 			{
@@ -120,7 +120,7 @@ Ware_Location.targetrange <-
 		local pos = center * 1.0;
 		local ang = QAngle(0, 90, 0);
 		local x = 0;
-		foreach (data in Ware_Players)
+		foreach (data in Ware_MinigamePlayers)
 		{
 			if (++x > 21)
 			{

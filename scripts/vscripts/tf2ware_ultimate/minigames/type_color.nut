@@ -38,7 +38,7 @@ function OnStart()
 	text_color = text_colors[text_idx];
 	local visual_color = text_colors[visual_idx];
 	
-	foreach (data in Ware_Players)
+	foreach (data in Ware_MinigamePlayers)
 		Ware_ShowMinigameColorText(data.player, text_color, colors[visual_idx]);
 	
 	answer = mode == 0 ? text_color : visual_color;
