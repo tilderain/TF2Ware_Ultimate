@@ -1,0 +1,8 @@
+Sprite
+{
+	$spriteorientation	vp_parallel
+	$spriteorigin 		"[ 0.50 0.50 ]"
+	$basetexture		sprites/tf2ware_ultimate/bomb_red
+	$basetexturetransform "center .5 .5 scale 0.25 0.25 rotate 0 translate 0 0"
+	$no_fullbright		1
+}

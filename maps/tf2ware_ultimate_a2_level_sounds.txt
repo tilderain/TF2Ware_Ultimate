@@ -1,0 +1,17 @@
+Croc.SwimBurst
+{
+	channel			CHAN_STATIC
+	volume			0.5
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_60dB
+	wave			)ambient/lair/crocs_swim_burst.wav
+}
+
+BaseCombatCharacter.AmmoPickup
+{
+	channel			CHAN_AUTO
+	volume			0.0
+	pitch			0
+	soundlevel		SNDLVL_60dB
+	wave			common/null.wav
+}

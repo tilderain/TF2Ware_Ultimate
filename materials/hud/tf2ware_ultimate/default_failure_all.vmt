@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "hud/tf2ware_ultimate/default_failure_all"
+	$translucent 1
+}

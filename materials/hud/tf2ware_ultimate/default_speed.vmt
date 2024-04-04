@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "hud/tf2ware_ultimate/default_speed"
+	$translucent 1
+}

@@ -1,0 +1,10 @@
+# Hammer
+*.vmx
+*.log
+*.prt
+
+# Junk model stuff
+*.sw.vtx
+
+# Sound cache
+*.cache

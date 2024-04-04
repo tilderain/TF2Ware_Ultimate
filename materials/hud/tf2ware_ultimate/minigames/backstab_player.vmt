@@ -1,0 +1,21 @@
+UnlitGeneric
+{
+	$basetexture hud/tf2ware_ultimate/minigames/backstab_player
+	$basetexturetransform "center .5 .2 scale 1.5 14 rotate 0 translate 0 0"
+
+    $translucent 1
+    $frame 0
+    $CHEAPWATERSTARTDISTANCE 0.0
+    $CHEAPWATERENDDISTANCE 0.0           
+    Proxies
+    {
+        WaterLOD
+        {
+        }
+        Equals
+        {
+            srcVar1		$CHEAPWATERENDDISTANCE
+            resultVar	$frame
+        }
+    }            
+}
