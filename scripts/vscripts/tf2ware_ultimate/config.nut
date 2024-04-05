@@ -22,6 +22,7 @@ Ware_Minigames <-
 	[1, "move"            ],
 	[1, "projectile_jump" ],
 	[1, "rocket_rain"     ],
+	[1, "sap"             ],
 	[1, "sawrun"          ],
 	[1, "say_word"        ],
 	[1, "shoot_gifts"     ],
