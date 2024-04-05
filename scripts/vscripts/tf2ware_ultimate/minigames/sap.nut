@@ -19,7 +19,8 @@ minigame.custom_overlay2 = "sap_engi";
 minigame.allow_damage = true
 function OnTakeDamage(params)
 {
-    return false;
+	if (params.const_entity.IsPlayer())
+		return false;
 }
 
 local engi_team;
@@ -36,7 +37,6 @@ function OnStart()
 		{
 			Ware_SetPlayerMission(player, 2);
 			Ware_SetPlayerClass(player, TF_CLASS_ENGINEER);
-			Ware_GivePlayerWeapon(player, "Wrench");
 			Ware_GivePlayerWeapon(player, "Toolbox");
 			Ware_GivePlayerWeapon(player, "Construction PDA");
 		}
@@ -46,13 +46,13 @@ function OnStart()
 			Ware_SetPlayerClass(player, TF_CLASS_SPY);
 			Ware_GivePlayerWeapon(player, "Sapper");
 		}
-	}	
+	}
 }
 
 function OnGameEvent_player_builtobject(params)
 {
 	local player = GetPlayerFromUserID(params.userid);
-	if (!player)
+	if (!player || player.GetPlayerClass() == TF_CLASS_SPY)
 		return;
 	
 	Ware_StripPlayerWeapons(player, ["tf_weapon_builder", "tf_weapon_pda_engineer_build"]);
