@@ -955,6 +955,8 @@ function Ware_EndMinigameInternal()
 		if (!(player.GetTeam() & 2))
 			continue;
 			
+		player.RemoveAllObjects(false);
+			
 		if (Ware_Minigame.no_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER);
 			

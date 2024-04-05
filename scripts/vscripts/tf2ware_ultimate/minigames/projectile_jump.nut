@@ -114,10 +114,4 @@ else if (mode == 3)
 			}
 		}
 	}	
-		
-	function OnEnd()
-	{
-		foreach (data in Ware_MinigamePlayers)
-			data.player.RemoveAllObjects(false);
-	}
 }
