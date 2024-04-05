@@ -1,4 +1,4 @@
-local mode = RandomInt(0, 3);
+local mode = RandomInt(0, 4);
 
 minigame <- Ware_MinigameData();
 minigame.name = "Projectile Jump";
@@ -9,6 +9,7 @@ minigame.convars =
 {
 	tf_damageforcescale_self_soldier_badrj = 10,
 	tf_damageforcescale_self_soldier_rj = 20
+	tf_damageforcescale_pyro_jump = 20,
 	tf_fastbuild = 1
 };
 
@@ -31,6 +32,11 @@ else if (mode == 3)
 {
 	minigame.description = "Sentry jump!"
 	minigame.custom_overlay = "sentry_jump";
+}
+else if (mode == 4)
+{
+	minigame.description = "Flare jump!"
+	minigame.custom_overlay = "flare_jump";
 }
 
 function OnStart()
@@ -56,6 +62,11 @@ function OnStart()
 		player_class = TF_CLASS_ENGINEER;
 		weapon = ["Wrangler", "Toolbox", "Construction PDA"];
 		Ware_SetGlobalAttribute("build rate bonus", 0, -1);
+	}
+	else if (mode == 4)
+	{
+		player_class = TF_CLASS_PYRO;
+		weapon = "Detonator";
 	}
 	
 	Ware_SetGlobalLoadout(player_class, weapon);
