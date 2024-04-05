@@ -56,6 +56,7 @@ Ware_MinigameMusic <-
 	"cheerful",
 	"clumsy",
 	"falling",
+	"funkymoves",
 	"getmoving",
 	"getready",
 	"golden",
@@ -64,7 +65,6 @@ Ware_MinigameMusic <-
 	"ohno",
 	"question"
 	"sillytime",
-	"speculations",
 	"spotlightsonyou",
 	"thethinker",
 	"wildwest",
