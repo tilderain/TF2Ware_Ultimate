@@ -5,6 +5,7 @@ Ware_Minigames <-
 	[1, "avoid_props"     ],
 	[1, "backstab"        ],
 	[1, "bombs"           ],
+	[1, "build_this"      ],
 	[1, "break_barrel"    ],
 	[1, "bullseye"        ],
 	[1, "bumpers"         ],
