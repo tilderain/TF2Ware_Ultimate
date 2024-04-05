@@ -5,6 +5,10 @@ minigame <- Ware_MinigameData();
 minigame.name = "Build This";
 minigame.duration = 4.0;
 minigame.music = "sillytime";
+minigame.convars = 
+{
+	tf_cheapobjects = 1
+};
 
 if (mode == 0)
 {
@@ -34,7 +38,7 @@ else if (mode == 3)
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, "Construction PDA");
+	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, ["Wrench", "Toolbox", "Construction PDA"]);
 }
 
 function OnGameEvent_player_builtobject(params)
@@ -46,14 +50,14 @@ function OnGameEvent_player_builtobject(params)
 	local building_enum = params.object;
 	if(building_enum == correct_building)
 	{
-		local is_exit = GetPropInt(building, "m_iObjectMode") == 1;
-		if(
-			(mode = 2 && is_exit) ||
-			(mode = 3 && !is_exit)
-		) // if it's the wrong teleporter for the mode
-			return;
-		
-		local player = params.userid;
+		if (
+			(mode < 2) ||
+			(mode == 2 && GetPropInt(building, "m_iObjectMode") != 1) || // tele entrance
+			(mode == 3 && GetPropInt(building, "m_iObjectMode") == 1) // tele exit
+		)
+		{
+		local player = GetPlayerFromUserID(params.userid);
 		Ware_PassPlayer(player, true);
+		}
 	}
 }
