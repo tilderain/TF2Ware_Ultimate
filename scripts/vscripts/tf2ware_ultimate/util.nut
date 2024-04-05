@@ -13,6 +13,16 @@ function Lerp(t, A, B)
     return A + (B - A) * t;
 }
 
+function RemapValClamped(v, A, B, C, D)
+{
+	local cv = (v - A) / (B - A);
+	if (cv <= 0.0)
+		return C;
+	if (cv >= 1.0)
+		return D;
+	return C + (D - C) * cv;
+}
+
 function Shuffle(arr)
 {
 	for (local i = arr.len() - 1; i > 0; i--)
@@ -35,7 +45,6 @@ function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs)
            (a_mins.y <= b_maxs.y && a_maxs.y >= b_mins.y) &&
            (a_mins.z <= b_maxs.z && a_maxs.z >= b_mins.z);
 }
-
 function MarkForPurge(entity)
 {
 	SetPropBool(entity, "m_bForcePurgeFixedupStrings", true);
@@ -58,7 +67,30 @@ function SpawnEntityFromTableSafe(classname, keyvalues)
 function CreateTimer(on_timer_func, delay)
 {
 	local relay = CreateEntitySafe("logic_relay");
-	SetInputHook(relay, "Trigger", on_timer_func, function() { if (self.IsValid()) self.Kill(); });
+	relay.ValidateScriptScope();
+	local relay_scope = relay.GetScriptScope();
+	relay_scope.scope <- this;
+	relay_scope.repeat <- false;
+	
+	SetInputHook(relay, "Trigger", 
+		function()
+		{
+			local delay = (on_timer_func.bindenv(scope))();
+			if (delay != null)
+			{
+				repeat = true;
+				EntFireByHandle(self, "Trigger", "", delay, null, null);
+			}
+			return false;
+		}
+		function() 
+		{
+			if (repeat)
+				repeat = false;
+			else if (self.IsValid()) 
+				self.Kill();
+		}
+	);
 	EntFireByHandle(relay, "Trigger", "", delay, null, null);
 	return relay;
 }

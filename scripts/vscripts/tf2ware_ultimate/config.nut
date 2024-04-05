@@ -65,6 +65,7 @@ Ware_MinigameMusic <-
 	"heat",
 	"keepitup",
 	"ohno",
+	"pumpit",
 	"question"
 	"sillytime",
 	"spotlightsonyou",

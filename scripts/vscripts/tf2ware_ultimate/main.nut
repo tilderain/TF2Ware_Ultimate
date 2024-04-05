@@ -52,6 +52,7 @@ class Ware_MinigameData
 		convars        = [];
 		entities       = [];
 		cleanup_names  = {};
+		timers		   = [];
 	}
 	
 	// Mandatory parameters
@@ -103,6 +104,8 @@ class Ware_MinigameData
 	entities		= null;
 	// Entity names to delete after minigame ends (e.g. projectiles)
 	cleanup_names	= null;
+	// Timers spawned by the minigame, stopped after it ends
+	timers			= null;
 	
 	cb_on_take_damage		= null;
 	cb_on_player_attack		= null;
@@ -140,9 +143,12 @@ class Ware_PlayerData
 	start_sound      = null;
 };
 
-if ("Ware_Minigame" in this && Ware_Minigame)
+if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
 {
-	// stop music if restarted mid-minigame
+	foreach (name, value in Ware_MinigameSavedConvars)
+		SetConvarValue(name, value);
+	Ware_MinigameSavedConvars.clear();
+	
 	Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_STOP);
 }
 
@@ -210,10 +216,8 @@ function Ware_FindStandardEntities()
 	Ware_TextManager.GetScriptScope().inputdisplay <- Ware_TextHook;
 	
 	Ware_ParticleSpawnerQueue <- [];
-	Ware_ParticleSpawner <- SpawnEntityFromTableSafe("trigger_particle", 
-	{ 
-		spawnflags = 64 
-	});
+	Ware_ParticleSpawner <- CreateEntitySafe("trigger_particle");
+	Ware_ParticleSpawner.KeyValueFromInt("spawnflags", 64);
 	Ware_ParticleSpawner.ValidateScriptScope();
 	Ware_ParticleSpawner.GetScriptScope().InputStartTouch <- Ware_ParticleHook;
 	Ware_ParticleSpawner.GetScriptScope().Inputstarttouch <- Ware_ParticleHook;
@@ -325,6 +329,13 @@ function Ware_SpawnEntity(classname, keyvalues)
 	local entity = SpawnEntityFromTableSafe(classname, keyvalues);
 	Ware_Minigame.entities.append(entity);
 	return entity;
+}
+
+function Ware_CreateTimer(on_timer_func, delay)
+{
+	local timer = CreateTimer(on_timer_func, delay);
+	Ware_Minigame.timers.append(timer);
+	return timer;	
 }
 
 function Ware_PlayGameSound(player, name, flags = 0)
@@ -481,6 +492,7 @@ function Ware_ParseLoadout(player)
 		}
 		else
 		{
+			SetPropEntityArray(player, "m_hMyWeapons", null, i);
 			weapon.Kill();
 		}
 	}
@@ -561,8 +573,16 @@ function Ware_StripPlayer(player, give_default_melee)
 			local active_weapon = player.GetActiveWeapon();
 			if (active_weapon != melee)
 			{
-				if (active_weapon && active_weapon.GetClassname() == "tf_weapon_minigun")
-					SetPropEntity(player, "m_hActiveWeapon", null); // force switch
+				if (active_weapon)
+				{
+					local classname = active_weapon.GetClassname();
+					
+					 // force switch fix
+					if (classname == "tf_weapon_minigun")
+						SetPropEntity(player, "m_hActiveWeapon", null);
+					else if (startswith(classname, "tf_weapon_sniperrifle"))
+						SetPropFloat(active_weapon, "m_flNextPrimaryAttack", 0.0);
+				}
 				player.Weapon_Switch(melee);
 			}
 		}
@@ -617,7 +637,13 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 		for (local i = 0; i < 3; i++)
 			SetPropIntArray(weapon, "m_aBuildableObjectTypes", 1, i);	
 		SetPropInt(weapon, "m_iObjectType", 0);
-		SetPropInt(weapon, "m_iObjectMode", 0);
+		switch_weapon = false;
+	}
+	else if (item_id == 735 || item_classname == "tf_weapon_sapper") // sapper
+	{
+		SetPropIntArray(weapon, "m_aBuildableObjectTypes", 1, 3);	
+		SetPropInt(weapon, "m_iObjectType", 3);
+		SetPropInt(weapon, "m_iSubType", 3);
 	}
 	
 	weapon.ValidateScriptScope();
@@ -668,7 +694,10 @@ function Ware_StripPlayerWeapons(player, weapons)
 		if (weapon)
 		{
 			if (weapons.find(weapon.GetClassname()) != null)	
+			{
+				SetPropEntityArray(player, "m_hMyWeapons", null, i);
 				weapon.Kill();
+			}
 		}
 	}		
 }
@@ -1134,7 +1163,10 @@ function Ware_EndMinigameInternal()
 	
 	foreach (name, v in Ware_Minigame.cleanup_names)
 		EntFire(name, "Kill");
-
+		
+	foreach (timer in Ware_Minigame.timers)
+		KillTimer(timer);
+	
 	Ware_Minigame = null;
 	Ware_MinigameScope.clear();
 	Ware_MinigameOverlay2Set = false;
@@ -1322,7 +1354,7 @@ function OnGameEvent_player_spawn(params)
 function OnGameEvent_player_changeclass(params)
 {
 	local player = GetPlayerFromUserID(params.userid);
-	if (player && !IsEntityAlive(player))
+	if (player && !IsEntityAlive(player) && !IsInWaitingForPlayers())
 		SetPropFloat(player, "m_flDeathTime", Time()); // no late respawns
 }
 
