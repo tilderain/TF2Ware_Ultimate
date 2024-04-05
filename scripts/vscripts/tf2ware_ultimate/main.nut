@@ -545,6 +545,8 @@ function Ware_SetGlobalLoadout(player_class, items, item_attributes = {})
 
 function Ware_StripPlayer(player, give_default_melee)
 {
+	player.RemoveCond(TF_COND_DISGUISING);
+	player.RemoveCond(TF_COND_DISGUISED);
 	player.RemoveCond(TF_COND_TAUNTING);
 	player.RemoveCond(TF_COND_ZOOMED);
 		
@@ -658,9 +660,9 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	player.Weapon_Equip(weapon);
 	if (switch_weapon)
 	{
-		if (item_id == 25) // construction pda
+		if (item_id == 25 || item_id == 27) // construction pda
 		{
-			// build menu will not show up unless its holstered for a bit
+			// build/disguise menu will not show up unless its holstered for a bit
 			EntFireByHandle(player, "CallScriptFunction", "Ware_FixupPlayerWeaponSwitch", 0.1, weapon, weapon);
 		}
 		else

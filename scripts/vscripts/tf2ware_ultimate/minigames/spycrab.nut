@@ -4,6 +4,7 @@ minigame.description = "Do the spycrab!"
 minigame.duration = 3.5;
 minigame.music = "sillytime";
 minigame.end_delay = 0.5;
+minigame.suicide_on_end = true;
 
 local sprite_model = "sprites/tf2ware_ultimate/spycrab.vmt"
 
@@ -21,6 +22,13 @@ function OnStart()
 		rendermode = kRenderTransColor,
 		spawnflags = 1,		
 	});
+
+}
+
+function OnPlayerVoiceline(player, voiceline)
+{
+	if (voiceline.find("taunt05.vcd") != null)
+		Ware_PassPlayer(player, true);
 }
 
 function OnEnd()
@@ -29,16 +37,8 @@ function OnEnd()
 	{
 		local player = data.player;
 		if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))
-		{
 			Ware_PassPlayer(player, true);
-		}
-		else
-		{
+		else if (!data.passed)
 			Ware_ChatPrint(player, "{color}Spycrabs must look up and crouch!", TF_COLOR_DEFAULT);
-			Ware_SuicidePlayer(player);
-		}
-		
-		player.RemoveCond(TF_COND_DISGUISING);
-		player.RemoveCond(TF_COND_DISGUISED);
 	}
 }
