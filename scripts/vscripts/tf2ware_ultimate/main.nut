@@ -112,6 +112,7 @@ class Ware_MinigameData
 	cb_on_player_death		= null;
 	cb_on_player_say		= null;
 	cb_on_player_voiceline	= null;
+	cb_on_player_touch		= null;
 	cb_on_update			= null;
 };
 
@@ -930,6 +931,7 @@ function Ware_StartMinigame(minigame)
 	Ware_Minigame.cb_on_player_death		= Ware_MinigameCallback("OnPlayerDeath");
 	Ware_Minigame.cb_on_player_say			= Ware_MinigameCallback("OnPlayerSay");
 	Ware_Minigame.cb_on_player_voiceline	= Ware_MinigameCallback("OnPlayerVoiceline");
+	Ware_Minigame.cb_on_player_touch		= Ware_MinigameCallback("OnPlayerTouch");
 	Ware_Minigame.cb_on_update				= Ware_MinigameCallback("OnUpdate");
 	
 	local event_prefix = "OnGameEvent_";
@@ -1229,6 +1231,55 @@ function Ware_OnUpdate()
 				Ware_Minigame.cb_on_player_voiceline(player, name.tolower());
 			}
 		}
+	}
+	
+	if (Ware_Minigame.cb_on_player_touch.func)
+	{
+		local candidates = [];
+		local bloat_maxs = Vector(0.05, 0.05, 0.05);
+		local bloat_mins = bloat_maxs * -1.0;
+		
+		foreach (data in Ware_MinigamePlayers)
+		{
+			local player = data.player;
+			if (IsEntityAlive(player))
+			{
+				local origin = player.GetOrigin();
+				candidates.append(
+				[
+					player, 
+					origin + player.GetBoundingMins() + bloat_mins, 
+					origin + player.GetPlayerMaxs() + bloat_maxs
+				]);
+			}
+		}
+		
+		local intersections = {};
+		local candidates_len = candidates.len();
+		for (local i = 0; i < candidates_len; ++i)
+		{
+			local candidate_a = candidates[i];
+			if (candidate_a in intersections)
+				continue;
+			
+			for (local j = i + 1; j < candidates_len; ++j)
+			{
+				local candidate_b = candidates[j];
+				if (candidate_b in intersections)
+					continue;
+				
+				if (IntersectBoxBox(candidate_a[1], candidate_a[2], candidate_b[1], candidate_b[2]))
+				{
+					local player_a = candidate_a[0];
+					local player_b = candidate_b[0];			
+					intersections[player_a] <- player_b;
+					intersections[player_b] <- player_a;
+				}
+			}
+		}
+		
+		foreach (player, other_player in intersections)
+			Ware_Minigame.cb_on_player_touch(player, other_player);
 	}
 	
 	return -1;
