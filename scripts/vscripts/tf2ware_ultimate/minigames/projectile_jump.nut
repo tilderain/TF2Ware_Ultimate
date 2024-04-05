@@ -10,7 +10,6 @@ minigame.convars =
 	tf_damageforcescale_self_soldier_badrj = 10,
 	tf_damageforcescale_self_soldier_rj = 20
 	tf_fastbuild = 1
-	tf_cheapobjects = 1
 };
 
 if (mode == 0)
@@ -95,12 +94,5 @@ else if (mode == 3)
 			return;
 			
 		SetPropInt(building, "m_nDefaultUpgradeLevel", 2);
-		
-		if (params.object == OBJ_SENTRYGUN)
-		{
-			local player = GetPlayerFromUserID(params.userid);
-			if (player)
-				Ware_StripPlayerWeapons(player, ["tf_weapon_builder", "tf_weapon_pda_engineer_build"]);
-		}
 	}	
 }
