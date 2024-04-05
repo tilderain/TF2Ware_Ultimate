@@ -142,6 +142,7 @@ class Ware_PlayerData
 	attributes	     = null;
 	melee_attributes = null;
 	start_sound      = null;
+	construction_pda = null;
 };
 
 if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
@@ -561,6 +562,8 @@ function Ware_StripPlayer(player, give_default_melee)
 		}
 	}
 	
+	Ware_DeferredPDAKill(data);
+	
 	if (give_default_melee)
 	{
 		if (melee != null && melee.IsValid())
@@ -689,13 +692,39 @@ function Ware_StripPlayerWeapons(player, weapons)
 		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i);
 		if (weapon)
 		{
-			if (weapons.find(weapon.GetClassname()) != null)	
+			local classname = weapon.GetClassname();
+			if (weapons.find(classname) != null)	
 			{
 				SetPropEntityArray(player, "m_hMyWeapons", null, i);
-				weapon.Kill();
+				
+				// see Ware_DeferredPDAKill for why this is needed
+				if (classname == "tf_weapon_pda_engineer_build")
+				{
+					local data = player.GetScriptScope().ware_data;
+					Ware_DeferredPDAKill(data);
+					data.construction_pda = weapon;
+					SetPropInt(weapon, "m_iObjectType", 0xFF);
+				}
+				else
+				{
+					weapon.Kill();
+				}
 			}
 		}
 	}		
+}
+
+// workaround for a tf2 bug: if a construction PDA is deleted it will hide the build menu for EVERYONE!
+// so it is deferred till the end of a minigame
+function Ware_DeferredPDAKill(data)
+{
+	local pda = data.construction_pda;
+	if (pda)
+	{
+		if (pda.IsValid())
+			pda.Kill();
+		data.construction_pda = null;
+	}
 }
 
 function Ware_AddPlayerAttribute(player, name, value, duration)
@@ -1370,6 +1399,8 @@ function OnGameEvent_player_spawn(params)
 	}
 	
 	local data = player.GetScriptScope().ware_data;
+	
+	Ware_DeferredPDAKill(data);
 	
 	// this is to fix persisting attributes if restarting mid-minigame
 	local melee = data.melee;
