@@ -621,6 +621,19 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	return weapon;
 }
 
+function Ware_StripPlayerWeapons(player, weapons)
+{
+	for (local i = 0; i < MAX_WEAPONS; i++)
+	{
+		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i);
+		if (weapon)
+		{
+			if (weapons.find(weapon.GetClassname()) != null)	
+				weapon.Kill();
+		}
+	}		
+}
+
 function Ware_AddPlayerAttribute(player, name, value, duration)
 {
 	player.AddCustomAttribute(name, value, duration);

@@ -100,18 +100,7 @@ else if (mode == 3)
 		{
 			local player = GetPlayerFromUserID(params.userid);
 			if (player)
-			{					
-				for (local i = 0; i < MAX_WEAPONS; i++)
-				{
-					local weapon = GetPropEntityArray(player, "m_hMyWeapons", i);
-					if (weapon 
-						&& (weapon.GetClassname() == "tf_weapon_builder"
-						|| weapon.GetClassname() == "tf_weapon_pda_engineer_build"))
-					{
-						weapon.Kill();
-					}
-				}						
-			}
+				Ware_StripPlayerWeapons(player, ["tf_weapon_builder", "tf_weapon_pda_engineer_build"]);
 		}
 	}	
 }

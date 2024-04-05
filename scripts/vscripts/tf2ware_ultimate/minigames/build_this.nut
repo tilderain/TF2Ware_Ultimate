@@ -16,7 +16,6 @@ if (mode == 0)
 	minigame.custom_overlay = "build_sentry";
 	correct_building = OBJ_SENTRYGUN;
 }
-
 else if (mode == 1)
 {
 	minigame.description = "Build a Dispenser"
@@ -46,18 +45,21 @@ function OnGameEvent_player_builtobject(params)
 	local building = EntIndexToHScript(params.index);
 	if (!building)
 		return;
-		
+	local player = GetPlayerFromUserID(params.userid);
+	if (!player)
+		return;
+	
 	local building_enum = params.object;
-	if(building_enum == correct_building)
+	if (building_enum == correct_building)
 	{
-		if (
-			(mode < 2) ||
+		if ((mode < 2) ||
 			(mode == 2 && GetPropInt(building, "m_iObjectMode") != 1) || // tele entrance
 			(mode == 3 && GetPropInt(building, "m_iObjectMode") == 1) // tele exit
 		)
 		{
-		local player = GetPlayerFromUserID(params.userid);
-		Ware_PassPlayer(player, true);
+			Ware_PassPlayer(player, true);
 		}
 	}
+	
+	Ware_StripPlayerWeapons(player, ["tf_weapon_builder", "tf_weapon_pda_engineer_build"]);
 }
