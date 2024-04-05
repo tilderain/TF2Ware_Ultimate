@@ -17,6 +17,7 @@ Ware_Minigames <-
 	[1, "hit_player"      ],
 	[1, "kamikaze"        ],
 	[1, "math"            ],
+	[1, "melee_arena"     ],
 	[1, "most_bombs"      ],
 	[1, "move"            ],
 	[1, "projectile_jump" ],
@@ -62,6 +63,7 @@ Ware_MinigameMusic <-
 	"golden",
 	"goodtimes",
 	"heat",
+	"keepitup",
 	"ohno",
 	"question"
 	"sillytime",

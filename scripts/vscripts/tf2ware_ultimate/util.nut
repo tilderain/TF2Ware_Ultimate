@@ -55,6 +55,32 @@ function SpawnEntityFromTableSafe(classname, keyvalues)
 	return entity;
 }
 
+function CreateTimer(on_timer_func, delay)
+{
+	local relay = CreateEntitySafe("logic_relay");
+	SetInputHook(relay, "Trigger", on_timer_func, function() { if (self.IsValid()) self.Kill(); });
+	EntFireByHandle(relay, "Trigger", "", delay, null, null);
+	return relay;
+}
+
+function FireTimer(timer)
+{
+	if (timer && timer.IsValid())
+	{
+		timer.GetScriptScope().InputTrigger();
+		KillTimer(timer);
+	}
+}
+
+function KillTimer(timer)
+{
+	if (timer && timer.IsValid())
+	{
+		timer.TerminateScriptScope();
+		timer.Kill();
+	}
+}
+
 function IsEntityAlive(player)
 {
 	return GetPropInt(player, "m_lifeState") == 0;
@@ -108,7 +134,7 @@ ROOT.setdelegate(
 });
 
 
-function PlaySoundOnClient(player, name, volume, pitch)
+function PlaySoundOnClient(player, name, volume, pitch, flags = 0)
 {
 	EmitSoundEx(
 	{
@@ -116,17 +142,19 @@ function PlaySoundOnClient(player, name, volume, pitch)
 		volume = volume
 		pitch = pitch,
 		entity = player,
+		flags = flags,
 		filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
 	});
 }
 
-function PlaySoundOnAllClients(name, volume, pitch)
+function PlaySoundOnAllClients(name, volume, pitch, flags = 0)
 {
 	EmitSoundEx(
 	{
 		sound_name = name,
 		volume = volume
 		pitch = pitch,
+		flags = flags,
 		filter_type = RECIPIENT_FILTER_GLOBAL
 	});
 }
@@ -134,4 +162,24 @@ function PlaySoundOnAllClients(name, volume, pitch)
 function GetPlayerName(player)
 {
     return GetPropString(player, "m_szNetname");
+}
+
+function HealPlayer(player, amount)
+{
+	local health = player.GetHealth();
+	local max_health = player.GetMaxHealth();
+	if (amount > max_health - health)
+		amount = max_health - health;
+	
+	if (amount > 0)
+	{
+		player.SetHealth(health + amount);
+		
+		SendGlobalGameEvent("player_healonhit",
+		{
+			amount = amount,
+			entindex = player.entindex(),
+			weapon_def_index = -1,
+		});
+	}
 }

@@ -47,6 +47,7 @@ class Ware_MinigameData
 		suicide_on_end = false;
 		no_collisions  = false;
 		friendly_fire  = true;
+		end_below_min  = false;
 		end_delay      = 0.0;
 		convars        = [];
 		entities       = [];
@@ -83,6 +84,8 @@ class Ware_MinigameData
 	no_collisions	= null;
 	// Toggle friendlyfire
 	friendly_fire	= null;
+	// Automatically end the minigame early if number of players alive is less than min_players
+	end_below_min	= null;
 	// Delay after the minigame "ends" before showing results
 	end_delay		= null;
 	// Custom text overlay to show rather than the default implied from name
@@ -135,6 +138,12 @@ class Ware_PlayerData
 	start_sound      = null;
 };
 
+if ("Ware_Minigame" in this && Ware_Minigame)
+{
+	// stop music if restarted mid-minigame
+	Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_STOP);
+}
+
 Ware_Started			  <- false;
 Ware_TimeScale			  <- 1.0;
 Ware_DebugStop			  <- false;
@@ -151,6 +160,9 @@ Ware_MinigameLocation     <- null;
 Ware_MinigameEvents       <- [];
 Ware_MinigameOverlay2Set  <- false;
 Ware_MinigameStartTime    <- 0.0;
+Ware_MinigamePreEndTimer  <- null;
+Ware_MinigameEndTimer     <- null;
+Ware_MinigameEnded        <- false;
 Ware_MinigamesPlayed	  <- 0;
 
 if (!("Ware_Players" in this))
@@ -296,14 +308,20 @@ function Ware_SpawnEntity(classname, keyvalues)
 	return entity;
 }
 
-function Ware_PlayGameSound(player, name)
+function Ware_PlayGameSound(player, name, flags = 0)
 {
-	PlaySoundOnClient(player, format("tf2ware_ultimate/music_game/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor());
+	if (player)
+		PlaySoundOnClient(player, format("tf2ware_ultimate/music_game/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags);
+	else
+		PlaySoundOnAllClients(format("tf2ware_ultimate/music_game/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags);
 }
 
-function Ware_PlayMinigameSound(player, name)
+function Ware_PlayMinigameSound(player, name, flags = 0)
 {
-	PlaySoundOnClient(player, format("tf2ware_ultimate/music_minigame/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor());
+	if (player)
+		PlaySoundOnClient(player, format("tf2ware_ultimate/music_minigame/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags);
+	else
+		PlaySoundOnAllClients(format("tf2ware_ultimate/music_minigame/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags);
 }
 
 function Ware_SetConvarValue(convar, value)
@@ -459,6 +477,8 @@ function Ware_SetGlobalLoadout(player_class, items, item_attributes = {})
 		}
 		else
 		{
+			player.RemoveCond(TF_COND_TAUNTING);
+			
 			local melee = data.melee;
 			if (melee)
 			{
@@ -477,8 +497,8 @@ function Ware_SetGlobalLoadout(player_class, items, item_attributes = {})
 
 function Ware_StripPlayer(player, give_default_melee)
 {
-	player.RemoveCond(TF_COND_ZOOMED);
 	player.RemoveCond(TF_COND_TAUNTING);
+	player.RemoveCond(TF_COND_ZOOMED);
 		
 	local data = player.GetScriptScope().ware_data;
 	local melee = data.melee;
@@ -502,7 +522,7 @@ function Ware_StripPlayer(player, give_default_melee)
 			local active_weapon = player.GetActiveWeapon();
 			if (active_weapon != melee)
 			{
-				if (active_weapon.GetClassname() == "tf_weapon_minigun")
+				if (active_weapon && active_weapon.GetClassname() == "tf_weapon_minigun")
 					SetPropEntity(player, "m_hActiveWeapon", null); // force switch
 				player.Weapon_Switch(melee);
 			}
@@ -739,7 +759,7 @@ function Ware_BeginIntermission()
 	}
 	
 	local minigame = Ware_MinigameRotation.remove(RandomInt(0, Ware_MinigameRotation.len() - 1));
-	RunDelayedCode(format("Ware_StartMinigame(`%s`)", minigame), 4.0);
+	CreateTimer(@() Ware_StartMinigame(minigame), 4.0);
 }
 
 function Ware_Speedup()
@@ -753,11 +773,13 @@ function Ware_Speedup()
 		Ware_ShowScreenOverlay2(player, null);
 	}
 	
-	RunDelayedCode("Ware_BeginIntermission()", 5.0);
+	CreateTimer(@() Ware_BeginIntermission(), 5.0);
 }
 
 function Ware_StartMinigame(minigame)
 {
+	Ware_MinigameEnded = false;
+	
 	IncludeScript(format("tf2ware_ultimate/minigames/%s", minigame), Ware_MinigameScope); 	
 
 	Ware_Minigame = Ware_MinigameScope.minigame;
@@ -884,18 +906,41 @@ function Ware_StartMinigame(minigame)
 		{
 			Ware_ShowScreenOverlay2(player, overlay2);
 		}
-		
-		// TODO: play for spectators
-		Ware_PlayMinigameSound(player, Ware_Minigame.music);
 	}
 	
-	RunDelayedCode("if (`OnEnd` in Ware_MinigameScope) Ware_MinigameScope.OnEnd()", Ware_Minigame.duration);
-	if (Ware_Minigame.suicide_on_end)
-		RunDelayedCode("Ware_SuicideFailedPlayers()", Ware_Minigame.duration);
-	RunDelayedCode(format("Ware_EndMinigame(`%s`)", minigame), Ware_Minigame.duration + Ware_Minigame.end_delay);
+	Ware_PlayMinigameSound(null, Ware_Minigame.music);
+	
+	Ware_MinigamePreEndTimer = CreateTimer(function() 
+		{ 
+			Ware_MinigameEnded = true;
+			if ("OnEnd" in Ware_MinigameScope) 
+				Ware_MinigameScope.OnEnd();
+			if (Ware_Minigame.suicide_on_end)
+				Ware_SuicideFailedPlayers();
+		}, 
+		Ware_Minigame.duration
+	);
+	Ware_MinigameEndTimer = CreateTimer(
+		@() Ware_EndMinigameInternal(), 
+		Ware_Minigame.duration + Ware_Minigame.end_delay
+	);
 }
 
-function Ware_EndMinigame(minigame)
+function Ware_EndMinigame()
+{
+	if (Ware_MinigameEnded)
+		return;
+		
+	FireTimer(Ware_MinigamePreEndTimer);
+	KillTimer(Ware_MinigameEndTimer);
+	
+	Ware_MinigameEndTimer = CreateTimer(
+		@() Ware_EndMinigameInternal(),
+		Ware_Minigame.end_delay
+	);
+}
+
+function Ware_EndMinigameInternal()
 {
 	Ware_MinigamesPlayed++;
 	
@@ -953,6 +998,8 @@ function Ware_EndMinigame(minigame)
 	
 	if (Ware_Minigame.allow_damage)
 		SetPropBool(GameRules, "m_bTruceActive", true);
+		
+	Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_STOP);
 
 	local all_passed = true;
 	local all_failed = true;
@@ -983,7 +1030,7 @@ function Ware_EndMinigame(minigame)
 		foreach (data in Ware_MinigamePlayers)
 		{
 			local player = data.player;
-			Ware_PlayGameSound(player,  data.passed ? "victory" : "failure");
+			Ware_PlayGameSound(player, data.passed ? "victory" : "failure");
 			Ware_ShowScreenOverlay(player, data.passed ? "hud/tf2ware_ultimate/default_victory" : "hud/tf2ware_ultimate/default_failure");
 			if (Ware_MinigameOverlay2Set)
 				Ware_ShowScreenOverlay2(player, null);
@@ -1006,15 +1053,32 @@ function Ware_EndMinigame(minigame)
 	Ware_MinigameOverlay2Set = false;
 	
 	if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % 5 == 0)
-		RunDelayedCode("Ware_Speedup()", 2.0);
+		CreateTimer(@() Ware_Speedup(), 2.0);
 	else
-		RunDelayedCode("Ware_BeginIntermission()", 2.0);
+		CreateTimer(@() Ware_BeginIntermission(), 2.0);
 }
 
 function Ware_OnUpdate()
 {
 	if (Ware_Minigame == null)
 		return;
+		
+	if (Ware_Minigame.end_below_min && !Ware_MinigameEnded)
+	{
+		local stop = true;
+		local alive_count = 0;
+		foreach (data in Ware_MinigamePlayers)
+		{
+			if (IsEntityAlive(data.player) && ++alive_count >= Ware_Minigame.min_players)
+			{
+				stop = false;
+				break;
+			}
+		}
+		
+		if (stop)
+			Ware_EndMinigame();
+	}
 	
 	Ware_Minigame.cb_on_update();
 	
@@ -1094,24 +1158,6 @@ function OnScriptHook_OnTakeDamage(params)
 	}
 }
 
-/*
-function OnScriptHook_OnPlayerAttack(player)
-{
-	if (Ware_Minigame == null)
-		return;
-
-	Ware_Minigame.cb_on_player_attack(player);
-}
-
-function OnScriptHook_OnPlayerTouch(player, other)
-{
-	if (Ware_Minigame == null)
-		return;
-
-	Ware_Minigame.cb_on_player_touch(player, other);
-}
-*/
-
 function OnGameEvent_teamplay_round_start(params)
 {
 	Ware_SetTimeScale(1.0);
@@ -1160,6 +1206,17 @@ function OnGameEvent_player_spawn(params)
 	
 	local data = player.GetScriptScope().ware_data;
 	
+	// this is to fix persisting attributes if restarting mid-minigame
+	local melee = data.melee;
+	if (melee && melee.IsValid())
+	{
+		foreach (attribute, value in data.melee_attributes)
+			melee.RemoveAttribute(attribute);
+	}
+	data.attributes.clear();
+	data.melee_attributes.clear();
+	
+	data.team = params.team;	
 	if (params.team & 2)
 	{
 		if (!data.start_sound)
@@ -1171,13 +1228,8 @@ function OnGameEvent_player_spawn(params)
 			
 		EntFireByHandle(player, "CallScriptFunction", "PlayerPostSpawn", -1, null, null);
 		
-		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE|HIDEHUD_METAL);
+		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE);
 	}
-	
-	data.attributes.clear();
-	data.melee_attributes.clear();
-	
-	data.team = params.team;
 }
 
 function OnGameEvent_player_changeclass(params)

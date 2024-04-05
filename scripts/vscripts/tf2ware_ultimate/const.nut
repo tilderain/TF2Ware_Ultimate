@@ -7,6 +7,10 @@ const MAX_WEAPONS = 7
 const DMG_SAWBLADE = 65536
 const DMG_CRIT = 1048576
 
+const SND_CHANGE_VOL = 1;
+const SND_CHANGE_PITCH = 2;
+const SND_STOP = 4;
+
 const TF_CLASS_FIRST = 1
 const TF_CLASS_LAST  = 9
 
