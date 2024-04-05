@@ -23,7 +23,7 @@ function OnUpdate()
 		if (!IsEntityAlive(player))
 			continue;
 			
-		if (Ware_GetPlayerHeight(player) > 250.0)
+		if (Ware_GetPlayerHeight(player) > 384.0)
 			Ware_PassPlayer(player, true);
 	}
 }
