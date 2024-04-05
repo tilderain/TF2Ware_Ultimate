@@ -10,7 +10,7 @@ minigame.custom_overlay = "airblast_rockets";
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower");
-	Ware_RunFunction("SpawnRockets", 0.8);
+	Ware_CreateTimer(@() SpawnRockets(), 0.8);
 }
 
 function OnUpdate()

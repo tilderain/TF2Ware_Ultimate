@@ -312,11 +312,6 @@ function Ware_Format(...)
 	return str;
 }
 
-function Ware_RunFunction(func_name, delay)
-{
-	RunDelayedCode(format("Ware_MinigameScope.%s()", func_name), delay);
-}
-
 function Ware_CreateEntity(classname)
 {
 	local entity = CreateEntitySafe(classname);

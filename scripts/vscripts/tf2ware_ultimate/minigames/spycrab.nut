@@ -10,7 +10,7 @@ local sprite_model = "sprites/tf2ware_ultimate/spycrab.vmt"
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SPY, null);
-	RunDelayedCode("Ware_SetGlobalLoadout(TF_CLASS_SPY, `Disguise Kit`)", 1.0);
+	Ware_CreateTimer(@() Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit"), 1.0);
 	
 	Ware_SpawnEntity("env_sprite_oriented",
 	{

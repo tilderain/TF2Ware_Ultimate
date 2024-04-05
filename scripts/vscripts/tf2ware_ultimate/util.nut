@@ -34,11 +34,6 @@ function Shuffle(arr)
 	}
 }
 
-function RunDelayedCode(code, delay)
-{
-	EntFireByHandle(World, "RunScriptCode", code, delay, null, null);
-}
-
 function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs) 
 {
     return (a_mins.x <= b_maxs.x && a_maxs.x >= b_mins.x) &&

@@ -10,8 +10,8 @@ minigame.fail_on_death = true;
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower");
-	Ware_RunFunction("SpawnBombs", 0.1);
-	Ware_RunFunction("SpawnBombs", 0.2);
+	Ware_CreateTimer(@() SpawnBombs(), 0.1);
+	Ware_CreateTimer(@() SpawnBombs(), 0.2);
 }
 
 function OnUpdate()
