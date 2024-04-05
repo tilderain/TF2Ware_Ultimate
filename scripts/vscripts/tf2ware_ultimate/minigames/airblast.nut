@@ -8,7 +8,7 @@ minigame.min_players = 2;
 minigame.start_pass = true;
 minigame.allow_damage = true;
 minigame.fail_on_death = true;
-minigame.end_delay = 1.0;
+minigame.end_delay = 0.5;
 minigame.convars = 
 {
 	tf_airblast_cray_power = 1000
