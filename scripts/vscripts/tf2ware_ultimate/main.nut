@@ -120,6 +120,7 @@ class Ware_PlayerData
 		scope            = entity.GetScriptScope();
 		team             = entity.GetTeam();
 		passed           = false;
+		passed_effects   = false;
 		mission          = 0;
 		attributes       = [];
 		melee_attributes = [];
@@ -130,6 +131,7 @@ class Ware_PlayerData
 	scope		     = null;
 	team		     = null;
 	passed		     = null;
+	passed_effects   = null;
 	mission		     = null;
 	melee		     = null;
 	melee_index      = null;
@@ -146,10 +148,18 @@ if ("Ware_Minigame" in this && Ware_Minigame)
 
 Ware_Started			  <- false;
 Ware_TimeScale			  <- 1.0;
-Ware_DebugStop			  <- false;
+
+if (!("Ware_DebugStop" in this))
+{
+	Ware_DebugStop            <- false;
+	Ware_DebugForceMinigame   <- "";
+}
 
 Ware_TextManagerQueue     <- null;
 Ware_TextManager          <- null;
+
+Ware_ParticleSpawnerQueue <- [];
+Ware_ParticleSpawner      <- null;
 
 Ware_MinigameRotation     <- [];
 Ware_Minigame             <- null;
@@ -198,6 +208,15 @@ function Ware_FindStandardEntities()
 	Ware_TextManager.ValidateScriptScope();
 	Ware_TextManager.GetScriptScope().InputDisplay <- Ware_TextHook;
 	Ware_TextManager.GetScriptScope().inputdisplay <- Ware_TextHook;
+	
+	Ware_ParticleSpawnerQueue <- [];
+	Ware_ParticleSpawner <- SpawnEntityFromTableSafe("trigger_particle", 
+	{ 
+		spawnflags = 64 
+	});
+	Ware_ParticleSpawner.ValidateScriptScope();
+	Ware_ParticleSpawner.GetScriptScope().InputStartTouch <- Ware_ParticleHook;
+	Ware_ParticleSpawner.GetScriptScope().Inputstarttouch <- Ware_ParticleHook;
 }
 
 function Ware_SetupLocations()
@@ -378,6 +397,26 @@ function Ware_TextHook()
 	local params = Ware_TextManagerQueue.remove(0);
 	self.KeyValueFromString("message", params.message);
 	self.KeyValueFromString("color", params.color);
+	return true;
+}
+
+function Ware_SpawnParticle(entity, name, attach_name = "", attach_type = PATTACH_ABSORIGIN_FOLLOW)
+{
+	Ware_ParticleSpawnerQueue.push(
+	{
+		name = name, 
+		attach_name = attach_name,
+		attach_type = attach_type,
+	});
+	EntFireByHandle(Ware_ParticleSpawner, "StartTouch", "", -1, entity, entity);	
+}
+
+function Ware_ParticleHook()
+{
+	local data = Ware_ParticleSpawnerQueue.remove(0);
+	SetPropString(self, "m_iszParticleName", data.name);
+	SetPropString(self, "m_iszAttachmentName", data.attach_name);
+	SetPropInt(self, "m_nAttachType", data.attach_type);
 	return true;
 }
 
@@ -689,9 +728,20 @@ function Ware_PassPlayer(player, pass)
 	local data = player.GetScriptScope().ware_data;
 	if (data.passed == pass)
 		return;
-
-	// TODO: sound + particle effect?
+		
+	if (pass && !data.passed_effects)
+	{
+		Ware_ShowPassEffects(player);
+		data.passed_effects = true;
+	}
+	
 	data.passed = pass;
+}
+
+function Ware_ShowPassEffects(player)
+{
+	player.EmitSound(SFX_WARE_PASS);
+	Ware_SpawnParticle(player, player.GetTeam() == TF_TEAM_RED ? PFX_WARE_PASS_RED : PFX_WARE_PASS_BLUE);	
 }
 
 function Ware_IsPlayerPassed(player)
@@ -771,7 +821,12 @@ function Ware_BeginIntermission()
 		}
 	}
 	
-	local minigame = Ware_MinigameRotation.remove(RandomInt(0, Ware_MinigameRotation.len() - 1));
+	local minigame;
+	if (Ware_DebugForceMinigame.len() > 0)
+		minigame = Ware_DebugForceMinigame;
+	else
+		minigame = Ware_MinigameRotation.remove(RandomInt(0, Ware_MinigameRotation.len() - 1));
+	
 	CreateTimer(@() Ware_StartMinigame(minigame), 4.0);
 }
 
@@ -791,6 +846,9 @@ function Ware_Speedup()
 
 function Ware_StartMinigame(minigame)
 {
+	if (Ware_DebugForceMinigame.len() > 0)
+		minigame = Ware_DebugForceMinigame;
+	
 	Ware_MinigameEnded = false;
 	
 	IncludeScript(format("tf2ware_ultimate/minigames/%s", minigame), Ware_MinigameScope); 	
@@ -819,6 +877,7 @@ function Ware_StartMinigame(minigame)
 		local data = scope.ware_data;
 		scope.ware_minidata.clear();
 		data.passed = Ware_Minigame.start_pass;
+		data.passed_effects = false;
 		data.mission = 0;
 		Ware_MinigamePlayers.append(data);
 	}
@@ -928,6 +987,19 @@ function Ware_StartMinigame(minigame)
 			Ware_MinigameEnded = true;
 			if ("OnEnd" in Ware_MinigameScope) 
 				Ware_MinigameScope.OnEnd();
+				
+			if (Ware_Minigame.start_pass)
+			{
+				foreach (data in Ware_MinigamePlayers)
+				{
+					if (data.passed && !data.passed_effects)
+					{
+						Ware_ShowPassEffects(data.player);
+						data.passed_effects = true;
+					}
+				}
+			}
+				
 			if (Ware_Minigame.suicide_on_end)
 				Ware_SuicideFailedPlayers();
 		}, 

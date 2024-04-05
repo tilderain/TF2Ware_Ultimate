@@ -11,6 +11,14 @@ const SND_CHANGE_VOL = 1;
 const SND_CHANGE_PITCH = 2;
 const SND_STOP = 4;
 
+const PATTACH_ABSORIGIN			= 0
+const PATTACH_ABSORIGIN_FOLLOW	= 1
+const PATTACH_CUSTOMORIGIN		= 2
+const PATTACH_POINT				= 3
+const PATTACH_POINT_FOLLOW		= 4
+const PATTACH_WORLDORIGIN		= 5
+const PATTACH_ROOTBONE_FOLLOW	= 6
+
 const TF_CLASS_FIRST = 1
 const TF_CLASS_LAST  = 9
 
@@ -47,7 +55,10 @@ const TF_COLOR_RED     = "FF3F3F"
 const TF_COLOR_BLUE    = "99CCFF"
 const TF_COLOR_SPEC    = "CCCCCC"
 
-const FCVAR_NOTIFY = 256
+const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
+
+const PFX_WARE_PASS_RED  = "teleportedin_red"
+const PFX_WARE_PASS_BLUE = "teleportedin_blue";
 
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
@@ -60,4 +71,15 @@ ITEM_PROJECTILE_MAP <-
 	[20]   = "tf_projectile_pipe_remote",
 	[308]  = "tf_projectile_pipe",
 	[56]   = "tf_projectile_arrow",
+}
+
+	
+foreach (key, value in CONST)
+{
+	if (startswith(key, "MDL"))
+		PrecacheModel(value);
+	else if (startswith(key, "SFX"))
+		PrecacheScriptSound(value);
+	else if (startswith(key, "PFX"))
+		PrecacheEntityFromTable({classname = "info_particle_system", effect_name = value});
 }

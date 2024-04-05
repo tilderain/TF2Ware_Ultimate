@@ -5,7 +5,7 @@ minigame.description2 = "Jump on a Heavy's head!"
 minigame.duration = 4.0;
 minigame.music = "clumsy";
 minigame.min_players = 2;
-minigame.start_pass = false;
+minigame.start_pass = true;
 minigame.allow_damage = true;
 minigame.fail_on_death = true;
 minigame.custom_overlay = "dont_jumped";
@@ -25,12 +25,12 @@ function OnStart()
 		{
 			Ware_SetPlayerMission(player, 2);
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT);
+			Ware_PassPlayer(player, false);
 		}
 		else
 		{
 			Ware_SetPlayerMission(player, 1);
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS);
-			Ware_PassPlayer(player, true); // TODO: this wont play nicely with vfx
 		}
 	}	
 }

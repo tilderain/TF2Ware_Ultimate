@@ -15,3 +15,12 @@ BaseCombatCharacter.AmmoPickup
 	soundlevel		SNDLVL_60dB
 	wave			common/null.wav
 }
+
+TF2Ware_Ultimate.Pass
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_60dB
+	wave			tf2ware_ultimate/pass.mp3
+}
