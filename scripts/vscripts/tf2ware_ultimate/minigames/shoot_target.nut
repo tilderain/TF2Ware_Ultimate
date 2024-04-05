@@ -1,5 +1,4 @@
 local mode = RandomInt(0, 1);
-mode = 1;
 
 local target_names, target_class;
 local gift_model = "models/tf2ware_ultimate/gift.mdl";
