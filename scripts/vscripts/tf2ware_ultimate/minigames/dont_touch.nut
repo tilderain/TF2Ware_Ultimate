@@ -9,10 +9,6 @@ minigame.start_pass = true;
 minigame.allow_damage = true;
 minigame.fail_on_death = true;
 minigame.end_delay = 0.5;
-minigame.convars =
-{
-	mp_friendlyfire = 1
-};
 
 function OnStart()
 {
@@ -21,6 +17,8 @@ function OnStart()
 	{
 		local player = data.player;
 		local weapon = player.GetActiveWeapon();
+		if (weapon == null)
+			continue;
 		
 		weapon.SetClip1(1);
 		Ware_SetPlayerAmmo(player, TF_AMMO_PRIMARY, 0);
@@ -29,9 +27,6 @@ function OnStart()
 
 function OnPlayerTouch(player1, player2)
 {
-	if (player1)
-		Ware_SuicidePlayer(player1);
-	
-	if (player2)
-		Ware_SuicidePlayer(player2);
+    if (player1)
+        player1.TakeDamage(1000.0, DMG_CLUB, player2);
 }
