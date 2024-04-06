@@ -42,6 +42,7 @@ Ware_Minigames <-
 	[1, "taunt_kill"      ],
 	[1, "touch_sky"       ],
 	[1, "type_color"      ],
+	[1, "water_war"       ],
 ];
 
 Ware_Location <- {};
@@ -64,6 +65,7 @@ Ware_MinigameMusic <-
 [
 	"actfast",
 	"actioninsilence",
+	"adventuretime",
 	"bliss",
 	"cheerful",
 	"circus",

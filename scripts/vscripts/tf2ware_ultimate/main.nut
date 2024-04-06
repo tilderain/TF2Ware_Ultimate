@@ -969,16 +969,18 @@ function Ware_StartMinigame(minigame)
 		location = Ware_Location[Ware_Minigame.location + "_big"];
 	else
 		location = Ware_Location[Ware_Minigame.location];
-	
+		
+	local custom_teleport = "OnTeleport" in Ware_MinigameScope;
 	if (location != Ware_MinigameLocation)
 	{
 		Ware_MinigameLocation = location;
-				
-		if ("OnTeleport" in Ware_MinigameScope)
-			Ware_MinigameScope.OnTeleport();
-		else
+		if (!custom_teleport)
 			location.Teleport();
 	}
+	
+	if (custom_teleport)
+		Ware_MinigameScope.OnTeleport();
+	
 	
 	if (Ware_Minigame.allow_damage)
 		SetPropBool(GameRules, "m_bTruceActive", false);
@@ -1359,7 +1361,15 @@ function OnScriptHook_OnTakeDamage(params)
 		return;
 		
 	if (Ware_Minigame == null)
+	{
+		if (params.damage_type & DMG_FALL)
+		{
+			params.damage = 0;
+			params.early_out = true;		
+		}
+		
 		return;
+	}
 		
 	if (Ware_Minigame.friendly_fire)
 	{
