@@ -19,10 +19,10 @@ function OnStart()
 		data.player.AddCond(TF_COND_SWIMMING_CURSE);
 }
 
-function OnTeleport()
+function OnTeleport(players)
 {
 	local radius = ((Ware_MinigameLocation.maxs.x - Ware_MinigameLocation.mins.x) * 0.5) - 76.0;
-	Ware_TeleportPlayersCircle(Ware_MinigameLocation.center + Vector(0, 0, 1024), radius);
+	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 1024), radius);
 }
 
 function OnTakeDamage(params)

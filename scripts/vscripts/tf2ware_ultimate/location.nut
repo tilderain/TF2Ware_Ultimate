@@ -1,8 +1,8 @@
-function Ware_TeleportPlayersCircle(origin, radius)
+function Ware_TeleportPlayersCircle(players, origin, radius)
 {
 	local inv = 360.0 / Ware_MinigamePlayers.len().tofloat();
 	local i = 0;
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in players)
 	{
 		local angle = i++ * inv;
 		local pos = Vector(
@@ -10,11 +10,11 @@ function Ware_TeleportPlayersCircle(origin, radius)
 			origin.y + radius * sin(angle * PI / 180.0),
 			origin.z);
 		local ang = QAngle(0.0, angle + 180.0, 0.0);
-		data.player.Teleport(true, pos, true, ang, true, Vector());
+		player.Teleport(true, pos, true, ang, true, Vector());
 	}
 }
 
-function Ware_TeleportPlayersRow(origin, angles, max_width, offset_horz, offset_vert)
+function Ware_TeleportPlayersRow(players, origin, angles, max_width, offset_horz, offset_vert)
 {
 	// TODO should make this work for non-cardinal axes
 	local axis_horz = fabs(angles.y) == 180 ? "x" : "y";
@@ -23,7 +23,7 @@ function Ware_TeleportPlayersRow(origin, angles, max_width, offset_horz, offset_
 	local center = origin * 1.0;
 	local reset = center[axis_vert];
 	local accum = 0.0;
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in players)
 	{
 		if (accum >= max_width)
 		{
@@ -33,7 +33,7 @@ function Ware_TeleportPlayersRow(origin, angles, max_width, offset_horz, offset_
 		}
 		
 		center[axis_vert] = origin[axis_vert] - max_width * 0.5 + accum;
-		data.player.Teleport(true, center, true, angles, true, Vector());
+		player.Teleport(true, center, true, angles, true, Vector());
 		accum += offset_vert;
 	}	
 }
@@ -64,14 +64,14 @@ Ware_Location.home <-
 			spawns.append(spawn);
 		}
 	}
-	Teleport   = function()
+	Teleport   = function(players)
 	{
 		local spawn_len = spawns.len();
-		foreach (data in Ware_MinigamePlayers)
+		foreach (player in players)
 		{
 			local spawn = spawns[spawn_idx];
 			spawn_idx = (spawn_idx + 1) % spawn_len;
-			data.player.Teleport(true, spawn.GetOrigin(), true, spawn.GetAbsAngles(), true, Vector());
+			player.Teleport(true, spawn.GetOrigin(), true, spawn.GetAbsAngles(), true, Vector());
 		}
 	}
 };
@@ -92,7 +92,7 @@ Ware_Location.circlepit <-
 {
 	center   = Vector(-1952, -872, 720),
 	radius   = 288.0,
-	Teleport = function() { Ware_TeleportPlayersCircle(center, radius); }
+	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius); }
 };
 
 Ware_Location.circlepit_big <-
@@ -105,9 +105,9 @@ Ware_Location.circlepit_big <-
 Ware_Location.sawrun <-
 {
 	center   = Vector(4480, -3900, -4495),
-	Teleport = function() 
+	Teleport = function(players) 
 	{
-		Ware_TeleportPlayersRow(
+		Ware_TeleportPlayersRow(players,
 			center - Vector(40, 0, 0),
 			QAngle(0, 90, 0),
 			512.0,
@@ -126,13 +126,13 @@ Ware_Location.targetrange <-
 		[Vector(2400, -4023, -3999), Vector(2944, -4023, -3999)],
 		[Vector(2495, -3656, -3999), Vector(3040, -3656, -3999)],
 	],
-	Teleport = function()
+	Teleport = function(players)
 	{
 		local offset = 64.0;
 		local pos = center * 1.0;
 		local ang = QAngle(0, 90, 0);
 		local x = 0;
-		foreach (data in Ware_MinigamePlayers)
+		foreach (player in players)
 		{
 			if (++x > 21)
 			{
@@ -141,7 +141,7 @@ Ware_Location.targetrange <-
 			}
 			
 			pos.x = center.x + (x / 2) * ((x & 1) ? offset : -offset);
-			data.player.Teleport(true, pos, true, ang, true, Vector());
+			player.Teleport(true, pos, true, ang, true, Vector());
 		}
 	}
 };
@@ -153,5 +153,5 @@ Ware_Location.boxarena <-
 	mins     = Vector(-2736, 7248, -7135),
 	maxs     = Vector(-832, 9152, -5552),
 	radius   = 512.0,	
-	Teleport = function() { Ware_TeleportPlayersCircle(center, radius); }
+	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius); }
 };

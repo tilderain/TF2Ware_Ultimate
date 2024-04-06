@@ -44,7 +44,14 @@ const OBJ_TELEPORTER        = 1
 const OBJ_SENTRYGUN         = 2
 const OBJ_ATTACHMENT_SAPPER = 3
 
-const TFCOLLISION_GROUP_COMBATOBJECT = 23
+const TFCOLLISION_GROUP_GRENADES                          = 20
+const TFCOLLISION_GROUP_OBJECT                            = 21
+const TFCOLLISION_GROUP_OBJECT_SOLIDTOPLAYERMOVEMENT      = 22
+const TFCOLLISION_GROUP_COMBATOBJECT                      = 23
+const TFCOLLISION_GROUP_ROCKETS                           = 24
+const TFCOLLISION_GROUP_RESPAWNROOMS                      = 25
+const TFCOLLISION_GROUP_PUMPKIN_BOMB                      = 26
+const TFCOLLISION_GROUP_ROCKET_BUT_NOT_WITH_OTHER_ROCKETS = 27
 
 const COLOR_RED        = "FF0000"
 const COLOR_GREEN      = "00FF00"

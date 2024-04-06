@@ -975,12 +975,11 @@ function Ware_StartMinigame(minigame)
 	{
 		Ware_MinigameLocation = location;
 		if (!custom_teleport)
-			location.Teleport();
+			location.Teleport(Ware_MinigamePlayers.map(@(data) data.player));
 	}
 	
 	if (custom_teleport)
-		Ware_MinigameScope.OnTeleport();
-	
+		Ware_MinigameScope.OnTeleport(Ware_MinigamePlayers.map(@(data) data.player));
 	
 	if (Ware_Minigame.allow_damage)
 		SetPropBool(GameRules, "m_bTruceActive", false);
@@ -1170,7 +1169,7 @@ function Ware_EndMinigameInternal()
 	
 	if (Ware_MinigameLocation != Ware_MinigameHomeLocation)
 	{
-		Ware_MinigameHomeLocation.Teleport();
+		Ware_MinigameHomeLocation.Teleport(Ware_MinigamePlayers.map(@(data) data.player));
 		Ware_MinigameLocation = Ware_MinigameHomeLocation;
 	}
 	

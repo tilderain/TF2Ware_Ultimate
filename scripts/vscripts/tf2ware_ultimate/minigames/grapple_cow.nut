@@ -33,9 +33,9 @@ function OnStart()
 	});
 }
 
-function OnTeleport()
+function OnTeleport(players)
 {
-	Ware_TeleportPlayersRow(
+	Ware_TeleportPlayersRow(players,
 		Ware_MinigameLocation.center + Vector(620, 0, 0),
 		QAngle(0, 180, 0),
 		1300.0,
