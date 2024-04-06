@@ -43,6 +43,7 @@ Ware_Location.home_big <-
 	maxs       = Vector(2428, 2298, 3198),
 	spawns     = [],
 	spawn_name = "home_big_spawns",
+	spawn_idx  = 0,
 	Init       = Ware_Location.home.Init,
 	Teleport   = Ware_Location.home.Teleport,
 };
