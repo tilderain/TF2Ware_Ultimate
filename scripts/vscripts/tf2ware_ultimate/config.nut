@@ -15,6 +15,7 @@ Ware_Minigames <-
 	[1, "count_bombs"     ],
 	[1, "disguise"        ],
 	[1, "flood"           ],
+	[1, "ghost"           ],
 	[1, "goomba"          ],
 	[1, "headshot"        ],
 	[1, "halloween_fight" ],
@@ -61,6 +62,7 @@ Ware_MinigameMusic <-
 [
 	"actfast",
 	"actioninsilence",
+	"bliss",
 	"cheerful",
 	"circus",
 	"clumsy",

@@ -187,6 +187,9 @@ if (!("Ware_Players" in this))
 {
 	Ware_Players         <- [];
 	Ware_MinigamePlayers <- [];
+	
+	// this shuts up incursion distance warnings from the nav mesh
+	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint");
 }
 
 function Ware_FindStandardEntities()
@@ -1244,6 +1247,9 @@ function Ware_OnUpdate()
 		if (stop)
 			Ware_EndMinigame();
 	}
+	
+	if (!Ware_Minigame.cb_on_update) // can happen if a minigame script errors on load
+		return;
 	
 	Ware_Minigame.cb_on_update();
 	
