@@ -133,3 +133,28 @@ Ware_Location.targetrange <-
 		}
 	}
 };
+
+
+Ware_Location.boxarena <-
+{
+	center   = Vector(-1792, 8192, -7135),
+	mins     = Vector(-2736, 7248, -7135),
+	maxs     = Vector(-832, 9152, -5552),
+	radius   = 512.0,	
+	Teleport = function()
+	{
+		local inv = 360.0 / Ware_MinigamePlayers.len().tofloat();
+		local i = 0;
+		foreach (data in Ware_MinigamePlayers)
+		{
+			local angle = i++ * inv;
+			local pos = Vector(
+				center.x + radius * cos(angle * PI / 180.0),
+				center.y + radius * sin(angle * PI / 180.0),
+				center.z);
+			local ang = QAngle(0.0, angle + 180.0, 0.0);
+			
+			data.player.Teleport(true, pos, true, ang, true, Vector());
+		}
+	}
+};
