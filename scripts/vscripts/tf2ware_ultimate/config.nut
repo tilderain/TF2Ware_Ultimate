@@ -3,6 +3,7 @@ Ware_Minigames <-
 [
 	[1, "airblast"        ],
 	[1, "avoid_props"     ],
+	[1, "avoid_trains"    ],
 	[1, "backstab"        ],
 	[1, "bombs"           ],
 	[1, "build_this"      ],
@@ -76,6 +77,7 @@ Ware_MinigameMusic <-
 	"sillytime",
 	"spotlightsonyou",
 	"thethinker",
+	"train",
 	"wildwest",
 ];
 

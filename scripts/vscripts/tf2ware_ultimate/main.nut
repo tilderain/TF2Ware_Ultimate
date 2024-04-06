@@ -881,7 +881,7 @@ function Ware_BeginIntermission()
 	if (Ware_DebugForceMinigame.len() > 0)
 		minigame = Ware_DebugForceMinigame;
 	else
-		minigame = Ware_MinigameRotation.remove(RandomInt(0, Ware_MinigameRotation.len() - 1));
+		minigame = Ware_MinigameRotation.remove(RandomIndex(Ware_MinigameRotation));
 	
 	CreateTimer(@() Ware_StartMinigame(minigame), 4.0);
 }

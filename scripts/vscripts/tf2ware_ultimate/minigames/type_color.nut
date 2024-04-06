@@ -32,8 +32,8 @@ local text_colors =
 
 function OnStart()
 {
-	local text_idx   = RandomInt(0, text_colors.len() - 1);
-	local visual_idx = RandomInt(0, text_colors.len() - 1);
+	local text_idx   = RandomIndex(text_colors);
+	local visual_idx = RandomIndex(text_colors);
 	
 	text_color = text_colors[text_idx];
 	local visual_color = text_colors[visual_idx];

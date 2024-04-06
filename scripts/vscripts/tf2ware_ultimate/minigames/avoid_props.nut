@@ -21,7 +21,7 @@ local prop_models =
 	"models/props_trainyard/train_billboard001_sm.mdl", 
 	"models/props_well/hand_truck01.mdl", 
 ];
-local prop_model = prop_models[RandomInt(0, prop_models.len()-1)];
+local prop_model = prop_models[RandomIndex(prop_models)];
 PrecacheModel(prop_model);
 
 is_sawblade <- prop_model.find("saw_blade") != null;

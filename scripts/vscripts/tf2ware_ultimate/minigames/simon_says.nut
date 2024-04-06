@@ -16,12 +16,12 @@ function OnStart()
 	if (mode == 4)
 	{
 		local items = ["Sandvich", "Dalokohs Bar", "Fishcake", "Buffalo Steak Sandvich", "Second Banana"];
-		Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS, items[RandomInt(0, items.len() - 1)]);
+		Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS, items[RandomIndex(items)];
 	}
 	else if (mode == 5)
 	{
 		local items = ["Bonk! Atomic Punch", "Crit-a-Cola"];
-		Ware_SetGlobalLoadout(TF_CLASS_SCOUT, items[RandomInt(0, items.len() - 1)]);
+		Ware_SetGlobalLoadout(TF_CLASS_SCOUT, items[RandomIndex(items)]);
 	}
 }
 

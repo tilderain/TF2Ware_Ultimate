@@ -15,7 +15,7 @@ local loadouts =
 	[TF_CLASS_SPY,          "Knife"],
 ];
 
-local loadout_idx = RandomInt(0, loadouts.len() - 1);
+local loadout_idx = RandomIndex(loadouts);
 local loadout = loadouts[loadout_idx];
 
 minigame <- Ware_MinigameData();

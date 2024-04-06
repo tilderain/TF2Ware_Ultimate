@@ -31,7 +31,7 @@ PrecacheSound(explode_sound);
 
 function OnStart()
 {
-	kamikaze = Ware_MinigamePlayers[RandomInt(0, Ware_MinigamePlayers.len() - 1)].player;
+	kamikaze = Ware_MinigamePlayers[RandomIndex(Ware_MinigamePlayers)].player;
 	
 	foreach (data in Ware_MinigamePlayers)
 	{

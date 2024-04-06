@@ -8,6 +8,21 @@ FindByName      <- Entities.FindByName.bindenv(Entities);
 SetConvarValue  <- Convars.SetValue.bindenv(Convars);
 GetConvarValue  <- Convars.GetStr.bindenv(Convars);
 
+function Min(a, b)
+{
+    return (a <= b) ? a : b;
+}
+
+function Max(a, b)
+{
+    return (a >= b) ? a : b;
+}
+
+function Clamp(val, min, max)
+{
+	return (val < min) ? min : (max < val) ? max : val;
+}
+
 function Lerp(t, A, B)
 {
     return A + (B - A) * t;
@@ -32,6 +47,11 @@ function Shuffle(arr)
 		arr[j] = arr[i];
 		arr[i] = t;
 	}
+}
+
+function RandomIndex(arr)
+{
+	return RandomInt(0, arr.len() - 1);
 }
 
 function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs) 
@@ -161,7 +181,7 @@ ROOT.setdelegate(
 });
 
 
-function PlaySoundOnClient(player, name, volume, pitch, flags = 0)
+function PlaySoundOnClient(player, name, volume = 1.0, pitch = 100, flags = 0)
 {
 	EmitSoundEx(
 	{
@@ -174,7 +194,7 @@ function PlaySoundOnClient(player, name, volume, pitch, flags = 0)
 	});
 }
 
-function PlaySoundOnAllClients(name, volume, pitch, flags = 0)
+function PlaySoundOnAllClients(name, volume = 1.0, pitch = 100, flags = 0)
 {
 	EmitSoundEx(
 	{

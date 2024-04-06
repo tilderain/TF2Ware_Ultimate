@@ -35,14 +35,8 @@ function SpawnBombs()
 		
 		local origin = data.player.GetOrigin();
 		origin += Vector(RandomFloat(-150, 150), RandomFloat(-150, 150), RandomFloat(350, 450)); 
-		if (origin.x < mins.x)
-			origin.x = mins.x;
-		if (origin.y < mins.y)
-			origin.y = mins.y;
-		if (origin.x > maxs.x)
-			origin.x = maxs.x;
-		if (origin.y > maxs.y)
-			origin.y = maxs.y;		
+		origin.x = Clamp(origin.x, mins.x, maxs.x);
+		origin.y = Clamp(origin.y, mins.y, maxs.y)
 		pipe.SetAbsOrigin(origin);
 		
 		Ware_SlapEntity(pipe, 160.0);

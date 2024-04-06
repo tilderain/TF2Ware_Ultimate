@@ -1,7 +1,7 @@
 local target_names = ["Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy"];
 foreach (name in target_names)
 	PrecacheModel(format("models/props_training/target_%s.mdl", name.tolower()));
-local target_class = target_names[RandomInt(0, target_names.len() - 1)];
+local target_class = target_names[RandomIndex(target_names)];
 
 minigame <- Ware_MinigameData();
 minigame.name = "Shoot Target";
@@ -26,7 +26,7 @@ function OnStart()
 	for (local i = 0; i < target_count; i++)
 	{
 		local line = Ware_MinigameLocation.lines[indices[i]];
-		local name = i == 0 ? target_class : target_names[RandomInt(0, target_names.len() - 1)];
+		local name = i == 0 ? target_class : target_names[RandomIndex(target_names)];
 		Ware_SpawnEntity("prop_dynamic",
 		{
 			model  = format("models/props_training/target_%s.mdl", name.tolower()),
