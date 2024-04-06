@@ -39,6 +39,7 @@ Ware_Minigames <-
 	[1, "spycrab"         ],
 	[1, "stand_near"      ],
 	[1, "stay_ground"     ],
+	[1, "street_fighter"  ],
 	[1, "swim_up"         ],
 	[1, "taunt_kill"      ],
 	[1, "touch_sky"       ],
@@ -89,6 +90,7 @@ Ware_MinigameMusic <-
 	"question"
 	"sillytime",
 	"spotlightsonyou",
+	"streetfighter",
 	"survivor",
 	"takeabreak",
 	"thethinker",

@@ -123,17 +123,3 @@ function OnEnd()
 		}
 	}
 }
-
-/*
-function OnTakeDamage(params)
-{
-	local attacker = params.attacker;
-	if (attacker
-		&& attacker.IsPlayer()
-		&& (params.damage_type & DMG_BLAST)
-		&& params.const_entity.GetModelName() == cow_model)
-	{
-		Ware_PassPlayer(attacker, true);
-	}
-}
-*/

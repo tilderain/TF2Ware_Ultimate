@@ -1154,7 +1154,7 @@ ITEM_MAP <-
         id = 1152,
         classname = "tf_weapon_grapplinghook"
     },
-    "Panic Attack Shotgun": 
+    "Panic Attack": 
     {
         id = 1153,
         classname = "tf_weapon_shotgun"

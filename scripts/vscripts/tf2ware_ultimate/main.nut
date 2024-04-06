@@ -49,6 +49,7 @@ class Ware_MinigameData
 		friendly_fire  = true;
 		thirdperson    = false;
 		end_below_min  = false;
+		end_dead_team  = false;
 		end_delay      = 0.0;
 		convars        = [];
 		entities       = [];
@@ -90,6 +91,8 @@ class Ware_MinigameData
 	thirdperson	    = null;
 	// Automatically end the minigame early if number of players alive is less than min_players, default is false
 	end_below_min	= null;
+	// Automatically end the minigame early if either team has no alive players, default is false
+	end_dead_team	= null;
 	// Delay after the minigame "ends" before showing results, default is 0.0
 	end_delay		= null;
 	// Custom text overlay to show rather than the default implied from name
@@ -615,27 +618,27 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	local item_id = item.id;
 	local item_classname = item.classname;
 	
-	if (item_id == 9) // shotgun
+	if (item_classname == "tf_weapon_shotgun") 
 	{
 		local player_class = player.GetPlayerClass();
 		if (player_class == TF_CLASS_SOLDIER)
 		{
-			item_id = 10;
+			if (item_id == 9) item_id = 10;
 			item_classname = "tf_weapon_shotgun_soldier";
 		}
 		else if (player_class == TF_CLASS_PYRO)
 		{
-			item_id = 12;
+			if (item_id == 9) item_id = 12;
 			item_classname = "tf_weapon_shotgun_pyro";
 		}	
 		else if (player_class == TF_CLASS_HEAVYWEAPONS)
 		{
-			item_id = 11;
+			if (item_id == 9) item_id = 11;
 			item_classname = "tf_weapon_shotgun_hwg";
 		}	
 		else /* if (player_class == TF_CLASS_ENGINEER)*/
 		{
-			item_id = 9;
+			if (item_id == 9) item_id = 9;
 			item_classname = "tf_weapon_shotgun_primary";
 		}			
 	}
@@ -1243,23 +1246,50 @@ function Ware_OnUpdate()
 	if (Ware_Minigame == null)
 		return;
 		
-	if (Ware_Minigame.end_below_min && !Ware_MinigameEnded)
+	if (!Ware_MinigameEnded)
 	{
-		local stop = true;
-		local alive_count = 0;
-		foreach (data in Ware_MinigamePlayers)
+		if (Ware_Minigame.end_below_min)
 		{
-			if (IsEntityAlive(data.player) && ++alive_count >= Ware_Minigame.min_players)
+			local stop = true;
+			local alive_count = 0;
+			foreach (data in Ware_MinigamePlayers)
 			{
-				stop = false;
-				break;
+				if (IsEntityAlive(data.player) && ++alive_count >= Ware_Minigame.min_players)
+				{
+					stop = false;
+					break;
+				}
 			}
+			
+			if (stop)
+				Ware_EndMinigame();
 		}
-		
-		if (stop)
-			Ware_EndMinigame();
+		else if (Ware_Minigame.end_dead_team)
+		{
+			local stop = true;
+			local red_alive = false;
+			local blue_alive = false;
+			foreach (data in Ware_MinigamePlayers)
+			{
+				local player = data.player;
+				if (IsEntityAlive(player))
+				{
+					local team = player.GetTeam();
+					if (team == TF_TEAM_RED)
+						red_alive = true;
+					else if (team == TF_TEAM_BLUE)
+						blue_alive = true;
+					
+					if (red_alive && blue_alive)
+						break;
+				}
+			}
+			
+			if (!red_alive || !blue_alive)
+				Ware_EndMinigame();			
+		}
 	}
-	
+
 	if (!Ware_Minigame.cb_on_update) // can happen if a minigame script errors on load
 		return;
 	
