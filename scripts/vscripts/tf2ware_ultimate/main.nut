@@ -47,6 +47,7 @@ class Ware_MinigameData
 		suicide_on_end = false;
 		no_collisions  = false;
 		friendly_fire  = true;
+		thirdperson    = false;
 		end_below_min  = false;
 		end_delay      = 0.0;
 		convars        = [];
@@ -85,6 +86,8 @@ class Ware_MinigameData
 	no_collisions	= null;
 	// Toggle friendlyfire
 	friendly_fire	= null;
+	// Force players into thirdperson?
+	thirdperson	    = null;
 	// Automatically end the minigame early if number of players alive is less than min_players
 	end_below_min	= null;
 	// Delay after the minigame "ends" before showing results
@@ -493,7 +496,7 @@ function Ware_ParseLoadout(player)
 		else
 		{
 			SetPropEntityArray(player, "m_hMyWeapons", null, i);
-			weapon.Kill();
+			KillWeapon(weapon);
 		}
 	}
 	
@@ -563,7 +566,7 @@ function Ware_StripPlayer(player, give_default_melee)
 			MarkForPurge(weapon);
 			SetPropEntityArray(player, "m_hMyWeapons", null, i);
 			if (weapon != melee)
-				weapon.Kill();
+				KillWeapon(weapon);
 		}
 	}
 	
@@ -729,7 +732,7 @@ function Ware_StripPlayerWeapons(player, weapons)
 				}
 				else
 				{
-					weapon.Kill();
+					KillWeapon(weapon);
 				}
 			}
 		}
@@ -948,6 +951,8 @@ function Ware_StartMinigame(minigame)
 		
 		if (Ware_Minigame.no_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER);
+		if (Ware_Minigame.thirdperson)
+			player.SetForcedTauntCam(1);
 
 		local scope = player.GetScriptScope();
 		local data = scope.ware_data;
@@ -967,8 +972,12 @@ function Ware_StartMinigame(minigame)
 	
 	if (location != Ware_MinigameLocation)
 	{
-		location.Teleport();
 		Ware_MinigameLocation = location;
+				
+		if ("OnTeleport" in Ware_MinigameScope)
+			Ware_MinigameScope.OnTeleport();
+		else
+			location.Teleport();
 	}
 	
 	if (Ware_Minigame.allow_damage)
@@ -1121,6 +1130,8 @@ function Ware_EndMinigameInternal()
 			
 		if (Ware_Minigame.no_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER);
+		if (Ware_Minigame.thirdperson)
+			player.SetForcedTauntCam(0);
 			
 		if (IsEntityAlive(player))
 		{

@@ -241,3 +241,15 @@ function TogglePlayerWearables(player, toggle)
 		wearable.SetDrawEnabled(toggle);
 	}
 }
+
+function KillWeapon(weapon)
+{
+	local wearable = GetPropEntity(weapon, "m_hExtraWearable");
+	if (wearable)
+	{
+		MarkForPurge(wearable);
+		wearable.Kill();
+	}
+	
+	weapon.Kill();
+}

@@ -20,6 +20,7 @@ minigame.start_pass = true;
 minigame.allow_damage = true;
 minigame.fail_on_death = true;
 minigame.end_below_min = true;
+minigame.thirdperson = true;
 minigame.custom_overlay = "fight";
 minigame.convars =
 {
@@ -63,8 +64,7 @@ function OnStart()
 			SetEntityParent(minidata.left_glow, player, "lefteye");
 			SetEntityParent(minidata.right_glow, player, "righteye");
 		}
-		
-		player.SetForcedTauntCam(1);
+
 		player.SetHealth(1000);
 		player.SetCustomModelWithClassAnimations(boss_models[boss_idx]);		
 	}
@@ -119,9 +119,7 @@ function OnEnd()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
-		
-		player.SetForcedTauntCam(0);
+		local player = data.player;	
 		player.SetCustomModel("");
 		player.SetModelScale(1.0, 0.0);
 		TogglePlayerWearables(player, true);		

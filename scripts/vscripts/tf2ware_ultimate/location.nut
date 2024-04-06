@@ -1,3 +1,19 @@
+function Ware_TeleportPlayersCircle(origin, radius)
+{
+	local inv = 360.0 / Ware_MinigamePlayers.len().tofloat();
+	local i = 0;
+	foreach (data in Ware_MinigamePlayers)
+	{
+		local angle = i++ * inv;
+		local pos = Vector(
+			origin.x + radius * cos(angle * PI / 180.0),
+			origin.y + radius * sin(angle * PI / 180.0),
+			origin.z);
+		local ang = QAngle(0.0, angle + 180.0, 0.0);
+		data.player.Teleport(true, pos, true, ang, true, Vector());
+	}
+}
+
 Ware_LocationParent <-
 {
 	function DebugDraw()
@@ -52,22 +68,7 @@ Ware_Location.circlepit <-
 {
 	center   = Vector(-1952, -872, 720),
 	radius   = 288.0,
-	Teleport = function()
-	{
-		local inv = 360.0 / Ware_MinigamePlayers.len().tofloat();
-		local i = 0;
-		foreach (data in Ware_MinigamePlayers)
-		{
-			local angle = i++ * inv;
-			local pos = Vector(
-				center.x + radius * cos(angle * PI / 180.0),
-				center.y + radius * sin(angle * PI / 180.0),
-				center.z);
-			local ang = QAngle(0.0, angle + 180.0, 0.0);
-			
-			data.player.Teleport(true, pos, true, ang, true, Vector());
-		}
-	}
+	Teleport = function() { Ware_TeleportPlayersCircle(center, radius); }
 };
 
 Ware_Location.circlepit_big <-
@@ -142,20 +143,5 @@ Ware_Location.boxarena <-
 	mins     = Vector(-2736, 7248, -7135),
 	maxs     = Vector(-832, 9152, -5552),
 	radius   = 512.0,	
-	Teleport = function()
-	{
-		local inv = 360.0 / Ware_MinigamePlayers.len().tofloat();
-		local i = 0;
-		foreach (data in Ware_MinigamePlayers)
-		{
-			local angle = i++ * inv;
-			local pos = Vector(
-				center.x + radius * cos(angle * PI / 180.0),
-				center.y + radius * sin(angle * PI / 180.0),
-				center.z);
-			local ang = QAngle(0.0, angle + 180.0, 0.0);
-			
-			data.player.Teleport(true, pos, true, ang, true, Vector());
-		}
-	}
+	Teleport = function() { Ware_TeleportPlayersCircle(center, radius); }
 };
