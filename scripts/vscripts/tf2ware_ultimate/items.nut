@@ -1,1177 +1,1232 @@
-// Auto-generated on 3/4/24
+// Auto-generated on 6/4/24
 if ("ITEM_MAP" in this)
 	return;
 
 ITEM_MAP <- 
 {
-    "Bat" : 
+    "Bat": 
     {
         id = 0,
         classname = "tf_weapon_bat"
     },
-    "Bottle" : 
+    "Bottle": 
     {
         id = 1,
         classname = "tf_weapon_bottle"
     },
-    "Fire Axe" : 
+    "Fire Axe": 
     {
         id = 2,
         classname = "tf_weapon_fireaxe"
     },
-    "Kukri" : 
+    "Kukri": 
     {
         id = 3,
         classname = "tf_weapon_club"
     },
-    "Knife" : 
+    "Knife": 
     {
         id = 4,
         classname = "tf_weapon_knife"
     },
-    "Fists" : 
+    "Fists": 
     {
         id = 5,
         classname = "tf_weapon_fists"
     },
-    "Shovel" : 
+    "Shovel": 
     {
         id = 6,
         classname = "tf_weapon_shovel"
     },
-    "Wrench" : 
+    "Wrench": 
     {
         id = 7,
         classname = "tf_weapon_wrench"
     },
-    "Bonesaw" : 
+    "Bonesaw": 
     {
         id = 8,
         classname = "tf_weapon_bonesaw"
     },
-    "Shotgun" : 
+    "Shotgun": 
     {
         id = 9,
         classname = "tf_weapon_shotgun"
     },
-    "Scattergun" : 
+    "Scattergun": 
     {
         id = 13,
         classname = "tf_weapon_scattergun"
     },
-    "Sniper Rifle" : 
+    "Sniper Rifle": 
     {
         id = 14,
         classname = "tf_weapon_sniperrifle"
     },
-    "Minigun" : 
+    "Minigun": 
     {
         id = 15,
         classname = "tf_weapon_minigun"
     },
-    "SMG" : 
+    "SMG": 
     {
         id = 16,
         classname = "tf_weapon_smg"
     },
-    "Syringe Gun" : 
+    "Syringe Gun": 
     {
         id = 17,
         classname = "tf_weapon_syringegun_medic"
     },
-    "Rocket Launcher" : 
+    "Rocket Launcher": 
     {
         id = 18,
         classname = "tf_weapon_rocketlauncher"
     },
-    "Grenade Launcher" : 
+    "Grenade Launcher": 
     {
         id = 19,
         classname = "tf_weapon_grenadelauncher"
     },
-    "Stickybomb Launcher" : 
+    "Stickybomb Launcher": 
     {
         id = 20,
         classname = "tf_weapon_pipebomblauncher"
     },
-    "Flame Thrower" : 
+    "Flame Thrower": 
     {
         id = 21,
         classname = "tf_weapon_flamethrower"
     },
-    "Pistol" : 
+    "Pistol": 
     {
         id = 22,
         classname = "tf_weapon_pistol"
     },
-    "Revolver" : 
+    "Revolver": 
     {
         id = 24,
         classname = "tf_weapon_revolver"
     },
-    "Construction PDA" : 
+    "Construction PDA": 
     {
         id = 25,
         classname = "tf_weapon_pda_engineer_build"
     },
-    "Destruction PDA" : 
+    "Destruction PDA": 
     {
         id = 26,
         classname = "tf_weapon_pda_engineer_destroy"
     },
-    "Disguise Kit" : 
+    "Disguise Kit": 
     {
         id = 27,
         classname = "tf_weapon_pda_spy"
     },
-    "Toolbox" : 
+    "Toolbox": 
     {
         id = 28,
         classname = "tf_weapon_builder"
     },
-    "Medi Gun" : 
+    "Medi Gun": 
     {
         id = 29,
         classname = "tf_weapon_medigun"
     },
-    "Invis Watch" : 
+    "Invis Watch": 
     {
         id = 30,
         classname = "tf_weapon_invis"
     },
-    "Kritzkrieg" : 
+    "Kritzkrieg": 
     {
         id = 35,
         classname = "tf_weapon_medigun"
     },
-    "Blutsauger" : 
+    "Blutsauger": 
     {
         id = 36,
         classname = "tf_weapon_syringegun_medic"
     },
-    "Ubersaw" : 
+    "Ubersaw": 
     {
         id = 37,
         classname = "tf_weapon_bonesaw"
     },
-    "Axtinguisher" : 
+    "Axtinguisher": 
     {
         id = 38,
         classname = "tf_weapon_fireaxe"
     },
-    "Flare Gun" : 
+    "Flare Gun": 
     {
         id = 39,
         classname = "tf_weapon_flaregun"
     },
-    "Backburner" : 
+    "Backburner": 
     {
         id = 40,
         classname = "tf_weapon_flamethrower"
     },
-    "Natascha" : 
+    "Natascha": 
     {
         id = 41,
         classname = "tf_weapon_minigun"
     },
-    "Sandvich" : 
+    "Sandvich": 
     {
         id = 42,
         classname = "tf_weapon_lunchbox"
     },
-    "Killing Gloves of Boxing" : 
+    "Killing Gloves of Boxing": 
     {
         id = 43,
         classname = "tf_weapon_fists"
     },
-    "Sandman" : 
+    "Sandman": 
     {
         id = 44,
         classname = "tf_weapon_bat_wood"
     },
-    "Force-a-Nature" : 
+    "Force-a-Nature": 
     {
         id = 45,
         classname = "tf_weapon_scattergun"
     },
-    "Bonk! Atomic Punch" : 
+    "Bonk! Atomic Punch": 
     {
         id = 46,
         classname = "tf_weapon_lunchbox_drink"
     },
-    "Huntsman" : 
+    "Huntsman": 
     {
         id = 56,
         classname = "tf_weapon_compound_bow"
     },
-    "Jarate" : 
+    "Jarate": 
     {
         id = 58,
         classname = "tf_weapon_jar"
     },
-    "Dead Ringer" : 
+    "Dead Ringer": 
     {
         id = 59,
         classname = "tf_weapon_invis"
     },
-    "Cloak and Dagger" : 
+    "Cloak and Dagger": 
     {
         id = 60,
         classname = "tf_weapon_invis"
     },
-    "Ambassador" : 
+    "Ambassador": 
     {
         id = 61,
         classname = "tf_weapon_revolver"
     },
-    "Direct Hit" : 
+    "Direct Hit": 
     {
         id = 127,
         classname = "tf_weapon_rocketlauncher_directhit"
     },
-    "Equalizer" : 
+    "Equalizer": 
     {
         id = 128,
         classname = "tf_weapon_shovel"
     },
-    "Buff Banner" : 
+    "Buff Banner": 
     {
         id = 129,
         classname = "tf_weapon_buff_item"
     },
-    "Scottish Resistance" : 
+    "Scottish Resistance": 
     {
         id = 130,
         classname = "tf_weapon_pipebomblauncher"
     },
-    "Eyelander" : 
+    "Eyelander": 
     {
         id = 132,
         classname = "tf_weapon_sword"
     },
-    "Wrangler" : 
+    "Wrangler": 
     {
         id = 140,
         classname = "tf_weapon_laser_pointer"
     },
-    "Frontier Justice" : 
+    "Frontier Justice": 
     {
         id = 141,
         classname = "tf_weapon_sentry_revenge"
     },
-    "Gunslinger" : 
+    "Gunslinger": 
     {
         id = 142,
         classname = "tf_weapon_robot_arm"
     },
-    "Homewrecker" : 
+    "Homewrecker": 
     {
         id = 153,
         classname = "tf_weapon_fireaxe"
     },
-    "Pain Train" : 
+    "Pain Train": 
     {
         id = 154,
         classname = "tf_weapon_shovel"
     },
-    "Southern Hospitality" : 
+    "Southern Hospitality": 
     {
         id = 155,
         classname = "tf_weapon_wrench"
     },
-    "Dalokohs Bar" : 
+    "Dalokohs Bar": 
     {
         id = 159,
         classname = "tf_weapon_lunchbox"
     },
-    "TTG Max Pistol" : 
+    "TTG Max Pistol": 
     {
         id = 160,
         classname = "tf_weapon_pistol"
     },
-    "TTG Sam Revolver" : 
+    "TTG Sam Revolver": 
     {
         id = 161,
         classname = "tf_weapon_revolver"
     },
-    "Crit-a-Cola" : 
+    "Crit-a-Cola": 
     {
         id = 163,
         classname = "tf_weapon_lunchbox_drink"
     },
-    "Golden Wrench" : 
+    "Golden Wrench": 
     {
         id = 169,
         classname = "tf_weapon_wrench"
     },
-    "Tribalman's Shiv" : 
+    "Tribalman's Shiv": 
     {
         id = 171,
         classname = "tf_weapon_club"
     },
-    "Scotsman's Skullcutter" : 
+    "Scotsman's Skullcutter": 
     {
         id = 172,
         classname = "tf_weapon_sword"
     },
-    "Vita-Saw" : 
+    "Vita-Saw": 
     {
         id = 173,
         classname = "tf_weapon_bonesaw"
     },
-    "Powerjack" : 
+    "Powerjack": 
     {
         id = 214,
         classname = "tf_weapon_fireaxe"
     },
-    "Degreaser" : 
+    "Degreaser": 
     {
         id = 215,
         classname = "tf_weapon_flamethrower"
     },
-    "Shortstop" : 
+    "Shortstop": 
     {
         id = 220,
         classname = "tf_weapon_handgun_scout_primary"
     },
-    "Holy Mackerel" : 
+    "Holy Mackerel": 
     {
         id = 221,
         classname = "tf_weapon_bat_fish"
     },
-    "Mad Milk" : 
+    "Mad Milk": 
     {
         id = 222,
         classname = "tf_weapon_jar_milk"
     },
-    "L'Etranger" : 
+    "L'Etranger": 
     {
         id = 224,
         classname = "tf_weapon_revolver"
     },
-    "Your Eternal Reward" : 
+    "Your Eternal Reward": 
     {
         id = 225,
         classname = "tf_weapon_knife"
     },
-    "Battalion's Backup" : 
+    "Battalion's Backup": 
     {
         id = 226,
         classname = "tf_weapon_buff_item"
     },
-    "Black Box" : 
+    "Black Box": 
     {
         id = 228,
         classname = "tf_weapon_rocketlauncher"
     },
-    "Sydney Sleeper" : 
+    "Sydney Sleeper": 
     {
         id = 230,
         classname = "tf_weapon_sniperrifle"
     },
-    "Bushwacka" : 
+    "Bushwacka": 
     {
         id = 232,
         classname = "tf_weapon_club"
     },
-    "Rocket Jumper" : 
+    "Rocket Jumper": 
     {
         id = 237,
         classname = "tf_weapon_rocketlauncher"
     },
-    "Gloves of Running Urgently" : 
+    "Gloves of Running Urgently": 
     {
         id = 239,
         classname = "tf_weapon_fists"
     },
-    "Stickybomb Jumper" : 
+    "Frying Pan": 
+    {
+        id = 264,
+        classname = "saxxy"
+    },
+    "Stickybomb Jumper": 
     {
         id = 265,
         classname = "tf_weapon_pipebomblauncher"
     },
-    "Horseless Headless Horseman's Headtaker" : 
+    "Horseless Headless Horseman's Headtaker": 
     {
         id = 266,
         classname = "tf_weapon_sword"
     },
-    "TTG Max Pistol - Poker Night" : 
+    "TTG Max Pistol - Poker Night": 
     {
         id = 294,
         classname = "tf_weapon_pistol"
     },
-    "TTG Watch" : 
+    "TTG Watch": 
     {
         id = 297,
         classname = "tf_weapon_invis"
     },
-    "Iron Curtain" : 
+    "Iron Curtain": 
     {
         id = 298,
         classname = "tf_weapon_minigun"
     },
-    "Amputator" : 
+    "Amputator": 
     {
         id = 304,
         classname = "tf_weapon_bonesaw"
     },
-    "Crusader's Crossbow" : 
+    "Crusader's Crossbow": 
     {
         id = 305,
         classname = "tf_weapon_crossbow"
     },
-    "Ullapool Caber" : 
+    "Ullapool Caber": 
     {
         id = 307,
         classname = "tf_weapon_stickbomb"
     },
-    "Loch-n-Load" : 
+    "Loch-n-Load": 
     {
         id = 308,
         classname = "tf_weapon_grenadelauncher"
     },
-    "Warrior's Spirit" : 
+    "Warrior's Spirit": 
     {
         id = 310,
         classname = "tf_weapon_fists"
     },
-    "Buffalo Steak Sandvich" : 
+    "Buffalo Steak Sandvich": 
     {
         id = 311,
         classname = "tf_weapon_lunchbox"
     },
-    "Brass Beast" : 
+    "Brass Beast": 
     {
         id = 312,
         classname = "tf_weapon_minigun"
     },
-    "Candy Cane" : 
+    "Candy Cane": 
     {
         id = 317,
         classname = "tf_weapon_bat"
     },
-    "Boston Basher" : 
+    "Boston Basher": 
     {
         id = 325,
         classname = "tf_weapon_bat"
     },
-    "Back Scratcher" : 
+    "Back Scratcher": 
     {
         id = 326,
         classname = "tf_weapon_fireaxe"
     },
-    "Claidheamohmor" : 
+    "Claidheamohmor": 
     {
         id = 327,
         classname = "tf_weapon_sword"
     },
-    "Jag" : 
+    "Jag": 
     {
         id = 329,
         classname = "tf_weapon_wrench"
     },
-    "Fists of Steel" : 
+    "Fists of Steel": 
     {
         id = 331,
         classname = "tf_weapon_fists"
     },
-    "Sharpened Volcano Fragment" : 
+    "Sharpened Volcano Fragment": 
     {
         id = 348,
         classname = "tf_weapon_fireaxe"
     },
-    "Sun-on-a-Stick" : 
+    "Sun-on-a-Stick": 
     {
         id = 349,
         classname = "tf_weapon_bat"
     },
-    "Detonator" : 
+    "Detonator": 
     {
         id = 351,
         classname = "tf_weapon_flaregun"
     },
-    "Concheror" : 
+    "Concheror": 
     {
         id = 354,
         classname = "tf_weapon_buff_item"
     },
-    "Fan O'War" : 
+    "Fan O'War": 
     {
         id = 355,
         classname = "tf_weapon_bat"
     },
-    "Conniver's Kunai" : 
+    "Conniver's Kunai": 
     {
         id = 356,
         classname = "tf_weapon_knife"
     },
-    "Half-Zatoichi" : 
+    "Half-Zatoichi": 
     {
         id = 357,
         classname = "tf_weapon_katana"
     },
-    "Shahanshah" : 
+    "Shahanshah": 
     {
         id = 401,
         classname = "tf_weapon_club"
     },
-    "Bazaar Bargain" : 
+    "Bazaar Bargain": 
     {
         id = 402,
         classname = "tf_weapon_sniperrifle_decap"
     },
-    "Persian Persuader" : 
+    "Persian Persuader": 
     {
         id = 404,
         classname = "tf_weapon_sword"
     },
-    "Quick-Fix" : 
+    "Quick-Fix": 
     {
         id = 411,
         classname = "tf_weapon_medigun"
     },
-    "Overdose" : 
+    "Overdose": 
     {
         id = 412,
         classname = "tf_weapon_syringegun_medic"
     },
-    "Solemn Vow" : 
+    "Solemn Vow": 
     {
         id = 413,
         classname = "tf_weapon_bonesaw"
     },
-    "Liberty Launcher" : 
+    "Liberty Launcher": 
     {
         id = 414,
         classname = "tf_weapon_rocketlauncher"
     },
-    "Reserve Shooter" : 
+    "Reserve Shooter": 
     {
         id = 415,
         classname = "tf_weapon_shotgun"
     },
-    "Market Gardener" : 
+    "Market Gardener": 
     {
         id = 416,
         classname = "tf_weapon_shovel"
     },
-    "Tomislav" : 
+    "Saxxy": 
+    {
+        id = 423,
+        classname = "saxxy"
+    },
+    "Tomislav": 
     {
         id = 424,
         classname = "tf_weapon_minigun"
     },
-    "Family Business" : 
+    "Family Business": 
     {
         id = 425,
         classname = "tf_weapon_shotgun"
     },
-    "Eviction Notice" : 
+    "Eviction Notice": 
     {
         id = 426,
         classname = "tf_weapon_fists"
     },
-    "Fishcake" : 
+    "Fishcake": 
     {
         id = 433,
         classname = "tf_weapon_lunchbox"
     },
-    "Cow Mangler 5000" : 
+    "Cow Mangler 5000": 
     {
         id = 441,
         classname = "tf_weapon_particle_cannon"
     },
-    "Righteous Bison" : 
+    "Righteous Bison": 
     {
         id = 442,
         classname = "tf_weapon_raygun"
     },
-    "Disciplinary Action" : 
+    "Disciplinary Action": 
     {
         id = 447,
         classname = "tf_weapon_shovel"
     },
-    "Soda Popper" : 
+    "Soda Popper": 
     {
         id = 448,
         classname = "tf_weapon_soda_popper"
     },
-    "Winger" : 
+    "Winger": 
     {
         id = 449,
         classname = "tf_weapon_handgun_scout_secondary"
     },
-    "Atomizer" : 
+    "Atomizer": 
     {
         id = 450,
         classname = "tf_weapon_bat"
     },
-    "Three-Rune Blade" : 
+    "Three-Rune Blade": 
     {
         id = 452,
         classname = "tf_weapon_bat"
     },
-    "Postal Pummeler" : 
+    "Postal Pummeler": 
     {
         id = 457,
         classname = "tf_weapon_fireaxe"
     },
-    "Enforcer" : 
+    "Enforcer": 
     {
         id = 460,
         classname = "tf_weapon_revolver"
     },
-    "Big Earner" : 
+    "Big Earner": 
     {
         id = 461,
         classname = "tf_weapon_knife"
     },
-    "Maul" : 
+    "Maul": 
     {
         id = 466,
         classname = "tf_weapon_fireaxe"
     },
-    "Nessie's Nine Iron" : 
+    "Conscientious Objector": 
+    {
+        id = 474,
+        classname = "saxxy"
+    },
+    "Nessie's Nine Iron": 
     {
         id = 482,
         classname = "tf_weapon_sword"
     },
-    "Original" : 
+    "Original": 
     {
         id = 513,
         classname = "tf_weapon_rocketlauncher"
     },
-    "Diamondback" : 
+    "Diamondback": 
     {
         id = 525,
         classname = "tf_weapon_revolver"
     },
-    "Machina" : 
+    "Machina": 
     {
         id = 526,
         classname = "tf_weapon_sniperrifle"
     },
-    "Widowmaker" : 
+    "Widowmaker": 
     {
         id = 527,
         classname = "tf_weapon_shotgun_primary"
     },
-    "Short Circuit" : 
+    "Short Circuit": 
     {
         id = 528,
         classname = "tf_weapon_mechanical_arm"
     },
-    "Unarmed Combat" : 
+    "Unarmed Combat": 
     {
         id = 572,
         classname = "tf_weapon_bat_fish"
     },
-    "Wanga Prick" : 
+    "Wanga Prick": 
     {
         id = 574,
         classname = "tf_weapon_knife"
     },
-    "Apoco-Fists" : 
+    "Apoco-Fists": 
     {
         id = 587,
         classname = "tf_weapon_fists"
     },
-    "Pomson 6000" : 
+    "Pomson 6000": 
     {
         id = 588,
         classname = "tf_weapon_drg_pomson"
     },
-    "Eureka Effect" : 
+    "Eureka Effect": 
     {
         id = 589,
         classname = "tf_weapon_wrench"
     },
-    "Third Degree" : 
+    "Third Degree": 
     {
         id = 593,
         classname = "tf_weapon_fireaxe"
     },
-    "Phlogistinator" : 
+    "Phlogistinator": 
     {
         id = 594,
         classname = "tf_weapon_flamethrower"
     },
-    "Manmelter" : 
+    "Manmelter": 
     {
         id = 595,
         classname = "tf_weapon_flaregun_revenge"
     },
-    "Scottish Handshake" : 
+    "Scottish Handshake": 
     {
         id = 609,
         classname = "tf_weapon_bottle"
     },
-    "Sharp Dresser" : 
+    "Sharp Dresser": 
     {
         id = 638,
         classname = "tf_weapon_knife"
     },
-    "Wrap Assassin" : 
+    "Wrap Assassin": 
     {
         id = 648,
         classname = "tf_weapon_bat_giftwrap"
     },
-    "Spy-cicle" : 
+    "Spy-cicle": 
     {
         id = 649,
         classname = "tf_weapon_knife"
     },
-    "Festive Minigun" : 
+    "Festive Minigun": 
     {
         id = 654,
         classname = "tf_weapon_minigun"
     },
-    "Holiday Punch" : 
+    "Holiday Punch": 
     {
         id = 656,
         classname = "tf_weapon_fists"
     },
-    "Festive Rocket Launcher" : 
+    "Festive Rocket Launcher": 
     {
         id = 658,
         classname = "tf_weapon_rocketlauncher"
     },
-    "Festive Flamethrower" : 
+    "Festive Flamethrower": 
     {
         id = 659,
         classname = "tf_weapon_flamethrower"
     },
-    "Festive Bat" : 
+    "Festive Bat": 
     {
         id = 660,
         classname = "tf_weapon_bat"
     },
-    "Festive Stickybomb Launcher" : 
+    "Festive Stickybomb Launcher": 
     {
         id = 661,
         classname = "tf_weapon_pipebomblauncher"
     },
-    "Festive Wrench" : 
+    "Festive Wrench": 
     {
         id = 662,
         classname = "tf_weapon_wrench"
     },
-    "Festive Medigun" : 
+    "Festive Medigun": 
     {
         id = 663,
         classname = "tf_weapon_medigun"
     },
-    "Festive Sniper Rifle" : 
+    "Festive Sniper Rifle": 
     {
         id = 664,
         classname = "tf_weapon_sniperrifle"
     },
-    "Festive Knife" : 
+    "Festive Knife": 
     {
         id = 665,
         classname = "tf_weapon_knife"
     },
-    "Festive Scattergun" : 
+    "Festive Scattergun": 
     {
         id = 669,
         classname = "tf_weapon_scattergun"
     },
-    "Black Rose" : 
+    "Black Rose": 
     {
         id = 727,
         classname = "tf_weapon_knife"
     },
-    "Beggar's Bazooka" : 
+    "Beggar's Bazooka": 
     {
         id = 730,
         classname = "tf_weapon_rocketlauncher"
     },
-    "Sapper" : 
+    "Sapper": 
     {
         id = 735,
         classname = "tf_weapon_builder"
     },
-    "Lollichop" : 
+    "Lollichop": 
     {
         id = 739,
         classname = "tf_weapon_fireaxe"
     },
-    "Scorch Shot" : 
+    "Scorch Shot": 
     {
         id = 740,
         classname = "tf_weapon_flaregun"
     },
-    "Rainblower" : 
+    "Rainblower": 
     {
         id = 741,
         classname = "tf_weapon_flamethrower"
     },
-    "Cleaner's Carbine" : 
+    "Cleaner's Carbine": 
     {
         id = 751,
         classname = "tf_weapon_charged_smg"
     },
-    "Hitman's Heatmaker" : 
+    "Hitman's Heatmaker": 
     {
         id = 752,
         classname = "tf_weapon_sniperrifle"
     },
-    "Baby Face's Blaster" : 
+    "Baby Face's Blaster": 
     {
         id = 772,
         classname = "tf_weapon_pep_brawler_blaster"
     },
-    "Pretty Boy's Pocket Pistol" : 
+    "Pretty Boy's Pocket Pistol": 
     {
         id = 773,
         classname = "tf_weapon_handgun_scout_secondary"
     },
-    "Escape Plan" : 
+    "Escape Plan": 
     {
         id = 775,
         classname = "tf_weapon_shovel"
     },
-    "Red-Tape Recorder" : 
+    "Red-Tape Recorder": 
     {
         id = 810,
         classname = "tf_weapon_sapper"
     },
-    "Huo Long Heatmaker" : 
+    "Huo Long Heatmaker": 
     {
         id = 811,
         classname = "tf_weapon_minigun"
     },
-    "Flying Guillotine" : 
+    "Flying Guillotine": 
     {
         id = 812,
         classname = "tf_weapon_cleaver"
     },
-    "Neon Annihilator" : 
+    "Neon Annihilator": 
     {
         id = 813,
         classname = "tf_weapon_breakable_sign"
     },
-    "Promo Red-Tape Recorder" : 
+    "Promo Red-Tape Recorder": 
     {
         id = 831,
         classname = "tf_weapon_sapper"
     },
-    "Promo Huo Long Heatmaker" : 
+    "Promo Huo Long Heatmaker": 
     {
         id = 832,
         classname = "tf_weapon_minigun"
     },
-    "Promo Flying Guillotine" : 
+    "Promo Flying Guillotine": 
     {
         id = 833,
         classname = "tf_weapon_cleaver"
     },
-    "Promo Neon Annihilator" : 
+    "Promo Neon Annihilator": 
     {
         id = 834,
         classname = "tf_weapon_breakable_sign"
     },
-    "Deflector" : 
+    "Deflector": 
     {
         id = 850,
         classname = "tf_weapon_minigun"
     },
-    "AWPer Hand" : 
+    "AWPer Hand": 
     {
         id = 851,
         classname = "tf_weapon_sniperrifle"
     },
-    "Robo-Sandvich" : 
+    "Robo-Sandvich": 
     {
         id = 863,
         classname = "tf_weapon_lunchbox"
     },
-    "Ap-Sap" : 
+    "Freedom Staff": 
+    {
+        id = 880,
+        classname = "saxxy"
+    },
+    "Ap-Sap": 
     {
         id = 933,
         classname = "tf_weapon_sapper"
     },
-    "Quackenbirdt" : 
+    "Bat Outta Hell": 
+    {
+        id = 939,
+        classname = "saxxy"
+    },
+    "Quackenbirdt": 
     {
         id = 947,
         classname = "tf_weapon_invis"
     },
-    "Loose Cannon" : 
+    "Memory Maker": 
+    {
+        id = 954,
+        classname = "saxxy"
+    },
+    "Loose Cannon": 
     {
         id = 996,
         classname = "tf_weapon_cannon"
     },
-    "Rescue Ranger" : 
+    "Rescue Ranger": 
     {
         id = 997,
         classname = "tf_weapon_shotgun_building_rescue"
     },
-    "Vaccinator" : 
+    "Vaccinator": 
     {
         id = 998,
         classname = "tf_weapon_medigun"
     },
-    "Festive Holy Mackerel" : 
+    "Festive Holy Mackerel": 
     {
         id = 999,
         classname = "tf_weapon_bat_fish"
     },
-    "Festive Axtinguisher" : 
+    "Festive Axtinguisher": 
     {
         id = 1000,
         classname = "tf_weapon_fireaxe"
     },
-    "Festive Buff Banner" : 
+    "Festive Buff Banner": 
     {
         id = 1001,
         classname = "tf_weapon_buff_item"
     },
-    "Festive Sandvich" : 
+    "Festive Sandvich": 
     {
         id = 1002,
         classname = "tf_weapon_lunchbox"
     },
-    "Festive Ubersaw" : 
+    "Festive Ubersaw": 
     {
         id = 1003,
         classname = "tf_weapon_bonesaw"
     },
-    "Festive Frontier Justice" : 
+    "Festive Frontier Justice": 
     {
         id = 1004,
         classname = "tf_weapon_sentry_revenge"
     },
-    "Festive Huntsman" : 
+    "Festive Huntsman": 
     {
         id = 1005,
         classname = "tf_weapon_compound_bow"
     },
-    "Festive Ambassador" : 
+    "Festive Ambassador": 
     {
         id = 1006,
         classname = "tf_weapon_revolver"
     },
-    "Festive Grenade Launcher" : 
+    "Festive Grenade Launcher": 
     {
         id = 1007,
         classname = "tf_weapon_grenadelauncher"
     },
-    "Halloween Spellbook" : 
+    "Ham Shank": 
+    {
+        id = 1013,
+        classname = "saxxy"
+    },
+    "Halloween Spellbook": 
     {
         id = 1069,
         classname = "tf_weapon_spellbook"
     },
-    "Basic Spellbook" : 
+    "Basic Spellbook": 
     {
         id = 1070,
         classname = "tf_weapon_spellbook"
     },
-    "Festive Force-a-Nature" : 
+    "Gold Frying Pan": 
+    {
+        id = 1071,
+        classname = "saxxy"
+    },
+    "Festive Force-a-Nature": 
     {
         id = 1078,
         classname = "tf_weapon_scattergun"
     },
-    "Festive Crusader's Crossbow" : 
+    "Festive Crusader's Crossbow": 
     {
         id = 1079,
         classname = "tf_weapon_crossbow"
     },
-    "Festive Sapper" : 
+    "Festive Sapper": 
     {
         id = 1080,
         classname = "tf_weapon_sapper"
     },
-    "Festive Flare Gun" : 
+    "Festive Flare Gun": 
     {
         id = 1081,
         classname = "tf_weapon_flaregun"
     },
-    "Festive Eyelander" : 
+    "Festive Eyelander": 
     {
         id = 1082,
         classname = "tf_weapon_sword"
     },
-    "Festive Jarate" : 
+    "Festive Jarate": 
     {
         id = 1083,
         classname = "tf_weapon_jar"
     },
-    "Festive Gloves of Running Urgently" : 
+    "Festive Gloves of Running Urgently": 
     {
         id = 1084,
         classname = "tf_weapon_fists"
     },
-    "Festive Black Box" : 
+    "Festive Black Box": 
     {
         id = 1085,
         classname = "tf_weapon_rocketlauncher"
     },
-    "Festive Wrangler" : 
+    "Festive Wrangler": 
     {
         id = 1086,
         classname = "tf_weapon_laser_pointer"
     },
-    "Fortified Compound" : 
+    "Fortified Compound": 
     {
         id = 1092,
         classname = "tf_weapon_compound_bow"
     },
-    "Classic" : 
+    "Classic": 
     {
         id = 1098,
         classname = "tf_weapon_sniperrifle_classic"
     },
-    "Bread Bite" : 
+    "Bread Bite": 
     {
         id = 1100,
         classname = "tf_weapon_fists"
     },
-    "B.A.S.E. Jumper" : 
+    "B.A.S.E. Jumper": 
     {
         id = 1101,
         classname = "tf_weapon_parachute"
     },
-    "Snack Attack" : 
+    "Snack Attack": 
     {
         id = 1102,
         classname = "tf_weapon_sapper"
     },
-    "Back Scatter" : 
+    "Back Scatter": 
     {
         id = 1103,
         classname = "tf_weapon_scattergun"
     },
-    "Air Strike" : 
+    "Air Strike": 
     {
         id = 1104,
         classname = "tf_weapon_rocketlauncher_airstrike"
     },
-    "Self-Aware Beauty Mark" : 
+    "Self-Aware Beauty Mark": 
     {
         id = 1105,
         classname = "tf_weapon_jar"
     },
-    "Mutated Milk" : 
+    "Mutated Milk": 
     {
         id = 1121,
         classname = "tf_weapon_jar_milk"
     },
-    "Spellbook Magazine" : 
+    "Necro Smasher": 
+    {
+        id = 1123,
+        classname = "saxxy"
+    },
+    "Crossing Guard": 
+    {
+        id = 1127,
+        classname = "saxxy"
+    },
+    "Spellbook Magazine": 
     {
         id = 1132,
         classname = "tf_weapon_spellbook"
     },
-    "Festive Shotgun" : 
+    "Festive Shotgun": 
     {
         id = 1141,
         classname = "tf_weapon_shotgun"
     },
-    "Festive Revolver" : 
+    "Festive Revolver": 
     {
         id = 1142,
         classname = "tf_weapon_revolver"
     },
-    "Festive Bonesaw" : 
+    "Festive Bonesaw": 
     {
         id = 1143,
         classname = "tf_weapon_bonesaw"
     },
-    "Festive Bonk" : 
+    "Festive Bonk": 
     {
         id = 1145,
         classname = "tf_weapon_lunchbox_drink"
     },
-    "Festive Backburner" : 
+    "Festive Backburner": 
     {
         id = 1146,
         classname = "tf_weapon_flamethrower"
     },
-    "Festive SMG" : 
+    "Festive SMG": 
     {
         id = 1149,
         classname = "tf_weapon_smg"
     },
-    "Quickiebomb Launcher" : 
+    "Quickiebomb Launcher": 
     {
         id = 1150,
         classname = "tf_weapon_pipebomblauncher"
     },
-    "Iron Bomber" : 
+    "Iron Bomber": 
     {
         id = 1151,
         classname = "tf_weapon_grenadelauncher"
     },
-    "Grappling Hook" : 
+    "Grappling Hook": 
     {
         id = 1152,
         classname = "tf_weapon_grapplinghook"
     },
-    "Panic Attack Shotgun" : 
+    "Panic Attack Shotgun": 
     {
         id = 1153,
         classname = "tf_weapon_shotgun"
     },
-    "Passtime Gun" : 
+    "Passtime Gun": 
     {
         id = 1155,
         classname = "tf_weapon_passtime_gun"
     },
-    "Dragon's Fury" : 
+    "Dragon's Fury": 
     {
         id = 1178,
         classname = "tf_weapon_rocketlauncher_fireball"
     },
-    "Thermal Thruster" : 
+    "Thermal Thruster": 
     {
         id = 1179,
         classname = "tf_weapon_rocketpack"
     },
-    "Gas Passer" : 
+    "Gas Passer": 
     {
         id = 1180,
         classname = "tf_weapon_jar_gas"
     },
-    "Hot Hand" : 
+    "Hot Hand": 
     {
         id = 1181,
         classname = "tf_weapon_slap"
     },
-    "Gloves of Running Urgently MvM" : 
+    "Gloves of Running Urgently MvM": 
     {
         id = 1184,
         classname = "tf_weapon_fists"
     },
-    "Second Banana" : 
+    "Second Banana": 
     {
         id = 1190,
         classname = "tf_weapon_lunchbox"
     },
-    "Secret Diary" : 
+    "Secret Diary": 
     {
         id = 5605,
         classname = "tf_weapon_spellbook"
     },
-    "Nostromo Napalmer" : 
+    "Nostromo Napalmer": 
     {
         id = 30474,
         classname = "tf_weapon_flamethrower"
     },
-    "Shooting Star" : 
+    "Shooting Star": 
     {
         id = 30665,
         classname = "tf_weapon_sniperrifle"
     },
-    "C.A.P.P.E.R" : 
+    "C.A.P.P.E.R": 
     {
         id = 30666,
         classname = "tf_weapon_pistol"
     },
-    "Batsaber" : 
+    "Batsaber": 
     {
         id = 30667,
         classname = "tf_weapon_bat"
     },
-    "Giger Counter" : 
+    "Giger Counter": 
     {
         id = 30668,
         classname = "tf_weapon_laser_pointer"
+    },
+    "Prinny Machete": 
+    {
+        id = 30758,
+        classname = "saxxy"
     }
 }

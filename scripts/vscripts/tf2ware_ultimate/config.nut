@@ -16,6 +16,7 @@ Ware_Minigames <-
 	[1, "flood"           ],
 	[1, "goomba"          ],
 	[1, "headshot"        ],
+	[1, "halloween_fight" ],
 	[1, "hit_player"      ],
 	[1, "kamikaze"        ],
 	[1, "math"            ],
@@ -76,6 +77,7 @@ Ware_MinigameMusic <-
 	"question"
 	"sillytime",
 	"spotlightsonyou",
+	"survivor",
 	"thethinker",
 	"train",
 	"wildwest",

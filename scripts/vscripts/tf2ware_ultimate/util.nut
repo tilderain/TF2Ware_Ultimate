@@ -133,9 +133,11 @@ function IsEntityAlive(player)
 	return GetPropInt(player, "m_lifeState") == 0;
 }
 
-function SetEntityParent(entity, parent)
+function SetEntityParent(entity, parent, attachment = null)
 {
 	EntFireByHandle(entity, "SetParent", "!activator", -1, parent, null);
+	if (attachment)
+		EntFireByHandle(entity, "SetParentAttachment", attachment, -1, null, null);
 }
 
 _PostInputScope <- null;
@@ -228,5 +230,14 @@ function HealPlayer(player, amount)
 			entindex = player.entindex(),
 			weapon_def_index = -1,
 		});
+	}
+}
+
+function TogglePlayerWearables(player, toggle)
+{
+	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+	{
+		MarkForPurge(wearable);
+		wearable.SetDrawEnabled(toggle);
 	}
 }

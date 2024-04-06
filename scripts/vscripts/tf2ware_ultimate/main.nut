@@ -590,6 +590,19 @@ function Ware_StripPlayer(player, give_default_melee)
 	}
 }
 
+SaxxyToClassnameMap <-
+{
+	[TF_CLASS_SCOUT]        = "tf_weapon_bat",
+	[TF_CLASS_SOLDIER]      = "tf_weapon_shovel",
+	[TF_CLASS_PYRO]         = "tf_weapon_fireaxe",
+	[TF_CLASS_DEMOMAN]      = "tf_weapon_bottle",
+	[TF_CLASS_HEAVYWEAPONS] = "tf_weapon_fists",
+	[TF_CLASS_ENGINEER]     = "tf_weapon_wrench",
+	[TF_CLASS_MEDIC]        = "tf_weapon_bonesaw",
+	[TF_CLASS_SNIPER]       = "tf_weapon_club",
+	[TF_CLASS_SPY]          = "tf_weapon_knife",
+};
+
 function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon = true)
 {
 	local item = ITEM_MAP[item_name];
@@ -624,6 +637,10 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	{
 		if (player.GetPlayerClass() == TF_CLASS_SCOUT)
 			item_id = 23;
+	}
+	else if (item_classname == "saxxy")
+	{
+		item_classname = SaxxyToClassnameMap[player.GetPlayerClass()];
 	}
 	
 	local weapon = CreateEntitySafe(item_classname);
@@ -1118,7 +1135,8 @@ function Ware_EndMinigameInternal()
 				player.RemoveCustomAttribute(attribute);
 			data.attributes.clear();
 			
-			SetPropInt(player, "m_nImpulse", 101); // refill health + ammo 							
+			player.SetHealth(player.GetMaxHealth());
+			SetPropInt(player, "m_nImpulse", 101); // refill ammo						
 			Ware_StripPlayer(player, true);
 		}
 		else
@@ -1427,6 +1445,7 @@ function OnGameEvent_player_spawn(params)
 		EntFireByHandle(player, "CallScriptFunction", "PlayerPostSpawn", -1, null, null);
 		
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE);
+		player.SetCustomModel("");
 	}
 }
 
