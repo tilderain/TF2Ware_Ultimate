@@ -72,25 +72,25 @@ class Ware_MinigameData
 	// Optional parameters
 	// Map location to teleport to (Ware_Location enum), default is home
 	location		= null;
-	// Minimum amount of players needed to start
+	// Minimum amount of players needed to start, default is 0
 	min_players		= null;
-	// Whether players will be flagged as passed when minigame starts 
+	// Whether players will be flagged as passed when minigame starts, default is false
 	start_pass		= null;
-	// Is damage to other players allowed?  
+	// Is damage to other players allowed? Default is false
 	allow_damage	= null;
-	// Whether players should be automatically failed when they die
+	// Whether players should be automatically failed when they die, default is false
 	fail_on_death	= null;
-	// Whether players should suicide if they haven't passed when minigame ends
+	// Whether players should suicide if they haven't passed when minigame ends, default is false
 	suicide_on_end	= null;
-	// Disables collisions between players
+	// Disables collisions between players, default is false
 	no_collisions	= null;
-	// Toggle friendlyfire
+	// Toggle friendlyfire, default is true
 	friendly_fire	= null;
-	// Force players into thirdperson?
+	// Force players into thirdperson? Default is false
 	thirdperson	    = null;
-	// Automatically end the minigame early if number of players alive is less than min_players
+	// Automatically end the minigame early if number of players alive is less than min_players, default is false
 	end_below_min	= null;
-	// Delay after the minigame "ends" before showing results
+	// Delay after the minigame "ends" before showing results, default is 0.0
 	end_delay		= null;
 	// Custom text overlay to show rather than the default implied from name
 	// Also only shown to players on 1st mission
