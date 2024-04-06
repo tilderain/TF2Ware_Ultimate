@@ -16,7 +16,8 @@ local platform;
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(RandomInt(0, 1) ? TF_CLASS_SOLDIER : TF_CLASS_DEMOMAN, "B.A.S.E. Jumper");
+	local player_class = RandomInt(0, 1) ? TF_CLASS_SOLDIER : TF_CLASS_DEMOMAN;
+	Ware_SetGlobalLoadout(player_class, "B.A.S.E. Jumper", {}, true);
 	
 	platform = Ware_SpawnEntity("prop_dynamic",
 	{

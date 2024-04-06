@@ -506,7 +506,7 @@ function Ware_ParseLoadout(player)
 	return melee;
 }
 
-function Ware_SetGlobalLoadout(player_class, items, item_attributes = {})
+function Ware_SetGlobalLoadout(player_class, items, item_attributes = {}, keep_melee = false)
 {
 	local is_list = typeof(items) == "array";
 	foreach (data in Ware_MinigamePlayers)
@@ -516,7 +516,7 @@ function Ware_SetGlobalLoadout(player_class, items, item_attributes = {})
 		
 		if (items)
 		{
-			Ware_StripPlayer(player, false);
+			Ware_StripPlayer(player, keep_melee);
 			
 			if (is_list)
 			{
