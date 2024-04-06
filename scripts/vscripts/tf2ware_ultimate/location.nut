@@ -14,6 +14,30 @@ function Ware_TeleportPlayersCircle(origin, radius)
 	}
 }
 
+function Ware_TeleportPlayersRow(origin, angles, max_width, offset_horz, offset_vert)
+{
+	// TODO should make this work for non-cardinal axes
+	local axis_horz = fabs(angles.y) == 180 ? "x" : "y";
+	local axis_vert = axis_horz == "x" ? "y" : "x";
+	
+	local center = origin * 1.0;
+	local reset = center[axis_vert];
+	local accum = 0.0;
+	foreach (data in Ware_MinigamePlayers)
+	{
+		if (accum >= max_width)
+		{
+			center[axis_vert] = reset;
+			center[axis_horz] += offset_horz;
+			accum = 0.0;
+		}
+		
+		center[axis_vert] = origin[axis_vert] - max_width * 0.5 + accum;
+		data.player.Teleport(true, center, true, angles, true, Vector());
+		accum += offset_vert;
+	}	
+}
+
 Ware_LocationParent <-
 {
 	function DebugDraw()
@@ -81,27 +105,13 @@ Ware_Location.circlepit_big <-
 Ware_Location.sawrun <-
 {
 	center   = Vector(4480, -3900, -4495),
-	Teleport = function()
+	Teleport = function() 
 	{
-		local width = 576;
-		local offset = 65;
-		local pos = Vector(0, center.y, center.z);
-		local ang = QAngle(0, 90, 0);
-		local row = 0;
-		local max_row = 7;
-
-		foreach (i, data in Ware_MinigamePlayers)
-		{
-			if (row > max_row)
-			{
-				pos.y -= offset;
-				row = 0;
-			}
-			
-			pos.x = center.x - (width * 0.5) + (row * offset);
-			data.player.Teleport(true, pos, true, ang, true, Vector());
-			row++;
-		}
+		Ware_TeleportPlayersRow(
+			center - Vector(40, 0, 0),
+			QAngle(0, 90, 0),
+			512.0,
+			-50.0, 50.0);
 	}
 };
 

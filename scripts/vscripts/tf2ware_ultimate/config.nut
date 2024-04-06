@@ -73,6 +73,7 @@ Ware_MinigameMusic <-
 	"cozy",
 	"dizzy",
 	"falling",
+	"farm",
 	"funkymoves",
 	"getmoving",
 	"getready",
