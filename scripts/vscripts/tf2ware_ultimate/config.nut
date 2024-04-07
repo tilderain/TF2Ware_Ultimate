@@ -70,6 +70,7 @@ Ware_MinigameMusic <-
 	"actioninsilence",
 	"adventuretime",
 	"bliss",
+	"brassy",
 	"cheerful",
 	"circus",
 	"clumsy",
