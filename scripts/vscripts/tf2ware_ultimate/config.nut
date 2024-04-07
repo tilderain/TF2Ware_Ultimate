@@ -22,6 +22,7 @@ Ware_Minigames <-
 	[1, "halloween_fight" ],
 	[1, "hit_player"      ],
 	[1, "hit_balls"       ],
+	[1, "hot_potato"      ],
 	[1, "kamikaze"        ],
 	[1, "math"            ],
 	[1, "melee_arena"     ],

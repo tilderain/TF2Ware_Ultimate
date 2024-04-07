@@ -337,6 +337,17 @@ function Ware_SpawnEntity(classname, keyvalues)
 	return entity;
 }
 
+function Ware_SpawnWearable(player, model_name)
+{
+	local wearable = Ware_CreateEntity("tf_wearable");
+	wearable.KeyValueFromString("classname", "ware_wearable");
+	SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model_name));
+	SetPropBool(wearable, "m_bValidatedAttachedEntity", true);
+	wearable.SetOwner(player);
+	wearable.DispatchSpawn();
+	return wearable;
+}
+
 function Ware_CreateTimer(on_timer_func, delay)
 {
 	local timer = CreateTimer(on_timer_func, delay);
@@ -849,6 +860,25 @@ function Ware_SuicideFailedPlayers()
 		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
 			Ware_SuicidePlayer(player);
 	}
+}
+
+function Ware_RadiusDamagePlayers(origin, radius, damage, attacker)
+{
+	foreach (data in Ware_MinigamePlayers)
+	{
+		local player = data.player;
+			
+		local dist = (player.GetOrigin() - origin).Length();
+		if (dist > radius)
+			continue;
+			
+		dist += DIST_EPSILON; // prevent divide by zero
+		local falloff = 1.0 - dist / radius;
+		if (falloff <= 0.0)
+			continue;
+			
+		player.TakeDamage(damage * falloff, DMG_BLAST, attacker);
+	}	
 }
 
 function Ware_GetPlayerHeight(player)
