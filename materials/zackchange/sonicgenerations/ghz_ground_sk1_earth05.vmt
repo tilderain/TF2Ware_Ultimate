@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "zackchange/sonicgenerations/ghz_ground_sk1_earth05_dif"
+	"$surfaceprop" "rock"
+	"%keywords" "sonic"
+	"$bumpmap" "zackchange/sonicgenerations/ghz_ground_sk1_earth05_nrm"
+}
