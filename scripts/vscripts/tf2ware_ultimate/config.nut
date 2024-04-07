@@ -12,6 +12,7 @@ Ware_Minigames <-
 	[1, "bumpers"         ],
 	[1, "caber_king"      ],
 	[1, "catch_cubes"     ],
+	[1, "change_class"    ],
 	[1, "count_bombs"     ],
 	[1, "disguise"        ],
 	[1, "dont_touch"      ],
@@ -91,6 +92,7 @@ Ware_MinigameMusic <-
 	"ohno",
 	"pumpit",
 	"question"
+	"settingthescene",
 	"sillytime",
 	"spotlightsonyou",
 	"streetfighter",
