@@ -24,6 +24,7 @@ Ware_Minigames <-
 	[1, "hit_balls"       ],
 	[1, "hot_potato"      ],
 	[1, "kamikaze"        ],
+	[1, "laugh"           ],
 	[1, "math"            ],
 	[1, "melee_arena"     ],
 	[1, "most_bombs"      ],

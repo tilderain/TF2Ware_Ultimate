@@ -63,7 +63,7 @@ function OnTakeDamage(params)
 	{
 		params.damage = 0.0;
 		victim.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER);
-		Ware_CreateTimer(CheckTaunt(victim, attacker), 0.0);
+		Ware_CreateTimer(@() CheckTaunt(victim, attacker), 0.0);
 	}
 }
 
@@ -86,5 +86,6 @@ function OnEnd()
 	{
 		local player = data.player;
 		player.RemoveCond(TF_COND_CRITBOOSTED);
+		player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER);
 	}
 }
