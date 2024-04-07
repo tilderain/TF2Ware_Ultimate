@@ -29,7 +29,7 @@ function OnStart()
 
 function OnTeleport(players)
 {
-	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 800), 512.0);
+	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 900), 512.0);
 }
 
 function OnUpdate()

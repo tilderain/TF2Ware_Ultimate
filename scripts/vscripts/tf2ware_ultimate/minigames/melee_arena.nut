@@ -16,7 +16,7 @@ minigame.custom_overlay = "survive";
 
 function OnStart()
 {
-	local attributes = { "active health degen" : -15.0 };
+	local attributes = { "active health degen" : -20.0 };
 	if (mode == 0)
 		Ware_SetGlobalLoadout(TF_CLASS_MEDIC, null, attributes);
 	else if (mode == 1)
@@ -28,7 +28,7 @@ function OnStart()
 	else if (mode == 4)
 		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, null, attributes);	
 	else if (mode == 5)
-		Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, null, attributes);
+		Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, "Gunslinger", attributes);
 }
 
 function OnTakeDamage(params)

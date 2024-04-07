@@ -47,7 +47,7 @@ function SpawnGift()
 	gift.SetPhysVelocity(Vector(RandomFloat(-500, 500), 0, RandomFloat(800, 1000)));
 	EntFireByHandle(gift, "Kill", "", RemapValClamped(Ware_TimeScale, 1.0, 2.0, 1.5, 3.0), null, null);
 	
-	return RandomFloat(1.9, 2.3);
+	return RandomFloat(1.7, 2.1);
 }
 
 function OnTakeDamage(params)

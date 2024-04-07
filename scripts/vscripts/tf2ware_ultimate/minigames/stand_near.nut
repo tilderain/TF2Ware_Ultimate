@@ -19,7 +19,7 @@ function OnStart()
 
 function OnEnd()
 {
-	local threshold = 75.0;
+	local threshold = 96.0;
 	
 	local targets = [];
 	foreach (data in Ware_MinigamePlayers)
