@@ -1490,6 +1490,33 @@ function PlayerPostSpawn()
 {
 	if (Ware_TimeScale != 1.0)
 		self.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1);
+		
+	local player_class = self.GetPlayerClass();
+	if (player_class == TF_CLASS_DEMOMAN)
+	{
+		for (local wearable = self.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+		{
+			MarkForPurge(wearable);
+			if (wearable.GetClassname() == "tf_wearable_demoshield")
+			{
+				SetPropBool(self, "m_Shared.m_bShieldEquipped", false);
+				wearable.Kill();
+				break;
+			}
+		}		
+	}
+	else if (player_class == TF_CLASS_SNIPER)
+	{
+		for (local wearable = self.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+		{
+			MarkForPurge(wearable);
+			if (wearable.GetClassname() == "tf_wearable_razorback")
+			{
+				wearable.Kill();
+				break;
+			}
+		}	
+	}
 }
 
 function OnGameEvent_player_spawn(params)
