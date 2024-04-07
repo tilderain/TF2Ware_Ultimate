@@ -1,14 +1,3 @@
-
-// NB: In microtf2, the game checks just for if the scout
-// has been hit, not whether or not they actually laughed.
-// This is not desirable as it is uninituitive for scout team.
-// It is perhaps more fair for heavy team.
-// For now, this minigame will only fail a scout if they laugh.
-// However, this minigame will eventually either make scouts
-// laugh even if mid-air, or disallow jumping altogether (or
-// something else).
-// - pokemonpasta
-
 local heavy_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE);
 
 minigame <- Ware_MinigameData();
@@ -55,6 +44,21 @@ function OnStart()
 	}
 }
 
+function OnUpdate()
+{
+	foreach (data in Ware_MinigamePlayers)
+	{
+		local player = data.player;
+		
+		// allows midair taunting
+		if (player.InCond(TF_COND_TAUNTING))
+		{
+			if (GetPropEntity(player, "m_hGroundEntity") == null)
+				SetPropEntity(player, "m_hGroundEntity", World);
+		}
+	}
+}
+
 function OnTakeDamage(params)
 {
 	local victim = params.const_entity;
@@ -62,6 +66,11 @@ function OnTakeDamage(params)
 	if (victim.IsPlayer() && attacker.IsPlayer())
 	{
 		params.damage = 0.0;
+		
+		// allows midair taunting
+		if (GetPropEntity(victim, "m_hGroundEntity") == null)
+			SetPropEntity(victim, "m_hGroundEntity", World);
+	
 		victim.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER);
 		Ware_CreateTimer(@() CheckTaunt(victim, attacker), 0.0);
 	}
@@ -72,8 +81,7 @@ function CheckTaunt(victim, attacker)
 	victim.AddCond(TF_COND_GRAPPLED_TO_PLAYER);
 	if (victim.GetTeam() != heavy_team &&
 		attacker.GetTeam() == heavy_team &&
-		victim.IsTaunting()
-		)
+		victim.IsTaunting())
 	{
 		Ware_PassPlayer(victim, false);
 		Ware_PassPlayer(attacker, true);

@@ -206,7 +206,10 @@ function Ware_FindStandardEntities()
 	ClientCmd <- CreateEntitySafe("point_clientcommand");
 	
 	MarkForPurge(WaterLOD);
-	AddThinkToEnt(World, "Ware_OnUpdate");
+	
+	// avoid adding the think again to not break global execution order
+	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
+		AddThinkToEnt(World, "Ware_OnUpdate");
 	
 	Ware_TextManagerQueue <- [];
 	Ware_TextManager = SpawnEntityFromTableSafe("game_text",
