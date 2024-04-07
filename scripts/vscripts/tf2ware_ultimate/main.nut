@@ -5,6 +5,8 @@ SetConvarValue("mp_friendlyfire", 1);
 SetConvarValue("mp_respawnwavetime", 99999);
 SetConvarValue("mp_scrambleteams_auto", 0);
 SetConvarValue("mp_waitingforplayers_time", 60);
+SetConvarValue("mp_teams_unbalance_limit", 1);
+SetConvarValue("mp_autoteambalance", 1);
 SetConvarValue("sv_turbophysics", 0);
 SetConvarValue("tf_dropped_weapon_lifetime", 0);
 SetConvarValue("tf_weapon_criticals", 0);
