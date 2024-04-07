@@ -16,7 +16,7 @@ function OnStart()
 	if (mode == 4)
 	{
 		local items = ["Sandvich", "Dalokohs Bar", "Fishcake", "Buffalo Steak Sandvich", "Second Banana"];
-		Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS, items[RandomIndex(items)];
+		Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS, items[RandomIndex(items)]);
 	}
 	else if (mode == 5)
 	{
