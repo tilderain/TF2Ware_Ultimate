@@ -251,5 +251,12 @@ function KillWeapon(weapon)
 		wearable.Kill();
 	}
 	
+	wearable = GetPropEntity(weapon, "m_hExtraWearableViewModel");
+	if (wearable)
+	{
+		MarkForPurge(wearable);
+		wearable.Kill();
+	}
+	
 	weapon.Kill();
 }
