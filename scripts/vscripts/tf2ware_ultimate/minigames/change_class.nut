@@ -53,9 +53,7 @@ function OnEnd()
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
-		if (IsEntityAlive(player) == false)
-			player.ForceRespawn();
-		if (player.GetPlayerClass() == desired_class)
+		if (GetPropInt(player, "m_Shared.m_iDesiredPlayerClass") == desired_class)
 			Ware_PassPlayer(player, true);
 	}
 }
