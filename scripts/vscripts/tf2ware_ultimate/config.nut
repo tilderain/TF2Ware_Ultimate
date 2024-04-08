@@ -37,6 +37,7 @@ Ware_Minigames <-
 	[1, "sap"             ],
 	[1, "sawrun"          ],
 	[1, "say_word"        ],
+	[1, "shark"           ],
 	[1, "shoot_gifts"     ],
 	[1, "shoot_target"    ],
 	[1, "simon_says"      ],
@@ -98,6 +99,7 @@ Ware_MinigameMusic <-
 	"question"
 	"settingthescene",
 	"sillytime",
+	"slowfox",
 	"spotlightsonyou",
 	"streetfighter",
 	"survivor",

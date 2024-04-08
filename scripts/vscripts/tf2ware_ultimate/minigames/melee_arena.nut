@@ -10,7 +10,6 @@ minigame.min_players = 2;
 minigame.start_pass = true;
 minigame.allow_damage = true;
 minigame.fail_on_death = true;
-minigame.end_below_min = true;
 minigame.end_delay = 1.0;
 minigame.custom_overlay = "survive";
 
@@ -44,4 +43,9 @@ function OnTakeDamage(params)
 		// must add health here instead of 'add_onhit_addhealth' attribute because it doesn't work with friendlyfire
 		HealPlayer(attacker, amount);
 	}
+}
+
+function CheckEnd()
+{
+	return Ware_GetAliveCount() <= 1;
 }

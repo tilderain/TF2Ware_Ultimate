@@ -48,8 +48,7 @@ function OnStart()
 				effect_name = bomb_particle,
 				start_active = true
 			});
-			
-			EntFireByHandle(particle, "SetParent", "!activator", -1, player, null);
+			SetEntityParent(particle, player);
 			
 			bomb = Ware_SpawnWearable(player, bomb_model);
 			SetPropInt(bomb, "m_fEffects", 0);

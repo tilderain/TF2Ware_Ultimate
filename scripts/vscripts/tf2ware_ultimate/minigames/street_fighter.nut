@@ -3,7 +3,6 @@ minigame.name = "Street Fighter";
 minigame.description = "Taunt kill!";
 minigame.duration = 21.5;
 minigame.end_delay = 1.0;
-minigame.end_dead_team = true;
 minigame.allow_damage = true;
 minigame.friendly_fire = false;
 minigame.location = "boxarena";
@@ -84,4 +83,9 @@ function OnTakeDamage(params)
 		
 		params.damage = 800.0;
 	}
+}
+
+function CheckEnd()
+{
+	return Ware_GetAliveCount(TF_TEAM_RED) == 0 || Ware_GetAliveCount(TF_TEAM_BLUE) == 0;
 }

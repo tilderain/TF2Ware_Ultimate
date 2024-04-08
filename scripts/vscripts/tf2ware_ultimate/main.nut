@@ -50,8 +50,6 @@ class Ware_MinigameData
 		no_collisions  = false;
 		friendly_fire  = true;
 		thirdperson    = false;
-		end_below_min  = false;
-		end_dead_team  = false;
 		end_delay      = 0.0;
 		convars        = [];
 		entities       = [];
@@ -91,10 +89,6 @@ class Ware_MinigameData
 	friendly_fire	= null;
 	// Force players into thirdperson? Default is false
 	thirdperson	    = null;
-	// Automatically end the minigame early if number of players alive is less than min_players, default is false
-	end_below_min	= null;
-	// Automatically end the minigame early if either team has no alive players, default is false
-	end_dead_team	= null;
 	// Delay after the minigame "ends" before showing results, default is 0.0
 	end_delay		= null;
 	// Custom text overlay to show rather than the default implied from name
@@ -122,6 +116,7 @@ class Ware_MinigameData
 	cb_on_player_voiceline	= null;
 	cb_on_player_touch		= null;
 	cb_on_update			= null;
+	cb_check_end			= null;
 };
 
 class Ware_PlayerData
@@ -130,7 +125,6 @@ class Ware_PlayerData
 	{
 		player           = entity;
 		scope            = entity.GetScriptScope();
-		team             = entity.GetTeam();
 		passed           = false;
 		passed_effects   = false;
 		mission          = 0;
@@ -141,7 +135,6 @@ class Ware_PlayerData
 	
 	player		     = null;
 	scope		     = null;
-	team		     = null;
 	passed		     = null;
 	passed_effects   = null;
 	mission		     = null;
@@ -151,10 +144,24 @@ class Ware_PlayerData
 	melee_attributes = null;
 	start_sound      = null;
 	construction_pda = null;
+	saved_team       = null;
 };
 
 if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
 {
+	foreach (data in Ware_MinigamePlayers)
+	{
+		local player = data.player;
+		if (!player.IsValid())
+			continue;
+			
+		if (data.saved_team != null)
+		{
+			ChangePlayerTeam(player, data.saved_team);
+			data.saved_team = null;
+		}		
+	}
+	
 	foreach (name, value in Ware_MinigameSavedConvars)
 		SetConvarValue(name, value);
 	Ware_MinigameSavedConvars.clear();
@@ -826,6 +833,15 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	}
 }
 
+function Ware_SetPlayerTeam(player, team)
+{
+	local old_team = player.GetTeam();
+	local data = player.GetScriptScope().ware_data;
+	if (data.saved_team == null)
+		data.saved_team = old_team;
+	ChangePlayerTeam(player, team);
+}
+
 function Ware_PassPlayer(player, pass)
 {
 	local data = player.GetScriptScope().ware_data;
@@ -902,6 +918,57 @@ function Ware_PlayStartSound()
 	 
 	if (IsInWaitingForPlayers())
 		Ware_PlayGameSound(self, "lets_get_started");	
+}
+
+function Ware_IsTeamDead(team)
+{
+	if (!(team & 2))
+		return true;
+		
+	foreach (data in Ware_MinigamePlayers)
+	{
+		local player = data.player;
+		if (player.GetTeam() == team && IsEntityAlive(player)) 
+			return false;
+	}
+	
+	return true;
+}
+
+function Ware_IsEveryoneDead()
+{
+	foreach (data in Ware_MinigamePlayers)
+	{
+		if (IsEntityAlive(data.player)) 
+			return false;
+	}
+	
+	return true;
+}
+
+function Ware_GetAliveCount(team = TEAM_UNASSIGNED)
+{
+	local count = 0;
+	if (team & 2)
+	{
+		foreach (data in Ware_MinigamePlayers)
+		{
+			local player = data.player;
+			if (player.GetTeam() == team && IsEntityAlive(player)) 
+				count++;
+		}	
+	}
+	else
+	{
+		foreach (data in Ware_MinigamePlayers)
+		{
+			local player = data.player;
+			if (IsEntityAlive(player)) 
+				count++;
+		}	
+	}
+	
+	return count;
 }
 
 function Ware_CheckHomeLocation(player_count)
@@ -1036,7 +1103,8 @@ function Ware_StartMinigame(minigame)
 	Ware_Minigame.cb_on_player_say			= Ware_MinigameCallback("OnPlayerSay");
 	Ware_Minigame.cb_on_player_voiceline	= Ware_MinigameCallback("OnPlayerVoiceline");
 	Ware_Minigame.cb_on_player_touch		= Ware_MinigameCallback("OnPlayerTouch");
-	Ware_Minigame.cb_on_update				= Ware_MinigameCallback("OnUpdate");
+	Ware_Minigame.cb_on_update				= Ware_MinigameCallback("OnUpdate")
+	Ware_Minigame.cb_check_end				= Ware_MinigameCallback("CheckEnd");
 	
 	local event_prefix = "OnGameEvent_";
 	local event_prefix_len = event_prefix.len();
@@ -1157,6 +1225,9 @@ function Ware_EndMinigame()
 
 function Ware_EndMinigameInternal()
 {
+	if ("OnCleanup" in Ware_MinigameScope) 
+		Ware_MinigameScope.OnCleanup();
+				
 	Ware_MinigamesPlayed++;
 	
 	foreach (name, value in Ware_MinigameSavedConvars)
@@ -1177,10 +1248,15 @@ function Ware_EndMinigameInternal()
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(0);
 			
+		local data = player.GetScriptScope().ware_data;
+		if (data.saved_team != null)
+		{
+			ChangePlayerTeam(player, data.saved_team);
+			data.saved_team = null;
+		}
+			
 		if (IsEntityAlive(player))
 		{
-			local data = player.GetScriptScope().ware_data;
-			
 			local melee = data.melee;
 			if (melee)
 			{
@@ -1288,46 +1364,9 @@ function Ware_OnUpdate()
 		
 	if (!Ware_MinigameEnded)
 	{
-		if (Ware_Minigame.end_below_min)
-		{
-			local stop = true;
-			local alive_count = 0;
-			foreach (data in Ware_MinigamePlayers)
-			{
-				if (IsEntityAlive(data.player) && ++alive_count >= Ware_Minigame.min_players)
-				{
-					stop = false;
-					break;
-				}
-			}
-			
-			if (stop)
-				Ware_EndMinigame();
-		}
-		else if (Ware_Minigame.end_dead_team)
-		{
-			local stop = true;
-			local red_alive = false;
-			local blue_alive = false;
-			foreach (data in Ware_MinigamePlayers)
-			{
-				local player = data.player;
-				if (IsEntityAlive(player))
-				{
-					local team = player.GetTeam();
-					if (team == TF_TEAM_RED)
-						red_alive = true;
-					else if (team == TF_TEAM_BLUE)
-						blue_alive = true;
-					
-					if (red_alive && blue_alive)
-						break;
-				}
-			}
-			
-			if (!red_alive || !blue_alive)
-				Ware_EndMinigame();			
-		}
+		local ret = Ware_Minigame.cb_check_end();
+		if (ret != null && ret == true)
+			Ware_EndMinigame();
 	}
 
 	if (!Ware_Minigame.cb_on_update) // can happen if a minigame script errors on load
@@ -1555,7 +1594,6 @@ function OnGameEvent_player_spawn(params)
 	data.attributes.clear();
 	data.melee_attributes.clear();
 	
-	data.team = params.team;	
 	if (params.team & 2)
 	{
 		if (!data.start_sound)

@@ -33,3 +33,12 @@ TF2Ware_Ultimate.Hadoken
 	soundlevel		SNDLVL_80dB
 	wave			tf2ware_ultimate/kenryu.mp3
 }
+
+TF2Ware_Ultimate.Sharkbite
+{
+	channel			CHAN_BODY
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_80dB
+	wave			physics/body/body_medium_break2.wav
+}

@@ -27,7 +27,6 @@ minigame.music = "morning";
 minigame.min_players = 2;
 minigame.allow_damage = true;
 minigame.friendly_fire = false;
-minigame.end_below_min = true;
 minigame.end_delay = 0.6;
 
 function OnStart()
@@ -48,4 +47,9 @@ function OnPlayerDeath(params)
 	if (!attacker || attacker == victim)
 		return;
 	Ware_PassPlayer(attacker, true);
+}
+
+function CheckEnd()
+{
+	return Ware_GetAliveCount() <= 1;
 }

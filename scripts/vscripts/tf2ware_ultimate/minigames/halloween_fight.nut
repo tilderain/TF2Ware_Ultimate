@@ -19,7 +19,6 @@ minigame.min_players = 2;
 minigame.start_pass = true;
 minigame.allow_damage = true;
 minigame.fail_on_death = true;
-minigame.end_below_min = true;
 minigame.thirdperson = true;
 minigame.custom_overlay = "fight";
 minigame.convars =
@@ -124,4 +123,9 @@ function OnEnd()
 		player.SetModelScale(1.0, 0.0);
 		TogglePlayerWearables(player, true);		
 	}
+}
+
+function CheckEnd()
+{
+	return Ware_GetAliveCount() <= 1;
 }
