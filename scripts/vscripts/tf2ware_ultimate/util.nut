@@ -213,6 +213,18 @@ function GetPlayerName(player)
     return GetPropString(player, "m_szNetname");
 }
 
+function StunPlayer(player, stun_type, stun_effects, stun_duration, move_speed_reduction)
+{
+	local trigger = CreateEntitySafe("trigger_stun");
+	trigger.KeyValueFromInt("spawnflags", 1);
+	trigger.KeyValueFromInt("stun_type", stun_type);
+	trigger.KeyValueFromInt("stun_effects", stun_effects.tointeger());
+	trigger.KeyValueFromFloat("stun_duration", stun_duration);
+	trigger.KeyValueFromFloat("move_speed_reduction", move_speed_reduction);
+	EntFireByHandle(trigger, "EndTouch", "", -1, player, player);
+	EntFireByHandle(trigger, "Kill", "", -1, null, null);
+}
+
 function HealPlayer(player, amount)
 {
 	local health = player.GetHealth();

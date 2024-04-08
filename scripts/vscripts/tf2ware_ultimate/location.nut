@@ -146,7 +146,6 @@ Ware_Location.targetrange <-
 	}
 };
 
-
 Ware_Location.boxarena <-
 {
 	center   = Vector(-1792, 8192, -7135),
@@ -154,4 +153,19 @@ Ware_Location.boxarena <-
 	maxs     = Vector(-832, 9152, -5552),
 	radius   = 512.0,	
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius); }
+};
+
+Ware_Location.beach <-
+{
+	center   = Vector(4400, 6668, -3790),
+	mins     = Vector(4112, 5656, -4200),
+	maxs     = Vector(8192, 7680, -3296),	
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players, 
+			center, 
+			QAngle(), 
+			1000.0, 
+			64.0, 64.0);
+	}
 };

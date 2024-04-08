@@ -39,6 +39,10 @@ const TF_AMMO_GRENADES2 = 5
 const TF_AMMO_GRENADES3 = 6
 const TF_AMMO_COUNT 	= 7 
 
+const TF_TRIGGER_STUN_MOVEMENT	= 0
+const TF_TRIGGER_STUN_CONTROLS	= 1
+const TF_TRIGGER_STUN_LOSER		= 2
+
 const OBJ_DISPENSER         = 0
 const OBJ_TELEPORTER        = 1
 const OBJ_SENTRYGUN         = 2
