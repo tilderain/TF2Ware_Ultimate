@@ -172,7 +172,7 @@ Ware_Location.beach <-
 
 Ware_Location.manor <-
 {
-	center   = Vector(8048, -6440, -3616),
+	center   = Vector(8048, -6440, -3615),
 	Teleport = function(players) 
 	{
 		// TODO
