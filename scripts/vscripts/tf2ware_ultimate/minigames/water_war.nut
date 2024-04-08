@@ -1,12 +1,10 @@
 minigame <- Ware_MinigameData();
 minigame.name = "Water War";
 minigame.description = "Survive!"
-minigame.duration = 4.0;
+minigame.duration = 12.0;
 minigame.music = "adventuretime";
-minigame.start_pass = true;
 minigame.allow_damage = true;
-minigame.fail_on_death = true;
-minigame.custom_overlay = "survive";
+minigame.custom_overlay = "kill_player";
 minigame.convars =
 {
 	tf_avoidteammates = 0
@@ -28,6 +26,17 @@ function OnTeleport(players)
 function OnTakeDamage(params)
 {
 	params.damage = 950.0;
+}
+
+function OnPlayerDeath(params)
+{
+	local attacker = GetPlayerFromUserID(params.attacker);
+	if (attacker == null)
+		return;
+	local victim = GetPlayerFromUserID(params.userid);
+	if (victim == attacker)
+		return;
+	Ware_PassPlayer(attacker, true);
 }
 
 function OnEnd()
