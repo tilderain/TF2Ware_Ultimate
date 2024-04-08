@@ -102,6 +102,7 @@ Ware_MinigameMusic <-
 	"takeabreak",
 	"thethinker",
 	"train",
+	"undergroundbros",
 	"wildwest",
 ];
 

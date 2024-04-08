@@ -17,7 +17,7 @@ function Ware_TeleportPlayersCircle(players, origin, radius)
 function Ware_TeleportPlayersRow(players, origin, angles, max_width, offset_horz, offset_vert)
 {
 	// TODO should make this work for non-cardinal axes
-	local axis_horz = fabs(angles.y) == 180 ? "x" : "y";
+	local axis_horz = (angles.y == 0.0 || fabs(angles.y) == 180.0) ? "x" : "y";
 	local axis_vert = axis_horz == "x" ? "y" : "x";
 	
 	local center = origin * 1.0;
@@ -167,5 +167,14 @@ Ware_Location.beach <-
 			QAngle(), 
 			1000.0, 
 			64.0, 64.0);
+	}
+};
+
+Ware_Location.manor <-
+{
+	center   = Vector(8048, -6440, -3616),
+	Teleport = function(players) 
+	{
+		// TODO
 	}
 };
