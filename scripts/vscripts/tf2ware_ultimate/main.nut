@@ -491,6 +491,11 @@ function Ware_GetMinigameTime()
 	return Time() - Ware_MinigameStartTime;
 }
 
+function Ware_GetMinigameRemainingTime()
+{
+	return (Ware_MinigameStartTime + Ware_Minigame.duration) - Time();
+}
+
 function Ware_ParseLoadout(player)
 {
 	local melee, last_melee;

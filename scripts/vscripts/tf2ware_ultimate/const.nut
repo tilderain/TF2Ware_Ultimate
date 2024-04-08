@@ -83,6 +83,7 @@ ITEM_PROJECTILE_MAP <-
 	[19]   = "tf_projectile_pipe",
 	[20]   = "tf_projectile_pipe_remote",
 	[308]  = "tf_projectile_pipe",
+	[44]   = "tf_projectile_stun_ball",
 	[56]   = "tf_projectile_arrow",
 }
 
