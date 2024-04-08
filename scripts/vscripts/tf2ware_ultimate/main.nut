@@ -808,6 +808,36 @@ function Ware_DisablePlayerPrimaryFire(player)
 		SetPropFloat(weapon, "m_flNextPrimaryAttack", FLT_MAX);
 }
 
+function Ware_RemoveUndesiredWearables(player)
+{
+	local player_class = player.GetPlayerClass();
+	if (player_class == TF_CLASS_DEMOMAN)
+	{
+		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+		{
+			MarkForPurge(wearable);
+			if (wearable.GetClassname() == "tf_wearable_demoshield")
+			{
+				SetPropBool(player, "m_Shared.m_bShieldEquipped", false);
+				wearable.Kill();
+				break;
+			}
+		}		
+	}
+	else if (player_class == TF_CLASS_SNIPER)
+	{
+		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+		{
+			MarkForPurge(wearable);
+			if (wearable.GetClassname() == "tf_wearable_razorback")
+			{
+				wearable.Kill();
+				break;
+			}
+		}	
+	}
+}
+
 function Ware_SetPlayerAmmo(player, ammo_type, ammo)
 {
 	SetPropIntArray(player, "m_iAmmo", ammo, ammo_type);
@@ -823,6 +853,7 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	player.Regenerate(true);
 	player.SetCustomModel(GetPropString(player, "m_PlayerClass.m_iszCustomModel"));
 	player.SetHealth(player.GetMaxHealth());
+	Ware_RemoveUndesiredWearables(player);
 	Ware_ParseLoadout(player);
 	
 	if (switch_melee)
@@ -1535,32 +1566,7 @@ function PlayerPostSpawn()
 	if (Ware_TimeScale != 1.0)
 		self.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1);
 		
-	local player_class = self.GetPlayerClass();
-	if (player_class == TF_CLASS_DEMOMAN)
-	{
-		for (local wearable = self.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-		{
-			MarkForPurge(wearable);
-			if (wearable.GetClassname() == "tf_wearable_demoshield")
-			{
-				SetPropBool(self, "m_Shared.m_bShieldEquipped", false);
-				wearable.Kill();
-				break;
-			}
-		}		
-	}
-	else if (player_class == TF_CLASS_SNIPER)
-	{
-		for (local wearable = self.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-		{
-			MarkForPurge(wearable);
-			if (wearable.GetClassname() == "tf_wearable_razorback")
-			{
-				wearable.Kill();
-				break;
-			}
-		}	
-	}
+	Ware_RemoveUndesiredWearables(self);
 }
 
 function OnGameEvent_player_spawn(params)
