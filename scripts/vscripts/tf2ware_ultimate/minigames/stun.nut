@@ -5,7 +5,6 @@ minigame.duration = 4.0;
 minigame.music = "bigjazzfinish";
 minigame.description = "Stun an Enemy!";
 minigame.allow_damage = true;
-minigame.friendly_fire = true;
 
 function OnStart()
 {
@@ -32,9 +31,6 @@ function OnTakeDamage(params)
 	params.damage = 0.0;
 	local victim = params.const_entity;
 	local attacker = params.attacker;
-	
-	if (!victim)
-		return;
 	
 	if (params.damage_stats == TF_DMG_CUSTOM_BASEBALL)
 	{
