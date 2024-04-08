@@ -4,6 +4,7 @@ minigame.duration = 9.0;
 minigame.music = "catchme";
 minigame.location = "beach";
 minigame.no_collisions  = true;
+minigame.thirdperson = true;
 
 local items =
 [
