@@ -1598,6 +1598,13 @@ function OnGameEvent_teamplay_round_start(params)
 	Ware_BeginIntermission();
 }
 
+function OnGameEvent_recalculate_truce(params)
+{
+	// minigames can spawn bosses like merasmus which will revert truce to false after its over
+	if (Ware_Minigame == null)
+		SetPropBool(GameRules, "m_bTruceActive", true);
+}
+
 function PlayerPostSpawn()
 {
 	if (Ware_TimeScale != 1.0)
