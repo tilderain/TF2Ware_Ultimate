@@ -9,12 +9,21 @@ local colors = ["red", "yellow", "blue"];
 local colors_text = [TF_COLOR_RED, COLOR_YELLOW, TF_COLOR_BLUE];
 local color = -1;
 
-local prop_model = "models/Combine_Helicopter/helicopter_bomb01.mdl";
+local prop_model = "models/tf2ware_ultimate/dummy_sphere.mdl";
 local bomb_sprite = "sprites/tf2ware_ultimate/bomb_%s.vmt";
 PrecacheModel(prop_model);
 
-function CreateBomb(sprite_model, chosen)
+bomb_queue <- [];
+
+function CreateBomb()
 {
+	if (bomb_queue.len() == 0)
+		return;
+	
+	local bomb_data = bomb_queue.remove(0);
+	local sprite_model = bomb_data[0];
+	local chosen = bomb_data[1];
+	
 	local pos = Ware_MinigameLocation.center;
 	pos += Vector(RandomFloat(-380, 380), RandomFloat(-380, 380), RandomFloat(80, 400));
 	
@@ -24,7 +33,7 @@ function CreateBomb(sprite_model, chosen)
 		origin = pos,
 		massscale = 0.01,
 		rendermode = kRenderNone,
-		modelscale = 2
+		disableshadows = true,
 	});
 	prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT);
 	
@@ -45,7 +54,7 @@ function CreateBomb(sprite_model, chosen)
 	if (chosen)
 		prop.AddEFlags(EFL_USER);
 	
-	return prop;
+	return 0.02;
 }
 
 function OnStart()
@@ -68,8 +77,12 @@ function OnStart()
     foreach (i, color in colors)
 	{
 		for (local j = 0; j < color_counts[i]; j++)
-			CreateBomb(format(bomb_sprite, color), i == max);
+		{
+			bomb_queue.append([format(bomb_sprite, color), i == max]);
+		}
 	}
+	
+	Ware_CreateTimer(@() CreateBomb(), 0.0);
 }
 
 function OnTakeDamage(params)

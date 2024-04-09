@@ -4,7 +4,7 @@ minigame.description = "Hit the Bullseye 5 times!"
 minigame.duration = 4.0;
 minigame.music = "wildwest";
 
-local prop_model = "models/Combine_Helicopter/helicopter_bomb01.mdl";
+local prop_model = "models/tf2ware_ultimate/dummy_sphere.mdl";
 local sprite_model = "sprites/tf2ware_ultimate/" + (RandomInt(0, 100) <= 5 ? "bullseye_gabe.vmt" : "bullseye.vmt");
 PrecacheModel(prop_model);
 
@@ -20,7 +20,6 @@ function OnStart()
 		origin = pos,
 		massscale = 0.02,
 		rendermode = kRenderNone,
-		modelscale = 2
 	});
 	prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT);
 	

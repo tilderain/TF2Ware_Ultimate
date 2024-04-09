@@ -6,7 +6,7 @@ minigame.music = "thethinker";
 minigame.end_delay = 0.5;
 minigame.suicide_on_end = true;
 
-local prop_model = "models/Combine_Helicopter/helicopter_bomb01.mdl";
+local prop_model = "models/tf2ware_ultimate/dummy_sphere.mdl";
 local sprite_model = "sprites/tf2ware_ultimate/bomb_red.vmt";
 PrecacheModel(prop_model);
 
@@ -27,7 +27,7 @@ function OnStart()
 			origin = pos,
 			massscale = 0.015,
 			rendermode = kRenderNone,
-			modelscale = 2.0,
+			disableshadows = true,
 		});
 		prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT);
 		
