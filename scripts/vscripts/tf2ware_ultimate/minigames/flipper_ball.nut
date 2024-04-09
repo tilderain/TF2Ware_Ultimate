@@ -1,0 +1,143 @@
+local mode = RandomInt(0, 1);
+
+minigame <- Ware_MinigameData();
+minigame.name = "Flipper Ball";
+minigame.description = "Get to the end!";
+minigame.duration = mode == 0 ? 27.0 : 28.0;
+minigame.music = mode == 0 ? "fastbros" : "letsgetquirky";
+minigame.location = "pinball";
+minigame.no_collisions  = true;
+minigame.custom_overlay = "get_end";
+minigame.convars =
+{
+	phys_timescale = 1.5,
+}
+
+local balls = [];
+local ball_model = "models/tf2ware_ultimate/big_soccer_ball.mdl";
+PrecacheModel(ball_model);
+
+function OnStart()
+{
+	if (mode == 0)
+		Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null);
+	else
+		Ware_SetGlobalLoadout(TF_CLASS_PYRO, null);
+	Ware_CreateTimer(@() SpawnBall(), 1.0);
+}
+
+function OnTeleport(players)
+{
+	if (mode == 0)
+	{
+		Ware_TeleportPlayersRow(players,
+			Ware_MinigameLocation.center_bottom,
+			QAngle(0, -90, 0),
+			1000.0,
+			65.0, 65.0);
+	}
+	else if (mode == 1)
+	{
+		Ware_TeleportPlayersRow(players,
+			Ware_MinigameLocation.center_top,
+			QAngle(0, 90, 0),
+			2100.0,
+			-64.0, 60.0);	
+	}
+}
+
+function SpawnBall()
+{
+	local alive_players = Ware_MinigamePlayers.filter(@(i, data) IsEntityAlive(data.player));
+	if (alive_players.len() > 0)
+	{
+		local player = alive_players[RandomIndex(alive_players)].player;	
+		local origin = player.GetOrigin();
+
+		local ball_origin = Ware_MinigameLocation.center_top + Vector(0, 220, 365);
+		ball_origin.x = origin.x;
+
+		local ball = Ware_SpawnEntity("prop_physics_override"
+		{
+			classname = "passtime_pass", // killicon
+			origin = ball_origin,
+			model = ball_model,
+			skin = RandomInt(0, 1),
+			disableshadows = true,
+			minhealthdmg = INT_MAX, // don't destroy on touch
+			spawnflags = 16, // break on touch
+		});
+		balls.append(ball);
+		
+		if (balls.len() < 50)
+			return 1.0;		
+	}
+}
+
+function OnTakeDamage(params)
+{
+	local victim = params.const_entity;
+	if (victim.IsPlayer())
+	{
+		if (params.damage_type & DMG_SLASH)
+		{
+			// the attacker is the player, so recover the true attacker from the damage position
+			local attacker = Entities.FindByClassnameNearest("passtime_pass", params.damage_position, 0.0);
+			if (attacker)
+				victim.TakeDamage(10000, DMG_BLAST|DMG_CRIT, attacker);			
+			return false;
+		}
+	}
+	else if (victim.GetClassname() == "passtime_pass")
+	{
+		return false;
+	}
+}
+
+function OnUpdate()
+{
+	local win_threshold;
+	if (mode == 0)
+	{
+		local win_y = Ware_MinigameLocation.center_top.y + 64.0;
+		foreach (data in Ware_MinigamePlayers)
+		{
+			local player = data.player;
+			if (IsEntityAlive(player) && player.GetOrigin().y < win_y)
+				Ware_PassPlayer(player, true);
+		}
+
+	}
+	else if (mode == 1)
+	{
+		local win_y = Ware_MinigameLocation.center_bottom.y - 400.0;
+				
+		for (local i = balls.len() - 1; i >= 0; i--)
+		{
+			local ball = balls[i];
+			if (!ball.IsValid())
+			{
+				balls.remove(i);
+				continue;
+			}
+			
+			if (ball.GetOrigin().y > win_y)
+			{
+				ball.Kill();
+				balls.remove(i);
+			}
+		}
+		
+		foreach (data in Ware_MinigamePlayers)
+		{
+			local player = data.player;
+			if (IsEntityAlive(player) && player.GetOrigin().y > win_y)
+				Ware_PassPlayer(player, true);
+		}		
+	}
+}
+
+function CheckEnd()
+{
+	return Ware_GetAliveCount() == 0;
+}

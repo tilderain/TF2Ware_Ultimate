@@ -108,6 +108,8 @@ class Ware_MinigameData
 	cleanup_names	= null;
 	// Timers spawned by the minigame, stopped after it ends
 	timers			= null;
+	// Player condition added by the minigame, reverted after end
+	condition		= null;
 	
 	cb_on_take_damage		= null;
 	cb_on_player_attack		= null;
@@ -795,6 +797,13 @@ function Ware_SetGlobalAttribute(name, value, duration)
 		Ware_AddPlayerAttribute(data.player, name, value, duration);
 }
 
+function Ware_SetGlobalCondition(condition)
+{
+	foreach (data in Ware_MinigamePlayers)
+		data.player.AddCond(condition);
+	Ware_Minigame.condition = condition;
+}
+
 function Ware_FixupPlayerWeaponSwitch()
 {
 	if (activator)
@@ -1278,6 +1287,8 @@ function Ware_EndMinigameInternal()
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER);
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(0);
+		if (Ware_Minigame.condition != null)
+			player.RemoveCond(Ware_Minigame.condition);
 			
 		local data = player.GetScriptScope().ware_data;
 		if (data.saved_team != null)

@@ -178,3 +178,13 @@ Ware_Location.manor <-
 		// TODO
 	}
 };
+
+Ware_Location.pinball <-
+{
+	center_top    = Vector(-3840, -5344, -5679),
+	center_bottom = Vector(-3840, 1984, -7599),
+	Teleport  = function(players) 
+	{
+		// TODO
+	}
+};

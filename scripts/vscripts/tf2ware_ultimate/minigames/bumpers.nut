@@ -19,8 +19,7 @@ minigame.convars =
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS, null);
-	foreach (data in Ware_MinigamePlayers)
-		data.player.AddCond(TF_COND_SPEED_BOOST);
+	Ware_SetGlobalCondition(TF_COND_SPEED_BOOST);
 }
 
 function OnTakeDamage(params)
@@ -34,10 +33,4 @@ function OnPlayerTouch(player, other_player)
 	other_player.EmitSound(bump_sound);
 	other_player.SetAbsVelocity(other_player.GetAbsVelocity() + Vector(0, 0, 600));
 	Ware_PushPlayerFromOther(other_player, player, 600.0);
-}
-
-function OnEnd()
-{
-	foreach (data in Ware_MinigamePlayers)
-		data.player.RemoveCond(TF_COND_SPEED_BOOST);
 }

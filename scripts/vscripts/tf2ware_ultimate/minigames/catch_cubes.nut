@@ -15,13 +15,10 @@ spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 1
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, RandomInt(0, 1) ? "Sun-on-a-Stick" : "Candy Cane");
+	Ware_SetGlobalCondition(TF_COND_SPEED_BOOST);
 	
 	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player;
-		player.AddCond(TF_COND_SPEED_BOOST);
-		Ware_GetPlayerMiniData(player).points <- 0;
-	}
+		Ware_GetPlayerMiniData(data.player).points <- 0;
 		
 	Ware_CreateTimer(@() CreateCube(), 0.5);
 }
@@ -66,10 +63,4 @@ function OnCubeTouch()
 			
 		self.GetMoveParent().Kill();
 	}
-}
-
-function OnEnd()
-{
-	foreach (data in Ware_MinigamePlayers)
-		data.player.RemoveCond(TF_COND_SPEED_BOOST);
 }
