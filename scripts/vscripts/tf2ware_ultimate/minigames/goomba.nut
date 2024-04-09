@@ -21,7 +21,7 @@ function OnStart()
 	{
 		local player = data.player;
 					
-		if (data.team == jump_team)
+		if (player.GetTeam() == jump_team)
 		{
 			Ware_SetPlayerMission(player, 2);
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT);
@@ -39,7 +39,7 @@ function OnUpdate()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
-		if (data.team == jump_team)
+		if (player.GetTeam() == jump_team)
 		{
 			local player = data.player;
 			if (IsEntityAlive(player))

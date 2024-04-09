@@ -26,7 +26,7 @@ function OnStart()
 		// prevent taunting
 		player.AddCond(TF_COND_GRAPPLED_TO_PLAYER);
 		
-		if (data.team == heavy_team)
+		if (player.GetTeam() == heavy_team)
 		{
 			Ware_SetPlayerMission(player, 2);
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS);

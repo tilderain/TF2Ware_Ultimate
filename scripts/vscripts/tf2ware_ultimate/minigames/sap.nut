@@ -21,7 +21,7 @@ function OnStart()
 	{
 		local player = data.player;
 					
-		if (data.team == engi_team)
+		if (player.GetTeam() == engi_team)
 		{
 			Ware_SetPlayerMission(player, 2);
 			Ware_SetPlayerClass(player, TF_CLASS_ENGINEER);

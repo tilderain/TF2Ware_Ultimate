@@ -1393,15 +1393,15 @@ function Ware_OnUpdate()
 	if (Ware_Minigame == null)
 		return;
 		
+	if (!Ware_Minigame.cb_on_update) // implies a minigame script errors on load
+		return;		
+		
 	if (!Ware_MinigameEnded)
 	{
 		local ret = Ware_Minigame.cb_check_end();
 		if (ret != null && ret == true)
 			Ware_EndMinigame();
 	}
-
-	if (!Ware_Minigame.cb_on_update) // can happen if a minigame script errors on load
-		return;
 	
 	Ware_Minigame.cb_on_update();
 	
