@@ -1,11 +1,9 @@
-local mode = RandomInt(0, 1);
-
 minigame <- Ware_MinigameData();
 minigame.name = "Most Bombs";
-minigame.description = mode == 0 ? "Shoot the most occuring color!" : "Say the most occuring color!";
+minigame.description = "Shoot the most occuring color!";
 minigame.duration = 8.0;
 minigame.music = "thethinker";
-minigame.custom_overlay = mode == 0 ? "most_bombs" : "most_bombs_say"; 
+minigame.custom_overlay = "most_bombs";
 
 local colors = ["red", "yellow", "blue"];
 local colors_text = [TF_COLOR_RED, COLOR_YELLOW, TF_COLOR_BLUE];
@@ -85,11 +83,8 @@ function OnTakeDamage(params)
 		local attacker = params.attacker;
 		if (attacker != null && attacker.IsPlayer())
 		{
-			if (mode == 0)
-			{
-				if (entity.IsEFlagSet(EFL_USER))
-					Ware_PassPlayer(attacker, true);
-			}
+			if (entity.IsEFlagSet(EFL_USER))
+				Ware_PassPlayer(attacker, true);
 
 			Ware_StripPlayer(attacker, true);
 		}
@@ -98,29 +93,5 @@ function OnTakeDamage(params)
 
 function OnEnd()
 {
-	local fmt;
-	if (mode == 0)
-		fmt = "{color}The correct color to shoot was {color}{str}";
-	else
-		fmt = "{color}The correct color to say was {color}{str}";
-	Ware_ChatPrint(null, fmt, TF_COLOR_DEFAULT, colors_text[color], colors[color].toupper());
-}
-
-function OnPlayerSay(player, text)
-{
-	if (mode != 1)
-		return true;
-	
-	if (text.tolower() == colors[color].tolower())
-	{
-		if (IsEntityAlive(player))
-			Ware_PassPlayer(player, true);
-	}
-	else
-	{
-		if (!Ware_IsPlayerPassed(player) && IsEntityAlive(player))
-			Ware_SuicidePlayer(player);
-	}
-	
-	return false;
+	Ware_ChatPrint(null, "{color}The correct color was {color}{str}", TF_COLOR_DEFAULT, colors_text[color], colors[color].toupper());
 }
