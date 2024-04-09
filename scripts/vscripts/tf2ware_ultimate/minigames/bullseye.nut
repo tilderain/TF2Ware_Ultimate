@@ -10,7 +10,7 @@ PrecacheModel(prop_model);
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Pistol");	
+	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Winger");	
 	
 	local pos = Ware_MinigameLocation.center + Vector(0.0, 0.0, RandomFloat(50.0, 250.0));
 	
