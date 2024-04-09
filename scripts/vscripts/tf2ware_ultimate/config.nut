@@ -33,6 +33,7 @@ Ware_Minigames <-
 	[1, "parachute"       ],
 	[1, "pickup_plate"    ],
 	[1, "piggyback"       ],
+	[1, "pirate"          ],
 	[1, "projectile_jump" ],
 	[1, "rocket_rain"     ],
 	[1, "sap"             ],
@@ -99,6 +100,7 @@ Ware_MinigameMusic <-
 	"makemegroove",
 	"morning",
 	"ohno",
+	"piper",
 	"pumpit",
 	"question"
 	"settingthescene",
