@@ -54,6 +54,7 @@ function OnTakeDamage(params)
 			{
 				Ware_PassPlayer(attacker, true);
 				EmitSoundOnClient(pop_sound, attacker);
+				DispatchParticleEffect("merasmus_blood_bits", victim.GetOrigin(), Vector());
 				victim.EmitSound(pop_sound);
 				victim.Kill();
 			}
