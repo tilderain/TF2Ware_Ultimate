@@ -114,6 +114,7 @@ class Ware_MinigameData
 	cb_on_take_damage		= null;
 	cb_on_player_attack		= null;
 	cb_on_player_death		= null;
+	cb_on_player_disconnect	= null;
 	cb_on_player_say		= null;
 	cb_on_player_voiceline	= null;
 	cb_on_player_touch		= null;
@@ -455,6 +456,9 @@ function Ware_SpawnParticle(entity, name, attach_name = "", attach_type = PATTAC
 
 function Ware_ParticleHook()
 {
+	if (!activator || !activator.IsValid()) // prevent invalid entity or this will crash
+		return false;
+		
 	local data = Ware_ParticleSpawnerQueue.remove(0);
 	SetPropString(self, "m_iszParticleName", data.name);
 	SetPropString(self, "m_iszAttachmentName", data.attach_name);
@@ -1140,6 +1144,7 @@ function Ware_StartMinigame(minigame)
 	Ware_Minigame.cb_on_take_damage			= Ware_MinigameCallback("OnTakeDamage");
 	Ware_Minigame.cb_on_player_attack		= Ware_MinigameCallback("OnPlayerAttack");
 	Ware_Minigame.cb_on_player_death		= Ware_MinigameCallback("OnPlayerDeath");
+	Ware_Minigame.cb_on_player_disconnect	= Ware_MinigameCallback("OnPlayerDisconnect");
 	Ware_Minigame.cb_on_player_say			= Ware_MinigameCallback("OnPlayerSay");
 	Ware_Minigame.cb_on_player_voiceline	= Ware_MinigameCallback("OnPlayerVoiceline");
 	Ware_Minigame.cb_on_player_touch		= Ware_MinigameCallback("OnPlayerTouch");
@@ -1263,6 +1268,13 @@ function Ware_EndMinigame()
 	);
 }
 
+Ware_DeferredPlayers <- [];
+function Ware_DeferredPlayerTeleport()
+{
+	Ware_MinigameHomeLocation.Teleport(Ware_DeferredPlayers);
+	Ware_DeferredPlayers.clear();
+}
+
 function Ware_EndMinigameInternal()
 {
 	if ("OnCleanup" in Ware_MinigameScope) 
@@ -1330,7 +1342,21 @@ function Ware_EndMinigameInternal()
 	
 	if (Ware_MinigameLocation != Ware_MinigameHomeLocation)
 	{
-		Ware_MinigameHomeLocation.Teleport(Ware_MinigamePlayers.map(@(data) data.player));
+		local players = [];
+		foreach (data in Ware_MinigamePlayers)
+		{
+			local player = data.player;
+			// parented players aren't unparented at this point so need to defer it to end of frame
+			if (player.GetMoveParent())
+				Ware_DeferredPlayers.append(player); 		
+			else
+				players.append(player);
+		}
+		
+		if (Ware_DeferredPlayers.len() > 0)
+			EntFireByHandle(World, "CallScriptFunction", "Ware_DeferredPlayerTeleport", -1, null, null);
+		
+		Ware_MinigameHomeLocation.Teleport(players);
 		Ware_MinigameLocation = Ware_MinigameHomeLocation;
 	}
 	
@@ -1673,6 +1699,11 @@ function OnGameEvent_player_disconnect(params)
 	idx = Ware_Players.find(player);
 	if (idx != null)
 		Ware_Players.remove(idx);
+		
+	if (Ware_Minigame == null)
+		return;
+	
+	Ware_Minigame.cb_on_player_disconnect(player);
 }
 
 function OnGameEvent_player_say(params)

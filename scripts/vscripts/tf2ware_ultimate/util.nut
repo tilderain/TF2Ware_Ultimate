@@ -133,11 +133,52 @@ function IsEntityAlive(player)
 	return GetPropInt(player, "m_lifeState") == 0;
 }
 
+function PlayerParentFix()
+{
+	self.RemoveEFlags(EFL_KILLME);
+	for (local wearable = self.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+		wearable.AddEFlags(EFL_KILLME);
+	
+	SetPropInt(self, "m_fEffects", 0);
+	SetPropInt(self, "m_iParentAttachment", 0);
+}
+
 function SetEntityParent(entity, parent, attachment = null)
 {
-	EntFireByHandle(entity, "SetParent", "!activator", -1, parent, null);
-	if (attachment)
-		EntFireByHandle(entity, "SetParentAttachment", attachment, -1, null, null);
+	if (parent)
+	{
+		EntFireByHandle(entity, "SetParent", "!activator", -1, parent, null);
+		if (attachment)
+			EntFireByHandle(entity, "SetParentAttachment", attachment, -1, null, null);
+	}
+	else
+	{
+		EntFireByHandle(entity, "ClearParent", "", -1, null, null);
+	}
+}
+
+function SetPlayerParent(player, parent, attachment = null)
+{
+	if (parent)
+	{
+		SetPropInt(player, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL);
+		EntFireByHandle(player, "SetParent", "!activator", -1, parent, null);
+		if (attachment)
+			EntFireByHandle(player, "SetParentAttachment", attachment, -1, null, null);
+	}
+	else
+	{
+		// prevent players and their stuff from getting deleted
+		player.AddEFlags(EFL_KILLME);
+		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+		{
+			MarkForPurge(wearable);
+			wearable.AddEFlags(EFL_KILLME);
+		}
+	
+		EntFireByHandle(player, "ClearParent", "", -1, null, null);
+		EntFireByHandle(player, "CallScriptFunction", "PlayerParentFix", -1, null, null);	
+	}
 }
 
 _PostInputScope <- null;
