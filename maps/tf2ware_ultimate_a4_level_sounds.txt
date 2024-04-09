@@ -42,3 +42,12 @@ TF2Ware_Ultimate.Sharkbite
 	soundlevel		SNDLVL_80dB
 	wave			physics/body/body_medium_break2.wav
 }
+
+TF2Ware_Ultimate.BalloonPop
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_90dB
+	wave			tf2ware_ultimate/balloon.mp3
+}
