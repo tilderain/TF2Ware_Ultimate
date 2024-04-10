@@ -23,6 +23,7 @@ Ware_Minigames <-
 	"hit_player"      
 	"hit_balls"       
 	"hot_potato"      
+	"jarate"          
 	"kamikaze"        
 	"land_platform"   
 	"laugh"           
@@ -107,6 +108,7 @@ Ware_MinigameMusic <-
 	"piper" 
 	"pumpit" 
 	"question"
+	"rockingout",
 	"settingthescene" 
 	"sillytime" 
 	"slowfox" 
