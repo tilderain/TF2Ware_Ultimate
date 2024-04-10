@@ -15,7 +15,8 @@ function OnStart()
 function OnGameEvent_player_stunned(params)
 {
 	local player = GetPlayerFromUserID(params.stunner);
-	Ware_PassPlayer(player, true);
+	if (player)
+		Ware_PassPlayer(player, true);
 }
 
 function OnUpdate()
