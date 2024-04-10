@@ -39,9 +39,9 @@ function OnUpdate()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
+		local player = data.player;
 		if (player.GetTeam() == jump_team)
 		{
-			local player = data.player;
 			if (IsEntityAlive(player))
 			{
 				local ground = GetPropEntity(player, "m_hGroundEntity");
