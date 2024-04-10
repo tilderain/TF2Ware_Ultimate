@@ -51,5 +51,5 @@ function OnPlayerDeath(params)
 
 function CheckEnd()
 {
-	return Ware_GetAliveCount() <= 1;
+	return Ware_GetAlivePlayers().len() <= 1;
 }

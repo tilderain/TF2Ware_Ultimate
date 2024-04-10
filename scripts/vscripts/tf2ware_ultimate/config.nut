@@ -1,129 +1,138 @@
-// 1 - enabled, 0 - disabled
 Ware_Minigames <-
 [
-	[1, "airblast"        ],
-	[1, "avoid_props"     ],
-	[1, "avoid_trains"    ],
-	[1, "backstab"        ],
-	[1, "bombs"           ],
-	[1, "build_this"      ],
-	[1, "break_barrel"    ],
-	[1, "bullseye"        ],
-	[1, "bumpers"         ],
-	[1, "caber_king"      ],
-	[1, "catch_cubes"     ],
-	[1, "change_class"    ],
-	[1, "count_bombs"     ],
-	[1, "disguise"        ],
-	[1, "dont_touch"      ],
-	[1, "flood"           ],
-	[1, "ghost"           ],
-	[1, "goomba"          ],
-	[1, "headshot"        ],
-	[1, "halloween_fight" ],
-	[1, "hit_player"      ],
-	[1, "hit_balls"       ],
-	[1, "hot_potato"      ],
-	[1, "kamikaze"        ],
-	[1, "land_platform"   ],
-	[1, "laugh"           ],
-	[1, "math"            ],
-	[1, "melee_arena"     ],
-	[1, "merasmus"        ],
-	[1, "most_bombs"      ],
-	[1, "move"            ],
-	[1, "parachute"       ],
-	[1, "pickup_plate"    ],
-	[1, "piggyback"       ],
-	[1, "pirate"          ],
-	[1, "pop_jack",       ],
-	[1, "projectile_jump" ],
-	[1, "rocket_rain"     ],
-	[1, "sap"             ],
-	[1, "sawrun"          ],
-	[1, "say_word"        ],
-	[1, "shark"           ],
-	[1, "shoot_gifts"     ],
-	[1, "shoot_target"    ],
-	[1, "simon_says"      ],
-	[1, "spycrab"         ],
-	[1, "stand_near"      ],
-	[1, "stay_ground"     ],
-	[1, "street_fighter"  ],
-	[1, "stun"            ],
-	[1, "swim_up"         ],
-	[1, "taunt_kill"      ],
-	[1, "touch_sky"       ],
-	[1, "type_color"      ],
-	[1, "water_war"       ],
-];
+	"airblast"        
+	"avoid_props"     
+	"avoid_trains"    
+	"backstab"        
+	"bombs"           
+	"build_this"      
+	"break_barrel"    
+	"bullseye"        
+	"bumpers"         
+	"caber_king"      
+	"catch_cubes"     
+	"change_class"    
+	"count_bombs"     
+	"disguise"        
+	"dont_touch"      
+	"flood"           
+	"ghost"           
+	"goomba"          
+	"headshot"        
+	"halloween_fight" 
+	"hit_player"      
+	"hit_balls"       
+	"hot_potato"      
+	"kamikaze"        
+	"land_platform"   
+	"laugh"           
+	"math"            
+	"melee_arena"     
+	"merasmus"        
+	"most_bombs"      
+	"move"            
+	"parachute"       
+	"pickup_plate"    
+	"piggyback"       
+	"pirate"          
+	"pop_jack",       
+	"projectile_jump" 
+	"rocket_rain"     
+	"sap"             
+	"sawrun"          
+	"say_word"        
+	"shark"           
+	"shoot_gifts"     
+	"shoot_target"    
+	"simon_says"      
+	"spycrab"         
+	"stand_near"      
+	"stay_ground"     
+	"street_fighter"  
+	"stun"            
+	"swim_up"         
+	"taunt_kill"      
+	"touch_sky"       
+	"type_color"      
+	"water_war"       
+]
 
-Ware_Location <- {};
+Ware_Location <- {}
 
 Ware_GameSounds <-
 [
-	"boss",
-	"break",
-	"break_end",
-	"failure",
-	"failure_all",
-	"gameover",
-	"intro",
-	"lets_get_started",
-	"speedup",
+	"boss"
+	"break"
+	"break_end"
+	"failure"
+	"failure_all"
+	"gameover"
+	"intro"
+	"lets_get_started"
+	"speedup"
 	"victory"
-];
+]
 
 Ware_MinigameMusic <-
 [
-	"actfast",
-	"actioninsilence",
-	"adventuretime",
-	"bigjazzfinish",
-	"bliss",
-	"brassy",
-	"catchme",
-	"cheerful",
-	"circus",
-	"clumsy",
-	"cozy",
-	"dizzy",
-	"drumdance",
-	"falling",
-	"farm",
-	"fastbros",
-	"funkymoves",
-	"getmoving",
-	"getready",
-	"golden",
-	"goodtimes",
-	"heat",
-	"keepitup",
-	"knockout",
-	"letsgetquirky",
-	"makemegroove",
-	"morning",
-	"nearend",
-	"ohno",
-	"piper",
-	"pumpit",
+	"actfast" 
+	"actioninsilence" 
+	"adventuretime" 
+	"bigjazzfinish" 
+	"bliss" 
+	"brassy" 
+	"catchme" 
+	"cheerful" 
+	"circus" 
+	"clumsy" 
+	"cozy" 
+	"dizzy" 
+	"drumdance" 
+	"falling" 
+	"farm" 
+	"fastbros" 
+	"funkymoves" 
+	"getmoving" 
+	"getready" 
+	"golden" 
+	"goodtimes" 
+	"heat" 
+	"keepitup" 
+	"knockout" 
+	"letsgetquirky" 
+	"makemegroove" 
+	"morning" 
+	"nearend" 
+	"ohno" 
+	"piper" 
+	"pumpit" 
 	"question"
-	"settingthescene",
-	"sillytime",
-	"slowfox",
-	"spotlightsonyou",
-	"streetfighter",
-	"surfin",
-	"survivor",
-	"sweetdays",
-	"takeabreak",
-	"thethinker",
-	"train",
-	"undergroundbros",
-	"wildwest",
-];
+	"settingthescene" 
+	"sillytime" 
+	"slowfox" 
+	"spotlightsonyou" 
+	"streetfighter" 
+	"surfin" 
+	"survivor" 
+	"sweetdays" 
+	"takeabreak" 
+	"thethinker" 
+	"train" 
+	"undergroundbros" 
+	"wildwest" 
+]
+
+Ware_BossgameMusic <-
+[
+	"casino"
+	"cuddly"
+	"effort"
+	"staredown"
+]
 
 foreach (sound in Ware_GameSounds)
 	PrecacheSound(format("tf2ware_ultimate/music_game/%s.mp3", sound));
 foreach (sound in Ware_MinigameMusic)
 	PrecacheSound(format("tf2ware_ultimate/music_minigame/%s.mp3", sound));
+foreach (sound in Ware_BossgameMusic)
+	PrecacheSound(format("tf2ware_ultimate/music_bossgame/%s.mp3", sound));

@@ -77,6 +77,16 @@ function RandomIndex(arr)
 	return RandomInt(0, arr.len() - 1);
 }
 
+function RandomElement(arr)
+{
+	return arr[RandomIndex(arr)];
+}
+
+function RemoveRandomElement(arr)
+{
+	return arr.remove(RandomIndex(arr));
+}
+
 function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs) 
 {
     return (a_mins.x <= b_maxs.x && a_maxs.x >= b_mins.x) &&

@@ -127,5 +127,5 @@ function OnEnd()
 
 function CheckEnd()
 {
-	return Ware_GetAliveCount() <= 1;
+	return Ware_GetAlivePlayers().len() <= 1;
 }

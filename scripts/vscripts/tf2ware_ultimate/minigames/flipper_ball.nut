@@ -139,5 +139,5 @@ function OnUpdate()
 
 function CheckEnd()
 {
-	return Ware_GetAliveCount() == 0;
+	return Ware_GetAlivePlayers().len() == 0;
 }

@@ -161,5 +161,5 @@ function OnCleanup()
 
 function CheckEnd()
 {
-	return Ware_GetAliveCount(TF_TEAM_RED) == 0;
+	return Ware_GetAlivePlayers(TF_TEAM_RED).len() == 0;
 }

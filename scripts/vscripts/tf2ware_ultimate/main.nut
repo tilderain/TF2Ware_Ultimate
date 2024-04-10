@@ -50,6 +50,7 @@ class Ware_MinigameData
 		no_collisions  = false;
 		friendly_fire  = true;
 		thirdperson    = false;
+		boss		   = false;
 		end_delay      = 0.0;
 		convars        = [];
 		entities       = [];
@@ -102,6 +103,8 @@ class Ware_MinigameData
 	convars			= null;
 	
 	// Internal use only
+	// Is a boss game?
+	boss			= null;
 	// Entities spawned by the minigame, to remove after it ends
 	entities		= null;
 	// Entity names to delete after minigame ends (e.g. projectiles)
@@ -179,6 +182,7 @@ if (!("Ware_DebugStop" in this))
 {
 	Ware_DebugStop            <- false;
 	Ware_DebugForceMinigame   <- "";
+	Ware_DebugForceBossgame   <- "";
 }
 
 Ware_TextManagerQueue     <- null;
@@ -381,10 +385,11 @@ function Ware_PlayGameSound(player, name, flags = 0)
 
 function Ware_PlayMinigameSound(player, name, flags = 0)
 {
+	local gametype = Ware_Minigame.boss ? "bossgame" : "minigame";
 	if (player)
-		PlaySoundOnClient(player, format("tf2ware_ultimate/music_minigame/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags);
+		PlaySoundOnClient(player, format("tf2ware_ultimate/music_%s/%s.mp3", gametype, name), 1.0, 100 * Ware_GetPitchFactor(), flags);
 	else
-		PlaySoundOnAllClients(format("tf2ware_ultimate/music_minigame/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags);
+		PlaySoundOnAllClients(format("tf2ware_ultimate/music_%s/%s.mp3", gametype, name), 1.0, 100 * Ware_GetPitchFactor(), flags);
 }
 
 function Ware_SetConvarValue(convar, value)
@@ -1006,29 +1011,12 @@ function Ware_IsEveryoneDead()
 	return true;
 }
 
-function Ware_GetAliveCount(team = TEAM_UNASSIGNED)
+function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 {
-	local count = 0;
 	if (team & 2)
-	{
-		foreach (data in Ware_MinigamePlayers)
-		{
-			local player = data.player;
-			if (player.GetTeam() == team && IsEntityAlive(player)) 
-				count++;
-		}	
-	}
+		return Ware_MinigamePlayers.filter(@(i, data) data.player.GetTeam() == team && IsEntityAlive(data.player));
 	else
-	{
-		foreach (data in Ware_MinigamePlayers)
-		{
-			local player = data.player;
-			if (IsEntityAlive(player)) 
-				count++;
-		}	
-	}
-	
-	return count;
+		return Ware_MinigamePlayers.filter(@(i, data) IsEntityAlive(data.player));
 }
 
 function Ware_CheckHomeLocation(player_count)
@@ -1064,19 +1052,18 @@ function Ware_BeginIntermission()
 	if (Ware_MinigameRotation.len() == 0)
 	{
 		foreach (minigame in Ware_Minigames)
-		{
-			if (minigame[0])
-				Ware_MinigameRotation.append(minigame[1]);
-		}
+			Ware_MinigameRotation.append(minigame);
 	}
 	
 	local minigame;
-	if (Ware_DebugForceMinigame.len() > 0)
+	if (Ware_DebugForceBossgame.len() > 0)
+		minigame = Ware_DebugForceBossgame;	
+	else if (Ware_DebugForceMinigame.len() > 0)
 		minigame = Ware_DebugForceMinigame;
 	else
 		minigame = Ware_MinigameRotation.remove(RandomIndex(Ware_MinigameRotation));
 	
-	CreateTimer(@() Ware_StartMinigame(minigame), 4.0);
+	CreateTimer(@() Ware_StartMinigame(minigame, false), 4.0);
 }
 
 function Ware_Speedup()
@@ -1093,16 +1080,25 @@ function Ware_Speedup()
 	CreateTimer(@() Ware_BeginIntermission(), 5.0);
 }
 
-function Ware_StartMinigame(minigame)
+function Ware_StartMinigame(minigame, is_boss)
 {
-	if (Ware_DebugForceMinigame.len() > 0)
+	if (Ware_DebugForceBossgame.len() > 0)
+	{
+		minigame = Ware_DebugForceBossgame;
+		is_boss = true;
+	}
+	else if (Ware_DebugForceMinigame.len() > 0)
+	{
 		minigame = Ware_DebugForceMinigame;
+	}
 	
 	Ware_MinigameEnded = false;
 	
-	IncludeScript(format("tf2ware_ultimate/minigames/%s", minigame), Ware_MinigameScope); 	
+	IncludeScript(format("tf2ware_ultimate/%s/%s",
+		is_boss ? "bossgames" : "minigames", minigame),  Ware_MinigameScope); 	
 
 	Ware_Minigame = Ware_MinigameScope.minigame;
+	Ware_Minigame.boss = is_boss;
 	Ware_MinigameStartTime = Time();
 	
 	foreach (name, value in Ware_Minigame.convars)
@@ -1606,10 +1602,7 @@ function OnGameEvent_teamplay_round_start(params)
 	
 	Ware_MinigameRotation.clear();
 	foreach (minigame in Ware_Minigames)
-	{
-		if (minigame[0])
-			Ware_MinigameRotation.append(minigame[1]);
-	}
+		Ware_MinigameRotation.append(minigame);
 	
 	Ware_BeginIntermission();
 }

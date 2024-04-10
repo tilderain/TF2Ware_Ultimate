@@ -173,20 +173,12 @@ Ware_Location.beach <-
 Ware_Location.manor <-
 {
 	center   = Vector(8048, -6440, -3615),
-	Teleport = function(players) 
-	{
-		// TODO
-	}
 };
 
 Ware_Location.pinball <-
 {
 	center_top    = Vector(-3840, -5344, -5679),
 	center_bottom = Vector(-3840, 1984, -7599),
-	Teleport  = function(players) 
-	{
-		// TODO
-	}
 };
 
 Ware_Location.factoryplatform <-
@@ -194,8 +186,10 @@ Ware_Location.factoryplatform <-
 	center        = Vector(4208, 1664, -5215),
 	center_left   = Vector(3708, 1664, -5271),
 	center_right  = Vector(4700, 1664, -5271),
-	Teleport  = function(players) 
-	{
-		// TODO
-	}
+}
+
+Ware_Location.love <-
+{
+	center_left    = Vector(6160, -984, -5919),
+	center_right   = Vector(6160, -2200, -5919),
 }
