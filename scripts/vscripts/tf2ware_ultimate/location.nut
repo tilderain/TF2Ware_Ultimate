@@ -188,3 +188,14 @@ Ware_Location.pinball <-
 		// TODO
 	}
 };
+
+Ware_Location.factoryplatform <-
+{
+	center        = Vector(4208, 1664, -5215),
+	center_left   = Vector(3708, 1664, -5271),
+	center_right  = Vector(4700, 1664, -5271),
+	Teleport  = function(players) 
+	{
+		// TODO
+	}
+}
