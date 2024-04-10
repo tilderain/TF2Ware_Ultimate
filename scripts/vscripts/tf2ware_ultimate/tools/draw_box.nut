@@ -7,24 +7,6 @@ enum Draw
 	Box
 }
 
-function roundf(x)
-{
-    if (x < 0.0)
-        return (x - 0.5).tointeger();
-    else
-        return (x + 0.5).tointeger();
-}
-
-function snapf(x, y)
-{
-	return roundf(x / y) * y;
-}
-
-function snapv(v, y)
-{
-	return Vector(snapf(v.x, y), snapf(v.y, y), snapf(v.z, y));
-}
-
 function DrawTrace(player)
 {
 	local eye_pos = player.EyePosition();
@@ -35,7 +17,7 @@ function DrawTrace(player)
 		start = eye_pos,
 		end = eye_pos + eye_fwd * 8192.0,
 		ignore = player,
-		mask = 82057 // CONTENTS_SOLID|CONTENTS_GRATE|CONTENTS_OPAQUE|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP
+		mask = MASK_PLAYERSOLID_BRUSHONLY,
 	};
 	
 	TraceLineEx(trace);
@@ -44,7 +26,7 @@ function DrawTrace(player)
 	{
 		draw_cur_normal = trace.plane_normal;
 		if (draw_snap_coord > 0.0)
-			return snapv(trace.pos, draw_snap_coord);
+			return SnapVector(trace.pos, draw_snap_coord);
 		else
 			return trace.pos;
 	}
@@ -123,16 +105,16 @@ function DrawEnd()
 		
 		if (backwards == 3)
 		{
-			printl(draw_cur_pos);
-			printl(draw_anchor_pos);
+			printl(VectorFormat(draw_cur_pos));
+			printl(VectorFormat(draw_anchor_pos));
 		}
 		else
 		{
 			if (backwards > 0)
 				printl("WARNING: Mins/Maxs has a backwards axis");
 			
-			printl(draw_anchor_pos);
-			printl(draw_cur_pos);
+			printl(VectorFormat(draw_anchor_pos));
+			printl(VectorFormat(draw_cur_pos));
 		}
 	}
 	

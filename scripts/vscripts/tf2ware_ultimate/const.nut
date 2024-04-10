@@ -2,17 +2,19 @@ const EFL_USER = 2097152
 
 const INT_MAX = 0x7FFFFFFF
 const FLT_MAX = 3.402823466e+38
-const RAD2DEG = 57.295779513;
-const DEG2RAD = 0.0174532924;
+const RAD2DEG = 57.295779513
+const DEG2RAD = 0.0174532924
+
+const MASK_PLAYERSOLID_BRUSHONLY = 81931
 
 const MAX_WEAPONS = 7
 
 const DMG_SAWBLADE = 65536
 const DMG_CRIT     = 1048576
 
-const SND_CHANGE_VOL = 1;
-const SND_CHANGE_PITCH = 2;
-const SND_STOP = 4;
+const SND_CHANGE_VOL   = 1
+const SND_CHANGE_PITCH = 2
+const SND_STOP         = 4
 
 const PATTACH_ABSORIGIN			= 0
 const PATTACH_ABSORIGIN_FOLLOW	= 1
@@ -72,7 +74,7 @@ const TF_COLOR_SPEC    = "CCCCCC"
 const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
 
 const PFX_WARE_PASS_RED  = "teleportedin_red"
-const PFX_WARE_PASS_BLUE = "teleportedin_blue";
+const PFX_WARE_PASS_BLUE = "teleportedin_blue"
 
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
 

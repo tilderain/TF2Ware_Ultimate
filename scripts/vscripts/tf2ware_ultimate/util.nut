@@ -23,9 +23,32 @@ function Clamp(val, min, max)
 	return (val < min) ? min : (max < val) ? max : val;
 }
 
+function Round(x)
+{
+    if (x < 0.0)
+        return (x - 0.5).tointeger();
+    else
+        return (x + 0.5).tointeger();
+}
+
+function Snap(x, y)
+{
+	return Round(x / y) * y;
+}
+
+function SnapVector(vec, y)
+{
+	return Vector(Snap(vec.x, y), Snap(vec.y, y), Snap(vec.z, y));
+}
+
 function Lerp(t, A, B)
 {
     return A + (B - A) * t;
+}
+
+function VectorFormat(vec)
+{
+	return format("Vector(%g, %g, %g)", vec.x, vec.y, vec.z);
 }
 
 function RemapValClamped(v, A, B, C, D)
@@ -60,6 +83,7 @@ function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs)
            (a_mins.y <= b_maxs.y && a_maxs.y >= b_mins.y) &&
            (a_mins.z <= b_maxs.z && a_maxs.z >= b_mins.z);
 }
+
 function MarkForPurge(entity)
 {
 	SetPropBool(entity, "m_bForcePurgeFixedupStrings", true);
