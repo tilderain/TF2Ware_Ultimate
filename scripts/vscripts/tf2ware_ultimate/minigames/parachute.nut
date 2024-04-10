@@ -25,11 +25,26 @@ function OnStart()
 		model = platform_model,
 		solid = SOLID_VPHYSICS,
 	})
+	
+	Ware_CreateTimer(@() AutodeployParachutes(), 1.1);
+}
+
+function AutodeployParachutes()
+{
+	foreach (data in Ware_MinigamePlayers)
+	{
+		local player = data.player;
+		if (!player.InCond(TF_COND_PARACHUTE_ACTIVE))
+		{
+			EmitSoundOnClient("Parachute_open", player);
+			player.AddCond(TF_COND_PARACHUTE_ACTIVE);
+		}
+	}
 }
 
 function OnTeleport(players)
 {
-	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 900), 512.0);
+	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 1000), 512.0);
 }
 
 function OnUpdate()
