@@ -1,14 +1,16 @@
+local mode = RandomInt(0, 1);
+
 minigame <- Ware_MinigameData();
 minigame.name = "Land the Platform";
 minigame.description = "Land on the platform!";
-minigame.duration = 6.0;
+minigame.duration = mode == 0 ? 6.0 : 4.0;
 minigame.no_collisions = true;
 minigame.location = "factoryplatform";
-minigame.music = "sweetdays";
+minigame.music = mode == 0 ? "sweetdays" : "surfin";
 
 function OnStart()
 {
-	if (RandomInt(0, 1) == 0)
+	if (mode == 0)
 		Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Iron Bomber");
 	else
 		Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Thermal Thruster");

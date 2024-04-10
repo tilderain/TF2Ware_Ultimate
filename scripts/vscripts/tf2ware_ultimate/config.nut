@@ -113,6 +113,7 @@ Ware_MinigameMusic <-
 	"slowfox",
 	"spotlightsonyou",
 	"streetfighter",
+	"surfin",
 	"survivor",
 	"sweetdays",
 	"takeabreak",

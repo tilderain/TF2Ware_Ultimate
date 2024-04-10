@@ -213,8 +213,9 @@ if (!("Ware_Players" in this))
 function Ware_FindStandardEntities()
 {
 	World     <- FindByClassname(null, "worldspawn");
-	GameRules <- FindByClassname(null, "tf_gamerules");
 	WaterLOD  <- FindByClassname(null, "water_lod_control");
+	GameRules <- FindByClassname(null, "tf_gamerules");
+	PlayerMgr <- FindByClassname(null, "tf_player_manager");
 	ClientCmd <- CreateEntitySafe("point_clientcommand");
 	
 	MarkForPurge(WaterLOD);
@@ -618,15 +619,30 @@ function Ware_StripPlayer(player, give_default_melee)
 			if (active_weapon != melee)
 			{
 				if (active_weapon)
-				{
+				{								
+					// force switch fixes
 					local classname = active_weapon.GetClassname();
-					
-					 // force switch fix
 					if (classname == "tf_weapon_minigun")
+					{
 						SetPropEntity(player, "m_hActiveWeapon", null);
+					}
 					else if (startswith(classname, "tf_weapon_sniperrifle"))
+					{
 						SetPropFloat(active_weapon, "m_flNextPrimaryAttack", 0.0);
+					}
+					else if (classname == "tf_weapon_rocketpack")
+					{
+						active_weapon.AddAttribute("holster_anim_time", 0.0, -1);
+						SetPropFloat(active_weapon, "m_flLaunchTime", 0.0);			
+						if (player.InCond(TF_COND_ROCKETPACK))
+						{
+							// needed to stop air sound
+							SendGlobalGameEvent("rocketpack_landed", { userid = GetPlayerUserID(player) });
+							player.RemoveCond(TF_COND_ROCKETPACK);
+						}
+					}
 				}
+				
 				player.Weapon_Switch(melee);
 			}
 		}

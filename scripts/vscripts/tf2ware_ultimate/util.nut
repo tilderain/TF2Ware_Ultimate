@@ -278,6 +278,11 @@ function GetPlayerName(player)
     return GetPropString(player, "m_szNetname");
 }
 
+function GetPlayerUserID(player)
+{
+    return GetPropIntArray(PlayerMgr, "m_iUserID", player.entindex());
+}
+
 function StunPlayer(player, stun_type, stun_effects, stun_duration, move_speed_reduction)
 {
 	local trigger = CreateEntitySafe("trigger_stun");
