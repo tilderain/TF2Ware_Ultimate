@@ -9,6 +9,12 @@ function OnStart()
 {
 	Ware_CreateTimer(@() SpawnGhost(), 1.2);
 	Ware_CreateTimer(@() SpawnGhost(), 3.0);
+
+	if (Ware_MinigameLocation.name.find("big") != null)
+	{
+		Ware_CreateTimer(@() SpawnGhost(), 1.6);
+		Ware_CreateTimer(@() SpawnGhost(), 2.4);	
+	}
 }
 
 function OnGameEvent_player_stunned(params)
