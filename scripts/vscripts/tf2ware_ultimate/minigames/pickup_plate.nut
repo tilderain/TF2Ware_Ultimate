@@ -47,7 +47,7 @@ function OnStart()
 			spawnflags = 1,
 		});		
 		trigger.SetSolid(SOLID_BBOX);
-		trigger.SetSize(prop.GetBoundingMins(), prop.GetBoundingMaxs());
+		trigger.SetSize(prop.GetBoundingMins() * 0.7, prop.GetBoundingMaxs() * 0.7);
 		trigger.ValidateScriptScope();
 		trigger.GetScriptScope().item <- item;
 		trigger.GetScriptScope().OnStartTouch <- OnTouchPlate;
