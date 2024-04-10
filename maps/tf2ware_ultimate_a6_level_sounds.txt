@@ -107,7 +107,7 @@ TF2Ware_Ultimate.ScoutDisgust
 		wave	vo/scout_dominationhvy08.mp3
 		wave	vo/scout_domination05.mp3
 		wave	vo/scout_domination06.mp3
-		wave	vo/scout_domination09.mp
+		wave	vo/scout_domination09.mp3
 		wave	vo/scout_domination08.mp3
 		wave	vo/scout_domination20.mp3
 	}

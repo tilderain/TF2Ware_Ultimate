@@ -102,9 +102,27 @@ function OnTakeDamage(params)
 
 function OnPlayerTouch(player, other_player)
 {
+	local hug = false;
+	local player_class = player.GetPlayerClass();
 	local other_player_class = other_player.GetPlayerClass();
-	if (player.GetPlayerClass() == TF_CLASS_SCOUT 
-		&& other_player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS)
+	
+	if (player_class == TF_CLASS_HEAVYWEAPONS
+		&& other_player_class == TF_CLASS_SCOUT)
+	{
+		// I'm not sure why this is necessary
+		// but if this isn't done then scouts can survive sitting in a corner
+		local temp = other_player;
+		other_player = player;
+		player = temp;
+		hug = true;
+	}
+	else if (player_class == TF_CLASS_SCOUT
+		&& other_player_class == TF_CLASS_HEAVYWEAPONS)
+	{
+		hug = true;
+	}
+	
+	if (hug)
 	{
 		EmitSoundOnClient(vo_kiss_sound, player);
 		other_player.EmitSound(vo_kiss_sound);
