@@ -53,14 +53,14 @@ function OnFireRocketPre()
 {
 	if (activator == null)
 		return false;
+
+	local down = QAngle(90, 0, 0);
+	local dir = down.Forward() + down.Left() * RandomFloat(-0.4, 0.4) + down.Up() * RandomFloat(-0.4, 0.4);
+	dir.Norm();			
+	self.SetForwardVector(dir);
 	
 	local pos = activator.GetOrigin();
-	self.SetOrigin(Vector
-	(
-		pos.x + RandomFloat(-50.0, 50.0),
-		pos.y + RandomFloat(-50.0, 50.0),
-		pos.z + RandomFloat(450.0, 900.0)
-	));
+	self.SetOrigin(activator.GetOrigin() + dir * RandomFloat(-900.0, -1300.0));
 	
 	return true;
 }
