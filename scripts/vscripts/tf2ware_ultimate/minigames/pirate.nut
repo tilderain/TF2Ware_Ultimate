@@ -45,7 +45,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	local offset = Vector(0, 0, 0);
+	local offset = Vector(0, 0, 300);
 	local red_point = red_ship.GetOrigin() + offset;
 	local blue_point = blue_ship.GetOrigin() + offset;
 	
@@ -65,7 +65,7 @@ function OnUpdate()
 		local team = player.GetTeam();
 		if (team == TF_TEAM_RED)
 		{
-			if ((origin - red_point).Length2D() < 150.0)
+			if (origin.z > red_point.z && (origin - red_point).Length2D() < 150.0)
 			{
 				Ware_ShowScreenOverlay(player, null);
 				Ware_CreateTimer(@() Ware_PassPlayer(player, true), 0.1);
@@ -74,7 +74,7 @@ function OnUpdate()
 		}
 		else if (team == TF_TEAM_BLUE)
 		{
-			if ((origin - blue_point).Length2D() < 150.0)
+			if (origin.z > blue_point.z && (origin - blue_point).Length2D() < 150.0)
 			{
 				Ware_ShowScreenOverlay(player, null);	
 				Ware_CreateTimer(@() Ware_PassPlayer(player, true), 0.1);
