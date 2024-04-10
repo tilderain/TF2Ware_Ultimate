@@ -1,6 +1,6 @@
 UnlitGeneric
 {
-	$basetexture hud/tf2ware_ultimate/minigames/grenade_land
+	$basetexture hud/tf2ware_ultimate/minigames/land_platform
 	$basetexturetransform "center .5 .2 scale 1.5 14 rotate 0 translate 0 0"
 
     $translucent 1

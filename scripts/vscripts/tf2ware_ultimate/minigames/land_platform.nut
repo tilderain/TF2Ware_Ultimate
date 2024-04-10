@@ -1,5 +1,5 @@
 minigame <- Ware_MinigameData();
-minigame.name = "Grenade Land";
+minigame.name = "Land the Platform";
 minigame.description = "Land on the platform!";
 minigame.duration = 6.0;
 minigame.no_collisions = true;
@@ -8,7 +8,10 @@ minigame.music = "sweetdays";
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Iron Bomber");
+	if (RandomInt(0, 1) == 0)
+		Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Iron Bomber");
+	else
+		Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Thermal Thruster");
 }
 
 function OnTeleport(players)
@@ -46,7 +49,8 @@ function OnUpdate()
 			
 		local origin = player.GetOrigin();
 		if (origin.x >= (Ware_MinigameLocation.center.x - 128.0)
-			&& origin.x <= (Ware_MinigameLocation.center.x + 128.0))
+			&& origin.x <= (Ware_MinigameLocation.center.x + 128.0)
+			&& (origin.z - Ware_MinigameLocation.center.z) < 40.0)
 		{
 			Ware_PassPlayer(player, true);
 		}

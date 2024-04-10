@@ -1,3 +1,5 @@
+// - vanilla overrides
+
 Croc.SwimBurst
 {
 	channel			CHAN_STATIC
@@ -15,6 +17,26 @@ BaseCombatCharacter.AmmoPickup
 	soundlevel		SNDLVL_60dB
 	wave			common/null.wav
 }
+
+Weapon_RocketPack.BoostersExtend
+{
+	channel			CHAN_WEAPON
+	soundlevel		SNDLVL_60dB
+	volume			0.3
+	pitch			PITCH_NORM
+	wave			)weapons/rocket_pack_boosters_extend.wav
+}
+
+Weapon_RocketPack.BoostersRetract
+{
+	channel			CHAN_WEAPON
+	soundlevel		SNDLVL_60dB
+	volume			0.3
+	pitch			PITCH_NORM
+	wave			)weapons/rocket_pack_boosters_retract.wav
+}
+
+// - custom
 
 TF2Ware_Ultimate.Pass
 {
