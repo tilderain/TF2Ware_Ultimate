@@ -130,6 +130,7 @@ class Ware_PlayerData
 	function constructor(entity)
 	{
 		player           = entity;
+		index			 = player.entindex();
 		scope            = entity.GetScriptScope();
 		passed           = false;
 		passed_effects   = false;
@@ -137,9 +138,11 @@ class Ware_PlayerData
 		attributes       = [];
 		melee_attributes = [];
 		start_sound      = false;
+		score			 = 0;
 	}
 	
 	player		     = null;
+	index			 = null;
 	scope		     = null;
 	passed		     = null;
 	passed_effects   = null;
@@ -151,6 +154,7 @@ class Ware_PlayerData
 	start_sound      = null;
 	construction_pda = null;
 	saved_team       = null;
+	score			 = null;
 };
 
 if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
@@ -208,6 +212,7 @@ Ware_MinigamesPlayed	  <- 0;
 if (!("Ware_Players" in this))
 {
 	Ware_Players         <- [];
+	Ware_PlayerScopes    <- [];
 	Ware_MinigamePlayers <- [];
 	
 	// this shuts up incursion distance warnings from the nav mesh
@@ -226,7 +231,10 @@ function Ware_FindStandardEntities()
 	
 	// avoid adding the think again to not break global execution order
 	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
+	{
 		AddThinkToEnt(World, "Ware_OnUpdate");
+		AddThinkToEnt(PlayerMgr, "Ware_LeaderboardUpdate");
+	}
 	
 	Ware_TextManagerQueue <- [];
 	Ware_TextManager = SpawnEntityFromTableSafe("game_text",
@@ -1000,17 +1008,6 @@ function Ware_IsTeamDead(team)
 	return true;
 }
 
-function Ware_IsEveryoneDead()
-{
-	foreach (data in Ware_MinigamePlayers)
-	{
-		if (IsEntityAlive(data.player)) 
-			return false;
-	}
-	
-	return true;
-}
-
 function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 {
 	if (team & 2)
@@ -1388,29 +1385,40 @@ function Ware_EndMinigameInternal()
 			all_passed = false;
 	}
 	
-	if (all_passed || all_failed)
+	foreach (data in Ware_MinigamePlayers)
 	{
-		local overlay = all_passed ? "hud/tf2ware_ultimate/default_victory_all" : "hud/tf2ware_ultimate/default_failure_all";
-		local sound = all_passed ? "victory" : "failure_all";
-		foreach (data in Ware_MinigamePlayers)
+		local player = data.player;
+		
+		local overlay;
+		local sound;
+		if (all_passed)
 		{
-			local player = data.player;
-			Ware_PlayGameSound(player, sound);
-			Ware_ShowScreenOverlay(player, overlay);
-			if (Ware_MinigameOverlay2Set)
-				Ware_ShowScreenOverlay2(player, null);	
+			overlay = "hud/tf2ware_ultimate/default_victory_all";
+			sound = "victory";
 		}
-	}
-	else
-	{
-		foreach (data in Ware_MinigamePlayers)
+		else if (all_failed)
 		{
-			local player = data.player;
-			Ware_PlayGameSound(player, data.passed ? "victory" : "failure");
-			Ware_ShowScreenOverlay(player, data.passed ? "hud/tf2ware_ultimate/default_victory" : "hud/tf2ware_ultimate/default_failure");
-			if (Ware_MinigameOverlay2Set)
-				Ware_ShowScreenOverlay2(player, null);
+			overlay = "hud/tf2ware_ultimate/default_failure_all";
+			sound = "failure_all";
+		}
+		else if (data.passed)
+		{
+			overlay = "hud/tf2ware_ultimate/default_victory";
+			sound = "victory";
+		}
+		else
+		{
+			overlay = "hud/tf2ware_ultimate/default_failure";
+			sound = "failure";
 		}		
+		
+		Ware_PlayGameSound(player, sound);
+		Ware_ShowScreenOverlay(player, overlay);
+		if (Ware_MinigameOverlay2Set)
+			Ware_ShowScreenOverlay2(player, null);			
+		
+		if (data.passed)
+			data.score += Ware_Minigame.boss ? 5 : 1;
 	}
 	
 	foreach (event_name in Ware_MinigameEvents)
@@ -1541,6 +1549,17 @@ function Ware_OnUpdate()
 	return -1;
 }
 
+function Ware_LeaderboardUpdate()
+{
+	foreach (scope in Ware_PlayerScopes)
+	{
+		local i = scope.index;
+		SetPropIntArray(self, "m_iTotalScore", scope.score, i);
+	}
+	
+	return -1;
+}
+
 ClearGameEventCallbacks();
 
 function OnScriptHook_OnTakeDamage(params)
@@ -1591,6 +1610,12 @@ function OnGameEvent_teamplay_round_start(params)
 {
 	Ware_SetTimeScale(1.0);
 	
+	foreach (player in Ware_Players)
+	{
+		player.GetScriptScope().ware_data.score = 0;
+		BrickPlayerScore(player);
+	}
+	
 	if (IsInWaitingForPlayers())
 		return;
 	
@@ -1636,6 +1661,7 @@ function OnGameEvent_player_spawn(params)
 		scope.ware_data <- Ware_PlayerData(player);
 		scope.ware_minidata <- {};
 		Ware_Players.append(player);
+		Ware_PlayerScopes.append(scope.ware_data);
 		return;
 	}
 	
@@ -1667,6 +1693,15 @@ function OnGameEvent_player_spawn(params)
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE);
 		player.SetCustomModel("");
 	}
+}
+
+function OnGameEvent_player_initial_spawn(params)
+{
+    local player = PlayerInstanceFromIndex(params.index);
+    if (player == null)
+		return;	
+	
+	BrickPlayerScore(player);
 }
 
 function OnGameEvent_player_changeclass(params)
@@ -1715,6 +1750,10 @@ function OnGameEvent_player_disconnect(params)
 	idx = Ware_Players.find(player);
 	if (idx != null)
 		Ware_Players.remove(idx);
+		
+	idx = Ware_PlayerScopes.find(data);
+	if (idx != null)
+		Ware_PlayerScopes.remove(idx);
 		
 	if (Ware_Minigame == null)
 		return;

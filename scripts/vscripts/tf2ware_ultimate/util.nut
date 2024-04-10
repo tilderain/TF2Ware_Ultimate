@@ -293,6 +293,25 @@ function GetPlayerUserID(player)
     return GetPropIntArray(PlayerMgr, "m_iUserID", player.entindex());
 }
 
+function BrickPlayerScore(player)
+{
+	// spoof as bot so this doesn't upload stats to steam
+	local is_bot = player.IsFakeClient();
+	if (!is_bot) 
+		player.AddFlag(FL_FAKECLIENT);
+
+	// this bricks the scoreboard score to always be 0
+	// so stranges don't get leveled up by our scoreboard manipulation
+	SendGlobalGameEvent("player_escort_score", 
+	{
+		player = player.entindex(),
+		points = -1
+	});
+
+	if (!is_bot) 
+		player.RemoveFlag(FL_FAKECLIENT);	
+}
+
 function StunPlayer(player, stun_type, stun_effects, stun_duration, move_speed_reduction)
 {
 	local trigger = CreateEntitySafe("trigger_stun");
