@@ -58,7 +58,10 @@ Ware_Minigames <-
 	"water_war"       
 ]
 
-Ware_Location <- {}
+Ware_Bossgames <-
+[
+	"cuddly_heavies",
+]
 
 Ware_GameSounds <-
 [

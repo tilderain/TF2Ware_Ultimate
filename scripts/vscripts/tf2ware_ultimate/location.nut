@@ -38,6 +38,8 @@ function Ware_TeleportPlayersRow(players, origin, angles, max_width, offset_horz
 	}	
 }
 
+Ware_Location <- {};
+
 Ware_LocationParent <-
 {
 	function DebugDraw()

@@ -212,7 +212,7 @@ Ware_MinigamesPlayed	  <- 0;
 if (!("Ware_Players" in this))
 {
 	Ware_Players         <- [];
-	Ware_PlayerScopes    <- [];
+	Ware_PlayersData     <- [];
 	Ware_MinigamePlayers <- [];
 	
 	// this shuts up incursion distance warnings from the nav mesh
@@ -1034,7 +1034,7 @@ function Ware_CheckHomeLocation(player_count)
 	}
 }
 
-function Ware_BeginIntermission()
+function Ware_BeginIntermission(is_boss)
 {
 	if (Ware_DebugStop)
 		return;
@@ -1055,12 +1055,28 @@ function Ware_BeginIntermission()
 	local minigame;
 	if (Ware_DebugForceBossgame.len() > 0)
 		minigame = Ware_DebugForceBossgame;	
+	else if (is_boss)
+		minigame = RandomElement(Ware_Bossgames);
 	else if (Ware_DebugForceMinigame.len() > 0)
 		minigame = Ware_DebugForceMinigame;
 	else
-		minigame = Ware_MinigameRotation.remove(RandomIndex(Ware_MinigameRotation));
+		minigame = RemoveRandomElement(Ware_MinigameRotation);
 	
-	CreateTimer(@() Ware_StartMinigame(minigame, false), 4.0);
+	CreateTimer(@() Ware_StartMinigame(minigame, is_boss), 4.0);
+}
+
+function Ware_BeginBoss()
+{
+	Ware_SetTimeScale(1.0);
+	
+	foreach (player in Ware_Players)
+	{
+		Ware_PlayGameSound(player, "boss");
+		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_boss");
+		Ware_ShowScreenOverlay2(player, null);
+	}
+	
+	CreateTimer(@() Ware_BeginIntermission(true), 4.0);
 }
 
 function Ware_Speedup()
@@ -1074,7 +1090,7 @@ function Ware_Speedup()
 		Ware_ShowScreenOverlay2(player, null);
 	}
 	
-	CreateTimer(@() Ware_BeginIntermission(), 5.0);
+	CreateTimer(@() Ware_BeginIntermission(false), 5.0);
 }
 
 function Ware_StartMinigame(minigame, is_boss)
@@ -1439,10 +1455,79 @@ function Ware_EndMinigameInternal()
 	Ware_MinigameScope.clear();
 	Ware_MinigameOverlay2Set = false;
 	
-	if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % 5 == 0)
+	local boss_threshold = 20;
+	local speed_threshold = 5;
+	
+	if (Ware_MinigamesPlayed > boss_threshold)
+		CreateTimer(@() Ware_GameOver(), 2.0);
+	else if (Ware_MinigamesPlayed == boss_threshold)
+		CreateTimer(@() Ware_BeginBoss(), 2.0);
+	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % speed_threshold == 0)
 		CreateTimer(@() Ware_Speedup(), 2.0);
 	else
-		CreateTimer(@() Ware_BeginIntermission(), 2.0);
+		CreateTimer(@() Ware_BeginIntermission(false), 2.0);
+}
+
+function Ware_GameOver()
+{
+	local highest_score = 1;
+	local highest_players = [];
+	
+	foreach (data in Ware_PlayersData)
+	{
+		if (data.score > highest_score)
+		{
+			highest_score = data.score;
+			highest_players.clear();
+			highest_players.append(data.player);
+		}
+		else if (data.score == highest_score)
+		{
+			highest_players.append(data.player);
+		}
+	}
+	
+	local delay = GetConvarValue("mp_bonusroundtime").tofloat();
+	SetPropBool(GameRules, "m_bTruceActive", false);
+	
+	foreach (data in Ware_PlayersData)
+	{
+		local player = data.player;
+		
+		Ware_PlayGameSound(player, "gameover");
+		
+		if (highest_players.find(player) != null)
+		{
+			player.AddCondEx(TF_COND_CRITBOOSTED, delay, null);
+			// TODO: give full loaodout back and add other effects
+			// TODO: don't allow damage to other winners
+		}
+		else
+		{
+			StunPlayer(player, TF_TRIGGER_STUN_LOSER, false, delay, 0.5);
+		}
+	}
+	
+	local winner_count = highest_players.len();
+	if (winner_count > 1)
+	{
+		Ware_ChatPrint(null, "{color}The winners each with {int} points:", TF_COLOR_DEFAULT, highest_score);
+		foreach (player in highest_players)
+			Ware_ChatPrint(null, "> {player} {color}!", player, TF_COLOR_DEFAULT);
+	}
+	else if (winner_count == 1)
+	{
+		Ware_ChatPrint(null, "{player} {color}won with {int} points!", highest_players[0], TF_COLOR_DEFAULT, highest_score);
+	}	
+	else if (winner_count == 0)
+	{
+		Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT);
+	}
+	
+	// TODO: add firework effects
+	
+	// TODO: need to respect round limits and add intermission screen
+	CreateTimer(@() SetConvarValue("mp_restartgame_immediate", 1), delay);
 }
 
 function Ware_OnUpdate()
@@ -1551,10 +1636,10 @@ function Ware_OnUpdate()
 
 function Ware_LeaderboardUpdate()
 {
-	foreach (scope in Ware_PlayerScopes)
+	foreach (data in Ware_PlayersData)
 	{
-		local i = scope.index;
-		SetPropIntArray(self, "m_iTotalScore", scope.score, i);
+		local i = data.index;
+		SetPropIntArray(self, "m_iTotalScore", data.score, i);
 	}
 	
 	return -1;
@@ -1629,7 +1714,7 @@ function OnGameEvent_teamplay_round_start(params)
 	foreach (minigame in Ware_Minigames)
 		Ware_MinigameRotation.append(minigame);
 	
-	Ware_BeginIntermission();
+	Ware_BeginIntermission(false);
 }
 
 function OnGameEvent_recalculate_truce(params)
@@ -1661,7 +1746,7 @@ function OnGameEvent_player_spawn(params)
 		scope.ware_data <- Ware_PlayerData(player);
 		scope.ware_minidata <- {};
 		Ware_Players.append(player);
-		Ware_PlayerScopes.append(scope.ware_data);
+		Ware_PlayersData.append(scope.ware_data);
 		return;
 	}
 	
@@ -1751,9 +1836,9 @@ function OnGameEvent_player_disconnect(params)
 	if (idx != null)
 		Ware_Players.remove(idx);
 		
-	idx = Ware_PlayerScopes.find(data);
+	idx = Ware_PlayersData.find(data);
 	if (idx != null)
-		Ware_PlayerScopes.remove(idx);
+		Ware_PlayersData.remove(idx);
 		
 	if (Ware_Minigame == null)
 		return;
