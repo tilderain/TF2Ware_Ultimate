@@ -12,6 +12,10 @@ minigame.allow_damage = true;
 minigame.fail_on_death = true;
 minigame.end_delay = 1.0;
 minigame.custom_overlay = "survive";
+minigame.convars =
+{
+	tf_avoidteammates = 0
+}
 
 function OnStart()
 {
