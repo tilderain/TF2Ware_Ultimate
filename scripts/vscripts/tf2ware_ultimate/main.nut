@@ -855,7 +855,7 @@ function Ware_DisablePlayerPrimaryFire(player)
 {
 	local weapon = player.GetActiveWeapon();
 	if (weapon != null)
-		SetPropFloat(weapon, "m_flNextPrimaryAttack", FLT_MAX);
+		SetPropFloat(weapon, "m_flNextPrimaryAttack", Time() + 0.2);
 }
 
 function Ware_RemoveUndesiredWearables(player)

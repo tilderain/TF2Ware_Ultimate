@@ -42,6 +42,15 @@ function OnStart()
 	}
 }
 
+function OnUpdate()
+{
+	foreach (data in Ware_MinigamePlayers)
+	{
+		if (data.player.GetPlayerClass() == TF_CLASS_PYRO)
+			Ware_DisablePlayerPrimaryFire(data.player);
+	}
+}
+
 function OnGameEvent_player_healonhit(params)
 {
 	local player = PlayerInstanceFromIndex(params.entindex);
