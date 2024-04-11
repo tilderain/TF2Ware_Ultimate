@@ -23,19 +23,28 @@ function OnStart()
 	EntFire(location_name + "_croc", "Enable", "", 2);
 	EntFire(format("%s_platform_%d", location_name, platform_index), "Close");
 	
+	// the waterfall model is really busted so have to do this in an ugly manner
+	local offset = Vector(444, 256, 0)
+	
 	local pos = Ware_MinigameLocation.mins * 1.0;
 	pos.x = (Ware_MinigameLocation.maxs.x + Ware_MinigameLocation.mins.x) * 0.5;
-	pos.y -= 256.0;
-	pos.x -= 444.0;
 	Ware_SpawnEntity("prop_dynamic",
 	{
 		model = waterfall_model,
-		origin = pos,
+		origin = pos - offset,
 		angles = QAngle(0, -45, 0),
 		disableshadows = true,
 	});
-	
-	DebugDrawLine(pos, pos + Vector(0, 0, 1024), 255, 0, 0, false, 5.0);
+	local pos = Ware_MinigameLocation.maxs * 1.0;
+	pos.x = (Ware_MinigameLocation.maxs.x + Ware_MinigameLocation.mins.x) * 0.5;
+	pos.z = Ware_MinigameLocation.mins.z;
+	Ware_SpawnEntity("prop_dynamic",
+	{
+		model = waterfall_model,
+		origin = pos + offset,
+		angles = QAngle(0, 135, 0),
+		disableshadows = true,
+	});
 }
 
 function OnEnd()
