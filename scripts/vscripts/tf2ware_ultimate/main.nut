@@ -1,3 +1,11 @@
+if (IsDedicatedServer())
+{
+	local msg = "** TF2Ware cannot be loaded on dedicated servers without a plugin";
+	ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + msg);
+	printl(msg);
+	return;
+}
+
 printl("\tTF2Ware Started");
 
 SetConvarValue("sv_gravity", 800.00006); // hide the sv_tags message
