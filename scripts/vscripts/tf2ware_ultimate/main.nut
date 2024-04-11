@@ -1062,13 +1062,22 @@ function Ware_BeginIntermission(is_boss)
 	
 	local minigame;
 	if (Ware_DebugForceBossgame.len() > 0)
+	{
 		minigame = Ware_DebugForceBossgame;	
-	else if (is_boss)
-		minigame = RandomElement(Ware_Bossgames);
+	}
 	else if (Ware_DebugForceMinigame.len() > 0)
+	{
 		minigame = Ware_DebugForceMinigame;
+		is_boss = false;
+	}
+	else if (is_boss)
+	{
+		minigame = RandomElement(Ware_Bossgames);
+	}
 	else
+	{
 		minigame = RemoveRandomElement(Ware_MinigameRotation);
+	}
 	
 	CreateTimer(@() Ware_StartMinigame(minigame, is_boss), 4.0);
 }
