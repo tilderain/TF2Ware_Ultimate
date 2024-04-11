@@ -353,7 +353,8 @@ function OnEnd()
 	}
 	else
 	{
-		Ware_ChatPrint(null, "{color}There is {int} ghosts left standing... The Undead win!", TF_COLOR_DEFAULT, alive_spies.len());
+		local word = alive_spies.len() > 1 ? "ghosts" : "ghost";
+		Ware_ChatPrint(null, "{color}There is {int} {str} left standing... The Undead win!", TF_COLOR_DEFAULT, alive_spies.len(), word);
 	}
 }
 
