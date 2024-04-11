@@ -1,12 +1,30 @@
 // - vanilla overrides
 
-Croc.SwimBurst
+Crocs.JumpOut
 {
-	channel			CHAN_STATIC
-	volume			0.05
-	pitch			PITCH_NORM
-	soundlevel		SNDLVL_60dB
-	wave			)ambient/lair/crocs_swim_burst.wav
+	channel		CHAN_STATIC
+	volume		0.4
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_60dB
+	wave		)ambient/lair/crocs_jump_out.wav
+}
+
+Crocs.JumpIn
+{
+	channel		CHAN_STATIC
+	volume		0.4
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_60dB
+	wave		)ambient/lair/crocs_jump_in.wav
+}
+
+Crocs.JumpBite
+{
+	channel		CHAN_STATIC
+	volume		0.4
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_60dB
+	wave		)ambient/lair/crocs_jump_bite.wav
 }
 
 BaseCombatCharacter.AmmoPickup
@@ -22,7 +40,7 @@ Weapon_RocketPack.BoostersExtend
 {
 	channel			CHAN_WEAPON
 	soundlevel		SNDLVL_60dB
-	volume			0.3
+	volume			0.5
 	pitch			PITCH_NORM
 	wave			)weapons/rocket_pack_boosters_extend.wav
 }
@@ -31,7 +49,7 @@ Weapon_RocketPack.BoostersRetract
 {
 	channel			CHAN_WEAPON
 	soundlevel		SNDLVL_60dB
-	volume			0.3
+	volume			0.5
 	pitch			PITCH_NORM
 	wave			)weapons/rocket_pack_boosters_retract.wav
 }
@@ -128,7 +146,7 @@ TF2Ware_Ultimate.ScoutDisgust
 		wave	vo/scout_autodejectedtie03.mp3
 		wave	vo/scout_autodejectedtie04.mp3
 		wave	vo/scout_cartstaycloseoffense03.mp3
-		wave	vo/scout_cartstopitdefense.mp3
+		wave	vo/scout_cartstopitdefense01.mp3
 		wave	vo/scout_dominationhvy02.mp3
 		wave	vo/scout_dominationhvy06.mp3
 		wave	vo/scout_dominationhvy08.mp3
