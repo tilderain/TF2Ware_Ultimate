@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+"$basetexture" "woods/nature/forest_rock_01"
+"$bumpmap" "woods/nature/forest_rock_01_ssbump"
+"$ssbump" "1"
+"$surfaceprop" "rock"
+	"%keywords" "tf, bulletcrops"
+
+}
+// BulletCrops Project
+// http://www.minerality.fr/bulletcropsproject/

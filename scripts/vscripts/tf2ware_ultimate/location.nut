@@ -1,6 +1,6 @@
 function Ware_TeleportPlayersCircle(players, origin, radius)
 {
-	local inv = 360.0 / Ware_MinigamePlayers.len().tofloat();
+	local inv = 360.0 / players.len().tofloat();
 	local i = 0;
 	foreach (player in players)
 	{
@@ -194,4 +194,56 @@ Ware_Location.love <-
 {
 	center_left    = Vector(6160, -984, -5919),
 	center_right   = Vector(6160, -2200, -5919),
+}
+
+Ware_Location.kart_containers <-
+{
+	center         = Vector(-1200, 3450, -6718),
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players, 
+			center,
+			QAngle(0, 180, 0),
+			900.0,
+			128.0, 128.0);
+	}
+}
+
+Ware_Location.kart_paths <-
+{
+	center_left    = Vector(-7100, -5100, -6046),
+	center_right   = Vector(-6550, -5100, -6046),
+	radius         = 150.0,
+	Teleport = function(players)
+	{
+		local red_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED);
+		local blue_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_BLUE);
+		
+		local left_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE);
+		
+		if (left_team == TF_TEAM_RED)
+		{
+			Ware_TeleportPlayersCircle(red_players, center_left, radius);
+			Ware_TeleportPlayersCircle(blue_players, center_right, radius);
+		}
+		else
+		{
+			Ware_TeleportPlayersCircle(blue_players, center_left, radius);
+			Ware_TeleportPlayersCircle(red_players, center_right, radius);
+		}
+	}
+	
+}
+
+Ware_Location.kart_ramp <-
+{
+	center         = Vector(-7000, -10400, -6494),
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players, 
+			center,
+			QAngle(0, 90, 0),
+			1500.0,
+			200.0, 100.0);
+	}
 }
