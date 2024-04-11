@@ -7,6 +7,7 @@ minigame.end_delay = 0.5;
 minigame.music = "fencing";
 minigame.min_players = 2;
 minigame.allow_damage = true;
+minigame.friendly_fire = false;
 minigame.start_pass = true;
 minigame.fail_on_death = true;
 minigame.custom_overlay = "extinguish_scout";
