@@ -9,13 +9,20 @@ minigame.allow_damage = true;
 minigame.friendly_fire = false;
 minigame.start_pass = true;
 
-// Mission 1: Scout Team
-minigame.description = "Don't Laugh!";
-minigame.custom_overlay = "laugh_scout";
+// Mission 0: Scout Team
+// Mission 1: Heavy Team
 
-// Mission 2: Heavy Team
-minigame.description2 = "Make the Scouts Laugh!";
-minigame.custom_overlay2 = "laugh_heavy";
+minigame.description =
+[
+	"Don't Laugh!"
+	"Make the Scouts Laugh!"
+];
+
+minigame.custom_overlay = 
+[
+	"laugh_scout"
+	"laugh_heavy"
+];
 
 function OnStart()
 {
@@ -28,7 +35,7 @@ function OnStart()
 		
 		if (player.GetTeam() == heavy_team)
 		{
-			Ware_SetPlayerMission(player, 2);
+			Ware_SetPlayerMission(player, 1);
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS);
 			Ware_GivePlayerWeapon(player, "Holiday Punch");
 			// give crits so holiday punch always makes laugh
@@ -38,7 +45,7 @@ function OnStart()
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 1);
+			Ware_SetPlayerMission(player, 0);
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT);
 		}
 	}

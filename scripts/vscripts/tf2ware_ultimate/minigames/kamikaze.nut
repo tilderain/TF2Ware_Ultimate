@@ -1,15 +1,21 @@
 minigame <- Ware_MinigameData();
 minigame.name = "Kamikaze";
-minigame.description = "Avoid the Kamikaze!"
-minigame.description2 = "Explode 2 players!"
+minigame.description = 
+[
+	"Avoid the Kamikaze!"
+	"Explode 2 players!"
+];
 minigame.duration = 4.0;
 minigame.music = "falling";
 minigame.min_players = 3;
 minigame.end_delay = 0.5;
 minigame.start_pass = true;
 minigame.allow_damage = true;
-minigame.custom_overlay = "avoid_kamikaze";
-minigame.custom_overlay2 = "explode_players";
+minigame.custom_overlay = 
+[
+	"avoid_kamikaze"
+	"explode_players"
+];
 
 local bomb_model = "models/custom/dirty_bomb_cart.mdl";
 local bomb_sound = "pl_hoodoo/alarm_clock_ticking_3.wav";
@@ -38,7 +44,7 @@ function OnStart()
 		if (player == kamikaze)
 		{
 			Ware_PassPlayer(player, false);
-			Ware_SetPlayerMission(player, 2);
+			Ware_SetPlayerMission(player, 1);
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS);		
 			EmitSoundOn(bomb_sound, player);
 			
@@ -56,7 +62,7 @@ function OnStart()
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 1);
+			Ware_SetPlayerMission(player, 0);
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT);
 		}
 	}	

@@ -1,13 +1,19 @@
 minigame <- Ware_MinigameData();
 minigame.name = "Cuddly Heavies"
-minigame.description = "Avoid the Cuddly Heavies!";
-minigame.description2 = "Hug every Scout!"
+minigame.description = 
+[
+	"Avoid the Cuddly Heavies!"
+	"Hug every Scout!"
+];
 minigame.duration = 65.0;
 minigame.end_delay = 0.6;
 minigame.music = "cuddly";
 minigame.location = "love";
-minigame.custom_overlay = "cuddly_avoid";
-minigame.custom_overlay2 = "cuddly_hug";
+minigame.custom_overlay =
+[
+	"cuddly_avoid"
+	"cuddly_hug"
+];
 minigame.min_players = 6;
 minigame.start_pass = true;
 minigame.allow_damage = true;
@@ -39,7 +45,7 @@ function OnStart()
 		local player = data.player;
 		if (heavies.find(player) != null)
 		{
-			Ware_SetPlayerMission(player, 2);	
+			Ware_SetPlayerMission(player, 1);	
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS);
 			Ware_PassPlayer(player, false);
 			Ware_StripPlayer(player, true);
@@ -50,7 +56,7 @@ function OnStart()
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 1);
+			Ware_SetPlayerMission(player, 0);
 			Ware_SetPlayerTeam(player, TF_TEAM_BLUE);
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT);
 			vo_scouts.append(player);

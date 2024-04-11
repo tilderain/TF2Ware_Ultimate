@@ -70,10 +70,8 @@ class Ware_MinigameData
 	// Internal name
 	name			= null;
 	// Description shown to people
-	// Also only shown to players on 1st mission
+	// This can either be a string or an array of strings (when using missions)
 	description		= null;
-	// Only shown to players on 2nd mission
-	description2	= null;
 	// Length before ending
 	duration		= null;
 	// Music to play
@@ -101,11 +99,11 @@ class Ware_MinigameData
 	// Delay after the minigame "ends" before showing results, default is 0.0
 	end_delay		= null;
 	// Custom text overlay to show rather than the default implied from name
-	// Also only shown to players on 1st mission
+	// This can either be a string or an array of strings (when using missions)
 	custom_overlay	= null;
 	// Secondary custom text overlay to show 
-	// Also only shown to players on 2nd mission
-	custom_overlay2	= null;
+	// Same rules as above
+	custom_overlay2 = null;
 	// Table of convars to set for this minigame
 	// Reverted to previous values after minigame ends
 	convars			= null;
@@ -478,7 +476,7 @@ function Ware_SpawnParticle(entity, name, attach_name = "", attach_type = PATTAC
 
 function Ware_ParticleHook()
 {
-	if (!activator || !activator.IsValid()) // prevent invalid entity or this will crash
+	if (!activator) // prevent invalid entity or this will crash
 		return false;
 		
 	local data = Ware_ParticleSpawnerQueue.remove(0);
@@ -1216,53 +1214,43 @@ function Ware_StartMinigame(minigame, is_boss)
 	
 	Ware_TextManager.KeyValueFromFloat("holdtime", Ware_Minigame.duration + Ware_Minigame.end_delay);
 	
-	local overlay, overlay2;
-	if (Ware_Minigame.custom_overlay == null)
+	local GetOverlays = function(overlays) 
 	{
-		overlay = format("hud/tf2ware_ultimate/minigames/%s", minigame);
-	}
-	else if (Ware_Minigame.custom_overlay.len() > 0)
-	{
-		if (Ware_Minigame.custom_overlay.slice(0, 3) == "../")
-			overlay = format("hud/tf2ware_ultimate/%s", Ware_Minigame.custom_overlay.slice(3));
+		local FixupOverlay = function(name)
+		{
+			if (name.slice(0, 3) == "../")
+				return "hud/tf2ware_ultimate/" + name.slice(3);
+			else
+				return "hud/tf2ware_ultimate/minigames/" + name;
+		}
+			
+		if (typeof(overlays) == "array")
+			return overlays.map(@(name) FixupOverlay(name));
 		else
-			overlay = format("hud/tf2ware_ultimate/minigames/%s", Ware_Minigame.custom_overlay);
+			return [FixupOverlay(overlays)];
 	}
+	
+	local overlays = [], overlays2 = [];
+	if (Ware_Minigame.custom_overlay == null)
+		overlays = ["hud/tf2ware_ultimate/minigames/" + minigame];
 	else
-	{
-		overlay = "";
-	}
+		overlays = GetOverlays(Ware_Minigame.custom_overlay);
 	
 	if (Ware_Minigame.custom_overlay2 != null)
 	{
-		overlay2 = Ware_Minigame.custom_overlay2; 
-		if (overlay2.slice(0, 3) == "../")
-			overlay2 = format("hud/tf2ware_ultimate/%s", overlay2.slice(3));
-		else
-			overlay2 = format("hud/tf2ware_ultimate/minigames/%s", overlay2);
-			
+		overlays2 = GetOverlays(Ware_Minigame.custom_overlay2);
 		Ware_MinigameOverlay2Set = true;
 	}
 
+	local overlay_len = overlays.len();
+	local overlay2_len = overlays2.len();
 	foreach (data in Ware_MinigamePlayers)
 	{	
-		local player = data.player;
 		local mission = data.mission;
-		
-		if (mission == 0)
-		{
-			Ware_ShowScreenOverlay(player, overlay);
-			if (Ware_MinigameOverlay2Set)
-				Ware_ShowScreenOverlay2(player, overlay2);
-		}
-		else if (mission == 1)
-		{
-			Ware_ShowScreenOverlay(player, overlay);
-		}
-		else if (mission == 2)
-		{
-			Ware_ShowScreenOverlay2(player, overlay2);
-		}
+		if (mission < overlay_len)
+			Ware_ShowScreenOverlay(data.player, overlays[mission]);	
+		if (mission < overlay2_len)
+			Ware_ShowScreenOverlay2(data.player, overlays2[mission]);		
 	}
 	
 	Ware_PlayMinigameSound(null, Ware_Minigame.music);

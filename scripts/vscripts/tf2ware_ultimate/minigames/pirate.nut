@@ -1,13 +1,19 @@
 minigame <- Ware_MinigameData();
 minigame.name = "Pirate Attack";
-minigame.description = "Jump over the RED ship!"
-minigame.description2 = "Jump over the BLUE ship!"
+minigame.description = 
+[
+	"Jump over the RED ship!"
+	"Jump over the BLUE ship!"
+];
 minigame.duration = 12.0;
 minigame.music = "piper";
 minigame.location = "beach";
 minigame.no_collisions  = true;
-minigame.custom_overlay = "pirate_red";
-minigame.custom_overlay2 = "pirate_blue";
+minigame.custom_overlay = 
+[
+	"pirate_red"
+	"pirate_blue"
+];
  
 local ship_model = "models/marioragdoll/super mario galaxy/bj ship/bjship.mdl";
 PrecacheModel(ship_model);
@@ -24,9 +30,9 @@ function OnStart()
 		local player = data.player;
 		local team = player.GetTeam();
 		if (team == TF_TEAM_RED)
-			Ware_SetPlayerMission(player, 1);
+			Ware_SetPlayerMission(player, 0);
 		else if (team == TF_TEAM_BLUE)
-			Ware_SetPlayerMission(player, 2);	
+			Ware_SetPlayerMission(player, 1);	
 	}
 	
 	red_ship = Ware_SpawnEntity("prop_dynamic_override",

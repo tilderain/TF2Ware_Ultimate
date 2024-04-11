@@ -1,7 +1,10 @@
 minigame <- Ware_MinigameData();
 minigame.name = "Extinguish"
-minigame.description = "Get Extinguished!";
-minigame.description2 = "Extinguish a Scout!";
+minigame.description =
+[
+	"Get Extinguished!"
+	"Extinguish a Scout!"
+];
 minigame.duration = 4.5;
 minigame.end_delay = 0.5;
 minigame.music = "fencing";
@@ -10,12 +13,16 @@ minigame.allow_damage = true;
 minigame.friendly_fire = false;
 minigame.start_pass = true;
 minigame.fail_on_death = true;
-minigame.custom_overlay = "extinguish_scout";
-minigame.custom_overlay2 = "extinguish_pyro";
+minigame.custom_overlay = 
+[
+	"extinguish_scout"
+	"extinguish_pyro"
+];
 minigame.convars =
 {
 	mp_teams_unbalance_limit = 0,
 }
+
 function OnStart()
 {
 	local pyro_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE);
@@ -25,7 +32,7 @@ function OnStart()
 					
 		if (player.GetTeam() == pyro_team)
 		{
-			Ware_SetPlayerMission(player, 2);
+			Ware_SetPlayerMission(player, 1);
 			Ware_SetPlayerClass(player, TF_CLASS_PYRO);
 			Ware_GivePlayerWeapon(player, "Backburner");
 			Ware_SetPlayerTeam(player, pyro_team);
@@ -34,10 +41,10 @@ function OnStart()
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 1);
+			Ware_SetPlayerMission(player, 0);
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT);
-			player.SetHealth(25);
-			BurnPlayer(player, 10, minigame.duration);
+			player.SetHealth(25);		
+			Ware_CreateTimer(@() BurnPlayer(player, 10, Ware_GetMinigameRemainingTime()), RandomFloat(0.0, 0.2));		
 			Ware_SetPlayerTeam(player, pyro_team);
 		}
 	}

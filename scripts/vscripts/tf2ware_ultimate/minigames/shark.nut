@@ -1,7 +1,10 @@
 minigame <- Ware_MinigameData();
 minigame.name = "Shark";
-minigame.description = "You are the Shark. Kill 3 players!"
-minigame.description2 = "Get on the beach and avoid the Shark!"
+minigame.description = 
+[
+	"You are the Shark. Kill 3 players!"
+	"Get on the beach and avoid the Shark!"
+];
 minigame.duration = 23.5;
 minigame.end_delay = 1.0;
 minigame.music = "slowfox";
@@ -10,8 +13,11 @@ minigame.allow_damage = true;
 minigame.fail_on_death  = true;
 minigame.no_collisions  = true;
 minigame.min_players = 4;
-minigame.custom_overlay = "avoid_shark";
-minigame.custom_overlay2 = "shark_kill";
+minigame.custom_overlay = 
+[
+	"avoid_shark"
+	"shark_kill"
+];
 minigame.convars =
 {
 	mp_teams_unbalance_limit = 0,
@@ -43,7 +49,7 @@ function OnStart()
 		local player = data.player;		
 		if (player == shark)
 		{
-			Ware_SetPlayerMission(player, 2);
+			Ware_SetPlayerMission(player, 1);
 			Ware_SetPlayerClass(player, TF_CLASS_PYRO);
 			player.SetForcedTauntCam(1);
 			player.SetCustomModel(shark_model);			
@@ -55,7 +61,7 @@ function OnStart()
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 1);
+			Ware_SetPlayerMission(player, 0);
 			Ware_SetPlayerClass(player, TF_CLASS_SOLDIER);
 			Ware_SetPlayerTeam(player, TF_TEAM_RED);
 		}

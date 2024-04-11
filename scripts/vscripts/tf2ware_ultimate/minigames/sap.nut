@@ -4,11 +4,17 @@ minigame.duration = 4.0;
 minigame.music = "funkymoves";
 minigame.min_players = 2;
 
-minigame.description = "Sap a Building!";
-minigame.description2 = "Get a Building Sapped!";
+minigame.description = 
+[
+	"Sap a Building!"
+	"Get a Building Sapped!"
+];
 
-minigame.custom_overlay = "sap_spy";
-minigame.custom_overlay2 = "sap_engi";
+minigame.custom_overlay = 
+[
+	"sap_spy"
+	"sap_engi"
+];
 
 // allow damage so sappers work, but prevent player damage
 minigame.allow_damage = true;
@@ -23,14 +29,14 @@ function OnStart()
 					
 		if (player.GetTeam() == engi_team)
 		{
-			Ware_SetPlayerMission(player, 2);
+			Ware_SetPlayerMission(player, 1);
 			Ware_SetPlayerClass(player, TF_CLASS_ENGINEER);
 			Ware_GivePlayerWeapon(player, "Toolbox");
 			Ware_GivePlayerWeapon(player, "Construction PDA");
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 1);
+			Ware_SetPlayerMission(player, 0);
 			Ware_SetPlayerClass(player, TF_CLASS_SPY);
 			Ware_GivePlayerWeapon(player, "Sapper");
 		}

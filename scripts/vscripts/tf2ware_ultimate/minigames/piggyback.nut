@@ -3,14 +3,20 @@
 
 minigame <- Ware_MinigameData();
 minigame.name = "Piggyback Heavy";
-minigame.description = "Piggyback the heavy before he reaches the end!"
-minigame.description2 = "Reach the end with less than 3 players on your back!"
+minigame.description = 
+[
+	"Piggyback the heavy before he reaches the end!"
+	"Reach the end with less than 3 players on your back!"
+];
 minigame.duration = 27.7;
 minigame.min_players = 5;
 minigame.location = "pinball";
 minigame.music = "makemegroove";
-minigame.custom_overlay = "piggyback_end";
-minigame.custom_overlay2 = "piggyback_heavy";
+minigame.custom_overlay = 
+[
+	"piggyback_end"
+	"piggyback_heavy"
+];
 minigame.convars =
 {
 	mp_teams_unbalance_limit = 0,
@@ -32,7 +38,7 @@ function OnStart()
 		local player = data.player;		
 		if (player == piggybacker)
 		{
-			Ware_SetPlayerMission(player, 2);
+			Ware_SetPlayerMission(player, 1);
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS);
 			Ware_SetPlayerTeam(player, TF_TEAM_BLUE);
 			player.SetForcedTauntCam(1);
@@ -50,7 +56,7 @@ function OnStart()
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 1);
+			Ware_SetPlayerMission(player, 0);
 			Ware_SetPlayerClass(player, TF_CLASS_PYRO);
 			Ware_SetPlayerTeam(player, TF_TEAM_RED);
 			player.AddCond(TF_COND_SPEED_BOOST);

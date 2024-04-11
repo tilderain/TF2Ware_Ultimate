@@ -1,15 +1,21 @@
 minigame <- Ware_MinigameData();
 minigame.name = "Goomba";
-minigame.description = "Don't get jumped on!"
-minigame.description2 = "Jump on a Heavy's head!"
+minigame.description = 
+[
+	"Don't get jumped on!"
+	"Jump on a Heavy's head!"
+];
 minigame.duration = 4.0;
 minigame.music = "clumsy";
 minigame.min_players = 2;
 minigame.start_pass = true;
 minigame.allow_damage = true;
 minigame.fail_on_death = true;
-minigame.custom_overlay = "dont_jumped";
-minigame.custom_overlay2 = "jump_heavy";
+minigame.custom_overlay =
+[
+	"dont_jumped"
+	"jump_heavy"
+];
 
 local jump_team;
 
@@ -23,13 +29,13 @@ function OnStart()
 					
 		if (player.GetTeam() == jump_team)
 		{
-			Ware_SetPlayerMission(player, 2);
+			Ware_SetPlayerMission(player, 1);
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT);
 			Ware_PassPlayer(player, false);
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 1);
+			Ware_SetPlayerMission(player, 0);
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS);
 		}
 	}	

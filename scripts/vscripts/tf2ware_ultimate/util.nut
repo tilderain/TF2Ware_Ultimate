@@ -312,12 +312,19 @@ function BrickPlayerScore(player)
 		player.RemoveFlag(FL_FAKECLIENT);	
 }
 
+function NullActivatorFix()
+{
+	// block input to prevent crashes with null activator
+	return activator != null;
+}
+
 function BurnPlayer(player, burn_damage, burn_duration)
 {
 	local trigger = CreateEntitySafe("trigger_ignite");
 	trigger.KeyValueFromInt("spawnflags", 1);
 	trigger.KeyValueFromFloat("damage_percent_per_second", burn_damage);
 	trigger.KeyValueFromFloat("burn_duration", burn_duration);
+	SetInputHook(trigger, "StartTouch", NullActivatorFix, null);
 	EntFireByHandle(trigger, "StartTouch", "", -1, player, player);
 	EntFireByHandle(trigger, "Kill", "", -1, null, null);	
 }
@@ -330,6 +337,7 @@ function StunPlayer(player, stun_type, stun_effects, stun_duration, move_speed_r
 	trigger.KeyValueFromInt("stun_effects", stun_effects.tointeger());
 	trigger.KeyValueFromFloat("stun_duration", stun_duration);
 	trigger.KeyValueFromFloat("move_speed_reduction", move_speed_reduction);
+	SetInputHook(trigger, "EndTouch", NullActivatorFix, null);
 	EntFireByHandle(trigger, "EndTouch", "", -1, player, player);
 	EntFireByHandle(trigger, "Kill", "", -1, null, null);
 }
