@@ -157,3 +157,26 @@ TF2Ware_Ultimate.ScoutDisgust
 		wave	vo/scout_domination20.mp3
 	}
 }
+
+TF2Ware_Ultimate.GhostLaugh
+{
+	channel			CHAN_VOICE
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_80dB
+	rndwave
+	{
+		wave	 vo/spy_laughshort06.mp3
+		wave	 vo/spy_laughshort05.mp3
+		wave	 vo/spy_laughshort04.mp3
+		wave	 vo/spy_laughshort03.mp3
+		wave	 vo/spy_laughshort02.mp3
+		wave	 vo/spy_laughshort01.mp3
+		wave	 vo/spy_laughlong01.mp3
+		wave	 vo/spy_laughhappy03.mp3
+		wave	 vo/spy_laughhappy02.mp3
+		wave 	 vo/spy_laughhappy01.mp3
+		wave 	 vo/spy_laughevil02.mp3
+		wave 	 vo/spy_laughevil01.mp3
+	}
+}

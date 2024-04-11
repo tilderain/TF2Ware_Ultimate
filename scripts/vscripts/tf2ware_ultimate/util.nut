@@ -167,6 +167,12 @@ function IsEntityAlive(player)
 	return GetPropInt(player, "m_lifeState") == 0;
 }
 
+function SetEntityColor(entity, r, g, b, a)
+{
+    local color = (r) | (g << 8) | (b << 16) | (a << 24);
+    SetPropInt(entity, "m_clrRender", color);
+}
+
 function PlayerParentFix()
 {
 	self.RemoveEFlags(EFL_KILLME);
@@ -215,6 +221,7 @@ function SetPlayerParent(player, parent, attachment = null)
 	}
 }
 
+
 _PostInputScope <- null;
 _PostInputFunc  <- null;
 
@@ -256,7 +263,6 @@ ROOT.setdelegate(
 		rawdelete(k);
 	}
 });
-
 
 function PlaySoundOnClient(player, name, volume = 1.0, pitch = 100, flags = 0)
 {
@@ -318,18 +324,24 @@ function NullActivatorFix()
 	return activator != null;
 }
 
-function BurnPlayer(player, burn_damage, burn_duration)
+function PlayVocalization(player, sound)
+{
+	if (player.IsValid() && IsEntityAlive(player))
+		player.EmitSound(sound);
+}
+
+function BurnPlayer(player, burn_damage, burn_duration, post_touch_callback = null)
 {
 	local trigger = CreateEntitySafe("trigger_ignite");
 	trigger.KeyValueFromInt("spawnflags", 1);
 	trigger.KeyValueFromFloat("damage_percent_per_second", burn_damage);
 	trigger.KeyValueFromFloat("burn_duration", burn_duration);
-	SetInputHook(trigger, "StartTouch", NullActivatorFix, null);
+	SetInputHook(trigger, "StartTouch", NullActivatorFix, post_touch_callback);
 	EntFireByHandle(trigger, "StartTouch", "", -1, player, player);
 	EntFireByHandle(trigger, "Kill", "", -1, null, null);	
 }
 
-function StunPlayer(player, stun_type, stun_effects, stun_duration, move_speed_reduction)
+function StunPlayer(player, stun_type, stun_effects, stun_duration, move_speed_reduction, post_touch_callback = null)
 {
 	local trigger = CreateEntitySafe("trigger_stun");
 	trigger.KeyValueFromInt("spawnflags", 1);
@@ -337,7 +349,7 @@ function StunPlayer(player, stun_type, stun_effects, stun_duration, move_speed_r
 	trigger.KeyValueFromInt("stun_effects", stun_effects.tointeger());
 	trigger.KeyValueFromFloat("stun_duration", stun_duration);
 	trigger.KeyValueFromFloat("move_speed_reduction", move_speed_reduction);
-	SetInputHook(trigger, "EndTouch", NullActivatorFix, null);
+	SetInputHook(trigger, "EndTouch", NullActivatorFix, post_touch_callback);
 	EntFireByHandle(trigger, "EndTouch", "", -1, player, player);
 	EntFireByHandle(trigger, "Kill", "", -1, null, null);
 }
@@ -359,6 +371,16 @@ function HealPlayer(player, amount)
 			entindex = player.entindex(),
 			weapon_def_index = -1,
 		});
+	}
+}
+
+function KillPlayerRagdoll(player)
+{
+	local ragdoll = GetPropEntity(player, "m_hRagdoll");
+	if (ragdoll)
+	{
+		MarkForPurge(ragdoll);
+		ragdoll.Kill();
 	}
 }
 

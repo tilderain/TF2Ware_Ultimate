@@ -174,7 +174,8 @@ Ware_Location.beach <-
 
 Ware_Location.manor <-
 {
-	center   = Vector(8048, -6440, -3615),
+	center  	  = Vector(8048, -6440, -3615),
+	lobby		  = Vector(6048, -5516, -3822),
 };
 
 Ware_Location.pinball <-

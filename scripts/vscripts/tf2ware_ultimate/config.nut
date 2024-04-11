@@ -61,7 +61,8 @@ Ware_Minigames <-
 
 Ware_Bossgames <-
 [
-	"cuddly_heavies",
+	"cuddly_heavies"
+	"ghostbuster"
 ]
 
 Ware_GameSounds <-
@@ -134,6 +135,7 @@ Ware_BossgameMusic <-
 	"casino"
 	"cuddly"
 	"effort"
+	"ghostbusters"	
 	"staredown"
 ]
 

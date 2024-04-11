@@ -119,14 +119,7 @@ function OnPlayerDeath(params)
 	local victim = GetPlayerFromUserID(params.userid);
 	if (victim == shark)
 	{
-		CreateTimer(function()
-			{ 
-				local ragdoll = GetPropEntity(victim, "m_hRagdoll");
-				if (ragdoll)
-					ragdoll.Kill();
-			}, 
-			0.0
-		);	
+		CreateTimer(@() KillPlayerRagdoll(victim), 0.0);
 	}
 	else
 	{

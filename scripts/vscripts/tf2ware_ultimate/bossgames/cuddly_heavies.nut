@@ -76,12 +76,6 @@ function OnStart()
 		Ware_CreateTimer(@() PlayVocalization(RemoveRandomElement(vo_scouts), vo_disgust_sound), RandomFloat(1.5, 5.0));
 }
 
-function PlayVocalization(player, sound)
-{
-	if (player.IsValid() && IsEntityAlive(player))
-		player.EmitSound(sound);
-}
-
 function OnTeleport(players)
 {
 	local heavy_count = Clamp(players.len() / 4, 2, 3);

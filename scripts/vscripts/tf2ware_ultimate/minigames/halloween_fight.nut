@@ -95,14 +95,7 @@ function OnPlayerDeath(params)
 	if (boss_idx == 1)
 	{
 		victim.SetCustomModel("");
-		CreateTimer(function()
-			{ 
-				local ragdoll = GetPropEntity(victim, "m_hRagdoll");
-				if (ragdoll)
-					ragdoll.Kill();
-			}, 
-			0.0
-		);
+		CreateTimer(@() KillPlayerRagdoll(victim), 0.0);
 	}
 	else if (boss_idx == 2)
 	{

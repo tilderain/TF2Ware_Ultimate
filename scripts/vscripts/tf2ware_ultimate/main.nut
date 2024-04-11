@@ -165,6 +165,9 @@ class Ware_PlayerData
 
 if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
 {
+	if ("OnCleanup" in Ware_MinigameScope) 
+		Ware_MinigameScope.OnCleanup();
+	
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
@@ -1782,6 +1785,7 @@ function OnGameEvent_player_spawn(params)
 		
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE);
 		player.SetCustomModel("");
+		SetPropInt(player, "m_clrRender", 0xFFFFFFFF);
 	}
 }
 
