@@ -94,9 +94,7 @@ words <-
 function OnStart()
 {
 	word = words[RandomIndex(words)];
-	foreach (data in Ware_MinigamePlayers)
-		Ware_ShowMinigameText(data.player, word);
-	
+	Ware_ShowMinigameText(null, word);
 	word = word.tolower();
 }
 

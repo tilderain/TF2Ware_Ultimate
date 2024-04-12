@@ -59,6 +59,8 @@ function OnStart()
 			bomb = Ware_SpawnWearable(player, bomb_model);
 			SetPropInt(bomb, "m_fEffects", 0);
 			SetEntityParent(bomb, player, "flag");
+			
+			player.SetForcedTauntCam(1);
 		}
 		else
 		{
@@ -72,6 +74,8 @@ function OnEnd()
 {
 	if (kamikaze.IsValid())
 	{		
+		kamikaze.SetForcedTauntCam(0);
+		
 		local kamikaze_pos = kamikaze.GetOrigin();
 		local particle = Ware_SpawnEntity("info_particle_system",
 		{

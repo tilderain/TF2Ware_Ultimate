@@ -199,6 +199,7 @@ if (!("Ware_DebugStop" in this))
 }
 
 Ware_TextManagerQueue     <- null;
+Ware_TextManagerLastMsg   <- null;
 Ware_TextManager          <- null;
 
 Ware_ParticleSpawnerQueue <- [];
@@ -249,26 +250,19 @@ function Ware_FindStandardEntities()
 	Ware_TextManager = SpawnEntityFromTableSafe("game_text",
 	{
 		message = "",
-		x = -1,
-		y = 0.3,
-		effect = 0,
-		color = "255 255 255",
-		fadein = 0.0,
+		effect  = 0,
+		fadein  = 0.0,
 		fadeout = 0.0,
-		holdtime = 0.0,
-		fxtime = 0.0,
+		fxtime  = 0.0,
 		channel = 3
 	});
-	Ware_TextManager.ValidateScriptScope();
-	Ware_TextManager.GetScriptScope().InputDisplay <- Ware_TextHook;
-	Ware_TextManager.GetScriptScope().inputdisplay <- Ware_TextHook;
+	SetInputHook(Ware_TextManager, "FireUser1", Ware_TextHookBegin, null);
+	SetInputHook(Ware_TextManager, "FireUser2", Ware_TextHookEnd, null);
 	
 	Ware_ParticleSpawnerQueue <- [];
 	Ware_ParticleSpawner <- CreateEntitySafe("trigger_particle");
 	Ware_ParticleSpawner.KeyValueFromInt("spawnflags", 64);
-	Ware_ParticleSpawner.ValidateScriptScope();
-	Ware_ParticleSpawner.GetScriptScope().InputStartTouch <- Ware_ParticleHook;
-	Ware_ParticleSpawner.GetScriptScope().Inputstarttouch <- Ware_ParticleHook;
+	SetInputHook(Ware_ParticleSpawner, "StartTouch", Ware_ParticleHook, null);
 }
 
 function Ware_SetupLocations()
@@ -436,34 +430,48 @@ function Ware_ShowScreenOverlay2(player, name)
 	}	
 }
 
-function Ware_ShowMinigameText(player, text)
+function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y = 0.3)
 {
 	Ware_TextManagerQueue.push(
 	{ 
-		message = text, 
-		color   = "255 255 255",
-		// TODO: adjust holdtime depending on current minigame remaining time
+		message  = text, 
+		color    = color,
+		holdtime = Ware_GetMinigameRemainingTime(),
+		x		 = x,
+		y        = y,
 	});	
-	EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null);
+	
+	EntFireByHandle(Ware_TextManager, "FireUser1", "", -1, null, null);	
+	if (player)
+	{
+		EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null);	
+	}
+	else
+	{
+		foreach (data in Ware_MinigamePlayers)
+			EntFireByHandle(Ware_TextManager, "Display", "", -1, data.player, null);	
+	}
+	EntFireByHandle(Ware_TextManager, "FireUser2", "", -1, null, null);	
 }
 
-function Ware_ShowMinigameColorText(player, text, color)
-{
-	Ware_TextManagerQueue.push(
-	{ 
-		message = text, 
-		color   = color,
-		// TODO: adjust holdtime depending on current minigame remaining time
-	});	
-	EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null);
-}
-
-function Ware_TextHook()
+function Ware_TextHookBegin()
 {
 	local params = Ware_TextManagerQueue.remove(0);
+	Ware_TextManagerLastMsg = params.message;
 	self.KeyValueFromString("message", params.message);
 	self.KeyValueFromString("color", params.color);
+	self.KeyValueFromFloat("holdtime", params.holdtime);
+	self.KeyValueFromFloat("x", params.x);
+	self.KeyValueFromFloat("y", params.y);
 	return true;
+}
+
+function Ware_TextHookEnd()
+{
+	// hack to purge stringtable
+	local purger = CreateEntitySafe("logic_relay");
+	purger.KeyValueFromString("targetname", Ware_TextManagerLastMsg);
+	purger.Kill();
 }
 
 function Ware_SpawnParticle(entity, name, attach_name = "", attach_type = PATTACH_ABSORIGIN_FOLLOW)
@@ -529,7 +537,7 @@ function Ware_GetMinigameTime()
 
 function Ware_GetMinigameRemainingTime()
 {
-	return (Ware_MinigameStartTime + Ware_Minigame.duration) - Time();
+	return (Ware_MinigameStartTime + Ware_Minigame.duration + Ware_Minigame.end_delay) - Time();
 }
 
 function Ware_ParseLoadout(player)

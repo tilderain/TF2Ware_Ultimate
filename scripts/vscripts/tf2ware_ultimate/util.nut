@@ -94,6 +94,17 @@ function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs)
            (a_mins.z <= b_maxs.z && a_maxs.z >= b_mins.z);
 }
 
+function FloatToTimeHMS(time)
+{
+	local h, m, s;
+	s = Round(time);
+	h = s / 3600;
+	s -= h * 3600;
+	m = s / 60;
+	s = s % 60;
+	return { hours = h, minutes = m, seconds = s };
+}
+
 function MarkForPurge(entity)
 {
 	SetPropBool(entity, "m_bForcePurgeFixedupStrings", true);

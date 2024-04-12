@@ -30,8 +30,7 @@ function OnGameEvent_player_stunned(params)
 			local weapon = victim.GetActiveWeapon();
 			if (weapon)
 				weapon.EnableDraw();
-		}
-		2.5);
+		}, 2.5);
 	}
 }
 

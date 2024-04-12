@@ -136,6 +136,7 @@ Ware_BossgameMusic <-
 	"cuddly"
 	"effort"
 	"ghostbusters"	
+	"slender"
 	"staredown"
 ]
 

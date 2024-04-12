@@ -180,3 +180,21 @@ TF2Ware_Ultimate.GhostLaugh
 		wave 	 vo/spy_laughevil01.mp3
 	}
 }
+
+TF2Ware_Ultimate.SlenderIntro
+{
+	channel			CHAN_STATIC
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/slender_intro.mp3
+}
+
+TF2Ware_Ultimate.SlenderPage
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_80dB
+	wave			tf2ware_ultimate/slender_page.wav
+}

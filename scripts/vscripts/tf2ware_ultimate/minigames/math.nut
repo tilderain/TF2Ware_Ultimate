@@ -47,9 +47,7 @@ function OnStart()
 		operator = "*";
 	}
 	
-	local text = Ware_Format("%d %s %d = ?", a, operator, b);
-	foreach (data in Ware_MinigamePlayers)
-		Ware_ShowMinigameText(data.player, text);
+	Ware_ShowMinigameText(null, Ware_Format("%d %s %d = ?", a, operator, b));
 }
 
 function OnEnd()
