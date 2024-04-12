@@ -248,3 +248,16 @@ Ware_Location.kart_ramp <-
 			200.0, 100.0);
 	}
 }
+
+Ware_Location.frogger <-
+{
+	center         = Vector(11488, -6150, -6448),
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players, 
+			center,
+			QAngle(0, 90, 0),
+			400.0,
+			-50.0, 50.0);
+	}
+}

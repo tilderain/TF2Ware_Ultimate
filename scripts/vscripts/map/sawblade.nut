@@ -10,15 +10,22 @@ function OnPostSpawn()
 {
 	for (local ent = self.FirstMoveChild(); ent != null; ent = ent.NextMovePeer())
 	{
-		if (ent.GetClassname() == "prop_dynamic")
+		MarkForPurge(ent);
+		if (ent.GetClassname() == "trigger_multiple")
+		{
+			ent.ValidateScriptScope();
+			ent.GetScriptScope().OnStartTouch <- OnStartTouch;
+			ent.ConnectOutput("OnStartTouch", "OnStartTouch");
+		}
+		else if (ent.GetClassname() == "prop_dynamic")
 		{
 			sawblade = ent;
-			break;
 		}
 	}
 	
 	local param = GetPropInt(self, "m_toggle_state") == 0 ? "Close" : "Open";
 	EntFireByHandle(self, param, "", -1, null, null);
+	MarkForPurge(self);
 }
 
 function Enable()

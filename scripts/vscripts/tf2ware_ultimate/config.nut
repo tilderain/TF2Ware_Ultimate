@@ -63,6 +63,8 @@ Ware_Bossgames <-
 [
 	"cuddly_heavies"
 	"ghostbuster"
+	"slender"
+	"frogger"
 ]
 
 Ware_GameSounds <-
@@ -135,6 +137,7 @@ Ware_BossgameMusic <-
 	"casino"
 	"cuddly"
 	"effort"
+	"frogger",
 	"ghostbusters"	
 	"slender"
 	"staredown"
