@@ -101,3 +101,27 @@ foreach (key, value in CONST)
 	else if (startswith(key, "PFX"))
 		PrecacheEntityFromTable({classname = "info_particle_system", effect_name = value});
 }
+
+PrecacheModel("models/player/items/taunts/bumpercar/parts/bumpercar.mdl");
+PrecacheModel("models/props_halloween/bumpercar_cage.mdl");
+
+KART_SOUNDS <-
+[
+	"BumperCar.Spawn",
+    "BumperCar.SpawnFromLava",
+    "BumperCar.GoLoop",
+    "BumperCar.Screech",
+    "BumperCar.HitGhost",
+    "BumperCar.Bump",
+    "BumperCar.BumpHard",
+    "BumperCar.BumpIntoAir",
+    "BumperCar.SpeedBoostStart",
+    "BumperCar.SpeedBoostStop",
+    "BumperCar.Jump",
+    "BumperCar.JumpLand",
+	"sf14.Merasmus.DuckHunt.BonusDucks",
+]
+
+foreach (sound in KART_SOUNDS)
+    PrecacheScriptSound(sound);
+

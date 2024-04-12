@@ -430,6 +430,12 @@ function Ware_ShowScreenOverlay2(player, name)
 	}	
 }
 
+function Ware_ShowGlobalScreenOverlay(name)
+{
+	foreach (data in Ware_MinigamePlayers)
+		Ware_ShowScreenOverlay(data.player, name);
+}
+
 function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y = 0.3)
 {
 	Ware_TextManagerQueue.push(
