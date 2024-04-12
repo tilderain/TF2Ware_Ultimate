@@ -15,10 +15,11 @@ function OnStart()
 
 function OnUpdate()
 {
+	local threshold = Ware_MinigameLocation.center.y + 844.0;
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
-		if (IsEntityAlive(player) && player.GetOrigin().y > -3056) // TODO don't hardcode this here
+		if (IsEntityAlive(player) && player.GetOrigin().y > threshold)
 			Ware_PassPlayer(player, true);
 	}
 }
