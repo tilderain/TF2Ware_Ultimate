@@ -115,6 +115,7 @@ function OnStart()
 			Ware_GivePlayerWeapon(player, "Fists", { "no_attack" : 1 });
 			player.SetCustomModel(ghost_model);
 			Ware_AddPlayerAttribute(player, "reduced_healing_from_medics", 0.0, -1);
+			TogglePlayerWearables(player, false);
 			SetPropInt(player, "m_nRenderMode", kRenderTransColor);			
 			SetEntityColor(player, 255, 255, 255, 60);
 			SetPropFloat(player, "m_flMaxspeed", 280.0);
