@@ -11,6 +11,7 @@ Ware_Minigames <-
 	"bumpers"         
 	"caber_king"      
 	"catch_cubes"     
+	"catch_money"
 	"change_class"    
 	"count_bombs"     
 	"disguise"        
@@ -92,6 +93,7 @@ Ware_MinigameMusic <-
 	"bigjazzfinish" 
 	"bliss" 
 	"brassy" 
+	"casino"
 	"catchme" 
 	"cheerful" 
 	"circus" 
@@ -140,7 +142,6 @@ Ware_MinigameMusic <-
 
 Ware_BossgameMusic <-
 [
-	"casino"
 	"cuddly"
 	"effort"
 	"frogger",
