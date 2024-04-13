@@ -212,9 +212,11 @@ Ware_Location.kart_containers <-
 
 Ware_Location.kart_paths <-
 {
-	center_left    = Vector(-7100, -5100, -6046),
-	center_right   = Vector(-6550, -5100, -6046),
-	radius         = 150.0,
+	center_left    = Vector(-7095, -5300, -6046),
+	center_right   = Vector(-6520, -5300, -6046),
+	angles         = QAngle(0, 90, 0),
+	width          = 380.0,
+	spacing        = 100.0,
 	Teleport = function(players)
 	{
 		local red_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED);
@@ -224,13 +226,13 @@ Ware_Location.kart_paths <-
 		
 		if (left_team == TF_TEAM_RED)
 		{
-			Ware_TeleportPlayersCircle(red_players, center_left, radius);
-			Ware_TeleportPlayersCircle(blue_players, center_right, radius);
+			Ware_TeleportPlayersRow(red_players, center_left, angles, width, spacing, spacing);
+			Ware_TeleportPlayersRow(blue_players, center_right, angles, width, spacing, spacing);
 		}
 		else
 		{
-			Ware_TeleportPlayersCircle(blue_players, center_left, radius);
-			Ware_TeleportPlayersCircle(red_players, center_right, radius);
+			Ware_TeleportPlayersRow(blue_players, center_left, angles, width, spacing, spacing);
+			Ware_TeleportPlayersRow(red_players, center_right, angles, width, spacing, spacing);
 		}
 	}
 	
