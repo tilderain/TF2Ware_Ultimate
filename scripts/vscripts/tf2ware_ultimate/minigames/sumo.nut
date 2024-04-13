@@ -23,7 +23,6 @@ minigame.location = arena[mode];
 
 function OnStart()
 {
-	// put everyone in karts and freeze them
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
