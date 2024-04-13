@@ -26,9 +26,10 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SPY, null);
 	Ware_CreateTimer(@() Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit"), 0.1);
 	
+	local beam_height = 100.0;
 	local beam = Ware_CreateEntity("env_beam");
-	beam.SetOrigin(Ware_MinigameLocation.center + Vector(-1000, 0, 96));
-	SetPropVector(beam, "m_vecEndPos", Ware_MinigameLocation.center + Vector(1000, 0, 96));
+	beam.SetOrigin(Ware_MinigameLocation.center + Vector(-1000, 0, beam_height));
+	SetPropVector(beam, "m_vecEndPos", Ware_MinigameLocation.center + Vector(1000, 0, beam_height));
 	beam.SetModel(beam_model);
 	beam.KeyValueFromString("rendercolor", "255 255 0");
 	beam.KeyValueFromInt("renderamt", 100);
@@ -40,11 +41,11 @@ function OnStart()
 	local trigger = Ware_SpawnEntity("trigger_multiple",
 	{
 		classname = "cow_mangler", // kill icon
-		origin = Ware_MinigameLocation.center + Vector(0, 0, 96),
+		origin = Ware_MinigameLocation.center + Vector(0, 0, beam_height),
 		spawnflags = 1
 	});
 	trigger.SetSolid(SOLID_BBOX);
-	trigger.SetSize(Vector(-1000, -8, -8), Vector(1000, 8, 8));
+	trigger.SetSize(Vector(-1000, -8, -4), Vector(1000, 8, 4));
 	trigger.ValidateScriptScope();
 	trigger.GetScriptScope().OnStartTouch <- OnBeamTouch;
 	trigger.ConnectOutput("OnStartTouch", "OnStartTouch");
