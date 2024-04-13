@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+"$basetexture" "maritime/concrete/road001"
+"$surfaceprop" "concrete"
+	"%keywords" "tf, bulletcrops"
+
+}
+// BulletCrops Project
+// http://www.minerality.fr/bulletcropsproject/

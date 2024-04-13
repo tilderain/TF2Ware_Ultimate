@@ -53,6 +53,7 @@ Ware_Minigames <-
 	"stay_ground"     
 	"street_fighter"  
 	"stun"            
+	"sumo"
 	"swim_up"         
 	"taunt_kill"      
 	"touch_sky"       
@@ -131,6 +132,7 @@ Ware_MinigameMusic <-
 	"thethinker" 
 	"train" 
 	"undergroundbros" 
+	"underwater"
 	"wildwest" 
 ]
 

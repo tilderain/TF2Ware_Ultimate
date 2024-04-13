@@ -263,3 +263,10 @@ Ware_Location.frogger <-
 			-50.0, 50.0);
 	}
 }
+
+Ware_Location.sumobox <-
+{
+	center         = Vector(-4600, -9500, -6142),
+	radius         = 400
+	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius); }
+}

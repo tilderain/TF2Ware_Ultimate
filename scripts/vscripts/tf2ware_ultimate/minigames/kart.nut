@@ -31,7 +31,7 @@ function OnStart()
 	}
 	
 	// start a countdown from 5
-	local timer = 5;
+	local timer = 3;
 	Ware_CreateTimer(function()
 	{
 		Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%s", timer.tostring()));
