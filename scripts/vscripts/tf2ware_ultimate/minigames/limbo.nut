@@ -37,6 +37,18 @@ function OnStart()
 	SetPropFloat(beam, "m_fEndWidth", 7.0);
 	EntFireByHandle(beam, "TurnOn", "", -1, null, null);
 	
+	local trigger = Ware_SpawnEntity("trigger_multiple",
+	{
+		classname = "cow_mangler", // kill icon
+		origin = Ware_MinigameLocation.center + Vector(0, 0, 96),
+		spawnflags = 1
+	});
+	trigger.SetSolid(SOLID_BBOX);
+	trigger.SetSize(Vector(-1000, -8, -8), Vector(1000, 8, 8));
+	trigger.ValidateScriptScope();
+	trigger.GetScriptScope().OnStartTouch <- OnBeamTouch;
+	trigger.ConnectOutput("OnStartTouch", "OnStartTouch");
+	
 	goal_vectors = beam.GetOrigin();
 }
 
@@ -46,7 +58,7 @@ function OnUpdate()
 	{
 		local player = data.player;
 		
-		if (player.GetOrigin().y > goal_vectors.y)
+		if (player.GetOrigin().y > goal_vectors.y + 50.0)
 			Ware_PassPlayer(player, true);
 		
 		if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))
@@ -59,11 +71,21 @@ function OnUpdate()
 	}
 }
 
+function OnBeamTouch()
+{
+	if (activator)
+		activator.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_PLASMA);
+}
+
 function OnEnd()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
+		
+		if (IsEntityAlive(player) && !data.passed)
+			Ware_ChatPrint(player, "{color}Spycrabs must look up and crouch!", TF_COLOR_DEFAULT);
+		
 		player.RemoveFlag(FL_ATCONTROLS);
 	}
 }
