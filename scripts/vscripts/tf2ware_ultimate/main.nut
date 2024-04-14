@@ -126,6 +126,7 @@ class Ware_MinigameData
 	cb_on_player_disconnect	= null;
 	cb_on_player_say		= null;
 	cb_on_player_voiceline	= null;
+	cb_on_player_horn		= null;
 	cb_on_player_touch		= null;
 	cb_on_update			= null;
 	cb_check_end			= null;
@@ -145,6 +146,8 @@ class Ware_PlayerData
 		melee_attributes = [];
 		start_sound      = false;
 		score			 = 0;
+		horn_timer		 = 0.0;
+		horn_buttons	 = 0;
 	}
 	
 	player		     = null;
@@ -161,6 +164,8 @@ class Ware_PlayerData
 	construction_pda = null;
 	saved_team       = null;
 	score			 = null;
+	horn_timer		 = null;
+	horn_buttons	 = null;
 };
 
 if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
@@ -1204,6 +1209,7 @@ function Ware_StartMinigame(minigame, is_boss)
 	Ware_Minigame.cb_on_player_disconnect	= Ware_MinigameCallback("OnPlayerDisconnect");
 	Ware_Minigame.cb_on_player_say			= Ware_MinigameCallback("OnPlayerSay");
 	Ware_Minigame.cb_on_player_voiceline	= Ware_MinigameCallback("OnPlayerVoiceline");
+	Ware_Minigame.cb_on_player_horn			= Ware_MinigameCallback("OnPlayerHorn");
 	Ware_Minigame.cb_on_player_touch		= Ware_MinigameCallback("OnPlayerTouch");
 	Ware_Minigame.cb_on_update				= Ware_MinigameCallback("OnUpdate")
 	Ware_Minigame.cb_check_end				= Ware_MinigameCallback("CheckEnd");
@@ -1565,6 +1571,24 @@ function Ware_OnUpdate()
 		local ret = Ware_Minigame.cb_check_end();
 		if (ret != null && ret == true)
 			Ware_EndMinigame();
+	}
+	
+	local time = Time();	
+	foreach (data in Ware_MinigamePlayers)
+	{
+		local player = data.player;	
+		if (player.InCond(TF_COND_HALLOWEEN_KART) && data.horn_timer < time)
+		{
+			local buttons = GetPropInt(player, "m_nButtons");
+			local buttons_pressed = (data.horn_buttons ^ buttons) & buttons;
+			if (buttons_pressed & IN_ATTACK)
+			{
+				player.EmitSound(SFX_WARE_KART_HORN);
+				data.horn_timer = time + 1.0;
+				Ware_Minigame.cb_on_player_horn();				
+			}
+			data.horn_buttons = buttons;
+		}
 	}
 	
 	Ware_Minigame.cb_on_update();

@@ -72,6 +72,7 @@ const TF_COLOR_BLUE    = "99CCFF"
 const TF_COLOR_SPEC    = "CCCCCC"
 
 const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
+const SFX_WARE_KART_HORN = "TF2Ware_Ultimate.KartHorn"
 
 const PFX_WARE_PASS_RED  = "teleportedin_red"
 const PFX_WARE_PASS_BLUE = "teleportedin_blue"
