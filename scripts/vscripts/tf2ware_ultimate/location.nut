@@ -240,7 +240,7 @@ Ware_Location.kart_paths <-
 
 Ware_Location.kart_ramp <-
 {
-	center         = Vector(-7000, -10400, -6494),
+	center   = Vector(-7000, -10400, -6494),
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(players, 
@@ -253,7 +253,7 @@ Ware_Location.kart_ramp <-
 
 Ware_Location.frogger <-
 {
-	center         = Vector(11488, -6150, -6448),
+	center   = Vector(11488, -6150, -6448),
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(players, 
@@ -266,7 +266,17 @@ Ware_Location.frogger <-
 
 Ware_Location.sumobox <-
 {
-	center         = Vector(-4600, -9500, -6142),
-	radius         = 400
+	center   = Vector(-4600, -9500, -6142),
+	radius   = 400
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius); }
+}
+
+Ware_Location.mandrill <-
+{
+	start    = Vector(2274, -13562, -5343),
+	Teleport = function(players)
+	{
+		foreach (player in players)
+			player.Teleport(true, start, true, QAngle(0, 180, 0), true, Vector());
+	}
 }
