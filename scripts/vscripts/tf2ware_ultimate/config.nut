@@ -42,6 +42,7 @@ Ware_Minigames <-
 	"pirate"          
 	"pop_jack",       
 	"projectile_jump" 
+	"rocket_jump"
 	"rocket_rain"     
 	"sap"             
 	"sawrun"          
@@ -129,6 +130,7 @@ Ware_MinigameMusic <-
 	"sillytime" 
 	"slowfox" 
 	"spotlightsonyou" 
+	"steadynow"
 	"streetfighter" 
 	"surfin" 
 	"survivor" 

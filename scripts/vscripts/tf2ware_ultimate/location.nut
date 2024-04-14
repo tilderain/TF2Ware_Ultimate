@@ -280,3 +280,10 @@ Ware_Location.mandrill <-
 			player.Teleport(true, start, true, QAngle(0, 180, 0), true, Vector());
 	}
 }
+
+Ware_Location.rocketjump <-
+{
+	center   = Vector(128, -3344, -7392),
+	radius   = 400
+	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius); }
+}

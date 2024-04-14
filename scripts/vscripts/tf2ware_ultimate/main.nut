@@ -335,7 +335,7 @@ function Ware_ChatPrint(target, fmt, ...)
 		}
 		else 
 		{
-			result += "{" + word + "}";
+			result += format(word, vargv[i++]);
 		}
 		
 		start = end + 1;

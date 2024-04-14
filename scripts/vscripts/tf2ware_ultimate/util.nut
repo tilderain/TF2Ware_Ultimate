@@ -440,3 +440,33 @@ function KillWeapon(weapon)
 	
 	weapon.Kill();
 }
+
+if (!("TriggerHurtDisintegrateProxy" in this) || !TriggerHurtDisintegrateProxy.IsValid())
+{
+    TriggerHurtDisintegrateProxy <- CreateEntitySafe("tf_weapon_bat");
+    NetProps.SetPropInt(TriggerHurtDisintegrateProxy, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 349);
+    NetProps.SetPropBool(TriggerHurtDisintegrateProxy, "m_AttributeManager.m_Item.m_bInitialized", true);
+    TriggerHurtDisintegrateProxy.DispatchSpawn();
+	TriggerHurtDisintegrateProxy.DisableDraw();
+    TriggerHurtDisintegrateProxy.AddAttribute("ragdolls become ash", 1, -1);
+}
+  
+function TriggerHurtDisintegrate()
+{
+	if (self.IsValid()) // safety check otherwise this will crash
+	{
+		if (self.IsPlayer())
+		{
+			SetPropEntity(TriggerHurtDisintegrateProxy, "m_hOwner", self);
+			self.EmitSound("Fire.Engulf");
+			self.TakeDamageCustom(
+				caller, self, TriggerHurtDisintegrateProxy, 
+				Vector(), Vector(), 
+				1000, DMG_BURN, TF_DMG_CUSTOM_BURNING);
+		}
+		else
+		{
+			self.TakeDamage(1000, DMG_BURN, caller);
+		}
+	}
+}
