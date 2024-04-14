@@ -1585,7 +1585,7 @@ function Ware_OnUpdate()
 			{
 				player.EmitSound(SFX_WARE_KART_HORN);
 				data.horn_timer = time + 1.0;
-				Ware_Minigame.cb_on_player_horn();				
+				Ware_Minigame.cb_on_player_horn(player);				
 			}
 			data.horn_buttons = buttons;
 		}
