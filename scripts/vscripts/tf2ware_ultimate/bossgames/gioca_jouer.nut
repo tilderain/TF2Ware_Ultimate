@@ -77,10 +77,10 @@ function OnStart()
 	// set a timer for each microgame. each tick of
 	// the "clock" ends the previous microgame,
 	// increments "micro", and starts the next one.
-	foreach (array in microgame_info)
+	foreach (microgame in microgame_info)
 	{
-		Ware_CreateTimer(@() GiocaJouer_Clock(), array[2]);
-		Ware_CreateTimer(@() GiocaJouer_Clock(), array[3]);
+		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[2]);
+		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[3]);
 	}
 }
 
@@ -254,9 +254,11 @@ function OnPlayerVoiceline(player, voiceline)
 			case MICRO_OKAY:
 				if (VCD_MAP[voiceline].find(".Cheers") != null)
 					GiocaJouer_PassPlayer(player, true);
+				break;
 			case MICRO_KISS:
 				if (VCD_MAP[voiceline].find(".Medic") != null)
-				GiocaJouer_PassPlayer(player, true);
+					GiocaJouer_PassPlayer(player, true);
+				break;
 		}
 	}
 }
@@ -280,6 +282,7 @@ function OnMicroEnd()
 				break;
 			case MICRO_SWIM:
 				player.RemoveCond(TF_COND_SWIMMING_CURSE);
+				player.RemoveCond(TF_COND_URINE);
 				break;
 			case MICRO_HORN:
 				player.RemoveCond(TF_COND_HALLOWEEN_KART);
@@ -330,9 +333,17 @@ function OnEnd()
 		if (score == high_score)
 		{
 			winners.append(player);
+			continue;
 		}
 	}
 	if (high_score > min_score)
 		foreach(player in winners)
+		{
 			Ware_PassPlayer(player, true);
+			Ware_ChatPrint(player, "You won! Your score was " + Ware_GetPlayerMiniData(player).gj_score.tostring() + ".", TF_COLOR_GREEN);
+		}
+		
+	foreach(data in Ware_MinigamePlayers)
+		if (!data.passed)
+			Ware_ChatPrint(data.player, "You lose! Your score was " + score.tostring() + ", but you needed to get " + min_score.tostring() + ".", TF_COLOR_RED);
 }
