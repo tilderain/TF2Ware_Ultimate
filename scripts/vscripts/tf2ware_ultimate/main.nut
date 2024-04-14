@@ -9,6 +9,7 @@ if (IsDedicatedServer())
 printl("\tTF2Ware Started");
 
 SetConvarValue("sv_gravity", 800.00006); // hide the sv_tags message
+SetConvarValue("mp_forcecamera", 0);
 SetConvarValue("mp_friendlyfire", 1);
 SetConvarValue("mp_respawnwavetime", 99999);
 SetConvarValue("mp_scrambleteams_auto", 0);
@@ -399,13 +400,13 @@ function Ware_PlayGameSound(player, name, flags = 0)
 		PlaySoundOnAllClients(format("tf2ware_ultimate/music_game/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags);
 }
 
-function Ware_PlayMinigameSound(player, name, flags = 0)
+function Ware_PlayMinigameSound(player, name, flags = 0, volume = 1.0)
 {
 	local gametype = Ware_Minigame.boss ? "bossgame" : "minigame";
 	if (player)
-		PlaySoundOnClient(player, format("tf2ware_ultimate/music_%s/%s.mp3", gametype, name), 1.0, 100 * Ware_GetPitchFactor(), flags);
+		PlaySoundOnClient(player, format("tf2ware_ultimate/music_%s/%s.mp3", gametype, name), volume, 100 * Ware_GetPitchFactor(), flags);
 	else
-		PlaySoundOnAllClients(format("tf2ware_ultimate/music_%s/%s.mp3", gametype, name), 1.0, 100 * Ware_GetPitchFactor(), flags);
+		PlaySoundOnAllClients(format("tf2ware_ultimate/music_%s/%s.mp3", gametype, name), volume, 100 * Ware_GetPitchFactor(), flags);
 }
 
 function Ware_SetConvarValue(convar, value)
@@ -1241,10 +1242,15 @@ function Ware_StartMinigame(minigame, is_boss)
 	{
 		local FixupOverlay = function(name)
 		{
-			if (name.slice(0, 3) == "../")
-				return "hud/tf2ware_ultimate/" + name.slice(3);
-			else
-				return "hud/tf2ware_ultimate/minigames/" + name;
+			if (name.len() > 0)
+			{
+				if (name.slice(0, 3) == "../")
+					return "hud/tf2ware_ultimate/" + name.slice(3);
+				else
+					return "hud/tf2ware_ultimate/minigames/" + name;
+			}
+			
+			return null;
 		}
 			
 		if (typeof(overlays) == "array")

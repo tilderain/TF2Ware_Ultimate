@@ -306,3 +306,12 @@ Ware_Location.hexplatforms <-
 		// Handled by minigame because of dynamic pillars
 	}
 }
+
+Ware_Location.dirtsquare <-
+{
+	center      = Vector(1648, -1776, -511),
+	Teleport = function(players) 
+	{ 
+		// TODO
+	}	
+};

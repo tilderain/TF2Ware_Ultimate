@@ -74,6 +74,7 @@ Ware_Bossgames <-
 	"mandrill"
 	"slender"
 	"frogger"
+	"wild_west"
 ]
 
 Ware_GameSounds <-
