@@ -41,24 +41,24 @@ PrecacheScriptSound(pass_sound);
 local microgame_info =
 [
 	// description                   overlay                                              absolute times
-	["Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move",          22.394, 101.723], // MICRO_SLEEP
-	["Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt",              25.671, 103.255], // MICRO_WAVE
-	["Jump!",                       "hud/tf2ware_ultimate/minigames/jump",               29.103, 105.039], // MICRO_HITCH
-	["Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch",             33.147, 106.812], // MICRO_SNEEZE
-	["Move!",                       "hud/tf2ware_ultimate/minigames/move",               36.428, 108.627], // MICRO_WALK
-	["Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim",   40.368, 110.264], // MICRO_SWIM
-	["Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left",            43.908, 112.206], // MICRO_SKI
-	["Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray",  47.361, 114.010], // MICRO_SPRAY
-	["Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab",            50.563, 115.689], // MICRO_MACHO
-	["Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn",   53.875, 117.515], // MICRO_HORN
-	["Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell",   58.288, 119.372], // MICRO_BELL
-	["Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay",   61.402, 121.146], // MICRO_OKAY
-	["Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic",         65.550, 123.182], // MICRO_KISS
-	["Disguise!",                   "hud/tf2ware_ultimate/minigames/disguise",           68.572, 124.682], // MICRO_COMB
-	["Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt",              72.226, 126.529], // MICRO_WAVE2
-	["Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt",            75.954, 128.775], // MICRO_WAVE3
-	["Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump",        79.432, 130.411], // MICRO_SUPER
-	[null,                          null,                                                82.961, 132.342], // MICRO_RESET
+	["Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move",            22.394, 101.723], // MICRO_SLEEP
+	["Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt",                25.671, 103.255], // MICRO_WAVE
+	["Jump!",                       "hud/tf2ware_ultimate/minigames/jump",                 29.103, 105.039], // MICRO_HITCH
+	["Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch",               33.147, 106.812], // MICRO_SNEEZE
+	["Move!",                       "hud/tf2ware_ultimate/minigames/move",                 36.428, 108.627], // MICRO_WALK
+	["Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim",     40.368, 110.264], // MICRO_SWIM
+	["Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left",              43.908, 112.206], // MICRO_SKI
+	["Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray",    47.361, 114.010], // MICRO_SPRAY
+	["Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab",              50.563, 115.689], // MICRO_MACHO
+	["Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn",     53.875, 117.515], // MICRO_HORN
+	["Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell",     58.288, 119.372], // MICRO_BELL
+	["Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay",     61.402, 121.146], // MICRO_OKAY
+	["Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic",           65.550, 123.182], // MICRO_KISS
+	["Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise", 68.572, 124.682], // MICRO_COMB
+	["Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt",                72.226, 126.529], // MICRO_WAVE2
+	["Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt",              75.954, 128.775], // MICRO_WAVE3
+	["Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump",          79.432, 130.411], // MICRO_SUPER
+	[null,                          null,                                                  82.961, 132.342], // MICRO_RESET
 ];
 
 function OnStart()
@@ -304,6 +304,7 @@ function OnMicroEnd()
 			// TODO: move emitsound to when you pass the objective for each microgame.
 			// For microgames that start false, play it ONCE when you call GiocaJouer_PassPlayer(player, true);
 			// For microgames that start true, keep it here in OnEnd()
+			// also lower the volume
 			EmitSoundOnClient(pass_sound, player);
 		}
 	}
