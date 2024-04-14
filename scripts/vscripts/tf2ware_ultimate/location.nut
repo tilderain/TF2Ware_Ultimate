@@ -287,3 +287,22 @@ Ware_Location.rocketjump <-
 	radius   = 400
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius); }
 }
+
+Ware_Location.hexplatforms <-
+{
+	center      = Vector(2304, -8448, -4880),
+	plat_models = [],
+	Init        = function()
+	{
+		for (local plat; plat = FindByName(plat, "hexplatforms_pillar*");)
+		{
+			MarkForPurge(plat);
+			plat_models.append(plat.GetModelName());
+			plat.Kill();
+		}	
+	}
+	Teleport = function(players) 
+	{ 
+		// Handled by minigame because of dynamic pillars
+	}
+}

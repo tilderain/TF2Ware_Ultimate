@@ -68,6 +68,7 @@ Ware_Minigames <-
 Ware_Bossgames <-
 [
 	"cuddly_heavies"
+	"falling_platforms"
 	"ghostbuster"
 	"gioca_jouer"
 	"mandrill"
@@ -149,6 +150,7 @@ Ware_BossgameMusic <-
 [
 	"cuddly"
 	"effort"
+	"falling"
 	"frogger",
 	"ghostbusters"	
 	"giocajouer"

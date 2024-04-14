@@ -24,35 +24,6 @@ function OnTakeDamage(params)
 	local attacker = params.attacker;
 	if (attacker && victim != attacker)
 	{
-		// replicate backstabs for teammates
-		if (attacker.GetTeam() == victim.GetTeam())
-		{
-			local to_target = victim.GetCenter() - attacker.GetCenter();
-			to_target.z = 0.0;
-			to_target.Norm();
-
-			local attacker_fwd = attacker.EyeAngles().Forward();
-			attacker_fwd.z = 0.0;
-			attacker_fwd.Norm();
-
-			local victim_fwd = victim.EyeAngles().Forward();
-			victim_fwd.z = 0.0;
-			victim_fwd.Norm();
-
-			if (to_target.Dot(victim_fwd) > 0.0 
-				&& to_target.Dot(attacker_fwd) > 0.5 
-				&& victim_fwd.Dot(attacker_fwd) > -0.3)
-			{
-				local viewmodel = GetPropEntity(attacker, "m_hViewModel");
-				if (viewmodel)
-					viewmodel.ResetSequence(viewmodel.LookupSequence("ACT_MELEE_VM_SWINGHARD"));
-					
-				params.damage       = victim.GetHealth() * 2.0;
-				params.damage_stats = TF_DMG_CUSTOM_BACKSTAB;
-				params.damage_type  = params.damage_type | DMG_CRIT;
-			}
-		}
-		
 		if (params.damage_stats == TF_DMG_CUSTOM_BACKSTAB)
 			Ware_PassPlayer(attacker, true);
 	}

@@ -1709,19 +1709,59 @@ function OnScriptHook_OnTakeDamage(params)
 		return;
 	}
 		
+	local victim = params.const_entity;
+	local attacker = params.attacker;
+
+	local same_team = false;
+	if (victim.IsPlayer()
+		&& attacker
+		&& attacker != victim
+		&& attacker.IsPlayer()
+		&& victim.GetTeam() == attacker.GetTeam())
+	{
+		same_team = true;
+	}
+
 	if (Ware_Minigame.friendly_fire)
 	{
 		params.force_friendly_fire = true;
+		
+		// replicate backstabs for teammates
+		if (same_team)
+		{
+			local weapon = attacker.GetActiveWeapon();
+			if (weapon && weapon.GetClassname() == "tf_weapon_knife")
+			{
+				local to_target = victim.GetCenter() - attacker.GetCenter();
+				to_target.z = 0.0;
+				to_target.Norm();
+
+				local attacker_fwd = attacker.EyeAngles().Forward();
+				attacker_fwd.z = 0.0;
+				attacker_fwd.Norm();
+
+				local victim_fwd = victim.EyeAngles().Forward();
+				victim_fwd.z = 0.0;
+				victim_fwd.Norm();
+
+				if (to_target.Dot(victim_fwd) > 0.0 
+					&& to_target.Dot(attacker_fwd) > 0.5 
+					&& victim_fwd.Dot(attacker_fwd) > -0.3)
+				{
+					local viewmodel = GetPropEntity(attacker, "m_hViewModel");
+					if (viewmodel)
+						viewmodel.ResetSequence(viewmodel.LookupSequence("ACT_MELEE_VM_SWINGHARD"));
+						
+					params.damage       = victim.GetHealth() * 2.0;
+					params.damage_stats = TF_DMG_CUSTOM_BACKSTAB;
+					params.damage_type  = params.damage_type | DMG_CRIT;
+				}			
+			}
+		}
 	}
 	else
 	{
-		local victim = params.const_entity;
-		local attacker = params.attacker;
-		if (victim.IsPlayer()
-			&& attacker
-			&& attacker != victim
-			&& attacker.IsPlayer()
-			&& victim.GetTeam() == attacker.GetTeam())
+		if (same_team)
 		{
 			params.damage = 0;
 			params.early_out = true;
