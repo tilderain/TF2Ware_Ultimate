@@ -15,7 +15,7 @@ minigame.custom_overlay = "shoot_gift_10";
 minigame.convars =
 {
 	// make this easier on higher timescales or its near impossible
-	phys_timescale = RemapValClamped(Ware_TimeScale, 1.0, 2.0, 1.0, 0.6),	
+	phys_timescale = RemapValClamped(Ware_TimeScale, 1.0, 2.0, 0.9, 0.6),	
 }
 
 function OnStart()
