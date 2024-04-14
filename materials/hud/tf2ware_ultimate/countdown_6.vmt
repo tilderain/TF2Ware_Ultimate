@@ -1,7 +1,7 @@
 UnlitGeneric
 {
-	$basetexture hud/tf2ware_ultimate/minigames/disguise
-	$basetexturetransform "center .5 .2 scale 3 14 rotate 0 translate 0 0"
+	$basetexture hud/tf2ware_ultimate/countdown_6
+	$basetexturetransform "center .5 .2 scale 6 14 rotate 0 translate 0 0"
 
     $translucent 1
     $frame 0

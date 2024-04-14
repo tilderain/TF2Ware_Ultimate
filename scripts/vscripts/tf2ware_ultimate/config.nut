@@ -68,7 +68,8 @@ Ware_Minigames <-
 Ware_Bossgames <-
 [
 	"cuddly_heavies"
-	"ghostbusters"
+	"ghostbuster"
+	"gioca_jouer"
 	"mandrill"
 	"slender"
 	"frogger"
@@ -150,6 +151,7 @@ Ware_BossgameMusic <-
 	"effort"
 	"frogger",
 	"ghostbusters"	
+	"giocajouer"
 	"mandrill"
 	"slender"
 	"staredown"
