@@ -470,3 +470,14 @@ function TriggerHurtDisintegrate()
 		}
 	}
 }
+
+function ForceRemovePlayerTaunt(player)
+{
+    player.RemoveCond(TF_COND_TAUNTING);
+    
+    // remove the cooldown for next taunt
+    player.AddCustomAttribute("gesture speed increase", 99999, -1);
+    player.Taunt(TAUNT_BASE_WEAPON, 0);
+    player.RemoveCond(TF_COND_TAUNTING);
+    player.RemoveCustomAttribute("gesture speed increase");    
+}

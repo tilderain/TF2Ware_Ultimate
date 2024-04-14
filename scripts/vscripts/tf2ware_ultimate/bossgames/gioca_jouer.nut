@@ -194,7 +194,7 @@ function OnUpdate()
 					GiocaJouer_PassPlayer(player, false);
 				break;
 			case MICRO_WAVE:
-			case MICRO_WAVE2: // TODO: Remove taunt cooldown between WAVE2 and WAVE3
+			case MICRO_WAVE2:
 			case MICRO_WAVE3:
 				if (player.IsTaunting())
 					GiocaJouer_PassPlayer(player, true);
@@ -276,7 +276,7 @@ function OnMicroEnd()
 			case MICRO_WAVE:
 			case MICRO_WAVE2:
 			case MICRO_WAVE3:
-				player.RemoveCond(TF_COND_TAUNTING);
+				ForceRemovePlayerTaunt(player);
 				break;
 			case MICRO_SWIM:
 				player.RemoveCond(TF_COND_SWIMMING_CURSE);
@@ -300,7 +300,6 @@ function OnMicroEnd()
 		if (minidata.gj_passed)
 		{
 			minidata.gj_score++;
-			printl(minidata.gj_score);
 			// TODO: move emitsound to when you pass the objective for each microgame.
 			// For microgames that start false, play it ONCE when you call GiocaJouer_PassPlayer(player, true);
 			// For microgames that start true, keep it here in OnEnd()
