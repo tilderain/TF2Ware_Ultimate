@@ -155,6 +155,7 @@ Ware_BossgameMusic <-
 	"frogger",
 	"ghostbusters"	
 	"giocajouer"
+	"mandrill"
 	"slender"
 	"staredown"
 ]
