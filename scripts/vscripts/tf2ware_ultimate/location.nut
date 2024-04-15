@@ -315,3 +315,19 @@ Ware_Location.dirtsquare <-
 		// TODO
 	}	
 };
+
+Ware_Location.jumprope <-
+{
+	center      = Vector(80, -1008, -4959),
+	Teleport = function(players) 
+	{ 
+		local red_players  = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED);
+		local blue_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_BLUE);
+		local center_left  = center + Vector(0, 300, 0);
+		local center_right = center + Vector(0, -300, 0);
+		local width   = 700.0;
+		local spacing = 60.0;
+		Ware_TeleportPlayersRow(red_players, center_left, QAngle(0, 270, 0), width, spacing, spacing);
+		Ware_TeleportPlayersRow(blue_players, center_right, QAngle(0, 90, 0), width, spacing, spacing);
+	}	
+};

@@ -69,8 +69,9 @@ Ware_Bossgames <-
 [
 	"cuddly_heavies"
 	"falling_platforms"
-	"ghostbuster"
+	"ghostbusters"
 	"gioca_jouer"
+	"jump_rope"
 	"mandrill"
 	"monoculus"
 	"slender"
@@ -156,6 +157,7 @@ Ware_BossgameMusic <-
 	"frogger",
 	"ghostbusters"	
 	"giocajouer"
+	"jumprope"
 	"mandrill"
 	"monoculus"
 	"slender"

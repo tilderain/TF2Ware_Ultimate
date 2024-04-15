@@ -367,21 +367,35 @@ function StunPlayer(player, stun_type, stun_effects, stun_duration, move_speed_r
 
 function HealPlayer(player, amount)
 {
-	local health = player.GetHealth();
-	local max_health = player.GetMaxHealth();
-	if (amount > max_health - health)
-		amount = max_health - health;
-	
 	if (amount > 0)
 	{
-		player.SetHealth(health + amount);
+		local health = player.GetHealth();
+		local max_health = player.GetMaxHealth();
+		if (amount > max_health - health)
+			amount = max_health - health;
 		
+		if (amount > 0)
+		{
+			player.SetHealth(health + amount);
+			
+			SendGlobalGameEvent("player_healonhit",
+			{
+				amount = amount,
+				entindex = player.entindex(),
+				weapon_def_index = -1,
+			});
+		}
+	}
+	else if (amount < 0)
+	{
 		SendGlobalGameEvent("player_healonhit",
 		{
 			amount = amount,
 			entindex = player.entindex(),
 			weapon_def_index = -1,
-		});
+		});	
+		
+		player.TakeDamage(amount * -1, DMG_PREVENT_PHYSICS_FORCE, player);	
 	}
 }
 
@@ -451,6 +465,11 @@ if (!("TriggerHurtDisintegrateProxy" in this) || !TriggerHurtDisintegrateProxy.I
     TriggerHurtDisintegrateProxy.AddAttribute("ragdolls become ash", 1, -1);
 }
   
+function TriggerHurtSmack()
+{
+	self.TakeDamage(1000, DMG_BULLET, activator);
+}
+
 function TriggerHurtDisintegrate()
 {
 	if (self.IsValid()) // safety check otherwise this will crash
