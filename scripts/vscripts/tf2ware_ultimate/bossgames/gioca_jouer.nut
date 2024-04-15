@@ -23,7 +23,7 @@ MICRO_SUPER  <- 16  // rocket jump
 MICRO_RESET  <- 17  // Reset. If we consider "reset" a microgame then we dont have to make a separate reset function, and we get previous OnMicroEnd call for free.
 
 micro <- null       // microgame tracker
-min_score <- 16     // minimum score to win
+min_score <- 16     // minimum score to win. Only the players with the highest score win, might change this to just check min_score, and increase min_score.
 
 minigame <- Ware_MinigameData();
 minigame.name = "Gioca Jouer";
@@ -336,14 +336,19 @@ function OnEnd()
 			continue;
 		}
 	}
-	if (high_score > min_score)
+	if (high_score >= min_score)
+	{
 		foreach(player in winners)
 		{
 			Ware_PassPlayer(player, true);
 			Ware_ChatPrint(player, "You won! Your score was " + Ware_GetPlayerMiniData(player).gj_score.tostring() + ".", TF_COLOR_GREEN);
 		}
-		
-	foreach(data in Ware_MinigamePlayers)
-		if (!data.passed)
-			Ware_ChatPrint(data.player, "You lose! Your score was " + score.tostring() + ", but you needed to get " + min_score.tostring() + ".", TF_COLOR_RED);
+		foreach(data in Ware_MinigamePlayers)
+			if (!data.passed)
+				Ware_ChatPrint(data.player, "You lose! Your score was " + score.tostring() + ", but the winning score was " + high_score.tostring() + ".", TF_COLOR_RED);
+	}
+	else
+		foreach(data in Ware_MinigamePlayers)
+			if (!data.passed)
+				Ware_ChatPrint(data.player, "You lose! Your score was " + score.tostring() + ", but you needed to get " + min_score.tostring() + ".", TF_COLOR_RED);
 }
