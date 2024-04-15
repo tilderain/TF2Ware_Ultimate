@@ -11,6 +11,10 @@ minigame.allow_damage = true;
 minigame.fail_on_death = true;
 minigame.start_pass = true;
 minigame.end_delay = 0.5
+minigame.convars =
+{
+	tf_halloween_kart_fast_turn_speed = 200
+}
 
 local arena =
 [
