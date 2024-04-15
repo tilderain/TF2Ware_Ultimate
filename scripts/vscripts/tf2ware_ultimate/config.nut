@@ -72,6 +72,7 @@ Ware_Bossgames <-
 	"ghostbuster"
 	"gioca_jouer"
 	"mandrill"
+	"monoculus"
 	"slender"
 	"frogger"
 	"wild_west"
@@ -156,6 +157,7 @@ Ware_BossgameMusic <-
 	"ghostbusters"	
 	"giocajouer"
 	"mandrill"
+	"monoculus"
 	"slender"
 	"staredown"
 ]

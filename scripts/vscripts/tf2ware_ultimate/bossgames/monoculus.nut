@@ -1,0 +1,80 @@
+minigame <- Ware_MinigameData();
+minigame.name = "Survive MONOCULUS"
+minigame.description = "Survive!"
+minigame.duration = 40.0;
+minigame.end_delay = 1.0;
+minigame.music = "monoculus";
+minigame.custom_overlay = "survive";
+minigame.start_pass = true;
+minigame.fail_on_death = true;
+minigame.convars =
+{
+	tf_flamethrower_burstammo = 0,
+}
+
+local monoculuses = [];
+local offset = Vector(0, 0, 256);
+
+function OnStart()
+{
+	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower");
+	
+	foreach (data in Ware_MinigamePlayers)
+		data.player.SetHealth(500);
+	
+	Ware_CreateTimer(@() SpawnMonoculus(), 0.1);
+	Ware_CreateTimer(@() SpawnMonoculus(), 3.0);
+}
+
+function SpawnMonoculus()
+{
+	local monoculus = Ware_SpawnEntity("eyeball_boss",
+	{
+		origin = Ware_MinigameLocation.center + offset
+		teamnum = 5,
+	});
+	offset.x += 128.0;
+	offset.z += 256.0;
+	monoculuses.append(monoculus);
+}
+
+function OnUpdate()
+{
+	monoculuses = monoculuses.filter(@(i, monoculus) monoculus.IsValid());
+	
+	// fix them getting stuck inside of each other
+	foreach (monoculus in monoculuses)
+	{
+		foreach (other_monoculus in monoculuses)
+		{
+			if (monoculus == other_monoculus)
+				continue;
+				
+			if ((monoculus.GetOrigin() - other_monoculus.GetOrigin()).Length() < 80.0)
+			{
+				monoculus.Teleport(
+					true, Ware_MinigameLocation.center + Vector(0, 0, 256),
+					false, QAngle(),
+					true, Vector());
+				break;
+			}
+		}
+	}
+}
+
+function OnEnd()
+{
+	foreach (monoculus in monoculuses)
+	{
+		if (monoculus.IsValid())
+		{
+			SendGlobalGameEvent("eyeball_boss_killed", {});
+			monoculus.Kill();
+		}
+	}
+}
+
+function CheckEnd()
+{
+	return Ware_GetAlivePlayers().len() == 0;
+}
