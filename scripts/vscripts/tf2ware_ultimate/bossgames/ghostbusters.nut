@@ -293,6 +293,23 @@ function OnUpdate()
 			}
 		}
 	}
+	
+	foreach (spy in spies)
+	{
+		if (spy.IsValid())
+		{
+			if (IsEntityAlive(spy))
+			{
+				local default_fov = GetPropInt(spy, "m_iDefaultFOV");
+				local new_fov = RemapValClamped(spy.GetHealth().tofloat(), spy.GetMaxHealth().tofloat(), 0.0, default_fov, 140.0);
+				SetPropInt(spy, "m_iFOV", new_fov);
+			}
+			else
+			{
+				SetPropInt(spy, "m_iFOV", 0);
+			}
+		}
+	}
 }
 
 function OnTakeDamage(params)
