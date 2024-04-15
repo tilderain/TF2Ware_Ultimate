@@ -8,10 +8,6 @@ minigame.music = mode == 0 ? "fastbros" : "letsgetquirky";
 minigame.location = "pinball";
 minigame.no_collisions  = true;
 minigame.custom_overlay = "get_end";
-minigame.convars =
-{
-	phys_timescale = 1.5,
-}
 
 local balls = [];
 local ball_model = "models/tf2ware_ultimate/big_soccer_ball.mdl";
@@ -66,6 +62,7 @@ function SpawnBall()
 			disableshadows = true,
 			minhealthdmg = INT_MAX, // don't destroy on touch
 			spawnflags = 16, // break on touch
+			overridescript = "mass,1000"
 		});
 		balls.append(ball);
 		
