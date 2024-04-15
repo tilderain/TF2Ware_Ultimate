@@ -1556,11 +1556,13 @@ function Ware_GameOver()
 		if (highest_players.find(player) != null)
 		{
 			player.AddCondEx(TF_COND_CRITBOOSTED, delay, null);
+			player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_victory");
 			// TODO: give full loaodout back and add other effects
 			// TODO: don't allow damage to other winners
 		}
 		else
 		{
+			player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_failure");
 			StunPlayer(player, TF_TRIGGER_STUN_LOSER, false, delay, 0.5);
 		}
 	}
