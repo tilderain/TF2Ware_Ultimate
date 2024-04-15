@@ -67,7 +67,7 @@ function PlacePlayers(players)
 	local x_offset = 0.0;
 	local flip = 0;
 	local first = true;
-	local spacing = 64.0;
+	local x_spacing = 70.0;
 	local y_spacing = 150.0;
 	
 	local last_player;
@@ -80,7 +80,7 @@ function PlacePlayers(players)
 			if (first)
 				first = false;
 			else
-				x_offset += x_offset < 0.0 ? spacing : -spacing;
+				x_offset += x_offset < 0.0 ? x_spacing : -x_spacing;
 		}
 	
 		if (flip & 1)
@@ -93,7 +93,7 @@ function PlacePlayers(players)
 				true, QAngle(0, 90, 0),
 				true, Vector());
 				
-			x_offset += x_offset < 0.0 ? -spacing : spacing;
+			x_offset += x_offset < 0.0 ? -x_spacing : x_spacing;
 		}
 		else
 		{
