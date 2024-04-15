@@ -11,8 +11,10 @@ minigame.fail_on_death = true;
 minigame.end_delay = 3.0; 
 minigame.custom_overlay = "";
 
+// 1v1 mode, currently disabled
+dueling <- false;
+
 mexican_standoff <- false;
-standoff_count <- 0;
 game_over <- false;
 shootout <- false;
 sound_standoff <- "tf2ware_ultimate/mexican_standoff.mp3";
@@ -45,7 +47,6 @@ function PlacePlayers(players)
 	
 	if (players.len() <= 3)
 	{
-		standoff_count = players.len();
 		mexican_standoff = true;
 		
 		Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center, 135.0);
@@ -85,8 +86,11 @@ function PlacePlayers(players)
 	
 		if (flip & 1)
 		{
-			Ware_GetPlayerMiniData(player).opponent <- last_player;
-			Ware_GetPlayerMiniData(last_player).opponent <- player;
+			if (dueling)
+			{
+				Ware_GetPlayerMiniData(player).opponent <- last_player;
+				Ware_GetPlayerMiniData(last_player).opponent <- player;
+			}
 			
 			player.Teleport(
 				true, Ware_MinigameLocation.center + Vector(x_offset, -y_spacing, 0),
@@ -108,7 +112,7 @@ function PlacePlayers(players)
 		flip++;
 	}
 	
-	if (flip & 1)	
+	if (dueling && (flip & 1))
 		Ware_GetPlayerMiniData(last_player).opponent <- null;
 	
 	Ware_CreateTimer(@() GiveGuns(), 2.0);
@@ -123,7 +127,9 @@ function GiveGuns()
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/wildwest_ready");	
 	
 		if (IsEntityAlive(player) 
-			&& (mexican_standoff || Ware_GetPlayerMiniData(player).opponent != null))
+			&& (mexican_standoff 
+				|| !dueling
+				|| Ware_GetPlayerMiniData(player).opponent != null))
 		{
 			Ware_SetPlayerAmmo(player, TF_AMMO_SECONDARY, 0);
 			local weapon = Ware_GivePlayerWeapon(player, "L'Etranger");
@@ -133,7 +139,7 @@ function GiveGuns()
 	
 	local delay;
 	if (mexican_standoff)
-		delay = RandomFloat(20.0, 45.0);
+		delay = RandomFloat(15.0, 45.0);
 	else
 		delay = RandomFloat(3.0, 10.0);
 	
@@ -175,7 +181,7 @@ function StopShootout()
 	
 	local final_players = [];
 	local alive_players = Ware_GetAlivePlayers();
-	if (mexican_standoff && alive_players.len() > standoff_count - 1)
+	if (mexican_standoff && alive_players.len() > 1)
 	{
 		foreach (data in alive_players)
 		{
@@ -194,29 +200,32 @@ function StopShootout()
 			local player = data.player;
 			if (IsEntityAlive(player))
 			{
-				local opponent = Ware_GetPlayerMiniData(player).opponent;
-				if (opponent)
+				if (dueling)
 				{
-					if (opponent.IsValid())
+					local opponent = Ware_GetPlayerMiniData(player).opponent;
+					if (opponent)
 					{
-						if (IsEntityAlive(opponent))
+						if (opponent.IsValid())
 						{
-							player.TakeDamageCustom(player, player, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_SUICIDE);
-							opponent.TakeDamageCustom(player, player, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_SUICIDE);
-							local msg = "{color}You and your opponent have been disqualified for missing!";
-							Ware_ChatPrint(player, msg, TF_COLOR_DEFAULT);
-							Ware_ChatPrint(opponent, msg, TF_COLOR_DEFAULT);
-							continue;
+							if (IsEntityAlive(opponent))
+							{
+								player.TakeDamageCustom(player, player, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_SUICIDE);
+								opponent.TakeDamageCustom(player, player, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_SUICIDE);
+								local msg = "{color}You and your opponent have been disqualified for missing!";
+								Ware_ChatPrint(player, msg, TF_COLOR_DEFAULT);
+								Ware_ChatPrint(opponent, msg, TF_COLOR_DEFAULT);
+								continue;
+							}
+						}
+						else
+						{
+							Ware_ChatPrint(player, "{color}Your opponent had disconnected so you have been spared...", TF_COLOR_DEFAULT);
 						}
 					}
-					else
+					else if (!mexican_standoff)
 					{
-						Ware_ChatPrint(player, "{color}Your opponent had disconnected so you have been spared...", TF_COLOR_DEFAULT);
+						Ware_ChatPrint(player, "{color}You had no opponent so you have been spared...", TF_COLOR_DEFAULT);
 					}
-				}
-				else if (!mexican_standoff)
-				{
-					Ware_ChatPrint(player, "{color}You had no opponent so you have been spared...", TF_COLOR_DEFAULT);
 				}
 				
 				Ware_StripPlayer(player, true);
@@ -256,9 +265,19 @@ function OnTakeDamage(params)
 		{
 			if (!mexican_standoff)
 			{
-				local opponent = Ware_GetPlayerMiniData(attacker).opponent;
-				if (opponent != victim)
-					return false;
+				if (dueling)
+				{
+					local opponent = Ware_GetPlayerMiniData(attacker).opponent;
+					if (opponent != victim)
+						return false;
+				}
+				else
+				{
+					local victim_side = victim.GetOrigin().y > Ware_MinigameLocation.center.y;
+					local attacker_side = attacker.GetOrigin().y > Ware_MinigameLocation.center.y;
+					if (victim_side == attacker_side)
+						return false;
+				}
 			}
 			
 			params.damage *= 5.0;
@@ -287,7 +306,7 @@ function OnUpdate()
 		{
 			if (buttons & IN_ATTACK)
 			{
-				SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 0.2);
+				SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 0.1);
 				minidata.holding_attack = true;
 			}
 			else
@@ -313,6 +332,12 @@ function OnEnd()
 		player.RemoveFlag(FL_ATCONTROLS);
 		SetPropInt(player, "m_afButtonForced", 0);
 	}
+}
+
+function OnCleanup()
+{
+	if (mexican_standoff)
+		PlaySoundOnAllClients(sound_standoff, 1.0, 100, SND_STOP);
 }
 
 function CheckEnd()
