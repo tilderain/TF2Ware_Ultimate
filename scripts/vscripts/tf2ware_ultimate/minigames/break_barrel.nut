@@ -28,7 +28,11 @@ function OnTakeDamage(params)
 	if (params.const_entity.GetClassname() == "prop_physics")
 	{
 		local attacker = params.attacker;
-		if (attacker != null && attacker.IsPlayer())
+		if (attacker != null 
+			&& attacker.IsPlayer() 
+			&& (params.damage_type & DMG_CLUB))
+		{
 			Ware_PassPlayer(attacker, true);
+		}
 	}
 }
