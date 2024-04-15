@@ -74,6 +74,7 @@ Ware_Bossgames <-
 	"jump_rope"
 	"mandrill"
 	"monoculus"
+	"obstacle_course"
 	"slender"
 	"frogger"
 	"wild_west"
@@ -162,6 +163,7 @@ Ware_BossgameMusic <-
 	"monoculus"
 	"slender"
 	"staredown"
+	"steadynow"
 ]
 
 foreach (sound in Ware_GameSounds)

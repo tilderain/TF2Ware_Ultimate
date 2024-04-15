@@ -331,3 +331,17 @@ Ware_Location.jumprope <-
 		Ware_TeleportPlayersRow(blue_players, center_right, QAngle(0, 90, 0), width, spacing, spacing);
 	}	
 };
+
+Ware_Location.obstaclecourse <-
+{
+	center      = Vector(-1696, -4068, -3927),
+	Teleport = function(players) 
+	{ 
+		// highest scoring players start last
+		players = clone(Ware_MinigamePlayers);
+		players.sort(@(a, b) a.score <=> b.score);
+		players = players.map(@(data) data.player);
+		
+		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 600.0, -60.0, 60.0);
+	}	
+};

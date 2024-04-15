@@ -17,12 +17,12 @@ function OnStart()
 	MarkForPurge(jumprope_door);
 	SetPropFloat(jumprope_door, "m_flSpeed", 100.0);
 	EntFireByHandle(jumprope_door, "Open", "", -1, null, null);
+	
 	Ware_CreateTimer(@() IncreaseRopeSpeed(), 5.0);
 	Ware_CreateTimer(@() CheckPlayerZones(), 5.0);
 	
 	jumprope_mins = Ware_MinigameLocation.center + Vector(-225, -113, 0);
 	jumprope_maxs = Ware_MinigameLocation.center + Vector(225, 113, 128);
-	DebugDrawBox(Vector(), jumprope_mins, jumprope_maxs, 255, 0, 0, 50, 5.0);
 }
 
 function IncreaseRopeSpeed()
