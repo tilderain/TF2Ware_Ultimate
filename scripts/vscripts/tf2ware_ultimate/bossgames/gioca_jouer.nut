@@ -341,14 +341,32 @@ function OnEnd()
 		foreach(player in winners)
 		{
 			Ware_PassPlayer(player, true);
-			Ware_ChatPrint(player, "You won! Your score was " + Ware_GetPlayerMiniData(player).gj_score.tostring() + ".", TF_COLOR_GREEN);
+			Ware_ChatPrint(player, "{color}You won! Your score was {color}{int}", 
+				TF_COLOR_DEFAULT, 		
+				COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score);
 		}
 		foreach(data in Ware_MinigamePlayers)
+		{
 			if (!data.passed)
-				Ware_ChatPrint(data.player, "You lose! Your score was " + score.tostring() + ", but the winning score was " + high_score.tostring() + ".", TF_COLOR_RED);
+			{
+				Ware_ChatPrint(data.player, "{color}You lose! Your score was {color}{int}{color}, but the winning score was {color}{int}",
+					TF_COLOR_DEFAULT, 
+					COLOR_LIME, Ware_GetPlayerMiniData(data.player).gj_score, TF_COLOR_DEFAULT
+					COLOR_LIME, high_score);
+			}
+		}
 	}
 	else
+	{
 		foreach(data in Ware_MinigamePlayers)
+		{
 			if (!data.passed)
-				Ware_ChatPrint(data.player, "You lose! Your score was " + score.tostring() + ", but you needed to get " + min_score.tostring() + ".", TF_COLOR_RED);
+			{
+				Ware_ChatPrint(data.player, "{color}You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
+					TF_COLOR_DEFAULT,
+					COLOR_LIME, Ware_GetPlayerMiniData(data.player).gj_score, TF_COLOR_DEFAULT
+					COLOR_LIME, min_score);
+			}
+		}
+	}
 }
