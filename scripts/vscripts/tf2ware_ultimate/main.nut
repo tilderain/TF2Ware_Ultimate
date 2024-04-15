@@ -9,6 +9,7 @@ if (IsDedicatedServer())
 printl("\tTF2Ware Started");
 
 SetConvarValue("sv_gravity", 800.00006); // hide the sv_tags message
+SetConvarValue("mp_disable_respawn_times", 0);
 SetConvarValue("mp_forcecamera", 0);
 SetConvarValue("mp_friendlyfire", 1);
 SetConvarValue("mp_respawnwavetime", 99999);
@@ -223,6 +224,7 @@ Ware_MinigameStartTime    <- 0.0;
 Ware_MinigamePreEndTimer  <- null;
 Ware_MinigameEndTimer     <- null;
 Ware_MinigameEnded        <- false;
+Ware_MinigameHighScorers  <- [];
 Ware_MinigamesPlayed	  <- 0;
 
 if (!("Ware_Players" in this))
@@ -927,6 +929,12 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	Ware_RemoveUndesiredWearables(player);
 	Ware_ParseLoadout(player);
 	
+	if (Ware_MinigameHighScorers.find(player) != null)
+	{
+		player.RemoveCond(TF_COND_TELEPORTED);
+		CreateTimer(@() player.AddCond(TF_COND_TELEPORTED), 0.25);
+	}
+	
 	if (switch_melee)
 	{
 		local data = player.GetScriptScope().ware_data;
@@ -1345,6 +1353,10 @@ function Ware_EndMinigameInternal()
 		SetConvarValue(name, value);
 	Ware_MinigameSavedConvars.clear();
 	
+	local highest_score = 1;
+	local highest_players = Ware_MinigameHighScorers;
+	highest_players.clear();
+	
 	local player_count = 0;
 	local respawn_players = [];
 	foreach (player in Ware_Players)
@@ -1353,7 +1365,7 @@ function Ware_EndMinigameInternal()
 			continue;
 			
 		player.RemoveAllObjects(false);
-			
+
 		if (Ware_Minigame.no_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER);
 		if (Ware_Minigame.thirdperson)
@@ -1382,6 +1394,7 @@ function Ware_EndMinigameInternal()
 				player.RemoveCustomAttribute(attribute);
 			data.attributes.clear();
 			
+			player.RemoveCond(TF_COND_TELEPORTED);				
 			player.SetHealth(player.GetMaxHealth());
 			SetPropInt(player, "m_nImpulse", 101); // refill ammo						
 			Ware_StripPlayer(player, true);
@@ -1469,8 +1482,26 @@ function Ware_EndMinigameInternal()
 		
 		if (data.passed)
 			data.score += Ware_Minigame.boss ? 5 : 1;
+			
+		if (data.score > highest_score)
+		{
+			highest_score = data.score;
+			highest_players.clear();
+			highest_players.append(player);
+		}
+		else if (data.score == highest_score)
+		{
+			highest_players.append(player);
+		}
 	}
 	
+	CreateTimer(function()
+	{
+		foreach (player in highest_players)
+			if (player.IsValid())
+				player.AddCond(TF_COND_TELEPORTED);
+	}, 0.25);
+
 	foreach (event_name in Ware_MinigameEvents)
 		GameEventCallbacks[event_name].pop();
 	Ware_MinigameEvents.clear();
@@ -1504,22 +1535,14 @@ function Ware_EndMinigameInternal()
 
 function Ware_GameOver()
 {
-	local highest_score = 1;
-	local highest_players = [];
+	local highest_players = Ware_MinigameHighScorers;
+	highest_players = highest_players.filter(@(i, player) player.IsValid());
 	
-	foreach (data in Ware_PlayersData)
-	{
-		if (data.score > highest_score)
-		{
-			highest_score = data.score;
-			highest_players.clear();
-			highest_players.append(data.player);
-		}
-		else if (data.score == highest_score)
-		{
-			highest_players.append(data.player);
-		}
-	}
+	local highest_score = 0;
+	local winner_count = highest_players.len();
+	
+	if (winner_count > 0)
+		highest_score = highest_players[0].GetScriptScope().ware_data.score;
 	
 	local delay = GetConvarValue("mp_bonusroundtime").tofloat();
 	SetPropBool(GameRules, "m_bTruceActive", false);
@@ -1542,7 +1565,6 @@ function Ware_GameOver()
 		}
 	}
 	
-	local winner_count = highest_players.len();
 	if (winner_count > 1)
 	{
 		Ware_ChatPrint(null, "{color}The winners each with {int} points:", TF_COLOR_DEFAULT, highest_score);
@@ -1858,6 +1880,9 @@ function OnGameEvent_player_spawn(params)
 	
 	if (params.team & 2)
 	{
+		if (Ware_MinigameHighScorers.find(player) != null)
+			player.AddCond(TF_COND_TELEPORTED);
+		
 		if (!data.start_sound)
 			EntFireByHandle(player, "CallScriptFunction", "Ware_PlayStartSound", 2.0, null, null);
 		

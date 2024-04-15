@@ -107,7 +107,7 @@ function OnPlayerDeath(params)
 	}
 }
 
-function OnEnd()
+function OnCleanup()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
