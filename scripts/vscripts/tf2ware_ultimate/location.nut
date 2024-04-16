@@ -345,3 +345,12 @@ Ware_Location.obstaclecourse <-
 		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 600.0, -60.0, 60.0);
 	}	
 };
+
+Ware_Location.ballcourt <-
+{
+	center      = Vector(5792, -3064, -7199),
+	Teleport = function(players) 
+	{ 
+		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 800.0, -60.0, 60.0);
+	}	
+};

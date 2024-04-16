@@ -53,7 +53,7 @@ class Hex
 			forceclosed = true,
 			ignoredebris = true,
 		});
-		SetPropInt(entity, "m_takedamage", 2);
+		SetPropInt(entity, "m_takedamage", DAMAGE_YES);
 	}
 	
 	q = null;

@@ -9,6 +9,11 @@ const MASK_PLAYERSOLID_BRUSHONLY = 81931
 
 const MAX_WEAPONS = 7
 
+const DAMAGE_NO				= 0
+const DAMAGE_EVENTS_ONLY	= 1
+const DAMAGE_YES			= 2
+const DAMAGE_AIM			= 3
+
 const DMG_SAWBLADE = 65536
 const DMG_CRIT     = 1048576
 

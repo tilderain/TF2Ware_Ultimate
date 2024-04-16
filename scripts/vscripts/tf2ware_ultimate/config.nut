@@ -67,6 +67,7 @@ Ware_Minigames <-
 
 Ware_Bossgames <-
 [
+	"basketball"
 	"cuddly_heavies"
 	"falling_platforms"
 	"ghostbusters"
@@ -152,6 +153,7 @@ Ware_MinigameMusic <-
 
 Ware_BossgameMusic <-
 [
+	"basketball"
 	"cuddly"
 	"effort"
 	"falling"
