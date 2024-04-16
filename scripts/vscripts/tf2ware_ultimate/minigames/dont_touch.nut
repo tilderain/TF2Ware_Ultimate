@@ -25,6 +25,12 @@ function OnStart()
 	}
 }
 
+function OnTakeDamage(params)
+{
+	if (params.damage_type & DMG_CLUB)
+		return false;
+}
+
 function OnPlayerTouch(player1, player2)
 {
 	if (Ware_GetMinigameTime() < 1.0) // grace period
