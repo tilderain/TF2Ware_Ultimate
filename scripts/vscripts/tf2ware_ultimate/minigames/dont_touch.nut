@@ -37,5 +37,5 @@ function OnPlayerTouch(player1, player2)
 		return;
 		
     if (player1)
-        player1.TakeDamage(1000.0, DMG_CLUB, player2);
+        player1.TakeDamage(1000.0, DMG_BULLET, player2);
 }
