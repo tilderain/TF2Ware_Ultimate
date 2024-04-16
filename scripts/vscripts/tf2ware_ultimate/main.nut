@@ -1,12 +1,28 @@
-if (IsDedicatedServer())
+if (!("Ware_Plugin" in this))
 {
-	local msg = "** TF2Ware cannot be loaded on dedicated servers without a plugin";
-	ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + msg);
-	printl(msg);
-	return;
+	local plugin_found = Convars.GetStr("ware_version") != null;
+	if (IsDedicatedServer() || plugin_found)
+	{
+		if (!plugin_found)
+		{
+			local msg = "** TF2Ware Ultimate requires the SourceMod plugin installed on dedicated servers";
+			ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + msg);
+			printl(msg);
+			return;
+		}
+		else
+		{
+			printl("\tVScript: TF2Ware Ultimate linked to SourceMod plugin");
+			Ware_Plugin <- true;
+		}
+	}
+	else
+	{
+		Ware_Plugin <- false;
+	}
+	
+	printl("\tVScript: TF2Ware Ultimate Started");	
 }
-
-printl("\tTF2Ware Started");
 
 SetConvarValue("sv_gravity", 800.00006); // hide the sv_tags message
 SetConvarValue("mp_disable_respawn_times", 0);
@@ -22,8 +38,11 @@ SetConvarValue("tf_dropped_weapon_lifetime", 0);
 SetConvarValue("tf_weapon_criticals", 0);
 SetConvarValue("tf_spawn_glows_duration", 0);
 SetConvarValue("tf_player_movement_restart_freeze", 0);
-// TODO: need to block cheat commands
-SendToConsole("sv_cheats 1");
+
+if (!Ware_Plugin)
+{
+	SendToConsole("sv_cheats 1");
+}
 
 class Ware_MinigameCallback
 {
@@ -237,6 +256,14 @@ if (!("Ware_Players" in this))
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint");
 }
 
+function Ware_SourcemodRoutine(name, keyvalues)
+{
+	keyvalues.id <- "tf2ware_ultimate";
+	keyvalues.routine <- name;
+	// unused event repurposed for vscript <-> sourcemod communication
+	SendGlobalGameEvent("player_rematch_change", keyvalues);
+}
+
 function Ware_FindStandardEntities()
 {
 	World     <- FindByClassname(null, "worldspawn");
@@ -289,7 +316,11 @@ function Ware_SetupLocations()
 
 function Ware_SetTimeScale(timescale)
 {
-	SendToConsole(format("host_timescale %g", timescale));
+	if (Ware_Plugin)
+		Ware_SourcemodRoutine("timescale", { value = timescale });
+	else
+		SendToConsole(format("host_timescale %g", timescale));
+	
 	Ware_TimeScale = timescale;
 	
 	foreach (data in Ware_MinigamePlayers)
