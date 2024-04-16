@@ -27,6 +27,9 @@ function OnStart()
 
 function OnPlayerTouch(player1, player2)
 {
+	if (Ware_GetMinigameTime() < 1.0) // grace period
+		return;
+		
     if (player1)
         player1.TakeDamage(1000.0, DMG_CLUB, player2);
 }
