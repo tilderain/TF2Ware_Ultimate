@@ -1,4 +1,4 @@
-local mode = 4;
+local mode = RandomInt(0, 4);
 local correct_building;
 
 minigame <- Ware_MinigameData();
