@@ -1,4 +1,4 @@
-local mode = RandomInt(0, 3);
+local mode = 4;
 local correct_building;
 
 minigame <- Ware_MinigameData();
@@ -12,27 +12,32 @@ minigame.convars =
 
 if (mode == 0)
 {
-	minigame.description = "Build a Sentry"
+	minigame.description = "Build a Sentry!"
 	minigame.custom_overlay = "build_sentry";
 	correct_building = OBJ_SENTRYGUN;
 }
 else if (mode == 1)
 {
-	minigame.description = "Build a Dispenser"
+	minigame.description = "Build a Dispenser!"
 	minigame.custom_overlay = "build_dispenser";
 	correct_building = OBJ_DISPENSER;
 }
 else if (mode == 2)
 {
-	minigame.description = "Build a Teleporter Entrance"
+	minigame.description = "Build a Teleporter Entrance!"
 	minigame.custom_overlay = "build_tele_entrance";
 	correct_building = OBJ_TELEPORTER;
 }
 else if (mode == 3)
 {
-	minigame.description = "Build a Teleporter Exit"
+	minigame.description = "Build a Teleporter Exit!"
 	minigame.custom_overlay = "build_tele_exit";
 	correct_building = OBJ_TELEPORTER;
+}
+else if (mode == 4)
+{
+	minigame.description = "Build Something!"
+	minigame.custom_overlay = "build_something";
 }
 
 function OnStart()
@@ -48,6 +53,13 @@ function OnGameEvent_player_builtobject(params)
 	local player = GetPlayerFromUserID(params.userid);
 	if (!player)
 		return;
+	
+	if (mode == 4)
+	{
+		Ware_PassPlayer(player, true);
+		Ware_StripPlayerWeapons(player, ["tf_weapon_builder", "tf_weapon_pda_engineer_build"]);
+		return;
+	}
 	
 	local building_enum = params.object;
 	if (building_enum == correct_building)
