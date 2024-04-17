@@ -98,8 +98,7 @@ function OnUpdate()
 		local bool_endzone = minidata.in_endzone;
 		
 		// If both have the same state we don't need to do anything
-		if ((!func_endzone && !bool_endzone) ||
-			(func_endzone && bool_endzone))
+		if (func_endzone == bool_endzone)
 			continue;
 		
 		if (func_endzone && !bool_endzone)
