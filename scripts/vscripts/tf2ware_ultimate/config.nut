@@ -16,6 +16,7 @@ Ware_Minigames <-
 	"count_bombs"     
 	"disguise"        
 	"dont_touch"      
+	"double_jump"
 	"extinguish"
 	"flood"           
 	"ghost"           
@@ -133,6 +134,7 @@ Ware_MinigameMusic <-
 	"piper" 
 	"pumpit" 
 	"question"
+	"ringring"
 	"rockingout",
 	"settingthescene" 
 	"sillytime" 
