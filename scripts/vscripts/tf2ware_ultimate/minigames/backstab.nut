@@ -1,4 +1,3 @@
-local player_class = RandomInt(0, 1) ? TF_CLASS_SNIPER : TF_CLASS_SPY;
 	
 minigame <- Ware_MinigameData();
 minigame.name = "Backstab a Player";
