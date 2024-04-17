@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData();
 minigame.name = "Math";
 minigame.description = "Type the answer!"
-minigame.duration = 5.0;
+minigame.duration = 4.0;
 minigame.music = "question";
 minigame.custom_overlay = "type_answer";
 minigame.custom_overlay2 = "../chalkboard";
