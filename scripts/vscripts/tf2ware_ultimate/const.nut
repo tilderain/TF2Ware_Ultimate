@@ -97,7 +97,12 @@ ITEM_PROJECTILE_MAP <-
 	[58]   = "tf_projectile_jar",
 }
 
-	
+DEVELOPER_STEAMID3 <-
+{
+	"[U:1:53275741]"  : 1, // ficool2
+	"[U:1:111328277]" : 1, // pokemonPasta
+}
+
 foreach (key, value in CONST)
 {
 	if (startswith(key, "MDL"))

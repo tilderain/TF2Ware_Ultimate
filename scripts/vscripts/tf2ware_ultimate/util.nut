@@ -310,6 +310,11 @@ function GetPlayerUserID(player)
     return GetPropIntArray(PlayerMgr, "m_iUserID", player.entindex());
 }
 
+function GetPlayerSteamID3(player)
+{
+    return GetPropString(player, "m_szNetworkIDString");
+}
+
 function BrickPlayerScore(player)
 {
 	// spoof as bot so this doesn't upload stats to steam

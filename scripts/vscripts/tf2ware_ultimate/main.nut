@@ -1105,7 +1105,10 @@ function Ware_CheckHomeLocation(player_count)
 function Ware_BeginIntermission(is_boss)
 {
 	if (Ware_DebugStop)
-		return;
+	{
+		// retry
+		return 1.0;
+	}
 	
 	foreach (player in Ware_Players)
 	{
@@ -1861,7 +1864,7 @@ function OnGameEvent_teamplay_round_start(params)
 	foreach (minigame in Ware_Minigames)
 		Ware_MinigameRotation.append(minigame);
 	
-	Ware_BeginIntermission(false);
+	CreateTimer(@() Ware_BeginIntermission(false), 0.0);
 }
 
 function OnGameEvent_recalculate_truce(params)
@@ -2004,17 +2007,129 @@ function OnGameEvent_player_disconnect(params)
 	Ware_Minigame.cb_on_player_disconnect(player);
 }
 
-function OnGameEvent_player_say(params)
+Ware_DevCommands <-
 {
-	if (Ware_Minigame == null)
-		return;
-		
+	"forceminigame" : function(player, text)
+	{
+		local args = split(text, " ");
+		if (args.len() >= 1)
+			Ware_DebugForceMinigame = args[0];
+		else
+			Ware_DebugForceMinigame = "";			
+		Ware_ChatPrint(player, "Forced minigame to '{str}'", Ware_DebugForceMinigame);
+	},
+	"forcebossgame" : function(player, text)
+	{
+		local args = split(text, " ");
+		if (args.len() >= 1)
+			Ware_DebugForceBossgame = args[0];
+		else
+			Ware_DebugForceBossgame = "";			
+		Ware_ChatPrint(player, "Forced bossgame to '{str}'", Ware_DebugForceBossgame);
+	},	
+	"restart" : function(player, text)
+	{
+		SetConvarValue("mp_restartgame_immediate", 1);
+		Ware_ChatPrint(player, "Restarting...");
+	}
+	"stop" : function(player, text)
+	{
+		Ware_DebugStop = true;
+		Ware_ChatPrint(player, "Stopping...");
+	}
+	"resume" : function(player, text)
+	{
+		Ware_DebugStop = false;
+		Ware_ChatPrint(player, "Resuming...");
+	}
+	"run" : function(player, text)
+	{
+		try
+		{
+			local quotes = split(text, "'");
+			local quote_len = quotes.len() - 1;
+			if (quote_len > 0)
+			{
+				text = "";
+				foreach (i, quote in quotes)
+				{
+					text += quote;
+					if (i != quote_len)
+						text += "\"";
+				}		
+			}
+			local code = "return (@() " + text + ").bindenv(ROOT)()";
+			printl(code);
+			local ret = compilestring(code)();
+			ClientPrint(player, HUD_PRINTTALK, "\x07FFFFFFRETURN: " + ret);
+		}
+		catch (e)
+		{
+			ClientPrint(player, HUD_PRINTTALK, "\x07FF0000ERROR: " + e);
+		}	
+	}
+	"timescale" : function(player, text)
+	{
+		local args = split(text, " ");
+		if (args.len() >= 1)
+		{
+			local scale = args[0].tofloat();
+			Ware_SetTimeScale(scale);
+			Ware_ChatPrint(player, "Set timescale to {%g}", scale);		
+		}
+		else		
+		{
+			Ware_ChatPrint(player, "Missing required scale parameter");		
+		}
+	}
+	"help" : function(player, text)
+	{
+		local cmds = [];
+		foreach (name, func in Ware_DevCommands)
+			if (name != "help")
+				cmds.append(name);
+			
+		cmds.sort(@(a, b) a <=> b);
+		foreach (name in cmds)
+			ClientPrint(player, HUD_PRINTTALK, "\x07FFFFFF* " + name);
+	}
+};	
+
+function OnGameEvent_player_say(params)
+{	
     local player = GetPlayerFromUserID(params.userid);
     if (player == null)
 		return;
+		
+	local text = params.text;
+	if (text.len() > 0)
+	{
+		if (startswith(text, "!ware_"))
+		{
+			local steamid3 = GetPlayerSteamID3(player);
+			if (steamid3 in DEVELOPER_STEAMID3)
+			{
+				local len = text.find(" ");
+				local cmd = len != null ? text.slice(6, len) : text.slice(6);
+				if (cmd in Ware_DevCommands)
+					Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "");
+				else
+					Ware_ChatPrint(player, "Unknown command '{str}'", cmd);
+			}
+			else
+			{
+				Ware_ChatPrint(player, "You do not have access to this command");
+			}
+			
+			return;
+		}
+	}
+	
+	if (Ware_Minigame == null)
+		return;
 	
 	// TODO: return value should indicate whether to hide message
-	Ware_Minigame.cb_on_player_say(player, params.text);
+	Ware_Minigame.cb_on_player_say(player, text);
 }
 
 __CollectGameEventCallbacks(this);
