@@ -232,6 +232,9 @@ Ware_ParticleSpawnerQueue <- [];
 Ware_ParticleSpawner      <- null;
 
 Ware_MinigameRotation     <- [];
+if (!("Ware_BossgameRotation" in this))
+	Ware_BossgameRotation <- [];
+
 Ware_Minigame             <- null;
 Ware_MinigameScope        <- {};
 Ware_MinigameSavedConvars <- {};
@@ -384,6 +387,15 @@ function Ware_ChatPrint(target, fmt, ...)
 	result += fmt.slice(start);
 	
 	ClientPrint(target, HUD_PRINTTALK, result);
+}
+
+function Ware_Error(...)
+{
+	vargv.insert(0, this);
+	vargv[1] = "\x07FF0000ERROR:\x07FBECCB " + vargv[1];
+	local msg = format.acall(vargv);
+	printl(msg);
+	ClientPrint(null, HUD_PRINTTALK, msg);
 }
 
 function Ware_Format(...)
@@ -1117,32 +1129,7 @@ function Ware_BeginIntermission(is_boss)
 		Ware_ShowScreenOverlay2(player, null);
 	}
 	
-	if (Ware_MinigameRotation.len() == 0)
-	{
-		foreach (minigame in Ware_Minigames)
-			Ware_MinigameRotation.append(minigame);
-	}
-	
-	local minigame;
-	if (Ware_DebugForceBossgame.len() > 0)
-	{
-		minigame = Ware_DebugForceBossgame;	
-	}
-	else if (Ware_DebugForceMinigame.len() > 0)
-	{
-		minigame = Ware_DebugForceMinigame;
-		is_boss = false;
-	}
-	else if (is_boss)
-	{
-		minigame = RandomElement(Ware_Bossgames);
-	}
-	else
-	{
-		minigame = RemoveRandomElement(Ware_MinigameRotation);
-	}
-	
-	CreateTimer(@() Ware_StartMinigame(minigame, is_boss), 4.0);
+	CreateTimer(@() Ware_StartMinigame(is_boss), 4.0);
 }
 
 function Ware_BeginBoss()
@@ -1173,23 +1160,113 @@ function Ware_Speedup()
 	CreateTimer(@() Ware_BeginIntermission(false), 5.0);
 }
 
-function Ware_StartMinigame(minigame, is_boss)
-{
-	if (Ware_DebugForceBossgame.len() > 0)
-	{
-		minigame = Ware_DebugForceBossgame;
-		is_boss = true;
-	}
-	else if (Ware_DebugForceMinigame.len() > 0)
-	{
-		minigame = Ware_DebugForceMinigame;
-	}
+function Ware_StartMinigame(is_boss)
+{	
+	local valid_players = [];
+	foreach (player in Ware_Players)
+		if ((player.GetTeam() & 2) && IsEntityAlive(player))
+			valid_players.append(player);
 	
-	Ware_MinigameEnded = false;
-	
-	IncludeScript(format("tf2ware_ultimate/%s/%s",
-		is_boss ? "bossgames" : "minigames", minigame),  Ware_MinigameScope); 	
+	local player_count = valid_players.len();
+	local success = false;
+	local try_debug = true;
+	local prev_is_boss = is_boss;
+	local attempts = 0;
+	local minigame;
 
+	while (!success)
+	{
+		if (++attempts > 25)
+		{
+			Ware_Error("No valid %s found to pick. There may not be enough minimum players", is_boss ? "bossgame" : "minigame");
+			return;
+		}
+		
+		local is_forced = false;
+		if (try_debug)
+		{
+			if (Ware_DebugForceBossgame.len() > 0)
+			{
+				minigame = Ware_DebugForceBossgame;	
+				is_boss = true;
+				is_forced = true;
+			}
+			else if (Ware_DebugForceMinigame.len() > 0)
+			{
+				minigame = Ware_DebugForceMinigame;
+				is_boss = false;
+				is_forced = true;
+			}		
+			try_debug = false;
+		}
+		else
+		{
+			is_boss = prev_is_boss;
+		}
+		
+		if (!is_forced)
+		{
+			if (is_boss)
+			{
+				if (Ware_BossgameRotation.len() == 0)
+				{
+					if (Ware_Bossgames.len() == 0)
+					{
+						Ware_Error("Bossgame rotation is empty");
+						return;
+					}
+					
+					Ware_BossgameRotation = Ware_Bossgames.filter(@(i, bossgame) true);
+				}
+				
+				minigame = RemoveRandomElement(Ware_BossgameRotation);
+			}
+			else
+			{
+				if (Ware_MinigameRotation.len() == 0)
+				{
+					if (Ware_Minigames.len() == 0)
+					{
+						Ware_Error("Minigame rotation is empty");
+						return;
+					}
+					
+					Ware_MinigameRotation = Ware_Minigames.filter(@(i, bossgame) true);		
+				}
+				
+				minigame = RemoveRandomElement(Ware_MinigameRotation);
+			}
+		}
+		
+		local path = format("tf2ware_ultimate/%s/%s", is_boss ? "bossgames" : "minigames", minigame);
+		try
+		{
+			Ware_MinigameScope.clear();		
+			IncludeScript(format("tf2ware_ultimate/%s/%s",
+				is_boss ? "bossgames" : "minigames", minigame), Ware_MinigameScope); 	
+				
+			if (player_count >= Ware_MinigameScope.minigame.min_players)
+			{
+				success = true;
+			}
+			else
+			{
+				printf("Re-rolling %s for min player count\n", minigame);
+			}
+		}
+		catch (e)
+		{
+			// TODO need line info
+			Ware_Error("Failed to load '%s', check console for more info", path);
+		}
+		
+		if (is_forced && !success)
+		{
+			Ware_Error("Failed to force load '%s', fallbacking to rotation", minigame);
+		}
+	}
+
+	Ware_MinigameEnded = false;
 	Ware_Minigame = Ware_MinigameScope.minigame;
 	Ware_Minigame.boss = is_boss;
 	Ware_MinigameStartTime = Time();
@@ -1201,13 +1278,8 @@ function Ware_StartMinigame(minigame, is_boss)
 	}
 	
 	Ware_MinigamePlayers.clear();
-	foreach (player in Ware_Players)
+	foreach (player in valid_players)
 	{
-		EntFireByHandle(ClientCmd, "Command", "r_cleardecals", -1, player, null);
-		
-		if (!(player.GetTeam() & 2) || !IsEntityAlive(player))
-			continue;
-		
 		if (Ware_Minigame.no_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER);
 		if (Ware_Minigame.thirdperson)
@@ -1222,7 +1294,6 @@ function Ware_StartMinigame(minigame, is_boss)
 		Ware_MinigamePlayers.append(data);
 	}
 	
-	local player_count = Ware_MinigamePlayers.len();
 	local location;
 	if (player_count > 12 && ((Ware_Minigame.location + "_big") in Ware_Location))
 		location = Ware_Location[Ware_Minigame.location + "_big"];
@@ -1848,6 +1919,7 @@ function OnGameEvent_teamplay_round_start(params)
 	foreach (player in Ware_Players)
 	{
 		player.GetScriptScope().ware_data.score = 0;
+		EntFireByHandle(ClientCmd, "Command", "r_cleardecals", -1, player, null);
 		BrickPlayerScore(player);
 	}
 	
