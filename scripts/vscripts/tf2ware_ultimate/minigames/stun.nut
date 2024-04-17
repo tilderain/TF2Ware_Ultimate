@@ -5,6 +5,7 @@ minigame.duration = 4.0;
 minigame.music = "bigjazzfinish";
 minigame.description = "Stun an Enemy!";
 minigame.allow_damage = true;
+minigame.min_players = 2;
 
 function OnStart()
 {
