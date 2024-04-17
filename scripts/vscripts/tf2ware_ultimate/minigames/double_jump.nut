@@ -19,7 +19,7 @@ function OnUpdate()
 	foreach(data in Ware_MinigamePlayers)
 	{
 		local player = data.player;
-		local airdashes = GetPropInt(player, "m_Shared.m_iAirDash");
+		local airdashes = GetPropInt(player, "m_Shared.m_iAirDash"); // doesn't count jump from ground - double == 1, triple == 2
 		switch (mode)
 		{
 			case 0:
