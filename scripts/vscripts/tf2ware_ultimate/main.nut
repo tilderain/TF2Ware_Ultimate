@@ -25,7 +25,7 @@ if (!("Ware_Plugin" in this))
 }
 
 // override vscript's own error handler for telemetry purposes
-Ware_IsListenServer <- GetListenServerHost() != null;
+Ware_ListenHost <- GetListenServerHost();
 Ware_LastErrorTime <- 0.0;
 function Ware_ErrorHandler(e)
 {
@@ -35,13 +35,17 @@ function Ware_ErrorHandler(e)
 		return;
 		
 	local developers = Ware_Players.filter(@(i, player) GetPlayerSteamID3(player) in DEVELOPER_STEAMID3);
+	// show for non-developers in local host as well
+	if (Ware_ListenHost && Ware_ListenHost.IsValid() && developers.find(Ware_ListenHost) == null)
+		developers.append(Ware_ListenHost);
+		
     local Print = function(msg)
 	{
 		// dev chat
 		foreach (developer in developers)
 			ClientPrint(developer, HUD_PRINTCONSOLE, msg);
 		// server console
-		if (!Ware_IsListenServer)
+		if (Ware_ListenHost == null)
 			printl(msg);
 	}
 	
@@ -1359,7 +1363,7 @@ function Ware_StartMinigame(is_boss)
 	
 	if ("OnStart" in Ware_MinigameScope)
 		Ware_MinigameScope.OnStart();
-		
+	
 	Ware_Minigame.cb_on_take_damage			= Ware_MinigameCallback("OnTakeDamage");
 	Ware_Minigame.cb_on_player_attack		= Ware_MinigameCallback("OnPlayerAttack");
 	Ware_Minigame.cb_on_player_death		= Ware_MinigameCallback("OnPlayerDeath");
