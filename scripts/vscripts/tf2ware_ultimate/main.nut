@@ -24,6 +24,57 @@ if (!("Ware_Plugin" in this))
 	printl("\tVScript: TF2Ware Ultimate Started");	
 }
 
+// override vscript's own error handler for telemetry purposes
+Ware_IsListenServer <- GetListenServerHost() != null;
+Ware_LastErrorTime <- 0.0;
+function Ware_ErrorHandler(e)
+{
+	// discard cascading error messages from input hooks
+	local s2 = getstackinfos(2);
+	if (s2 && "post_func" in s2.locals)
+		return;
+		
+	local developers = Ware_Players.filter(@(i, player) GetPlayerSteamID3(player) in DEVELOPER_STEAMID3);
+    local Print = function(msg)
+	{
+		// dev chat
+		foreach (developer in developers)
+			ClientPrint(developer, HUD_PRINTCONSOLE, msg);
+		// server console
+		if (!Ware_IsListenServer)
+			printl(msg);
+	}
+	
+	local time = Time();
+	if (Ware_LastErrorTime < time)
+	{
+		// in case of a spammy error, rate limit it
+		Ware_LastErrorTime = time + 5.0;
+		foreach (developer in developers)
+			ClientPrint(developer, HUD_PRINTTALK, "\x07FF0000A script error has occured. Check console for details");
+	}
+	
+    Print(format("\n[TF2Ware] AN ERROR HAS OCCURRED [%s]", e));
+    Print("CALLSTACK");
+    local s, l = 2;
+    while (s = getstackinfos(l++))
+        Print(format("\t*FUNCTION [%s()] %s line [%d]", s.func, s.src, s.line));
+    Print("LOCALS");
+    if (s2)
+	{
+        foreach (n, v in s2.locals) 
+		{
+            local t = type(v);
+            t ==    "null" ? Print(format("\t[%s] NULL"  , n))    :
+            t == "integer" ? Print(format("\t[%s] %d"    , n, v)) :
+            t ==   "float" ? Print(format("\t[%s] %.14g" , n, v)) :
+            t ==  "string" ? Print(format("\t[%s] \"%s\"", n, v)) :
+                             Print(format("\t[%s] %s %s" , n, t, v.tostring()));
+        }
+	}
+}
+seterrorhandler(Ware_ErrorHandler);
+
 SetConvarValue("sv_gravity", 800.00006); // hide the sv_tags message
 SetConvarValue("mp_disable_respawn_times", 0);
 SetConvarValue("mp_forcecamera", 0);
@@ -1242,22 +1293,14 @@ function Ware_StartMinigame(is_boss)
 		try
 		{
 			Ware_MinigameScope.clear();		
-			IncludeScript(format("tf2ware_ultimate/%s/%s",
-				is_boss ? "bossgames" : "minigames", minigame), Ware_MinigameScope); 	
+			IncludeScript(path, Ware_MinigameScope); 	
 				
 			if (player_count >= Ware_MinigameScope.minigame.min_players)
-			{
 				success = true;
-			}
-			else
-			{
-				printf("Re-rolling %s for min player count\n", minigame);
-			}
 		}
 		catch (e)
 		{
-			// TODO need line info
-			Ware_Error("Failed to load '%s', check console for more info", path);
+			Ware_ErrorHandler(format("Failed to load '%s.nut'. Missing from disk or syntax error", path));
 		}
 		
 		if (is_forced && !success)
