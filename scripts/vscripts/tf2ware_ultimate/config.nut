@@ -73,6 +73,7 @@ Ware_Bossgames <-
 	"falling_platforms"
 	"ghostbusters"
 	"gioca_jouer"
+	"grand_prix"
 	"jump_rope"
 	"mandrill"
 	"monoculus"
@@ -162,6 +163,7 @@ Ware_BossgameMusic <-
 	"frogger",
 	"ghostbusters"	
 	"giocajouer"
+	"grandprix"
 	"jumprope"
 	"mandrill"
 	"monoculus"

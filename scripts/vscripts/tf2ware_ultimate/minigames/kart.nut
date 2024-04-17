@@ -30,7 +30,7 @@ function OnStart()
 		player.AddCond(TF_COND_HALLOWEEN_KART_CAGE);
 	}
 	
-	// start a countdown from 5
+	// start a countdown
 	local timer = 3;
 	Ware_CreateTimer(function()
 	{
