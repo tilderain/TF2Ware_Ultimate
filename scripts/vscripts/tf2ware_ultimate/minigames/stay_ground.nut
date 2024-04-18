@@ -1,19 +1,19 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Stay on the Ground";
-minigame.description = "Stay on the ground!"
-minigame.duration = 4.0;
-minigame.music = "falling";
-minigame.start_pass = true;
-minigame.allow_damage = true;
-minigame.fail_on_death = true;
-minigame.convars = 
-{
-	sv_gravity = 50
-};
+minigame <- Ware_MinigameData
+({
+	name          = "Stay on the Ground"
+	author        = "ficool2"
+	description   = "Stay on the ground!"
+	duration      = 4.0
+	music         = "falling"
+	start_pass    = true
+	allow_damage  = true
+	fail_on_death = true
+})
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Launcher");
+	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Launcher")
+	Ware_SetGlobalCondition(TF_COND_CRITBOOSTED)
 }
 
 function OnTakeDamage(params)
@@ -22,28 +22,23 @@ function OnTakeDamage(params)
 	{
 		if (params.const_entity.IsPlayer())
 		{
-			Ware_SlapEntity(params.const_entity, 240.0);
-			return false;
+			Ware_SlapEntity(params.const_entity, 300.0)
+			params.damage = 20
 		}
 	}
-}
-
-function OnPlayerAttack(player)
-{
-	Ware_PushPlayer(player, -400.0);
 }
 
 function OnUpdate()
 {
 	if (Ware_GetMinigameTime() < 2.0)
-		return;
+		return
 
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if (!IsEntityAlive(player))
-			continue;			
+			continue
 		if (Ware_GetPlayerHeight(player) > 250.0)
-			Ware_SuicidePlayer(player);
+			Ware_SuicidePlayer(player)
 	}
 }

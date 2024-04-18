@@ -1,29 +1,32 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Survive MONOCULUS"
-minigame.description = "Survive!"
-minigame.duration = 40.0;
-minigame.end_delay = 1.0;
-minigame.music = "monoculus";
-minigame.custom_overlay = "survive";
-minigame.start_pass = true;
-minigame.fail_on_death = true;
-minigame.convars =
-{
-	tf_flamethrower_burstammo = 0,
-}
+minigame <- Ware_MinigameData
+({
+	name           = "Survive MONOCULUS"
+	author         = "ficool2"
+	description    = "Survive!"
+	duration       = 40.0
+	end_delay      = 1.0
+	music          = "monoculus"
+	custom_overlay = "survive"
+	start_pass     = true
+	fail_on_death  = true
+	convars        =
+	{
+		tf_flamethrower_burstammo = 0,
+	}
+})
 
-local monoculuses = [];
-local offset = Vector(0, 0, 256);
+monoculuses <- []
+offset <- Vector(0, 0, 256)
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower");
+	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower")
 	
 	foreach (data in Ware_MinigamePlayers)
-		data.player.SetHealth(500);
+		data.player.SetHealth(500)
 	
-	Ware_CreateTimer(@() SpawnMonoculus(), 0.1);
-	Ware_CreateTimer(@() SpawnMonoculus(), 3.0);
+	Ware_CreateTimer(@() SpawnMonoculus(), 0.1)
+	Ware_CreateTimer(@() SpawnMonoculus(), 3.0)
 }
 
 function SpawnMonoculus()
@@ -32,15 +35,15 @@ function SpawnMonoculus()
 	{
 		origin = Ware_MinigameLocation.center + offset
 		teamnum = 5,
-	});
-	offset.x += 128.0;
-	offset.z += 256.0;
-	monoculuses.append(monoculus);
+	})
+	offset.x += 128.0
+	offset.z += 256.0
+	monoculuses.append(monoculus)
 }
 
 function OnUpdate()
 {
-	monoculuses = monoculuses.filter(@(i, monoculus) monoculus.IsValid());
+	monoculuses = monoculuses.filter(@(i, monoculus) monoculus.IsValid())
 	
 	// fix them getting stuck inside of each other
 	foreach (monoculus in monoculuses)
@@ -48,15 +51,15 @@ function OnUpdate()
 		foreach (other_monoculus in monoculuses)
 		{
 			if (monoculus == other_monoculus)
-				continue;
+				continue
 				
 			if ((monoculus.GetOrigin() - other_monoculus.GetOrigin()).Length() < 80.0)
 			{
 				monoculus.Teleport(
 					true, Ware_MinigameLocation.center + Vector(0, 0, 256),
 					false, QAngle(),
-					true, Vector());
-				break;
+					true, Vector())
+				break
 			}
 		}
 	}
@@ -68,13 +71,13 @@ function OnEnd()
 	{
 		if (monoculus.IsValid())
 		{
-			SendGlobalGameEvent("eyeball_boss_killed", {});
-			monoculus.Kill();
+			SendGlobalGameEvent("eyeball_boss_killed", {})
+			monoculus.Kill()
 		}
 	}
 }
 
 function CheckEnd()
 {
-	return Ware_GetAlivePlayers().len() == 0;
+	return Ware_GetAlivePlayers().len() == 0
 }

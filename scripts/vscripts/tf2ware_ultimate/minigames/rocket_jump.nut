@@ -1,40 +1,43 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Rocket Jump";
-minigame.description = "Get to the top!";
-minigame.duration = 30.0;
-minigame.end_delay = 1.0;
-minigame.location = "rocketjump";
-minigame.music = "steadynow";
-minigame.start_pass = false;
-minigame.custom_overlay = "get_top";
+minigame <- Ware_MinigameData
+({
+	name           = "Rocket Jump"
+	author         = "ficool2"
+	description    = "Get to the top!"
+	duration       = 30.0
+	end_delay      = 1.0
+	location       = "rocketjump"
+	music          = "steadynow"
+	custom_overlay = "get_top"
+	start_pass     = false
+})
 
-local first = true;
+first <- true
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper");
+	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
 	
-	EntFire("rocketjump_train", "StartForward", "", 1.5);
+	EntFire("rocketjump_train", "StartForward", "", 1.5)
 }
 
 function OnUpdate()
 {
-	local thresold = Ware_MinigameLocation.center.z + 2600.0;
+	local thresold = Ware_MinigameLocation.center.z + 2600.0
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if (IsEntityAlive(player) && GetPropEntity(player, "m_hGroundEntity") != null)
 		{
-			local origin = player.GetOrigin();
+			local origin = player.GetOrigin()
 			if (origin.z > thresold)
 			{
-				Ware_PassPlayer(player, true);
+				Ware_PassPlayer(player, true)
 				
 				if (first)
 				{
 					Ware_ChatPrint(null, "{player} {color}made it to the top first in {%.1f} seconds!",
-						player, TF_COLOR_DEFAULT, Ware_GetMinigameTime());
-					first = false;
+						player, TF_COLOR_DEFAULT, Ware_GetMinigameTime())
+					first = false
 				}
 			}
 		}
@@ -43,11 +46,11 @@ function OnUpdate()
 
 function OnCleanup()
 {
-	EntFire("rocketjump_train", "TeleportToPathTrack", "boss8_path");
-	EntFire("rocketjump_train", "Stop");
+	EntFire("rocketjump_train", "TeleportToPathTrack", "boss8_path")
+	EntFire("rocketjump_train", "Stop")
 }
 
 function CheckEnd()
 {
-	return Ware_GetAlivePlayers().len() == 0;
+	return Ware_GetAlivePlayers().len() == 0
 }

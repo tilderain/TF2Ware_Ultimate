@@ -1,44 +1,47 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Spycrab";
-minigame.description = "Do the spycrab!"
-minigame.duration = 3.5;
-minigame.music = "sillytime";
-minigame.end_delay = 0.5;
-minigame.suicide_on_end = true;
+minigame <- Ware_MinigameData
+({
+	name           = "Spycrab"
+	author         = "ficool2"
+	description    = "Do the spycrab!"
+	duration       = 3.5
+	end_delay      = 0.5
+	music          = "sillytime"
+	suicide_on_end = true
+})
 
-local sprite_model = "sprites/tf2ware_ultimate/spycrab.vmt"
+sprite_model <- "sprites/tf2ware_ultimate/spycrab.vmt"
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SPY, null);
-	Ware_CreateTimer(@() Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit"), 1.0);
+	Ware_SetGlobalLoadout(TF_CLASS_SPY)
+	Ware_CreateTimer(@() Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit"), 1.0)
 	
 	Ware_SpawnEntity("env_sprite_oriented",
 	{
-		origin = Ware_MinigameLocation.center + Vector(0, 0, 2000),
-		angles = QAngle(90, 0, 0),
-		model = sprite_model,
-		scale = 5,
-		rendermode = kRenderTransColor,
-		spawnflags = 1,		
-	});
+		origin     = Ware_MinigameLocation.center + Vector(0, 0, 2000)
+		angles     = QAngle(90, 0, 0)
+		model      = sprite_model
+		scale      = 5
+		rendermode = kRenderTransColor
+		spawnflags = 1,	
+	})
 
 }
 
 function OnPlayerVoiceline(player, voiceline)
 {
 	if (voiceline.find("taunt05.vcd") != null)
-		Ware_PassPlayer(player, true);
+		Ware_PassPlayer(player, true)
 }
 
 function OnEnd()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))
-			Ware_PassPlayer(player, true);
+			Ware_PassPlayer(player, true)
 		else if (!data.passed)
-			Ware_ChatPrint(player, "{color}Spycrabs must look up and crouch!", TF_COLOR_DEFAULT);
+			Ware_ChatPrint(player, "{color}Spycrabs must look up and crouch!", TF_COLOR_DEFAULT)
 	}
 }

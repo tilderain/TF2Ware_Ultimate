@@ -1,44 +1,47 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Frogger";
-minigame.description = "Get to the end!";
-minigame.duration = 95.0;
-minigame.end_delay = 1.0;
-minigame.location = "frogger";
-minigame.music = "frogger";
-minigame.start_pass = false;
-minigame.no_collisions = true;
-minigame.thirdperson = true;	
-minigame.custom_overlay = "get_end";
+minigame <- Ware_MinigameData
+({
+	name           = "Frogger"
+	author         = "ficool2"
+	description    = "Get to the end!"
+	duration       = 95.0
+	end_delay      = 1.0
+	location       = "frogger"
+	music          = "frogger"
+	custom_overlay = "get_end"
+	start_pass     = false
+	no_collisions  = true
+	thirdperson    = true
+})
 
-local frog_model = "models/tf2ware_ultimate/frog.mdl";
-local jump_sound = "TF2Ware_Ultimate.FroggerHop";
-local death_sound = "TF2Ware_Ultimate.FroggerSquash";
+first <- true
 
-PrecacheModel(frog_model);
-PrecacheScriptSound(jump_sound);
-PrecacheScriptSound(death_sound);
+planks <- []
 
-local first = true;
+frog_model <- "models/tf2ware_ultimate/frog.mdl"
+jump_sound <- "TF2Ware_Ultimate.FroggerHop"
+death_sound <- "TF2Ware_Ultimate.FroggerSquash"
 
-local planks = [];
+PrecacheModel(frog_model)
+PrecacheScriptSound(jump_sound)
+PrecacheScriptSound(death_sound)
 
 function OnStart()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
-		Ware_AddPlayerAttribute(player, "no_attack", 1, -1);
-		Ware_AddPlayerAttribute(player, "no double jump", 1, -1);
-		Ware_AddPlayerAttribute(player, "increased jump height", 0.6, -1);
-		Ware_GetPlayerMiniData(player).jumping <- false;
-		TogglePlayerWearables(player, false);		
-		player.SetCustomModelWithClassAnimations(frog_model);
+		local player = data.player
+		Ware_AddPlayerAttribute(player, "no_attack", 1, -1)
+		Ware_AddPlayerAttribute(player, "no double jump", 1, -1)
+		Ware_AddPlayerAttribute(player, "increased jump height", 0.6, -1)
+		Ware_GetPlayerMiniData(player).jumping <- false
+		TogglePlayerWearables(player, false)
+		player.SetCustomModelWithClassAnimations(frog_model)
 		
 		// show hats
 		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
 		{
 			if (wearable.LookupBone("bip_head") >= 0)
-				wearable.SetDrawEnabled(true);
+				wearable.SetDrawEnabled(true)
 		}
 	}
 		
@@ -49,81 +52,81 @@ function OnStart()
 		show_in_hud    = true,
 		show_time_remaining = true,
 		setup_length   = 6,
-	});
-	EntFireByHandle(timer, "Resume", "", -1, null, null);
+	})
+	EntityEntFire(timer, "Resume")
 
-	Ware_CreateTimer(@() OpenDoors(), 6.0);
-	SetupMap();
+	Ware_CreateTimer(@() OpenDoors(), 6.0)
+	SetupMap()
 }
 
 function SetupMap()
 {
-	planks.clear();
+	planks.clear()
 	
-	local plank_names = ["a", "b", "c"];
+	local plank_names = ["a", "b", "c"]
 	foreach (name in plank_names)
 	{
-		local remove_count = RandomInt(0, 2);
-		local speed = RandomFloat(100.0, 550.0);
-		local targetname = "frogger_logs_" + name + "*";
+		local remove_count = RandomInt(0, 2)
+		local speed = RandomFloat(100.0, 550.0)
+		local targetname = "frogger_logs_" + name + "*"
 		for (local plank; plank = FindByName(plank, targetname);)
 		{
-			MarkForPurge(plank);
+			MarkForPurge(plank)
 			if (plank.GetClassname() != "func_tracktrain")
-				continue;
+				continue
 				
 			if (remove_count > 0 && RandomInt(0, 2) == 0)
 			{
-				plank.AddSolidFlags(FSOLID_NOT_SOLID);
+				plank.AddSolidFlags(FSOLID_NOT_SOLID)
 				
-				local prop = plank.FirstMoveChild();
+				local prop = plank.FirstMoveChild()
 				if (prop)
 				{
-					prop.DisableDraw();
-					MarkForPurge(prop);
+					prop.DisableDraw()
+					MarkForPurge(prop)
 				}
 				
-				remove_count--;
+				remove_count--
 			}
 				
-			plank.KeyValueFromFloat("startspeed", speed);
-			EntFireByHandle(plank, "StartForward", "", -1, null, null);
+			plank.KeyValueFromFloat("startspeed", speed)
+			EntityEntFire(plank, "StartForward")
 			
-			planks.append(plank);
+			planks.append(plank)
 		}	
 	}	
 	
 	for (local sawblade; sawblade = FindByName(sawblade, "frogger_saw_linear_*");)
 	{
-		sawblade.KeyValueFromFloat("speed", RandomFloat(150.0, 550.0));
-		EntFireByHandle(sawblade, "Open", "", -1, null, null);
-		MarkForPurge(sawblade);
+		sawblade.KeyValueFromFloat("speed", RandomFloat(150.0, 550.0))
+		EntityEntFire(sawblade, "Open")
+		MarkForPurge(sawblade)
 	}	
 	
-	EntFire("frogger_Train1_*", "StartForward");
-	EntFire("frogger_Train2_*", "StartForward");
-	EntFire("frogger_Train3_*", "StartForward");
+	EntFire("frogger_Train1_*", "StartForward")
+	EntFire("frogger_Train2_*", "StartForward")
+	EntFire("frogger_Train3_*", "StartForward")
 
-	EntFire("frogger_door2", "Unlock");
-	EntFire("frogger_door3", "Unlock");
-	EntFire("frogger_door5", "Unlock");	
-	EntFire("frogger_door2", "Open");
-	EntFire("frogger_door3", "Open");
-	EntFire("frogger_door5", "Open");
+	EntFire("frogger_door2", "Unlock")
+	EntFire("frogger_door3", "Unlock")
+	EntFire("frogger_door5", "Unlock")
+	EntFire("frogger_door2", "Open")
+	EntFire("frogger_door3", "Open")
+	EntFire("frogger_door5", "Open")
 	
-	local spike_timer = FindByName(null, "frogger_spike_timer");
-	spike_timer.KeyValueFromFloat("RefireTime", RandomFloat(1.0, 5.0));
-	EntFireByHandle(spike_timer, "Enable", "", -1, null, null);
-	MarkForPurge(spike_timer);
+	local spike_timer = FindByName(null, "frogger_spike_timer")
+	spike_timer.KeyValueFromFloat("RefireTime", RandomFloat(1.0, 5.0))
+	EntityEntFire(spike_timer, "Enable")
+	MarkForPurge(spike_timer)
 
-	local box1 = FindByName(null, "frogger_door2");
-	local box2 = FindByName(null, "frogger_door3");
-	EntityOutputs.AddOutput(box1, "OnFullyClosed", "!self", "SetSpeed", "80", 0.0, -1);
-	EntityOutputs.AddOutput(box1, "OnFullyOpen", "!self", "SetSpeed", "500", 0.0, -1);
-	EntityOutputs.AddOutput(box2, "OnFullyClosed", "!self", "SetSpeed", "100", 0.0, -1);
-	EntityOutputs.AddOutput(box2, "OnFullyOpen", "!self", "SetSpeed", "500", 0.0, -1);
-	MarkForPurge(box1);
-	MarkForPurge(box2);
+	local box1 = FindByName(null, "frogger_door2")
+	local box2 = FindByName(null, "frogger_door3")
+	EntityOutputs.AddOutput(box1, "OnFullyClosed", "!self", "SetSpeed", "80", 0.0, -1)
+	EntityOutputs.AddOutput(box1, "OnFullyOpen", "!self", "SetSpeed", "500", 0.0, -1)
+	EntityOutputs.AddOutput(box2, "OnFullyClosed", "!self", "SetSpeed", "100", 0.0, -1)
+	EntityOutputs.AddOutput(box2, "OnFullyOpen", "!self", "SetSpeed", "500", 0.0, -1)
+	MarkForPurge(box1)
+	MarkForPurge(box2)
 }
 
 function CleanupMap()
@@ -132,76 +135,76 @@ function CleanupMap()
 	{
 		if (plank.IsValid())
 		{
-			plank.RemoveSolidFlags(FSOLID_NOT_SOLID);		
-			local prop = plank.FirstMoveChild();
+			plank.RemoveSolidFlags(FSOLID_NOT_SOLID)
+			local prop = plank.FirstMoveChild()
 			if (prop)
-				prop.EnableDraw();
+				prop.EnableDraw()
 		}
 	}
 	
-	EntFire("frogger_start_door", "Close");
-	EntFire("frogger_start_door_*", "Close");
+	EntFire("frogger_start_door", "Close")
+	EntFire("frogger_start_door_*", "Close")
 	
-	EntFire("frogger_logs_*", "Stop");
-	EntFire("frogger_Train1_*", "Stop");
-	EntFire("frogger_Train2_*", "Stop");
-	EntFire("frogger_Train3_*", "Stop");
+	EntFire("frogger_logs_*", "Stop")
+	EntFire("frogger_Train1_*", "Stop")
+	EntFire("frogger_Train2_*", "Stop")
+	EntFire("frogger_Train3_*", "Stop")
 	
-	EntFire("frogger_spike_timer", "Disable");
+	EntFire("frogger_spike_timer", "Disable")
 	
-	EntFire("frogger_saw_linear_*", "SetSpeed", "0");
+	EntFire("frogger_saw_linear_*", "SetSpeed", "0")
 	
-	EntFire("frogger_door2", "Close");
-	EntFire("frogger_door3", "Close");
-	EntFire("frogger_door5", "Close");
-	EntFire("frogger_door2", "Lock");
-	EntFire("frogger_door3", "Lock");
-	EntFire("frogger_door5", "Lock");
+	EntFire("frogger_door2", "Close")
+	EntFire("frogger_door3", "Close")
+	EntFire("frogger_door5", "Close")
+	EntFire("frogger_door2", "Lock")
+	EntFire("frogger_door3", "Lock")
+	EntFire("frogger_door5", "Lock")
 	
-	local box1 = FindByName(null, "frogger_door2");
-	local box2 = FindByName(null, "frogger_door3");
-	EntityOutputs.RemoveOutput(box1, "OnFullyClosed", "!self", "SetSpeed", "80");
-	EntityOutputs.RemoveOutput(box1, "OnFullyOpen", "!self", "SetSpeed", "500");
-	EntityOutputs.RemoveOutput(box2, "OnFullyClosed", "!self", "SetSpeed", "100");
-	EntityOutputs.RemoveOutput(box2, "OnFullyOpen", "!self", "SetSpeed", "500");
+	local box1 = FindByName(null, "frogger_door2")
+	local box2 = FindByName(null, "frogger_door3")
+	EntityOutputs.RemoveOutput(box1, "OnFullyClosed", "!self", "SetSpeed", "80")
+	EntityOutputs.RemoveOutput(box1, "OnFullyOpen", "!self", "SetSpeed", "500")
+	EntityOutputs.RemoveOutput(box2, "OnFullyClosed", "!self", "SetSpeed", "100")
+	EntityOutputs.RemoveOutput(box2, "OnFullyOpen", "!self", "SetSpeed", "500")
 }
 
 function OpenDoors()
 {
-	EntFire("frogger_start_door", "Open");
-	EntFire("frogger_start_door_" + RandomInt(0, 2), "Open");
+	EntFire("frogger_start_door", "Open")
+	EntFire("frogger_start_door_" + RandomInt(0, 2), "Open")
 }
 
 function OnPlayerDeath(params)
 {
-	local victim = GetPlayerFromUserID(params.userid);
+	local victim = GetPlayerFromUserID(params.userid)
 	if (victim)
-		victim.EmitSound(death_sound);
+		victim.EmitSound(death_sound)
 }
 
 function OnUpdate()
 {
-	local threshold = Ware_MinigameLocation.center.y + 7150.0;
+	local threshold = Ware_MinigameLocation.center.y + 7150.0
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
-		local minidata = Ware_GetPlayerMiniData(player);
+		local player = data.player
+		local minidata = Ware_GetPlayerMiniData(player)
 		
-		local jumping = GetPropBool(player, "m_Shared.m_bJumping");
+		local jumping = GetPropBool(player, "m_Shared.m_bJumping")
 		if (jumping && !minidata.jumping)
-			player.EmitSound(jump_sound);
-		minidata.jumping = jumping;
+			player.EmitSound(jump_sound)
+		minidata.jumping = jumping
 		
-		SetPropFloat(player, "m_flMaxspeed", 300.0);
+		SetPropFloat(player, "m_flMaxspeed", 300.0)
 		
 		if (IsEntityAlive(player) && player.GetOrigin().y > threshold)
 		{
-			Ware_PassPlayer(player, true);
+			Ware_PassPlayer(player, true)
 			
 			if (first)
 			{
-				Ware_ChatPrint(null, "{player} {color}made it to the goal first!", player, TF_COLOR_DEFAULT);
-				first = false;
+				Ware_ChatPrint(null, "{player} {color}made it to the goal first!", player, TF_COLOR_DEFAULT)
+				first = false
 			}
 		}
 	}
@@ -209,26 +212,26 @@ function OnUpdate()
 
 function OnEnd()
 {
-	CleanupMap();
+	CleanupMap()
 }
 
 function OnCleanup()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
-		TogglePlayerWearables(player, true);
-		data.player.SetCustomModel("");	
+		local player = data.player
+		TogglePlayerWearables(player, true)
+		data.player.SetCustomModel("")
 	}
 }
 
 function CheckEnd()
 {
-	local alive_players = Ware_GetAlivePlayers();
-	local alive_count = alive_players.len();
+	local alive_players = Ware_GetAlivePlayers()
+	local alive_count = alive_players.len()
 	if (alive_count == 0)
-		return true;
+		return true
 		
-	local passed_players = alive_players.filter(@(i, data) Ware_IsPlayerPassed(data.player));
-	return passed_players.len() == alive_count;
+	local passed_players = alive_players.filter(@(i, data) Ware_IsPlayerPassed(data.player))
+	return passed_players.len() == alive_count
 }

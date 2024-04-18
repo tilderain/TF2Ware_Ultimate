@@ -1,86 +1,74 @@
-local mode = RandomInt(0, 4);
+mode_infos <- 
+[
+	[ "Needle jump!", "needle_jump" ],
+	[ "Rocket jump!", "rocket_jump" ],
+	[ "Sticky jump!", "sticky_jump" ],
+	[ "Sentry jump!", "sentry_jump" ],
+	[ "Flare jump!",  "flare_jump"  ],
+]
 
-minigame <- Ware_MinigameData();
-minigame.name = "Projectile Jump";
-minigame.duration = mode == 3 ? 5.0 : 4.0;
-minigame.music = "goodtimes";
-minigame.end_delay = mode == 3 ? 0.0 : 1.0;
-minigame.convars = 
-{
-	tf_damageforcescale_self_soldier_badrj = 10,
-	tf_damageforcescale_self_soldier_rj = 20
-	tf_damageforcescale_pyro_jump = 20,
-	tf_fastbuild = 1
-};
+mode <- RandomInt(0, 4)
 
-if (mode == 0)
-{
-	minigame.description = "Needle jump!"
-	minigame.custom_overlay = "needle_jump";
-}
-else if (mode == 1)
-{
-	minigame.description = "Rocket jump!"
-	minigame.custom_overlay = "rocket_jump";
-}
-else if (mode == 2)
-{
-	minigame.description = "Sticky jump!"
-	minigame.custom_overlay = "sticky_jump";
-}
-else if (mode == 3)
-{
-	minigame.description = "Sentry jump!"
-	minigame.custom_overlay = "sentry_jump";
-}
-else if (mode == 4)
-{
-	minigame.description = "Flare jump!"
-	minigame.custom_overlay = "flare_jump";
-}
+minigame <- Ware_MinigameData
+({
+	name           = "Projectile Jump"
+	author         = "ficool2"
+	description    = mode_infos[mode][0]
+	duration       = mode == 3 ? 5.0 : 4.0
+	end_delay      = mode == 3 ? 0.0 : 1.0
+	music          = "goodtimes"
+	custom_overlay = mode_infos[mode][1]
+	convars        = 
+	{
+		tf_damageforcescale_self_soldier_badrj = 10
+		tf_damageforcescale_self_soldier_rj    = 20
+		tf_damageforcescale_pyro_jump          = 20
+		tf_fastbuild                           = 1
+	}
+})
 
 function OnStart()
 {
-	local player_class, weapon;
+	local player_class, weapon
 	if (mode == 0)
 	{
-		player_class = TF_CLASS_MEDIC;
+		player_class = TF_CLASS_MEDIC
 		weapon = "Syringe Gun"
 	}
 	else if (mode == 1)
 	{
-		player_class = TF_CLASS_SOLDIER;
-		weapon = "Rocket Launcher";
+		player_class = TF_CLASS_SOLDIER
+		weapon = "Rocket Launcher"
 	}
 	else if (mode == 2)
 	{
-		player_class = TF_CLASS_DEMOMAN;
-		weapon = "Stickybomb Launcher";
+		player_class = TF_CLASS_DEMOMAN
+		weapon = "Stickybomb Launcher"
 	}
 	else if (mode == 3)
 	{
-		player_class = TF_CLASS_ENGINEER;
-		weapon = ["Wrangler", "Toolbox", "Construction PDA"];
-		Ware_SetGlobalAttribute("build rate bonus", 0, -1);
+		player_class = TF_CLASS_ENGINEER
+		weapon = ["Wrangler", "Toolbox", "Construction PDA"]
+		Ware_SetGlobalAttribute("build rate bonus", 0, -1)
 	}
 	else if (mode == 4)
 	{
-		player_class = TF_CLASS_PYRO;
-		weapon = "Detonator";
+		player_class = TF_CLASS_PYRO
+		weapon = "Detonator"
 	}
 	
-	Ware_SetGlobalLoadout(player_class, weapon);
+	Ware_SetGlobalLoadout(player_class, weapon)
 }
 
 function OnUpdate()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if (!IsEntityAlive(player))
-			continue;		
+			continue
 		if (Ware_GetPlayerHeight(player) > 512.0)
-			Ware_PassPlayer(player, true);
+			Ware_PassPlayer(player, true)
 	}
 }
 
@@ -88,22 +76,22 @@ if (mode == 0)
 {
 	function OnPlayerAttack(player)
 	{
-		local dir = player.EyeAngles().Forward();
-		dir.Norm();
+		local dir = player.EyeAngles().Forward()
+		dir.Norm()
 		
-		local dot = dir.Dot(Vector(0, 0, -1.0));
+		local dot = dir.Dot(Vector(0, 0, -1.0))
 		if (dot > 0.707) // cos(45)
-			player.SetAbsVelocity(player.GetAbsVelocity() - dir * 80.0 * dot);
+			player.SetAbsVelocity(player.GetAbsVelocity() - dir * 80.0 * dot)
 	}
 }
 else if (mode == 3)
 {
 	function OnGameEvent_player_builtobject(params)
 	{
-		local building = EntIndexToHScript(params.index);
+		local building = EntIndexToHScript(params.index)
 		if (!building)
-			return;
+			return
 			
-		SetPropInt(building, "m_nDefaultUpgradeLevel", 2);
+		SetPropInt(building, "m_nDefaultUpgradeLevel", 2)
 	}	
 }

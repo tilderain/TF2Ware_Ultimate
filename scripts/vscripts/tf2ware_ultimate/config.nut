@@ -172,9 +172,6 @@ Ware_BossgameMusic <-
 	"steadynow"
 ]
 
-foreach (sound in Ware_GameSounds)
-	PrecacheSound(format("tf2ware_ultimate/music_game/%s.mp3", sound));
-foreach (sound in Ware_MinigameMusic)
-	PrecacheSound(format("tf2ware_ultimate/music_minigame/%s.mp3", sound));
-foreach (sound in Ware_BossgameMusic)
-	PrecacheSound(format("tf2ware_ultimate/music_bossgame/%s.mp3", sound));
+foreach (sound in Ware_GameSounds)    PrecacheSound(format("tf2ware_ultimate/music_game/%s.mp3", sound))
+foreach (sound in Ware_MinigameMusic) PrecacheSound(format("tf2ware_ultimate/music_minigame/%s.mp3", sound))
+foreach (sound in Ware_BossgameMusic) PrecacheSound(format("tf2ware_ultimate/music_bossgame/%s.mp3", sound))

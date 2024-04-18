@@ -1,53 +1,53 @@
-local sawblade;
-local move_sound = "SawMill.Blade";
-local touch_sound = "SawMill.BladeImpact";
-local touched = false;
+sawblade <- null
+touched <- false
 
-PrecacheScriptSound(move_sound);
-PrecacheScriptSound(touch_sound);
+move_sound <- "SawMill.Blade"
+touch_sound <- "SawMill.BladeImpact"
+PrecacheScriptSound(move_sound)
+PrecacheScriptSound(touch_sound)
 
 function OnPostSpawn()
 {
 	for (local ent = self.FirstMoveChild(); ent != null; ent = ent.NextMovePeer())
 	{
-		MarkForPurge(ent);
+		MarkForPurge(ent)
 		if (ent.GetClassname() == "trigger_multiple")
 		{
-			ent.ValidateScriptScope();
-			ent.GetScriptScope().OnStartTouch <- OnStartTouch;
-			ent.ConnectOutput("OnStartTouch", "OnStartTouch");
+			ent.ValidateScriptScope()
+			ent.GetScriptScope().OnStartTouch <- OnStartTouch.bindenv(this)
+			ent.ConnectOutput("OnStartTouch", "OnStartTouch")
 		}
 		else if (ent.GetClassname() == "prop_dynamic")
 		{
-			sawblade = ent;
+			sawblade = ent
 		}
 	}
 	
-	local param = GetPropInt(self, "m_toggle_state") == 0 ? "Close" : "Open";
-	EntFireByHandle(self, param, "", -1, null, null);
-	MarkForPurge(self);
+	local param = GetPropInt(self, "m_toggle_state") == 0 ? "Close" : "Open"
+	EntityEntFire(self, param)
+	MarkForPurge(self)
 }
 
 function Enable()
 {
-	EmitSoundOn(move_sound, self);
+	EmitSoundOn(move_sound, self)
 }
 
 function Disable()
 {
-	StopSoundOn(move_sound, self);
+	StopSoundOn(move_sound, self)
 }
 
 function OnStartTouch()
 {
-	activator.TakeDamage(1000.0, DMG_SAWBLADE, self);
-	DispatchParticleEffect("env_sawblood", activator.GetCenter(), Vector());
-	EmitSoundOn(touch_sound, sawblade);
+	activator.TakeDamage(1000.0, DMG_SAWBLADE, self)
+	DispatchParticleEffect("env_sawblood", activator.GetCenter(), Vector())
+	EmitSoundOn(touch_sound, sawblade)
 	
 	if (!touched)
 	{
 		if (sawblade != null)
-			sawblade.SetSkin(1);
-		touched = true;
+			sawblade.SetSkin(1)
+		touched = true
 	}
 }

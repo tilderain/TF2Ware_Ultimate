@@ -1,42 +1,45 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Goomba";
-minigame.description = 
-[
-	"Don't get jumped on!"
-	"Jump on a Heavy's head!"
-];
-minigame.duration = 4.0;
-minigame.music = "clumsy";
-minigame.min_players = 2;
-minigame.start_pass = true;
-minigame.allow_damage = true;
-minigame.fail_on_death = true;
-minigame.custom_overlay =
-[
-	"dont_jumped"
-	"jump_heavy"
-];
+minigame <- Ware_MinigameData
+({
+	name           = "Goomba"
+	author         = "ficool2"
+	description    = 
+	[
+		"Don't get jumped on!"
+		"Jump on a Heavy's head!"
+	]
+	duration       = 4.0
+	music          = "clumsy"
+	custom_overlay =
+	[
+		"dont_jumped"
+		"jump_heavy"
+	]
+	min_players    = 2
+	start_pass     = true
+	allow_damage   = true
+	fail_on_death  = true
+})
 
-local jump_team;
+jump_team <- 0;
 
 function OnStart()
 {
-	jump_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE);
+	jump_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 	
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 					
 		if (player.GetTeam() == jump_team)
 		{
-			Ware_SetPlayerMission(player, 1);
-			Ware_SetPlayerClass(player, TF_CLASS_SCOUT);
-			Ware_PassPlayer(player, false);
+			Ware_SetPlayerMission(player, 1)
+			Ware_SetPlayerClass(player, TF_CLASS_SCOUT)
+			Ware_PassPlayer(player, false)
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 0);
-			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS);
+			Ware_SetPlayerMission(player, 0)
+			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS)
 		}
 	}	
 }
@@ -45,20 +48,20 @@ function OnUpdate()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if (player.GetTeam() == jump_team)
 		{
 			if (IsEntityAlive(player))
 			{
-				local ground = GetPropEntity(player, "m_hGroundEntity");
+				local ground = GetPropEntity(player, "m_hGroundEntity")
 				if (ground != null && ground.IsPlayer() && ground.GetTeam() != jump_team)
 				{
-					Ware_PassPlayer(player, true);
+					Ware_PassPlayer(player, true)
 
 					ground.TakeDamageCustom(
 						player, player, null, Vector(), Vector(), 
-						1000.0, DMG_FALL, TF_DMG_CUSTOM_BOOTS_STOMP);
-					ScreenShake(ground.GetCenter(), 15.0, 150.0, 1.0, 500, 0, true);
+						1000.0, DMG_FALL, TF_DMG_CUSTOM_BOOTS_STOMP)
+					ScreenShake(ground.GetCenter(), 15.0, 150.0, 1.0, 500, 0, true)
 				}
 			}
 		}
@@ -67,5 +70,5 @@ function OnUpdate()
 
 function OnTakeDamage(params)
 {
-	return params.damage_stats == TF_DMG_CUSTOM_BOOTS_STOMP;
+	return params.damage_stats == TF_DMG_CUSTOM_BOOTS_STOMP
 }

@@ -1,43 +1,46 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Swim Up";
-minigame.description = "Swim Up!"
-minigame.duration = 4.0;
-minigame.music = "getmoving";
-minigame.allow_damage = true;
+minigame <- Ware_MinigameData
+({
+	name         = "Swim Up"
+	author       = "ficool2"
+	description  = "Swim Up!"
+	duration     = 4.0
+	music        = "getmoving"
+	allow_damage = true
+})
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Neon Annihilator");
+	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Neon Annihilator")
 	foreach (data in Ware_MinigamePlayers)
-		data.player.AddCond(TF_COND_SWIMMING_CURSE);
+		data.player.AddCond(TF_COND_SWIMMING_CURSE)
 }
 
 function OnUpdate()
 {
 	if (Ware_GetMinigameTime() < 2.0)
-		return;
+		return
 	
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if (!IsEntityAlive(player))
-			continue;
+			continue
 			
 		if (Ware_GetPlayerHeight(player) > 384.0)
-			Ware_PassPlayer(player, true);
+			Ware_PassPlayer(player, true)
 	}
 }
 
 function OnTakeDamage(params)
 {
-	params.damage *= 3.0;
+	params.damage *= 3.0
 }
 
 function OnEnd()
 {
 	foreach (data in Ware_MinigamePlayers)
 	{
-		data.player.RemoveCond(TF_COND_SWIMMING_CURSE);
-		data.player.RemoveCond(TF_COND_URINE);
+		data.player.RemoveCond(TF_COND_SWIMMING_CURSE)
+		data.player.RemoveCond(TF_COND_URINE)
 	}
 }

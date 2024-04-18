@@ -1,44 +1,47 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Slender"
-minigame.description = 
-[
-	"Collect every page!",
-	"You are Slender: Kill every survivor!"
-];
-minigame.duration = 215.0;
-minigame.end_delay = 1.5;
-minigame.music = "slender";
-minigame.location = "manor";
-minigame.custom_overlay =
-[
-	"slender_survivor"
-	"slender_kill"
-];
-minigame.min_players = 10;
-minigame.start_pass = true;
-minigame.allow_damage = true;
-minigame.friendly_fire = false;
-minigame.convars =
-{
-	mp_teams_unbalance_limit = 0
-}
+minigame <- Ware_MinigameData
+({
+	name           = "Slender"
+	author         = "ficool2"
+	description    = 
+	[
+		"Collect every page!"
+		"You are Slender: Kill every survivor!"
+	]
+	duration       = 215.0
+	end_delay      = 1.5
+	music          = "slender"
+	location       = "manor"
+	custom_overlay =
+	[
+		"slender_survivor"
+		"slender_kill"
+	]
+	min_players    = 10
+	start_pass     = true
+	allow_damage   = true
+	friendly_fire  = false
+	convars        =
+	{
+		mp_teams_unbalance_limit = 0
+	}
+})
 
-MISSION_SURVIVOR <- 0;
-MISSION_SLENDER  <- 1;
+MISSION_SURVIVOR <- 0
+MISSION_SLENDER  <- 1
 
-local sound_intro = "TF2Ware_Ultimate.SlenderIntro";
-local sound_page = "TF2Ware_Ultimate.SlenderPage";
-local slender_model = "models/arrival/slenderman.mdl";
-local page_model = "models/slender/sheet.mdl";
+fog <- null
+slenders <- []
+pages <- []
 
-local fog;
-local slenders = [];
-local pages = [];
+sound_intro <- "TF2Ware_Ultimate.SlenderIntro"
+sound_page <- "TF2Ware_Ultimate.SlenderPage"
+slender_model <- "models/arrival/slenderman.mdl"
+page_model <- "models/slender/sheet.mdl"
 
-PrecacheScriptSound(sound_intro);
-PrecacheScriptSound(sound_page);
-PrecacheModel(slender_model);
-PrecacheModel(page_model);
+PrecacheScriptSound(sound_intro)
+PrecacheScriptSound(sound_page)
+PrecacheModel(slender_model)
+PrecacheModel(page_model)
 
 local pages_info =
 [
@@ -81,13 +84,13 @@ local pages_info =
 		[Vector(-952, -362, -213),  276.0],
 		[Vector(-1419, -778, -199), 4.0  ],
 	],
-];
+]
 
-local pages_collected = 0;
-local page_add_time = 12.0;
-local pages_max = pages_info.len();
+local pages_collected = 0
+local page_add_time = 12.0
+local pages_max = pages_info.len()
 
-local end_time = 0.0;
+local end_time = 0.0
 
 function OnStart()
 {
@@ -99,36 +102,36 @@ function OnStart()
 		fogstart = 100,
 		fogend = 384,
 		fogmaxdensity = 1.0,
-	});
+	})
 	
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if (slenders.find(player) != null)
 		{
-			Ware_SetPlayerMission(player, MISSION_SLENDER);	
-			Ware_SetPlayerClass(player, TF_CLASS_SPY);
-			Ware_StripPlayer(player, false);
-			Ware_SetPlayerTeam(player, TF_TEAM_BLUE);
-			Ware_AddPlayerAttribute(player, "voice pitch scale", 0, -1);
-			TogglePlayerWearables(player, false);
-			player.SetCustomModel(slender_model);
-			player.SetModelScale(1.4, 0.0);
+			Ware_SetPlayerMission(player, MISSION_SLENDER)
+			Ware_SetPlayerClass(player, TF_CLASS_SPY)
+			Ware_StripPlayer(player, false)
+			Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
+			Ware_AddPlayerAttribute(player, "voice pitch scale", 0, -1)
+			TogglePlayerWearables(player, false)
+			player.SetCustomModel(slender_model)
+			player.SetModelScale(1.4, 0.0)
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, MISSION_SURVIVOR);
-			Ware_SetPlayerClass(player, TF_CLASS_MEDIC);
-			Ware_StripPlayer(player, true);
-			Ware_SetPlayerTeam(player, TF_TEAM_RED);
-			Ware_PassPlayer(player, false);
-			SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog);
+			Ware_SetPlayerMission(player, MISSION_SURVIVOR)
+			Ware_SetPlayerClass(player, TF_CLASS_MEDIC)
+			Ware_StripPlayer(player, true)
+			Ware_SetPlayerTeam(player, TF_TEAM_RED)
+			Ware_PassPlayer(player, false)
+			SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
 		}
 	}
 	
 	foreach (i, group in pages_info)
 	{
-		local info = RandomElement(group);
+		local info = RandomElement(group)
 		local page = Ware_SpawnEntity("prop_dynamic_override",
 		{
 			origin = Ware_MinigameLocation.center + info[0],
@@ -137,78 +140,78 @@ function OnStart()
 			solid = SOLID_BBOX,
 			skin = i,
 			disableshadows = true,
-		});
-		page.SetTeam(TF_TEAM_RED); // glow only shows to survivors
-		page.SetModelScale(1.1, 0.0); // dont't scale collision
-		pages.append(page);
+		})
+		page.SetTeam(TF_TEAM_RED) // glow only shows to survivors
+		page.SetModelScale(1.1, 0.0) // dont't scale collision
+		pages.append(page)
 	}
 	
-	PlaySoundOnAllClients(sound_intro);
+	PlaySoundOnAllClients(sound_intro)
 	
-	end_time = Time() + (minigame.duration - pages_max * page_add_time);
+	end_time = Time() + (minigame.duration - pages_max * page_add_time)
 	
 	Ware_CreateTimer(function() 
 	{
-		Ware_PlayMinigameSound(null, Ware_Minigame.music);
-		return 28.5;
-	}, 28.5);
+		Ware_PlayMinigameSound(null, Ware_Minigame.music)
+		return 28.5
+	}, 28.5)
 	
-	Ware_CreateTimer(@() ShowStatusText(), 1.0);
+	Ware_CreateTimer(@() ShowStatusText(), 1.0)
 }
 
 function OnTeleport(players)
 {
-	local slender_count = Clamp(ceil(players.len() / 8.0).tointeger(), 1, 2);
+	local slender_count = Clamp(ceil(players.len() / 8.0).tointeger(), 1, 2)
 	for (local i = 0; i < slender_count; i++)
-		slenders.append(RemoveRandomElement(players));
+		slenders.append(RemoveRandomElement(players))
 	
 	Ware_TeleportPlayersRow(slenders,
 		Ware_MinigameLocation.center + Vector(-2700, -60, 8),
 		QAngle(0, 90, 0),
 		400.0,
-		60.0, 60.0);	
+		60.0, 60.0)
 	
 	Ware_TeleportPlayersRow(players,
 		Ware_MinigameLocation.lobby,
 		QAngle(0, -90, 0),
 		400.0,
-		-60.0, 60.0);	
+		-60.0, 60.0)
 }
 
 function ShowStatusText()
 {
-	local hms = FloatToTimeHMS(Max(end_time - Time(), 0.0));
-	Ware_ShowMinigameText(null, format("%d/%d\n%d:%02d", pages_collected, pages_max, hms.minutes, hms.seconds));
-	return 1.0;
+	local hms = FloatToTimeHMS(Max(end_time - Time(), 0.0))
+	Ware_ShowMinigameText(null, format("%d/%d\n%d:%02d", pages_collected, pages_max, hms.minutes, hms.seconds))
+	return 1.0
 }
 
 function OnUpdate()
 {
-	local slenders_data = {};
+	local slenders_data = {}
 	foreach (player in slenders)
 	{
 		if (player.IsValid() && IsEntityAlive(player))
-			slenders_data[player] <- player.GetCenter();
+			slenders_data[player] <- player.GetCenter()
 	}
 
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if (!IsEntityAlive(player))
-			continue;
+			continue
 		
 		if (data.mission == MISSION_SLENDER)
 		{
-			SetPropFloat(player, "m_flMaxspeed", 203.0 + pages_collected * 5.0);
+			SetPropFloat(player, "m_flMaxspeed", 203.0 + pages_collected * 5.0)
 		}
 		else if (data.mission == MISSION_SURVIVOR)
 		{
-			SetPropFloat(player, "m_flMaxspeed", 230.0);
+			SetPropFloat(player, "m_flMaxspeed", 230.0)
 			
 			foreach (slender, origin in slenders_data)
 			{
 				if ((player.GetCenter() - origin).Length() <= 90.0)
-					player.TakeDamage(300.0, DMG_CLUB, slender);
+					player.TakeDamage(300.0, DMG_CLUB, slender)
 			}
 		}
 	}
@@ -220,92 +223,92 @@ function OnUpdate()
 	//		DebugDrawText(
 	//			page.GetOrigin(), 
 	//			(page.GetOrigin() - Ware_MinigameLocation.center).tostring(), 
-	//			false, 0.03);		
+	//			false, 0.03)
 	//	}
 	//}		
 }
 
 function OnTakeDamage(params)
 {
-	local victim = params.const_entity;
+	local victim = params.const_entity
 	if (victim.IsPlayer())
 	{
-		local attacker = params.attacker;
+		local attacker = params.attacker
 		if (victim.GetPlayerClass() == TF_CLASS_SPY)
-			return false;
+			return false
 	}
 	else if (victim.GetClassname() == "prop_dynamic"
 			&& victim.GetModelName() == page_model
 			&& !victim.IsEFlagSet(EFL_KILLME))
 	{
-		victim.EmitSound(sound_page);
-		victim.SetSolid(SOLID_NONE);
-		EntFireByHandle(victim, "Kill", "", 0.1, null, null);
+		victim.EmitSound(sound_page)
+		victim.SetSolid(SOLID_NONE)
+		EntityEntFire(victim, "Kill", "", 0.1)
 		
-		pages_collected++;
-		end_time += page_add_time;
-		ShowStatusText();
+		pages_collected++
+		end_time += page_add_time
+		ShowStatusText()
 	}	
 }
 
 function OnPlayerDeath(params)
 {
-	local victim = GetPlayerFromUserID(params.userid);
+	local victim = GetPlayerFromUserID(params.userid)
 	if (victim && victim.GetPlayerClass() == TF_CLASS_SPY)
 	{
-		victim.SetCustomModel("");
-		CreateTimer(@() KillPlayerRagdoll(victim), 0.0);
+		victim.SetCustomModel("")
+		CreateTimer(@() KillPlayerRagdoll(victim), 0.0)
 	}
 }
 
 function OnEnd()
 {
-	local survivors = Ware_GetAlivePlayers(TF_TEAM_RED);
+	local survivors = Ware_GetAlivePlayers(TF_TEAM_RED)
 	
 	if (pages_collected >= pages_max)
 	{
 		foreach (data in survivors)
-			Ware_PassPlayer(data.player, true);
+			Ware_PassPlayer(data.player, true)
 			
 		foreach (player in slenders)
 		{
 			if (player.IsValid())
-				Ware_PassPlayer(player, false);
+				Ware_PassPlayer(player, false)
 		}
 		
-		Ware_ChatPrint(null, "{color}All pages collected... The Survivors win!", TF_COLOR_DEFAULT);
+		Ware_ChatPrint(null, "{color}All pages collected... The Survivors win!", TF_COLOR_DEFAULT)
 	}
 	else if (survivors.len() == 0)
 	{
-		Ware_ChatPrint(null, "{color}All survivors are dead... Slender wins!", TF_COLOR_DEFAULT);
+		Ware_ChatPrint(null, "{color}All survivors are dead... Slender wins!", TF_COLOR_DEFAULT)
 	}
 	else
 	{
-		Ware_ChatPrint(null, "{color}Time's up... Slender wins!", TF_COLOR_DEFAULT);
+		Ware_ChatPrint(null, "{color}Time's up... Slender wins!", TF_COLOR_DEFAULT)
 	}
 }
 
 function OnCleanup()
 {
-	Ware_ShowMinigameText(null, "");
+	Ware_ShowMinigameText(null, "")
 	
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if (data.mission == MISSION_SURVIVOR)
 		{
-			SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", null);
+			SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", null)
 		}
 		else if (data.mission == MISSION_SLENDER)
 		{
-			player.SetModelScale(1.0, 0.0);
-			player.SetCustomModel("");
-			TogglePlayerWearables(player, true);
+			player.SetModelScale(1.0, 0.0)
+			player.SetCustomModel("")
+			TogglePlayerWearables(player, true)
 		}
 	}
 }
 
 function CheckEnd()
 {
-	return end_time < Time() || Ware_GetAlivePlayers(TF_TEAM_RED).len() == 0 || pages_collected >= pages_max;
+	return end_time < Time() || Ware_GetAlivePlayers(TF_TEAM_RED).len() == 0 || pages_collected >= pages_max
 }

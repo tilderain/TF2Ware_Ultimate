@@ -1,66 +1,70 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Pop the JACK";
-minigame.description = "Hit the JACK until it pops!";
-minigame.duration = 7.3;
-minigame.location = "boxarena";
-minigame.music = "drumdance";
-minigame.no_collisions = true;
-minigame.convars =
-{
-	phys_timescale = 0.5,
-}
+minigame <- Ware_MinigameData
+({
+	name          = "Pop the JACK"
+	author        = "ficool2"
+	description   = "Hit the JACK until it pops!"
+	duration      = 7.3
+	location      = "boxarena"
+	music         = "drumdance"
+	no_collisions = true
+	convars       =
+	{
+		phys_timescale = 0.5
+	}
+})
 
-local pop_sound = "TF2Ware_Ultimate.BalloonPop";
-local jack_model = RandomInt(0, 100) <= 10 ? "models/passtime/ball/passtime_ball_halloween.mdl" : "models/passtime/ball/passtime_ball.mdl";
-PrecacheModel(jack_model);
-PrecacheScriptSound(pop_sound);
+pop_sound <- "TF2Ware_Ultimate.BalloonPop"
+jack_model <- RandomInt(0, 100) <= 10 ? "models/passtime/ball/passtime_ball_halloween.mdl" : "models/passtime/ball/passtime_ball.mdl"
+
+PrecacheModel(jack_model)
+PrecacheScriptSound(pop_sound)
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Necro Smasher");
+	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Necro Smasher")
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
-		Ware_CreateTimer(@() SpawnJack(player), RandomFloat(0.2, 0.3));
+		local player = data.player
+		Ware_CreateTimer(@() SpawnJack(player), RandomFloat(0.2, 0.3))
 	}
 }
 
 function SpawnJack(player)
 {
 	if (!player.IsValid())
-		return;
+		return
 	
-	local origin = player.EyePosition() + player.EyeAngles().Forward() * 350.0;
-	origin.z = Ware_MinigameLocation.center.z + 64.0;
+	local origin = player.EyePosition() + player.EyeAngles().Forward() * 350.0
+	origin.z = Ware_MinigameLocation.center.z + 64.0
 	
 	Ware_SpawnEntity("prop_physics_multiplayer",
 	{
 		origin = origin,
 		model = jack_model,
 		skin = player.GetTeam() - 2,
-	});
+	})
 }
 
 function OnTakeDamage(params)
 {
-	local victim = params.const_entity;
+	local victim = params.const_entity
 	if (victim.GetClassname() == "prop_physics_multiplayer")
 	{
-		local attacker = params.attacker;
+		local attacker = params.attacker
 		if (attacker && attacker.IsPlayer())
 		{
-			local scale = victim.GetModelScale() + 0.5;
+			local scale = victim.GetModelScale() + 0.5
 			if (scale > 2.5)
 			{
-				Ware_PassPlayer(attacker, true);
-				EmitSoundOnClient(pop_sound, attacker);
-				DispatchParticleEffect("merasmus_blood_bits", victim.GetOrigin(), Vector());
-				victim.EmitSound(pop_sound);
-				victim.Kill();
+				Ware_PassPlayer(attacker, true)
+				EmitSoundOnClient(pop_sound, attacker)
+				DispatchParticleEffect("merasmus_blood_bits", victim.GetOrigin(), Vector())
+				victim.EmitSound(pop_sound)
+				victim.Kill()
 			}
 			else
 			{
-				victim.SetModelScale(scale, 0.0);
+				victim.SetModelScale(scale, 0.0)
 			}
 		}
 	}

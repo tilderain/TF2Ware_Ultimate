@@ -1,44 +1,44 @@
-minigame <- Ware_MinigameData();
-minigame.name = "Sap a Building";
-minigame.duration = 4.0;
-minigame.music = "funkymoves";
-minigame.min_players = 2;
-
-minigame.description = 
-[
-	"Sap a Building!"
-	"Get a Building Sapped!"
-];
-
-minigame.custom_overlay = 
-[
-	"sap_spy"
-	"sap_engi"
-];
-
-// allow damage so sappers work, but prevent player damage
-minigame.allow_damage = true;
-minigame.friendly_fire = false;
+minigame <- Ware_MinigameData
+({
+	name           = "Sap a Building"
+	author         = "pokemonPasta"
+	description    = 
+	[
+		"Sap a Building!"
+		"Get a Building Sapped!"
+	]
+	duration       = 4.0
+	music          = "funkymoves"
+	custom_overlay = 
+	[
+		"sap_spy"
+		"sap_engi"
+	]
+	min_players    = 2
+	// allow damage so sappers work, but prevent player damage
+	allow_damage   = true
+	friendly_fire  = false
+})
 
 function OnStart()
 {
-	local engi_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE);
+	local engi_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 					
 		if (player.GetTeam() == engi_team)
 		{
-			Ware_SetPlayerMission(player, 1);
-			Ware_SetPlayerClass(player, TF_CLASS_ENGINEER);
-			Ware_GivePlayerWeapon(player, "Toolbox");
-			Ware_GivePlayerWeapon(player, "Construction PDA");
+			Ware_SetPlayerMission(player, 1)
+			Ware_SetPlayerClass(player, TF_CLASS_ENGINEER)
+			Ware_GivePlayerWeapon(player, "Toolbox")
+			Ware_GivePlayerWeapon(player, "Construction PDA")
 		}
 		else
 		{
-			Ware_SetPlayerMission(player, 0);
-			Ware_SetPlayerClass(player, TF_CLASS_SPY);
-			Ware_GivePlayerWeapon(player, "Sapper");
+			Ware_SetPlayerMission(player, 0)
+			Ware_SetPlayerClass(player, TF_CLASS_SPY)
+			Ware_GivePlayerWeapon(player, "Sapper")
 		}
 	}
 }
@@ -46,17 +46,16 @@ function OnStart()
 function OnTakeDamage(params)
 {
 	if (params.const_entity.IsPlayer())
-		return false;
+		return false
 }
 
 function OnGameEvent_player_sapped_object(params)
 {
-	local spy = GetPlayerFromUserID(params.userid);
-	local engi = GetPlayerFromUserID(params.ownerid);
+	local spy = GetPlayerFromUserID(params.userid)
+	local engi = GetPlayerFromUserID(params.ownerid)
 	
 	if (spy)
-		Ware_PassPlayer(spy, true);
-	
+		Ware_PassPlayer(spy, true)
 	if (engi)
-		Ware_PassPlayer(engi, true);
+		Ware_PassPlayer(engi, true)
 }

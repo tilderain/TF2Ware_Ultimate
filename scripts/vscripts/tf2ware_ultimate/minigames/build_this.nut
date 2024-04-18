@@ -1,77 +1,56 @@
-local mode = RandomInt(0, 4);
-local correct_building;
+mode <- RandomInt(0, 4)
+building_modes <-
+[
+	[ "Build a Sentry!",              "build_sentry",        OBJ_SENTRYGUN  ],
+	[ "Build a Dispenser!",           "build_dispenser",     OBJ_DISPENSER  ],
+	[ "Build a Teleporter Entrance!", "build_tele_entrance", OBJ_TELEPORTER ],
+	[ "Build a Teleporter Exit!",     "build_tele_exit",     OBJ_TELEPORTER ],
+	[ "Build Something!",             "build_something",     null           ],
+]
+building_mode <- building_modes[mode]
 
-minigame <- Ware_MinigameData();
-minigame.name = "Build This";
-minigame.duration = 4.0;
-minigame.music = "sillytime";
-minigame.convars = 
-{
-	tf_cheapobjects = 1
-};
-
-if (mode == 0)
-{
-	minigame.description = "Build a Sentry!"
-	minigame.custom_overlay = "build_sentry";
-	correct_building = OBJ_SENTRYGUN;
-}
-else if (mode == 1)
-{
-	minigame.description = "Build a Dispenser!"
-	minigame.custom_overlay = "build_dispenser";
-	correct_building = OBJ_DISPENSER;
-}
-else if (mode == 2)
-{
-	minigame.description = "Build a Teleporter Entrance!"
-	minigame.custom_overlay = "build_tele_entrance";
-	correct_building = OBJ_TELEPORTER;
-}
-else if (mode == 3)
-{
-	minigame.description = "Build a Teleporter Exit!"
-	minigame.custom_overlay = "build_tele_exit";
-	correct_building = OBJ_TELEPORTER;
-}
-else if (mode == 4)
-{
-	minigame.description = "Build Something!"
-	minigame.custom_overlay = "build_something";
-}
+minigame <- Ware_MinigameData
+({
+	name           = "Build This"
+	author         = "pokemonPasta"	
+	description    = building_mode[0]
+	duration       = 4.0
+	music          = "sillytime"
+	custom_overlay = building_mode[1]
+})
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, ["Wrench", "Toolbox", "Construction PDA"]);
+	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, ["Wrench", "Toolbox", "Construction PDA"])
 }
 
 function OnGameEvent_player_builtobject(params)
 {
-	local building = EntIndexToHScript(params.index);
+	local building = EntIndexToHScript(params.index)
 	if (!building)
-		return;
-	local player = GetPlayerFromUserID(params.userid);
+		return
+	local player = GetPlayerFromUserID(params.userid)
 	if (!player)
-		return;
+		return
 	
 	if (mode == 4)
 	{
-		Ware_PassPlayer(player, true);
-		Ware_StripPlayerWeapons(player, ["tf_weapon_builder", "tf_weapon_pda_engineer_build"]);
-		return;
+		Ware_PassPlayer(player, true)
 	}
-	
-	local building_enum = params.object;
-	if (building_enum == correct_building)
+	else
 	{
-		if ((mode < 2) ||
-			(mode == 2 && GetPropInt(building, "m_iObjectMode") != 1) || // tele entrance
-			(mode == 3 && GetPropInt(building, "m_iObjectMode") == 1) // tele exit
-		)
+		local building_enum = params.object
+		if (building_enum == building_mode[2])
 		{
-			Ware_PassPlayer(player, true);
+			if ((mode < 2) ||
+				(mode == 2 && GetPropInt(building, "m_iObjectMode") != 1) || // tele entrance
+				(mode == 3 && GetPropInt(building, "m_iObjectMode") == 1) // tele exit
+			)
+			{
+				Ware_PassPlayer(player, true)
+			}
 		}
 	}
 	
-	Ware_StripPlayerWeapons(player, ["tf_weapon_builder", "tf_weapon_pda_engineer_build"]);
+	Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0);
 }

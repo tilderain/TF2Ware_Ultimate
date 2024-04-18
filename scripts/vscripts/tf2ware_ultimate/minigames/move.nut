@@ -1,29 +1,32 @@
-local mode = RandomInt(0, 1);
+mode <- RandomInt(0, 1)
 
-minigame <- Ware_MinigameData();
-minigame.name = "Move";
-minigame.description = mode == 0 ? "Move!" : "Don't Move!";
-minigame.duration = 4.0;
-minigame.music = "actioninsilence";
-minigame.start_pass = true;
-minigame.fail_on_death = true;
-minigame.custom_overlay = mode == 0 ? "move" : "dont_move";
+minigame <- Ware_MinigameData
+({
+	name           = "Move"
+	author         = "ficool2"
+	description    = mode == 0 ? "Move!" : "Don't Move!"
+	duration       = 4.0
+	music          = "actioninsilence"
+	start_pass     = true
+	fail_on_death  = true
+	custom_overlay = mode == 0 ? "move" : "dont_move"
+})
 
 function OnUpdate()
 {
 	if (Ware_GetMinigameTime() < 2.0)
-		return;
+		return
 	
 	foreach (data in Ware_MinigamePlayers)
 	{
-		local player = data.player;
+		local player = data.player
 		if (!IsEntityAlive(player))
-			continue;
+			continue
 		
 		if (mode == 0)
 		{
 			if (player.GetAbsVelocity().Length() < 75.0)
-				Ware_SuicidePlayer(player);
+				Ware_SuicidePlayer(player)
 		}
 		else if (mode == 1)
 		{

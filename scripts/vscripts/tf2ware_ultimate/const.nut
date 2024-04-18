@@ -1,3 +1,5 @@
+// by ficool2
+
 const EFL_USER = 2097152
 
 const INT_MAX = 0x7FFFFFFF
@@ -13,6 +15,16 @@ const DAMAGE_NO				= 0
 const DAMAGE_EVENTS_ONLY	= 1
 const DAMAGE_YES			= 2
 const DAMAGE_AIM			= 3
+
+const SF_TRIGGER_ALLOW_CLIENTS				= 1
+const SF_TRIGGER_ALLOW_NPCS					= 2
+const SF_TRIGGER_ALLOW_PUSHABLES			= 4
+const SF_TRIGGER_ALLOW_PHYSICS				= 8
+const SF_TRIGGER_ONLY_PLAYER_ALLY_NPCS		= 16
+const SF_TRIGGER_ONLY_CLIENTS_IN_VEHICLES	= 32
+const SF_TRIGGER_ALLOW_ALL					= 64
+
+const SF_PHYSPROP_TOUCH	= 16
 
 const DMG_SAWBLADE = 65536
 const DMG_CRIT     = 1048576
@@ -99,40 +111,35 @@ ITEM_PROJECTILE_MAP <-
 
 DEVELOPER_STEAMID3 <-
 {
-	"[U:1:53275741]"  : 1, // ficool2
-	"[U:1:111328277]" : 1, // pokemonPasta
+	"[U:1:53275741]"  : 1 // ficool2
+	"[U:1:111328277]" : 1 // pokemonPasta
 }
 
 foreach (key, value in CONST)
 {
-	if (startswith(key, "MDL"))
-		PrecacheModel(value);
-	else if (startswith(key, "SFX"))
-		PrecacheScriptSound(value);
-	else if (startswith(key, "PFX"))
-		PrecacheEntityFromTable({classname = "info_particle_system", effect_name = value});
+	if (startswith(key, "MDL"))      PrecacheModel(value)
+	else if (startswith(key, "SFX")) PrecacheScriptSound(value)
+	else if (startswith(key, "PFX")) PrecacheEntityFromTable({classname = "info_particle_system", effect_name = value})
 }
 
-PrecacheModel("models/player/items/taunts/bumpercar/parts/bumpercar.mdl");
-PrecacheModel("models/props_halloween/bumpercar_cage.mdl");
+PrecacheModel("models/player/items/taunts/bumpercar/parts/bumpercar.mdl")
+PrecacheModel("models/props_halloween/bumpercar_cage.mdl")
 
 KART_SOUNDS <-
 [
-	"BumperCar.Spawn",
-    "BumperCar.SpawnFromLava",
-    "BumperCar.GoLoop",
-    "BumperCar.Screech",
-    "BumperCar.HitGhost",
-    "BumperCar.Bump",
-    "BumperCar.BumpHard",
-    "BumperCar.BumpIntoAir",
-    "BumperCar.SpeedBoostStart",
-    "BumperCar.SpeedBoostStop",
-    "BumperCar.Jump",
-    "BumperCar.JumpLand",
-	"sf14.Merasmus.DuckHunt.BonusDucks",
+	"BumperCar.Spawn"
+    "BumperCar.SpawnFromLava"
+    "BumperCar.GoLoop"
+    "BumperCar.Screech"
+    "BumperCar.HitGhost"
+    "BumperCar.Bump"
+    "BumperCar.BumpHard"
+    "BumperCar.BumpIntoAir"
+    "BumperCar.SpeedBoostStart"
+    "BumperCar.SpeedBoostStop"
+    "BumperCar.Jump"
+    "BumperCar.JumpLand"
+	"sf14.Merasmus.DuckHunt.BonusDucks"
 ]
-
-foreach (sound in KART_SOUNDS)
-    PrecacheScriptSound(sound);
+foreach (sound in KART_SOUNDS) PrecacheScriptSound(sound)
 
