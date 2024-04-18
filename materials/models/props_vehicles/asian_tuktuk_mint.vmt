@@ -1,0 +1,22 @@
+"VertexLitGeneric"
+{
+    "$basetexture" "models\props_vehicles\asian_tuktuk"
+    "$bumpmap" "models\props_vehicles\asian_tuktuk_normal"
+    
+
+    "$blendtintbybasealpha" "1" 
+    "$blendtintcoloroverbase" "0"
+    
+   "$color2" "{188 221 179}" // A Mann's Mint
+   
+    "$phong" "1"
+    "$phongexponent" "15"
+    "$phongboost" "9"    
+    "$lightwarptexture" "models\lightwarps\weapon_lightwarp"
+    "$phongfresnelranges"    "[.25 1 4]"
+    
+    //"$envmap" "env_cubemap"
+    //"$envmaptint" "[.35 .35 .35]"
+    //"$envmap" "effects/saxxy/saxxy_gold"
+    //$envmapmask "models/props_vehicles/land/asian_tuktuk_envmask"
+}

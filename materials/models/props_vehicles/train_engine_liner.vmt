@@ -1,0 +1,11 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/props_vehicles/train_engine_liner"
+	"$bumpmap" "models/props_vehicles/train_engine_liner_normal"
+
+	"$phong" "1"
+	"$phongexponent" "1"
+	"$phongboost" "1"
+	"$lightwarptexture" "models\lightwarps\weapon_lightwarp"
+	"$phongfresnelranges"	"[.25 .5 1]"
+}

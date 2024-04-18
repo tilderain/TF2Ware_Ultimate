@@ -1,0 +1,12 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/props_vehicles/bugatti"
+	"$bumpmap" "models/props_vehicles/bugatti_normal"
+
+	"$phong" "3"
+	"$phongexponent" "30"
+	"$phongboost" "10"
+	"$lightwarptexture" "models/props_vehicles/pickup_lightwarp"
+
+	"$phongfresnelranges"	"[.25 .5 1]"
+}
