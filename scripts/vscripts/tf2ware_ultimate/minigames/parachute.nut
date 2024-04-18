@@ -60,3 +60,9 @@ function OnUpdate()
 			Ware_PassPlayer(player, true)
 	}
 }
+
+function OnEnd()
+{
+	foreach (data in Ware_MinigamePlayers)
+		data.player.RemoveCond(TF_COND_PARACHUTE_ACTIVE)
+}
