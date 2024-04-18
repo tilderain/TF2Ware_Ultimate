@@ -289,6 +289,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceMinigame   <- ""
 	Ware_DebugForceBossgame   <- ""
 }
+Ware_DebugGameOver		  <- false
 
 Ware_TextManagerQueue     <- null
 Ware_TextManagerLastMsg   <- null
@@ -1692,7 +1693,7 @@ function Ware_EndMinigameInternal()
 	local boss_threshold = 20
 	local speed_threshold = 5
 	
-	if (Ware_MinigamesPlayed > boss_threshold)
+	if (Ware_MinigamesPlayed > boss_threshold || Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), 2.0)
 	else if (Ware_MinigamesPlayed == boss_threshold)
 		CreateTimer(@() Ware_BeginBoss(), 2.0)
@@ -1752,9 +1753,32 @@ function Ware_GameOver()
 	}
 	
 	// TODO: add firework effects
-	
-	// TODO: need to respect round limits and add intermission screen
-	CreateTimer(@() SetConvarValue("mp_restartgame_immediate", 1), delay)
+
+	local win = SpawnEntityFromTableSafe("game_round_win", 
+	{
+		teamnum         = TEAM_UNASSIGNED
+		force_map_reset = true
+		switch_teams    = true
+	})
+	SetInputHook(win, "RoundWin", null, function()
+	{
+		// prevent loser state on winners
+		SetPropInt(GameRules, "m_iRoundState", GR_STATE_RND_RUNNING)
+		// hide win panel
+		SendGlobalGameEvent("tf_game_over", {})
+		// stop stalemate sound
+		for (local team = TF_TEAM_RED; team <= TF_TEAM_BLUE; team++)
+		{
+			SendGlobalGameEvent("teamplay_broadcast_audio",
+			{
+				team             = team
+				sound            = "Game.Stalemate"
+				additional_flags = SND_STOP
+				player           = -1
+			})
+		}
+	});
+	EntityEntFire(win, "RoundWin")
 }
 
 function Ware_OnUpdate()
@@ -2167,6 +2191,11 @@ Ware_DevCommands <-
 	{
 		SetConvarValue("mp_restartgame_immediate", 1)
 		Ware_ChatPrint(player, "Restarting...")
+	}
+	"gameover" : function(player, text)
+	{
+		Ware_DebugGameOver = true
+		Ware_ChatPrint(player, "Forcing game over...")		
 	}
 	"stop" : function(player, text)
 	{
