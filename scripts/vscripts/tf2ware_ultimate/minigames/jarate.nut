@@ -14,8 +14,9 @@ function OnStart()
 
 function OnGameEvent_player_stunned(params)
 {
+	local victim = GetPlayerFromUserID(params.victim);
 	local player = GetPlayerFromUserID(params.stunner);
-	if (player)
+	if (victim && player && victim != player)
 		Ware_PassPlayer(player, true);
 }
 
