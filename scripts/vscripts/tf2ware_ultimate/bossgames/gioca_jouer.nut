@@ -22,8 +22,9 @@ MICRO_WAVE3  <- 15  // re-taunt
 MICRO_SUPER  <- 16  // rocket jump
 MICRO_RESET  <- 17  // Reset. If we consider "reset" a microgame then we dont have to make a separate reset function, and we get previous OnMicroEnd call for free.
 
-micro <- null       // microgame tracker
-min_score <- 16     // minimum score to win. Only the players with the highest score win, might change this to just check min_score, and increase min_score.
+micro <- null        // microgame tracker
+min_score <- 16      // minimum score to win. Only the players with the highest score win, might change this to just check min_score, and increase min_score.
+micro_grace <- false // tracks grace period for certain microgames.
 
 minigame <- Ware_MinigameData
 ({
@@ -38,7 +39,7 @@ minigame <- Ware_MinigameData
 	no_collisions = true
 })
 
-pass_sound <- "Player.HitSoundBeepo"
+pass_sound <- "Halloween.PumpkinDrop"
 PrecacheScriptSound(pass_sound)
 
 microgame_info <-
@@ -150,6 +151,8 @@ function OnMicroStart()
 			case MICRO_SLEEP:
 			case MICRO_WALK:
 				GiocaJouer_PassPlayer(player, true)
+				micro_grace <- true
+				Ware_CreateTimer(@() micro_grace <- false, 0.5) // can't be more than about 2sec
 				break
 			case MICRO_SWIM:
 				player.AddCond(TF_COND_SWIMMING_CURSE)
@@ -193,7 +196,7 @@ function OnUpdate()
 		{
 			// TODO: Delay before game checks on don't move/move? timer used in move.nut may not work since its not the start of a microgame and each of these happen twice
 			case MICRO_SLEEP:
-				if (player.GetAbsVelocity().Length() > 5.0)
+				if (player.GetAbsVelocity().Length() > 5.0 && !micro_grace)
 					GiocaJouer_PassPlayer(player, false)
 				break
 			case MICRO_WAVE:
@@ -211,7 +214,7 @@ function OnUpdate()
 					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_WALK:
-				if (player.GetAbsVelocity().Length() < 75.0)
+				if (player.GetAbsVelocity().Length() < 75.0 && !micro_grace)
 					GiocaJouer_PassPlayer(player, false)
 				break
 			case MICRO_SWIM:
