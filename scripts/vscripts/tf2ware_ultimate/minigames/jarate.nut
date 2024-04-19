@@ -5,6 +5,7 @@ minigame <- Ware_MinigameData
 	duration     = 4.0
 	music        = "rockingout"
 	description  = "Jarate an Enemy!"
+	min_players  = 2
 	allow_damage = true
 })
 
