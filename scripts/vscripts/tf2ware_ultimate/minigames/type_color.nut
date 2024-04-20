@@ -24,7 +24,7 @@ colors <-
 	"255 255 255",
 	"255 0 0",
 	"255 255 0"
-	"0 0 255"
+	"45 130 220" // slightly more legible blue, may need more adjusting to stand out from chalkboard more
 ]
 
 text_colors <-
