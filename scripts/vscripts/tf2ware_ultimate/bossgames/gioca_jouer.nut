@@ -152,7 +152,7 @@ function OnMicroStart()
 			case MICRO_WALK:
 				GiocaJouer_PassPlayer(player, true)
 				micro_grace <- true
-				Ware_CreateTimer(@() micro_grace <- false, 0.5) // can't be more than about 2sec
+				Ware_CreateTimer(function() {micro_grace <- false}, 1.0) // can't be more than about 2sec
 				break
 			case MICRO_SWIM:
 				player.AddCond(TF_COND_SWIMMING_CURSE)
@@ -194,7 +194,6 @@ function OnUpdate()
 			continue
 		switch (micro)
 		{
-			// TODO: Delay before game checks on don't move/move? timer used in move.nut may not work since its not the start of a microgame and each of these happen twice
 			case MICRO_SLEEP:
 				if (player.GetAbsVelocity().Length() > 5.0 && !micro_grace)
 					GiocaJouer_PassPlayer(player, false)
