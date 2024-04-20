@@ -89,7 +89,7 @@ function OnUpdate()
 		if (minidata.lapcount >= 5)
 		{
 			EmitSoundOnClient(finish_sound, player)
-			
+			Ware_ShowScreenOverlay(player, null)
 			local hms = FloatToTimeHMS(Ware_GetMinigameTime())
 			if (first)
 			{
