@@ -2017,7 +2017,11 @@ function OnGameEvent_teamplay_round_start(params)
 	if (Ware_Started)
 		return
 	Ware_Started = true
-
+	
+	// putting this here rather than in loop we already have since i want to go after waiting for players check. if that doesnt matter just move this in.
+	foreach(player in Ware_Players)
+		Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
+	
 	SetPropBool(GameRules, "m_bTruceActive", true)
 	
 	Ware_MinigameRotation.clear()
