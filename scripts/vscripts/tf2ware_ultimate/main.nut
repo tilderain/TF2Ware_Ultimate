@@ -513,7 +513,7 @@ function Ware_CreateTimer(on_timer_func, delay)
 
 function Ware_PlayGameSound(player, name, flags = 0)
 {
-	if (Ware_GameSounds.themable_sounds.find(name))
+	if (Ware_GameSounds.themable_sounds.find(name) != null)
 		path <- format("%s/%s", Ware_Theme, name)
 	else
 		path <- format("_default/%s", name)
