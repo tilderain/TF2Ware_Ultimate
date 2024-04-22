@@ -90,9 +90,11 @@ Ware_GameSounds <-
 	"break_end"
 	"failure"
 	"failure_all"
+	"gameclear"
 	"gameover"
 	"intro"
 	"lets_get_started"
+	"mapend"
 	"speedup"
 	"victory"
 ]

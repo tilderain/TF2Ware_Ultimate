@@ -2171,6 +2171,13 @@ function OnGameEvent_player_disconnect(params)
 	Ware_Minigame.cb_on_player_disconnect(player)
 }
 
+function OnGameEvent_teamplay_game_over(params)
+{
+	// map end
+	foreach(player in Ware_Players)
+		Ware_PlayGameSound(player, "mapend")
+}
+
 Ware_DevCommands <-
 {
 	"forceminigame" : function(player, text)
