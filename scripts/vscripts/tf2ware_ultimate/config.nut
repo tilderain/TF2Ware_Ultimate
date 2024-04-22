@@ -83,21 +83,39 @@ Ware_Bossgames <-
 	"wild_west"
 ]
 
-Ware_GameSounds <-
+Ware_Themes <-
 [
-	"boss"
-	"break"
-	"break_end"
-	"failure"
-	"failure_all"
-	"gameclear"
-	"gameover"
-	"intro"
-	"lets_get_started"
-	"mapend"
-	"speedup"
-	"victory"
+	// path      name in case we want to display it anywhere
+	["_default", "TF2Ware"],
+	["wii_mona", "Mona (Wii)"],
+	
 ]
+
+Ware_GameSounds <-
+{
+	default_sounds =
+	[
+		"boss"
+		"break"
+		"break_end"
+		"failure"
+		"failure_all"
+		"gameclear"
+		"gameover"
+		"intro"
+		"lets_get_started"
+		"mapend"
+		"speedup"
+		"victory"
+	]
+	
+	themable_sounds =
+	[
+		"failure"
+		"intro"
+		"victory"
+	]
+}
 
 Ware_MinigameMusic <-
 [
@@ -174,6 +192,6 @@ Ware_BossgameMusic <-
 	"steadynow"
 ]
 
-foreach (sound in Ware_GameSounds)    PrecacheSound(format("tf2ware_ultimate/music_game/%s.mp3", sound))
-foreach (sound in Ware_MinigameMusic) PrecacheSound(format("tf2ware_ultimate/music_minigame/%s.mp3", sound))
-foreach (sound in Ware_BossgameMusic) PrecacheSound(format("tf2ware_ultimate/music_bossgame/%s.mp3", sound))
+foreach (sound in Ware_GameSounds.default_sounds)    PrecacheSound(format("tf2ware_ultimate/music_game/_default/%s.mp3", sound))
+foreach (sound in Ware_MinigameMusic)                PrecacheSound(format("tf2ware_ultimate/music_minigame/%s.mp3", sound))
+foreach (sound in Ware_BossgameMusic)                PrecacheSound(format("tf2ware_ultimate/music_bossgame/%s.mp3", sound))

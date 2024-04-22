@@ -288,6 +288,8 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugStop            <- false
 	Ware_DebugForceMinigame   <- ""
 	Ware_DebugForceBossgame   <- ""
+	Ware_DebugForceTheme      <- ""
+	Ware_DebugOldTheme        <- ""
 }
 Ware_DebugGameOver		  <- false
 
@@ -315,6 +317,11 @@ Ware_MinigameEndTimer     <- null
 Ware_MinigameEnded        <- false
 Ware_MinigameHighScorers  <- []
 Ware_MinigamesPlayed	  <- 0
+
+if (!("Ware_RoundsPlayed" in this))
+	Ware_RoundsPlayed     <- 0
+
+Ware_Theme                <- "_default"
 
 if (!("Ware_Players" in this))
 {
@@ -506,10 +513,15 @@ function Ware_CreateTimer(on_timer_func, delay)
 
 function Ware_PlayGameSound(player, name, flags = 0)
 {
-	if (player)
-		PlaySoundOnClient(player, format("tf2ware_ultimate/music_game/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags)
+	if (Ware_GameSounds.themable_sounds.find(name))
+		path <- format("%s/%s", Ware_Theme, name)
 	else
-		PlaySoundOnAllClients(format("tf2ware_ultimate/music_game/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags)
+		path <- format("_default/%s", name)
+	
+	if (player)
+		PlaySoundOnClient(player, format("tf2ware_ultimate/music_game/%s.mp3", path), 1.0, 100 * Ware_GetPitchFactor(), flags)
+	else
+		PlaySoundOnAllClients(format("tf2ware_ultimate/music_game/%s.mp3", path), 1.0, 100 * Ware_GetPitchFactor(), flags)
 }
 
 function Ware_PlayMinigameSound(player, name, flags = 0, volume = 1.0)
@@ -1189,6 +1201,27 @@ function Ware_BeginIntermission(is_boss)
 		return 1.0
 	}
 	
+	if (Ware_DebugForceTheme.len() > 0)
+	{
+		Ware_DebugOldTheme = Ware_Theme
+		
+		if (Ware_DebugForceTheme == "default")
+			Ware_Theme = "_default"
+		else
+		{
+			Ware_Theme = Ware_DebugForceTheme
+			foreach(sound in Ware_GameSounds.themable_sounds)
+			{
+				PrecacheSound(format("tf2ware_ultimate/music_game/%s/%s.mp3", Ware_Theme, sound))
+			}
+		}
+	}
+	else if (Ware_DebugOldTheme != "")
+	{
+		Ware_Theme = Ware_DebugOldTheme
+		Ware_DebugOldTheme = ""
+	}
+	
 	foreach (player in Ware_Players)
 	{
 		Ware_PlayGameSound(player, "intro")
@@ -1705,6 +1738,8 @@ function Ware_EndMinigameInternal()
 
 function Ware_GameOver()
 {
+	Ware_RoundsPlayed++
+	
 	local highest_players = Ware_MinigameHighScorers
 	highest_players = highest_players.filter(@(i, player) player.IsValid())
 	
@@ -2018,6 +2053,13 @@ function OnGameEvent_teamplay_round_start(params)
 		return
 	Ware_Started = true
 	
+	// first round always uses default theme
+	if (Ware_RoundsPlayed > 0)
+		Ware_Theme <- Ware_Themes[RandomInt(0, Ware_Themes.len() - 1)][0]
+		
+	foreach(sound in Ware_GameSounds.themable_sounds)
+		PrecacheSound(format("tf2ware_ultimate/music_game/%s/%s.mp3", Ware_Theme, sound))
+	
 	// putting this here rather than in loop we already have since i want to go after waiting for players check. if that doesnt matter just move this in.
 	foreach(player in Ware_Players)
 		Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
@@ -2197,6 +2239,15 @@ Ware_DevCommands <-
 		else
 			Ware_DebugForceBossgame = ""
 		Ware_ChatPrint(player, "Forced bossgame to '{str}'", Ware_DebugForceBossgame)
+	}
+	"forcetheme": function(player, text)
+	{
+		local args = split(text, " ")
+		if (args.len() >= 1)
+			Ware_DebugForceTheme = args[0]
+		else
+			Ware_DebugForceTheme = ""
+		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
 	}
 	"restart" : function(player, text)
 	{
