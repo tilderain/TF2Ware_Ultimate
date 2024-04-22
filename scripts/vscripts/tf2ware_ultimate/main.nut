@@ -1721,10 +1721,9 @@ function Ware_GameOver()
 	{
 		local player = data.player
 		
-		Ware_PlayGameSound(player, "gameover")
-		
 		if (highest_players.find(player) != null)
 		{
+			Ware_PlayGameSound(player, "gameclear")
 			player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
 			player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_victory")
 			// TODO: give full loaodout back and add other effects
@@ -1732,6 +1731,7 @@ function Ware_GameOver()
 		}
 		else
 		{
+			Ware_PlayGameSound(player, "gameover")
 			player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_failure")
 			StunPlayer(player, TF_TRIGGER_STUN_LOSER, false, delay, 0.5)
 		}
