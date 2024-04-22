@@ -320,8 +320,8 @@ Ware_MinigamesPlayed	  <- 0
 
 if (!("Ware_RoundsPlayed" in this))
 	Ware_RoundsPlayed     <- 0
-
-Ware_Theme                <- "_default"
+if (!("Ware_Theme" in this))
+	Ware_Theme            <- Ware_Themes[0][0]
 
 if (!("Ware_Players" in this))
 {
@@ -516,7 +516,7 @@ function Ware_PlayGameSound(player, name, flags = 0)
 	if (Ware_GameSounds.themable_sounds.find(name) != null)
 		path <- format("%s/%s", Ware_Theme, name)
 	else
-		path <- format("_default/%s", name)
+		path <- format("%s/%s", Ware_Themes[0][0], name)
 	
 	if (player)
 		PlaySoundOnClient(player, format("tf2ware_ultimate/music_game/%s.mp3", path), 1.0, 100 * Ware_GetPitchFactor(), flags)
@@ -1206,7 +1206,7 @@ function Ware_BeginIntermission(is_boss)
 		Ware_DebugOldTheme = Ware_Theme
 		
 		if (Ware_DebugForceTheme == "default")
-			Ware_Theme = "_default"
+			Ware_Theme = Ware_Themes[0][0]
 		else
 		{
 			Ware_Theme = Ware_DebugForceTheme
@@ -1221,6 +1221,9 @@ function Ware_BeginIntermission(is_boss)
 		Ware_Theme = Ware_DebugOldTheme
 		Ware_DebugOldTheme = ""
 	}
+	
+	if (Ware_Theme == "")
+		Ware_Theme = Ware_Themes[0][0]
 	
 	foreach (player in Ware_Players)
 	{
@@ -1772,6 +1775,11 @@ function Ware_GameOver()
 		}
 	}
 	
+	CreateTimer(function() {
+		foreach(player in Ware_Players)
+			Ware_PlayGameSound(player, "results")
+	}, 5.0)
+	
 	if (winner_count > 1)
 	{
 		Ware_ChatPrint(null, "{color}The winners each with {int} points:", TF_COLOR_DEFAULT, highest_score)
@@ -2044,6 +2052,7 @@ function OnGameEvent_teamplay_round_start(params)
 		player.GetScriptScope().ware_data.score = 0
 		EntFireByHandle(ClientCmd, "Command", "r_cleardecals", -1, player, null)
 		BrickPlayerScore(player)
+		Ware_PlayGameSound(player, "results", SND_STOP)
 	}
 	
 	if (IsInWaitingForPlayers())

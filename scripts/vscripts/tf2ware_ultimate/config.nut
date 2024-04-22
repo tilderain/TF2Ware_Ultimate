@@ -105,6 +105,7 @@ Ware_GameSounds <-
 		"intro"
 		"lets_get_started"
 		"mapend"
+		"results"
 		"speedup"
 		"victory"
 	]
@@ -113,6 +114,7 @@ Ware_GameSounds <-
 	[
 		"failure"
 		"intro"
+		"results"
 		"victory"
 	]
 }
