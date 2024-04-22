@@ -87,6 +87,7 @@ Ware_Themes <-
 [
 	// path      name in case we want to display it anywhere
 	["_default",      "TF2Ware"],
+	["ds_jimmyt",     "Jimmy T. (DS)"],
 	["wii_katandana", "Kat & Ana (Wii)"],
 	["wii_mona",      "Mona (Wii)"],
 	
