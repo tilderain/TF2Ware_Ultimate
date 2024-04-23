@@ -85,9 +85,10 @@ Ware_Bossgames <-
 
 Ware_Themes <-
 [
-	// path      name in case we want to display it anywhere
-	["_default",      "TF2Ware"],
-	["ds_jimmyt",     "Jimmy T. (DS)"],
+	// path           name in case we want to display it anywhere
+	["_default",      "TF2Ware Ultimate"],
+	["ds_jimmyt",     "Jimmy T. (DS - Touched!)"],
+	["ds_orbulon"     "Orbulon (DS - D.I.Y.)"],
 	["wii_katandana", "Kat & Ana (Wii)"],
 	["wii_mona",      "Mona (Wii)"],
 	
