@@ -1,5 +1,6 @@
 # Hammer
 *.bsp
+*.bsp.unpacked
 *.vmx
 *.log
 *.prt
