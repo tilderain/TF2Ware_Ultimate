@@ -88,6 +88,7 @@ Ware_Themes <-
 	// path           name in case we want to display it anywhere
 	["_default",      "TF2Ware Ultimate"],
 	["ds_jimmyt",     "Jimmy T. (DS - Touched!)"],
+	["ds_wario",      "Wario (DS - Touched!)"],
 	["ds_warioman",   "Warioman (DS - Touched!)"],
 	["ds_orbulon"     "Orbulon (DS - D.I.Y.)"],
 	["wii_katandana", "Kat & Ana (Wii)"],
