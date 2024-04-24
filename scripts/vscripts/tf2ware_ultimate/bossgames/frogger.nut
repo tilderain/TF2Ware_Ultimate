@@ -40,7 +40,7 @@ function OnStart()
 		// show hats
 		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
 		{
-			if (wearable.LookupBone("bip_head") >= 0)
+			if (startswith(wearable.GetClassname(), "tf_wearable") && wearable.LookupBone("bip_head") >= 0)
 				wearable.SetDrawEnabled(true)
 		}
 	}
