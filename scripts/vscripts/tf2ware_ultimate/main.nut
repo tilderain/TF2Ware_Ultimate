@@ -281,13 +281,16 @@ if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
 }
 
 Ware_Started			  <- false
+Ware_Finished             <- false
 Ware_TimeScale			  <- 1.0
 
 if (!("Ware_DebugStop" in this))
 {
-	Ware_DebugStop            <- false
-	Ware_DebugForceMinigame   <- ""
-	Ware_DebugForceBossgame   <- ""
+	Ware_DebugStop            	<- false
+	Ware_DebugForceMinigame   	<- ""
+	Ware_DebugForceBossgame   	<- ""
+	Ware_DebugForceMinigameOnce <- false
+	Ware_DebugForceBossgameOnce <- false
 }
 Ware_DebugGameOver		  <- false
 
@@ -1252,18 +1255,45 @@ function Ware_StartMinigame(is_boss)
 		local is_forced = false
 		if (try_debug)
 		{
-			if (Ware_DebugForceBossgame.len() > 0)
+			do 
 			{
-				minigame = Ware_DebugForceBossgame
-				is_boss = true
-				is_forced = true
+				if (Ware_DebugForceBossgame.len() > 0)
+				{
+					if (Ware_DebugForceBossgameOnce)
+					{
+						if (is_boss)
+						{
+							minigame = Ware_DebugForceBossgame
+							Ware_DebugForceBossgame = ""
+							Ware_DebugForceBossgameOnce = false
+							is_forced = true			
+							break
+						}
+					}
+					else
+					{
+						minigame = Ware_DebugForceBossgame
+						is_boss = true
+						is_forced = true
+						break
+					}
+				}
+				
+				if (Ware_DebugForceMinigame.len() > 0)
+				{
+					minigame = Ware_DebugForceMinigame
+					if (Ware_DebugForceMinigameOnce)
+					{
+						Ware_DebugForceMinigame = ""
+						Ware_DebugForceMinigameOnce = false
+					}
+					is_boss = false
+					is_forced = true
+					break
+				}	
 			}
-			else if (Ware_DebugForceMinigame.len() > 0)
-			{
-				minigame = Ware_DebugForceMinigame
-				is_boss = false
-				is_forced = true
-			}		
+			while (0)
+			
 			try_debug = false
 		}
 		else
@@ -1690,14 +1720,11 @@ function Ware_EndMinigameInternal()
 	Ware_MinigameScope.clear()
 	Ware_MinigameOverlay2Set = false
 	
-	local boss_threshold = 20
-	local speed_threshold = 5
-	
-	if (Ware_MinigamesPlayed > boss_threshold || Ware_DebugGameOver)
+	if (Ware_MinigamesPlayed > Ware_BossThreshold || Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), 2.0)
-	else if (Ware_MinigamesPlayed == boss_threshold)
+	else if (Ware_MinigamesPlayed == Ware_BossThreshold)
 		CreateTimer(@() Ware_BeginBoss(), 2.0)
-	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % speed_threshold == 0)
+	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % Ware_SpeedUpThreshold == 0)
 		CreateTimer(@() Ware_Speedup(), 2.0)
 	else
 		CreateTimer(@() Ware_BeginIntermission(false), 2.0)
@@ -1705,6 +1732,8 @@ function Ware_EndMinigameInternal()
 
 function Ware_GameOver()
 {
+	Ware_Finished = true
+	
 	local highest_players = Ware_MinigameHighScorers
 	highest_players = highest_players.filter(@(i, player) player.IsValid())
 	
@@ -1928,8 +1957,6 @@ function OnScriptHook_OnTakeDamage(params)
 			params.damage = 0
 			params.early_out = true
 		}
-		
-		return
 	}
 		
 	local victim = params.const_entity
@@ -1945,7 +1972,7 @@ function OnScriptHook_OnTakeDamage(params)
 		same_team = true
 	}
 
-	if (Ware_Minigame.friendly_fire)
+	if (!Ware_Minigame || Ware_Minigame.friendly_fire)
 	{
 		params.force_friendly_fire = true
 		
@@ -1992,7 +2019,8 @@ function OnScriptHook_OnTakeDamage(params)
 		}
 	}
 	
-	if (Ware_Minigame.cb_on_take_damage(params) == false)
+	if (Ware_Minigame != null 
+		&& Ware_Minigame.cb_on_take_damage(params) == false)
 	{
 		params.damage = 0
 		params.early_out = true
@@ -2178,26 +2206,31 @@ function OnGameEvent_teamplay_game_over(params)
 		Ware_PlayGameSound(player, "mapend")
 }
 
+function Ware_DevCommandForceMinigame(player, text, is_boss, once)
+{
+	local gamename = is_boss ? "Ware_DebugForceBossgame" : "Ware_DebugForceMinigame"
+	local args = split(text, " ")
+	
+	if (args.len() >= 1)
+		ROOT[gamename] = args[0]
+	else
+		ROOT[gamename] = ""
+		
+	ROOT[gamename + "Once"] = once	
+	
+	local name = is_boss ? "bossgame" : "minigame"
+	if (once)
+		Ware_ChatPrint(player, "Setting next {str} to '{str}'", name, ROOT[gamename])	
+	else
+		Ware_ChatPrint(player, "Forced {str} to '{str}'", name, ROOT[gamename])	
+}
+
 Ware_DevCommands <-
 {
-	"forceminigame" : function(player, text)
-	{
-		local args = split(text, " ")
-		if (args.len() >= 1)
-			Ware_DebugForceMinigame = args[0]
-		else
-			Ware_DebugForceMinigame = ""
-		Ware_ChatPrint(player, "Forced minigame to '{str}'", Ware_DebugForceMinigame)
-	}
-	"forcebossgame" : function(player, text)
-	{
-		local args = split(text, " ")
-		if (args.len() >= 1)
-			Ware_DebugForceBossgame = args[0]
-		else
-			Ware_DebugForceBossgame = ""
-		Ware_ChatPrint(player, "Forced bossgame to '{str}'", Ware_DebugForceBossgame)
-	}
+	"nextminigame"  : function(player, text) { Ware_DevCommandForceMinigame(player, text, false, true)  }
+	"nextbossgame"  : function(player, text) { Ware_DevCommandForceMinigame(player, text, true, true)   }
+	"forceminigame" : function(player, text) { Ware_DevCommandForceMinigame(player, text, false, false) }
+	"forcebossgame" : function(player, text) { Ware_DevCommandForceMinigame(player, text, true, false)  }
 	"restart" : function(player, text)
 	{
 		SetConvarValue("mp_restartgame_immediate", 1)

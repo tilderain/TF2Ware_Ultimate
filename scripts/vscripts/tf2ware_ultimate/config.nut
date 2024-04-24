@@ -1,3 +1,6 @@
+Ware_BossThreshold     <- 20
+Ware_SpeedUpThreshold  <- 5
+
 Ware_Minigames <-
 [
 	"airblast"        
