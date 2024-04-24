@@ -5,6 +5,7 @@ minigame <- Ware_MinigameData
 	description = "Catch the money!"
 	duration    = 30.0
 	music       = "casino"
+	thirdperson = true
 })
 
 cash_models  <- 
