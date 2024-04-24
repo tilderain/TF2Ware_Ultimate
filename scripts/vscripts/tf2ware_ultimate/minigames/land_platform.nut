@@ -1,3 +1,6 @@
+// 0: Iron Bomber
+// 1: Thermal Thruster
+
 mode <- RandomInt(0, 1)
 
 minigame <- Ware_MinigameData
@@ -5,7 +8,7 @@ minigame <- Ware_MinigameData
 	name          = "Land the Platform"
 	author        = "ficool2"
 	description   = "Land on the platform!"
-	duration      = mode == 0 ? 6.0 : 4.0
+	duration      = mode == 0 ? 6.0 : 5.0
 	location      = "factoryplatform"
 	music         = mode == 0 ? "sweetdays" : "surfin"
 })
