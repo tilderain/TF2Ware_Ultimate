@@ -1218,7 +1218,7 @@ function Ware_BeginBoss()
 
 function Ware_Speedup()
 {
-	Ware_SetTimeScale(Ware_TimeScale + 0.25)
+	Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
 	
 	foreach (player in Ware_Players)
 	{

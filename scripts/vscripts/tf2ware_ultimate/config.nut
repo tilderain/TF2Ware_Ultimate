@@ -1,5 +1,6 @@
 Ware_BossThreshold     <- 20
 Ware_SpeedUpThreshold  <- 5
+Ware_SpeedUpInterval   <- 0.2
 
 Ware_Minigames <-
 [
