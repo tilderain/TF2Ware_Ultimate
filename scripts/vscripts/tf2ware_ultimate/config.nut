@@ -88,7 +88,7 @@ Ware_Themes <-
 	// path           name in case we want to display it anywhere
 	["_default",      "TF2Ware Ultimate"],
 	["3ds_ashley",    "Ashley (3DS)"],
-	["3ds_jimmy",     "Jimmy T. (3DS)"],
+	["3ds_jimmyt",    "Jimmy T. (3DS)"],
 	["ds_jimmyt",     "Jimmy T. (DS - Touched!)"],
 	["ds_wario",      "Wario (DS - Touched!)"],
 	["ds_warioman",   "Warioman (DS - Touched!)"],
