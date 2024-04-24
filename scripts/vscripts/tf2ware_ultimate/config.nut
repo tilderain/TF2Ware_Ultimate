@@ -91,6 +91,7 @@ Ware_Themes <-
 	["ds_wario",      "Wario (DS - Touched!)"],
 	["ds_warioman",   "Warioman (DS - Touched!)"],
 	["ds_orbulon"     "Orbulon (DS - D.I.Y.)"],
+	["ds_shuffle",    "Shuffle (DS - D.I.Y.)"],
 	["wii_katandana", "Kat & Ana (Wii)"],
 	["wii_mona",      "Mona (Wii)"],
 	
