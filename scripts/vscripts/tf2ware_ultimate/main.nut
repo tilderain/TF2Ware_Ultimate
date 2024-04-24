@@ -2086,8 +2086,8 @@ function OnGameEvent_player_spawn(params)
     local player = GetPlayerFromUserID(params.userid)
     if (player == null)
 		return
-		
-	if (params.team == TEAM_UNASSIGNED)
+	
+	if (Ware_Players.find(player) == null)
 	{
 		MarkForPurge(player)
 		player.ValidateScriptScope()
@@ -2096,7 +2096,8 @@ function OnGameEvent_player_spawn(params)
 		scope.ware_minidata <- {}
 		Ware_Players.append(player)
 		Ware_PlayersData.append(scope.ware_data)
-		return
+		if (params.team == TEAM_UNASSIGNED)
+			return
 	}
 	
 	local data = player.GetScriptScope().ware_data
