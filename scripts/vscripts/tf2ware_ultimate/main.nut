@@ -565,7 +565,7 @@ function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y 
 		y        = y
 	})
 	
-	EntityEntFire(Ware_TextManager, "FireUser1");
+	EntityEntFire(Ware_TextManager, "FireUser1")
 	if (player)
 	{
 		EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null)
@@ -575,7 +575,7 @@ function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y 
 		foreach (data in Ware_MinigamePlayers)
 			EntFireByHandle(Ware_TextManager, "Display", "", -1, data.player, null)
 	}
-	EntityEntFire(Ware_TextManager, "FireUser2");
+	EntityEntFire(Ware_TextManager, "FireUser2")
 }
 
 function Ware_TextHookBegin()
@@ -1596,7 +1596,7 @@ function Ware_EndMinigameInternal()
 		}
 		
 		if (Ware_DeferredPlayers.len() > 0)
-			EntityEntFire(World, "CallScriptFunction", "Ware_DeferredPlayerTeleport");
+			EntityEntFire(World, "CallScriptFunction", "Ware_DeferredPlayerTeleport")
 		
 		Ware_MinigameHomeLocation.Teleport(players)
 		Ware_MinigameLocation = Ware_MinigameHomeLocation
@@ -1777,7 +1777,7 @@ function Ware_GameOver()
 				player           = -1
 			})
 		}
-	});
+	})
 	EntityEntFire(win, "RoundWin")
 }
 
@@ -2091,13 +2091,13 @@ function OnGameEvent_player_spawn(params)
 			player.AddCond(TF_COND_TELEPORTED)
 		
 		if (!data.start_sound)
-			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 2.0);
+			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 2.0)
 		
 		local melee = Ware_ParseLoadout(player)
 		if (melee != null)
 			player.Weapon_Switch(melee)
 			
-		EntityEntFire(player, "CallScriptFunction", "PlayerPostSpawn");
+		EntityEntFire(player, "CallScriptFunction", "PlayerPostSpawn")
 		
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
 		player.SetCustomModel("")
