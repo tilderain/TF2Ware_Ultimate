@@ -45,6 +45,7 @@ words <-
 	"Uber"
 	"Cloak"
 	"Sandvich"
+	"Sandwich"
 	"Bonk"
 	"Hale"
 	"Crate"
@@ -86,10 +87,17 @@ words <-
 	"TF2Ware"
 	"Redsun"
 	"Frog"
+	"Meow"
+	"Cat"
+	"Skull"
+	"Cookie"
+	"Turtle"
 	
 	// these two are evil but rare
 	"Bombinomicon"
 	"Shahanshah"
+	// I'm so sorry
+	"Claidheamh Mor"
 ]
 
 first <- false
