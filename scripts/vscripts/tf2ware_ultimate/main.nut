@@ -1203,7 +1203,8 @@ function Ware_BeginIntermission(is_boss)
 	
 	if (Ware_DebugForceTheme.len() > 0)
 	{
-		Ware_DebugOldTheme = Ware_Theme
+		if (Ware_DebugOldTheme == "")
+			Ware_DebugOldTheme = Ware_Theme
 		
 		if (Ware_DebugForceTheme == "default")
 			Ware_Theme = Ware_Themes[0][0]
