@@ -1024,6 +1024,11 @@ function Ware_RemoveUndesiredWearables(player)
 	}
 }
 
+function Ware_GetPlayerAmmo(player, ammo_type)
+{
+	return GetPropIntArray(player, "m_iAmmo", ammo_type)
+}
+
 function Ware_SetPlayerAmmo(player, ammo_type, ammo)
 {
 	SetPropIntArray(player, "m_iAmmo", ammo, ammo_type)

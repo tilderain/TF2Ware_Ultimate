@@ -69,6 +69,13 @@ function OnUpdate()
 		grenade.RemoveSolidFlags(FSOLID_TRIGGER)
 		grenade.KeyValueFromString("classname", "ware_projectile_pipe")
 	}
+	
+	foreach(data in Ware_MinigamePlayers)
+	{
+		local player = data.player
+		if (Ware_GetPlayerAmmo(player, TF_AMMO_PRIMARY) == 0)
+			SetPropInt(player, "m_nImpulse", 101)
+	}
 }
 
 function OnEnd()
