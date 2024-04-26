@@ -7,7 +7,7 @@ minigame <- Ware_MinigameData
 		"Don't get jumped on!"
 		"Jump on a Heavy's head!"
 	]
-	duration       = 4.0
+	duration       = 5.0
 	music          = "clumsy"
 	custom_overlay =
 	[
@@ -40,6 +40,7 @@ function OnStart()
 		{
 			Ware_SetPlayerMission(player, 0)
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS)
+			Ware_AddPlayerAttribute(player, "no_jump", 1.0, minigame.duration)
 		}
 	}	
 }
