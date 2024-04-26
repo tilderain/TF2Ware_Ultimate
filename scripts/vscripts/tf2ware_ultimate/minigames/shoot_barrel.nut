@@ -19,7 +19,7 @@ PrecacheScriptSound(hit_sound)
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Reserve Shooter");	
-	Ware_CreateTimer(@() SpawnBarrel(), 0.1)
+	Ware_CreateTimer(@() SpawnBarrel(), 1.0)
 }
 
 function SpawnBarrel()
