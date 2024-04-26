@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name        = "Catch the Money"
 	author      = "ficool2"
 	description = "Catch the money!"
-	duration    = 30.0
+	duration    = 18.0
 	music       = "casino"
 	thirdperson = true
 })
