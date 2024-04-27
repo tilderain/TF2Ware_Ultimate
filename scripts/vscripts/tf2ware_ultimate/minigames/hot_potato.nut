@@ -43,6 +43,7 @@ function SetHotPotato(player)
 	hot_potato_wearable = Ware_SpawnWearable(player, bomb_model)
 	SetPropInt(hot_potato_wearable, "m_fEffects", 0)
 	SetEntityParent(hot_potato_wearable, hot_potato, "head")
+	SetPropFloat(hot_potato_wearable, "m_flModelScale", 1.5)
 	
 	hot_potato_timer = Time() + 0.5
 }
