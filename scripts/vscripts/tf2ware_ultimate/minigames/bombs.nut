@@ -34,7 +34,7 @@ function SpawnBombs()
 		
 		SetPropFloat(pipe, "m_flDamage", 250.0)
 		SetPropInt(pipe, "m_iTeamNum", TEAM_SPECTATOR)
-		SetPropFloat(pipe, "m_flModelScale", 1.1)
+		SetPropFloat(pipe, "m_flModelScale", 2.0)
 		
 		local origin = data.player.GetOrigin()
 		origin += Vector(RandomFloat(-150, 150), RandomFloat(-150, 150), RandomFloat(350, 450))
@@ -45,5 +45,6 @@ function SpawnBombs()
 		Ware_SlapEntity(pipe, 160.0)
 		
 		pipe.DispatchSpawn()
+		pipe.SetModelSimple("models/workshop/weapons/c_models/c_quadball/w_quadball_grenade.mdl")
 	}
 }

@@ -77,6 +77,7 @@ function OnFireRocketPost()
 		{
 			rocket.SetOwner(activator)
 			rocket.SetTeam(TEAM_SPECTATOR)
+			SetPropFloat(rocket, "m_flModelScale", 1.5)
 			rocket.KeyValueFromString("classname", "ware_projectile")
 		}
 	}
