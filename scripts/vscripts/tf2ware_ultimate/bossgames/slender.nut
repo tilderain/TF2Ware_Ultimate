@@ -91,6 +91,7 @@ local page_add_time = 12.0
 local pages_max = pages_info.len()
 
 local end_time = 0.0
+local end_time_max = 0.0
 
 function OnStart()
 {
@@ -149,6 +150,7 @@ function OnStart()
 	PlaySoundOnAllClients(sound_intro)
 	
 	end_time = Time() + (minigame.duration - pages_max * page_add_time)
+	end_time_max = end_time
 	
 	Ware_CreateTimer(function() 
 	{
@@ -247,6 +249,11 @@ function OnTakeDamage(params)
 		
 		pages_collected++
 		end_time += page_add_time
+		if (end_time > end_time_max)
+		{
+			end_time = Time() + (minigame.duration - pages_max * page_add_time)
+			end_time_max = end_time
+		}
 		ShowStatusText()
 	}	
 }
