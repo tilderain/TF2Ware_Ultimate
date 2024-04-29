@@ -22,6 +22,7 @@ minigame <- Ware_MinigameData
 
 kamikaze <- null
 bomb <- null
+annotation_id <- null
 players_killed <- 0
 player_threshold <- 2
 
@@ -71,7 +72,9 @@ function OnStart()
 			Ware_SetPlayerMission(player, 0)
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT)
 		}
-	}	
+	}
+	
+	annotation_id = Ware_ShowAnnotation(kamikaze, "Avoid me!")
 }
 
 function OnEnd()
@@ -106,6 +109,10 @@ function OnPlayerDeath(params)
 {
 	local victim = GetPlayerFromUserID(params.userid)
 
+	// get rid of annotation a bit more cleanly
+	if (victim == kamikaze)
+		Ware_HideAnnotation(annotation_id)
+	
 	if (params.damagebits & DMG_BLAST)
 	{
 		players_killed++

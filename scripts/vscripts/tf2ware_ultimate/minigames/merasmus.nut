@@ -34,6 +34,8 @@ function SpawnMerasmus()
 		origin = Ware_MinigameLocation.center + Vector(0, 0, 32),
 		modelscale = 0.5,
 	})
+	
+	Ware_ShowAnnotation(merasmus.GetOrigin() + Vector(0, 0, 80), "Stun me!")
 }
 
 function OnUpdate()

@@ -10,10 +10,12 @@ minigame <- Ware_MinigameData
 
 highest_player <- null
 highest_height <- 0.0
+target_height  <- 1500.0
 
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null, { "air dash count" : 9999 })
+	Ware_ShowAnnotation(Ware_MinigameLocation.center + Vector(0, 0, target_height), "Goal!")
 }
 
 function OnUpdate()
@@ -35,7 +37,7 @@ function OnUpdate()
 			highest_height = height
 		}
 		
-		if (height > 1500.0)
+		if (height > target_height)
 			Ware_PassPlayer(player, true)
 	}
 }

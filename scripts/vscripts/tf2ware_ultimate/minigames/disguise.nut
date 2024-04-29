@@ -43,17 +43,7 @@ function OnStart()
 		modelscale  = 1.25
 		defaultanim = RandomInt(0, 1) ? "taunt_aerobic_A" : "taunt_aerobic_B"
 	})
-	SendGlobalGameEvent("show_annotation",
-	{
-		worldPosX       = pos.x
-		worldPosY       = pos.y
-		worldPosZ       = pos.z + 128.0
-		id              = 1
-		text            = "MATCH ME!"
-		lifetime        = minigame.duration
-		show_distance   = false
-		show_effect     = false,
-	})
+	Ware_ShowAnnotation(pos + Vector(0, 0, 128), "MATCH ME!")
 }
 
 function OnEnd()

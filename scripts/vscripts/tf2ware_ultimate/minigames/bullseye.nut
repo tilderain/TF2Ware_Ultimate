@@ -37,6 +37,8 @@ function OnStart()
 	})	
 	SetEntityParent(sprite, prop)
 	
+	Ware_ShowAnnotation(sprite, "Bullseye!")
+	
 	foreach (data in Ware_MinigamePlayers)
 		Ware_GetPlayerMiniData(data.player).points <- 0
 }
