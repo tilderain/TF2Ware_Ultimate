@@ -606,7 +606,9 @@ function Ware_ShowAnnotation(pos, text, lifetime = -1)
 		vector = pos.GetOrigin()
 		entindex = pos.entindex()
 	}
-	
+	else
+		return
+
 	SendGlobalGameEvent("show_annotation",
 		{
 			worldPosX = vector.x,
