@@ -332,7 +332,6 @@ if (!("Ware_Players" in this))
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
 }
 
-// if (!("Ware_AnnotationIDs" in this))
 Ware_AnnotationIDs   <- 0
 
 function Ware_SourcemodRoutine(name, keyvalues)
