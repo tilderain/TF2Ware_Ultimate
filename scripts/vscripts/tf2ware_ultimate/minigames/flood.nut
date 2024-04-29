@@ -22,9 +22,14 @@ function OnStart()
 	local location_name = Ware_MinigameLocation.name
 	
 	platform_index = RandomInt(1, 4)
+	
+	local platform_name = format("%s_platform_%d", location_name, platform_index)
+	
 	EntFire(location_name + "_flood", "Open", "", 2)
 	EntFire(location_name + "_croc", "Enable", "", 2)
-	EntFire(format("%s_platform_%d", location_name, platform_index), "Close")
+	EntFire(platform_name, "Close")
+	
+	Ware_ShowAnnotation(Entities.FindByName(null, platform_name).GetOrigin() + Vector(0, 0, 100), "GET ON ME!")
 	
 	// the waterfall model is really busted so have to do this in an ugly manner
 	local offset = Vector(444, 256, 0)
