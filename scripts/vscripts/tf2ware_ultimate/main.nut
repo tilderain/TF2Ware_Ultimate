@@ -41,7 +41,7 @@ function Ware_ErrorHandler(e)
 	if (Ware_ListenHost && Ware_ListenHost.IsValid() && developers.find(Ware_ListenHost) == null)
 		developers.append(Ware_ListenHost)
 		
-    local Print = function(msg)
+	local Print = function(msg)
 	{
 		// dev chat
 		foreach (developer in developers)
@@ -60,23 +60,23 @@ function Ware_ErrorHandler(e)
 			ClientPrint(developer, HUD_PRINTTALK, "\x07FF0000A script error has occured. Check console for details")
 	}
 	
-    Print(format("\n[TF2Ware] AN ERROR HAS OCCURRED [%s]", e))
-    Print("CALLSTACK")
-    local s, l = 2
-    while (s = getstackinfos(l++))
-        Print(format("\t*FUNCTION [%s()] %s line [%d]", s.func, s.src, s.line))
-    Print("LOCALS")
-    if (s2)
+	Print(format("\n[TF2Ware] AN ERROR HAS OCCURRED [%s]", e))
+	Print("CALLSTACK")
+	local s, l = 2
+	while (s = getstackinfos(l++))
+		Print(format("\t*FUNCTION [%s()] %s line [%d]", s.func, s.src, s.line))
+	Print("LOCALS")
+	if (s2)
 	{
-        foreach (n, v in s2.locals) 
+		foreach (n, v in s2.locals) 
 		{
-            local t = type(v)
-            t ==    "null" ? Print(format("\t[%s] NULL"  , n))    :
-            t == "integer" ? Print(format("\t[%s] %d"    , n, v)) :
-            t ==   "float" ? Print(format("\t[%s] %.14g" , n, v)) :
-            t ==  "string" ? Print(format("\t[%s] \"%s\"", n, v)) :
-                             Print(format("\t[%s] %s %s" , n, t, v.tostring()))
-        }
+			local t = type(v)
+			t ==    "null" ? Print(format("\t[%s] NULL"  , n))    :
+			t == "integer" ? Print(format("\t[%s] %d"    , n, v)) :
+			t ==   "float" ? Print(format("\t[%s] %.14g" , n, v)) :
+			t ==  "string" ? Print(format("\t[%s] \"%s\"", n, v)) :
+							 Print(format("\t[%s] %s %s" , n, t, v.tostring()))
+		}
 	}
 }
 seterrorhandler(Ware_ErrorHandler)
@@ -142,6 +142,7 @@ class Ware_MinigameData
 		entities       = []
 		cleanup_names  = {}
 		timers		   = []
+		annotations    = []
 		
 		if (table)
 		{
@@ -204,6 +205,8 @@ class Ware_MinigameData
 	cleanup_names	= null
 	// Timers spawned by the minigame, stopped after it ends
 	timers			= null
+	// Annotations created by the minigame, hidden after it ends
+	annotations		= null
 	// Player condition added by the minigame, reverted after end
 	condition		= null
 	
@@ -328,6 +331,9 @@ if (!("Ware_Players" in this))
 	// this shuts up incursion distance warnings from the nav mesh
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
 }
+
+// if (!("Ware_AnnotationIDs" in this))
+Ware_AnnotationIDs   <- 0
 
 function Ware_SourcemodRoutine(name, keyvalues)
 {
@@ -579,6 +585,64 @@ function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y 
 			EntFireByHandle(Ware_TextManager, "Display", "", -1, data.player, null)
 	}
 	EntityEntFire(Ware_TextManager, "FireUser2")
+}
+
+function Ware_ShowAnnotation(pos, text, lifetime = -1)
+{
+	// pos can be a vector or an entity handle. if it's a handle it'll follow that entity.
+	// if you want it to start at an entity but stay there, pass that entity's origin instead.
+	// annotations created outside of minigames will stay around until theyre hidden manually
+	
+	local vector, entindex
+	local id = Ware_AnnotationIDs++
+	
+	if (typeof(pos) == "Vector")
+	{
+		vector = pos
+		entindex = 0
+	}
+	else if (typeof(pos) == "instance")
+	{
+		vector = pos.GetOrigin()
+		entindex = pos.entindex()
+	}
+	
+	SendGlobalGameEvent("show_annotation",
+		{
+			worldPosX = vector.x,
+			worldPosY = vector.y,
+			worldPosZ = vector.z,
+			id = id,
+			text = text,
+			lifetime = lifetime,
+			visibilityBitfield = 0,
+			follow_entindex = entindex,
+			show_distance = false,
+			show_effect = false,
+			play_sound = "common/null.wav",
+		})
+	
+	if (Ware_Minigame != null)
+		Ware_Minigame.annotations.append(id)
+	
+	return id
+}
+
+function Ware_HideAnnotation(id)
+{
+	SendGlobalGameEvent("hide_annotation", { id = id })
+	if (Ware_Minigame != null)
+	{
+		local idx = Ware_Minigame.annotations.find(id)
+		if (idx != null)
+			Ware_Minigame.annotations.remove(idx)
+	}
+}
+
+function Ware_HideAllAnnotations()
+{
+	for (local i = 0; i < Ware_AnnotationIDs; i++)
+		SendGlobalGameEvent("hide_annotation", { id = i })
 }
 
 function Ware_TextHookBegin()
@@ -1720,6 +1784,9 @@ function Ware_EndMinigameInternal()
 		
 	foreach (timer in Ware_Minigame.timers)
 		KillTimer(timer)
+		
+	foreach (annotation in Ware_Minigame.annotations)
+		Ware_HideAnnotation(annotation)
 	
 	Ware_Minigame = null
 	Ware_MinigameScope.clear()
@@ -2088,8 +2155,8 @@ function PlayerPostSpawn()
 
 function OnGameEvent_player_spawn(params)
 {
-    local player = GetPlayerFromUserID(params.userid)
-    if (player == null)
+	local player = GetPlayerFromUserID(params.userid)
+	if (player == null)
 		return
 	
 	if (Ware_Players.find(player) == null)
@@ -2141,8 +2208,8 @@ function OnGameEvent_player_spawn(params)
 
 function OnGameEvent_player_initial_spawn(params)
 {
-    local player = PlayerInstanceFromIndex(params.index)
-    if (player == null)
+	local player = PlayerInstanceFromIndex(params.index)
+	if (player == null)
 		return
 	
 	BrickPlayerScore(player)
@@ -2312,8 +2379,8 @@ Ware_DevCommands <-
 
 function OnGameEvent_player_say(params)
 {	
-    local player = GetPlayerFromUserID(params.userid)
-    if (player == null)
+	local player = GetPlayerFromUserID(params.userid)
+	if (player == null)
 		return
 		
 	local text = params.text
