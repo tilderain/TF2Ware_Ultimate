@@ -81,6 +81,8 @@ function OnStart()
 			player.AddCond(TF_COND_SPEED_BOOST)
 		}
 	}
+	
+	Ware_ShowAnnotation(piggybacker, "Jump on my back!")
 }
 
 function PiggybackUnparent(player, invis_hack)
