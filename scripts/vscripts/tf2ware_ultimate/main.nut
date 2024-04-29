@@ -642,7 +642,7 @@ function Ware_HideAnnotation(id)
 function Ware_HideAllAnnotations()
 {
 	for (local i = 0; i < Ware_AnnotationIDs; i++)
-		SendGlobalGameEvent("hide_annotation", { id = i })
+		Ware_HideAnnotation(i)
 }
 
 function Ware_TextHookBegin()
