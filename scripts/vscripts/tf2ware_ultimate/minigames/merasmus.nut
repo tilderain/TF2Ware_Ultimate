@@ -50,15 +50,19 @@ function OnUpdate()
 
 function OnTakeDamage(params)
 {
+	local attacker = params.attacker
 	if (params.const_entity.GetClassname() == "merasmus")
 	{
-		local attacker = params.attacker
 		if (attacker
 			&& attacker.IsPlayer()
 			&& params.damage_stats == TF_DMG_CUSTOM_MERASMUS_PLAYER_BOMB)
 		{
 			Ware_PassPlayer(attacker, true)
 		}
+	}
+	else if (attacker && attacker.GetClassname() == "merasmus")
+	{
+		params.damage *= 5.0
 	}
 }
 
