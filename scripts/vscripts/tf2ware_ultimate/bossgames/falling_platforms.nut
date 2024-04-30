@@ -8,6 +8,7 @@ minigame <- Ware_MinigameData
 	location       = "hexplatforms"
 	music          = "falling"
 	custom_overlay = "push_enemy"
+	min_players    = 2	
 	start_pass     = true
 	fail_on_death  = true
 	allow_damage   = true
