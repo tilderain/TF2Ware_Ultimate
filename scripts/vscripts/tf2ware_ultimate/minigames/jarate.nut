@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Jarate")
+	Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Jarate", {}, true)
 	Ware_SetGlobalAttribute("applies snare effect", 0.0000001, Ware_GetMinigameTime())
 }
 
