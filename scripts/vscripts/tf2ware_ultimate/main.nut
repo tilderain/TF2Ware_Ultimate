@@ -321,7 +321,10 @@ Ware_MinigamesPlayed	  <- 0
 if (!("Ware_RoundsPlayed" in this))
 	Ware_RoundsPlayed     <- 0
 if (!("Ware_Theme" in this))
-	Ware_Theme            <- Ware_Themes[0][0]
+{
+	Ware_Theme              <- Ware_Themes[0]
+	Ware_CurrentThemeSounds <- {}
+}
 
 if (!("Ware_Players" in this))
 {
@@ -511,12 +514,52 @@ function Ware_CreateTimer(on_timer_func, delay)
 	return timer
 }
 
+function Ware_SetTheme(requested_theme)
+{
+	Ware_Theme <- {}
+	
+	foreach(theme in Ware_Themes)
+	{
+		if (theme.theme_name == requested_theme)
+		{
+			Ware_Theme <- theme
+			break
+		}
+	}
+	
+	if (Ware_Theme == null)
+	{
+		WareError("No theme named '%s' was found. Setting to default theme instead.", requested_theme)
+		Ware_Theme <- Ware_Themes[0]
+	}
+	
+	Ware_SetupThemeSounds()
+}
+
+function Ware_SetupThemeSounds()
+{
+	Ware_CurrentThemeSounds <- {}
+	
+	foreach(sound_name in Ware_GameSounds)
+	{
+		if (sound_name in Ware_Theme.sounds)
+		{
+			Ware_CurrentThemeSounds[sound_name] <- [Ware_Theme.theme_name, Ware_Theme.sounds[sound_name]]
+			PrecacheSound(format("tf2ware_ultimate/music_game/%s/%s.mp3", Ware_Theme.theme_name, sound_name))
+		}
+		else if (sound_name in Ware_Themes[0].sounds)
+			Ware_CurrentThemeSounds[sound_name] <- [Ware_Themes[0].theme_name, Ware_Themes[0].sounds[sound_name]]
+	}
+}
+
 function Ware_PlayGameSound(player, name, flags = 0)
 {
-	if (Ware_GameSounds.themable_sounds.find(name) != null)
-		path <- format("%s/%s", Ware_Theme, name)
+	local path
+	
+	if (name in Ware_CurrentThemeSounds)
+		path = format("%s/%s", Ware_CurrentThemeSounds[name][0], name)
 	else
-		path <- format("%s/%s", Ware_Themes[0][0], name)
+		path = format("%s/%s", Ware_Themes[0].theme_name, name)
 	
 	if (player)
 		PlaySoundOnClient(player, format("tf2ware_ultimate/music_game/%s.mp3", path), 1.0, 100 * Ware_GetPitchFactor(), flags)
@@ -1204,27 +1247,21 @@ function Ware_BeginIntermission(is_boss)
 	if (Ware_DebugForceTheme.len() > 0)
 	{
 		if (Ware_DebugOldTheme == "")
-			Ware_DebugOldTheme = Ware_Theme
+			Ware_DebugOldTheme = Ware_Theme.theme_name
 		
 		if (Ware_DebugForceTheme == "default")
-			Ware_Theme = Ware_Themes[0][0]
+			Ware_SetTheme("_default")
 		else
-		{
-			Ware_Theme = Ware_DebugForceTheme
-			foreach(sound in Ware_GameSounds.themable_sounds)
-			{
-				PrecacheSound(format("tf2ware_ultimate/music_game/%s/%s.mp3", Ware_Theme, sound))
-			}
-		}
+			Ware_SetTheme(Ware_DebugForceTheme)
 	}
 	else if (Ware_DebugOldTheme != "")
 	{
-		Ware_Theme = Ware_DebugOldTheme
+		Ware_SetTheme(Ware_DebugOldTheme)
 		Ware_DebugOldTheme = ""
 	}
 	
-	if (Ware_Theme == "")
-		Ware_Theme = Ware_Themes[0][0]
+	if (Ware_Theme == {})
+		Ware_SetTheme("_default")
 	
 	foreach (player in Ware_Players)
 	{
@@ -2065,10 +2102,21 @@ function OnGameEvent_teamplay_round_start(params)
 	
 	// first round always uses default theme
 	if (Ware_RoundsPlayed > 0)
-		Ware_Theme <- Ware_Themes[RandomInt(0, Ware_Themes.len() - 1)][0]
+	{
+		local new_theme
 		
-	foreach(sound in Ware_GameSounds.themable_sounds)
-		PrecacheSound(format("tf2ware_ultimate/music_game/%s/%s.mp3", Ware_Theme, sound))
+		// roll til we get a new one
+		do{
+			new_theme = RandomElement(Ware_Themes)
+		}
+		while (new_theme == Ware_Theme)
+		
+		Ware_Theme <- new_theme
+	}
+		
+	Ware_SetupThemeSounds()
+	
+	Ware_ChatPrint(null, "Theme: {str}", Ware_Theme.visual_name)
 	
 	// putting this here rather than in loop we already have since i want to go after waiting for players check. if that doesnt matter just move this in.
 	foreach(player in Ware_Players)

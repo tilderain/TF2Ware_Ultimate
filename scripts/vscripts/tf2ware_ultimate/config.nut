@@ -85,48 +85,144 @@ Ware_Bossgames <-
 
 Ware_Themes <-
 [
-	// path           name in case we want to display it anywhere
-	["_default",              "TF2Ware Ultimate"], // for the most part this seems to be "Elevator" from smooth moves, with some generic tracks from it too.
-	["3ds_ashley",            "Ashley (3DS)"],
-	["3ds_jimmyt",            "Jimmy T. (3DS)"],
-	["ds_diy_orbulon"         "Orbulon (DS - D.I.Y.)"],
-	["ds_diy_shuffle",        "Shuffle (DS - D.I.Y.)"],
-	["ds_touched_jimmyt",     "Jimmy T. (DS - Touched!)"],
-	["ds_touched_wario",      "Wario (DS - Touched!)"],
-	["ds_touched_warioman",   "Warioman (DS - Touched!)"],
-	["wii_9volt",             "9-Volt (Wii)"],
-	["wii_katandana",         "Kat & Ana (Wii)"],
-	["wii_mona",              "Mona (Wii)"],
+	{
+		theme_name = "_default"
+		visual_name = "TF2Ware Ultimate"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
 	
+	{
+		theme_name = "3ds_ashley"
+		visual_name = "Ashley (3DS)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
+	
+	{
+		theme_name = "3ds_jimmyt"
+		visual_name = "Jimmy T. (3DS)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
+	
+	{
+		theme_name = "ds_diy_orbulon"
+		visual_name = "Orbulon (DS - D.I.Y.)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
+	
+	{
+		theme_name = "ds_diy_shuffle"
+		visual_name = "Shuffle (DS - D.I.Y.)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
+	
+	{
+		theme_name = "ds_touched_jimmyt"
+		visual_name = "Jimmy T. (DS - Touched!)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
+	
+	{
+		theme_name = "ds_touched_wario"
+		visual_name = "Wario (DS - Touched!)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
+	
+	{
+		theme_name = "ds_touched_warioman"
+		visual_name = "Warioman (DS - Touched!)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
+	
+	{
+		theme_name = "wii_9volt"
+		visual_name = "9-Volt (Wii)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
+	
+	{
+		theme_name = "wii_katandana"
+		visual_name = "Kat & Ana (Wii)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
+	
+	{
+		theme_name = "wii_mona"
+		visual_name = "Mona (Wii)"
+		sounds = {
+			"failure": 0.0
+			"intro":   0.0
+			"results": 0.0
+			"victory": 0.0
+		}
+	},
 ]
 
 Ware_GameSounds <-
-{
-	default_sounds =
-	[
-		"boss"
-		"break"
-		"break_end"
-		"failure"
-		"failure_all"
-		"gameclear"
-		"gameover"
-		"intro"
-		"lets_get_started"
-		"mapend"
-		"results"
-		"speedup"
-		"victory"
-	]
-	
-	themable_sounds =
-	[
-		"failure"
-		"intro"
-		"results"
-		"victory"
-	]
-}
+[
+	"boss"
+	"break"
+	"break_end"
+	"failure"
+	"failure_all"
+	"gameclear"
+	"gameover"
+	"intro"
+	"lets_get_started"
+	"mapend"
+	"results"
+	"speedup"
+	"victory"
+]
 
 Ware_MinigameMusic <-
 [
@@ -203,6 +299,6 @@ Ware_BossgameMusic <-
 	"steadynow"
 ]
 
-foreach (sound in Ware_GameSounds.default_sounds)    PrecacheSound(format("tf2ware_ultimate/music_game/_default/%s.mp3", sound))
-foreach (sound in Ware_MinigameMusic)                PrecacheSound(format("tf2ware_ultimate/music_minigame/%s.mp3", sound))
-foreach (sound in Ware_BossgameMusic)                PrecacheSound(format("tf2ware_ultimate/music_bossgame/%s.mp3", sound))
+foreach (sound in Ware_GameSounds)    PrecacheSound(format("tf2ware_ultimate/music_game/_default/%s.mp3", sound))
+foreach (sound in Ware_MinigameMusic) PrecacheSound(format("tf2ware_ultimate/music_minigame/%s.mp3", sound))
+foreach (sound in Ware_BossgameMusic) PrecacheSound(format("tf2ware_ultimate/music_bossgame/%s.mp3", sound))
