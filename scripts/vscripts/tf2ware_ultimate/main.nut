@@ -288,9 +288,9 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugStop            <- false
 	Ware_DebugForceMinigame   <- ""
 	Ware_DebugForceBossgame   <- ""
-	Ware_DebugForceTheme      <- ""
-	Ware_DebugOldTheme        <- ""
 }
+Ware_DebugForceTheme      <- ""
+Ware_DebugOldTheme        <- ""
 Ware_DebugGameOver		  <- false
 
 Ware_TextManagerQueue     <- null
