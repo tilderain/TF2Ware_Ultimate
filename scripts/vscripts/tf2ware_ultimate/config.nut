@@ -89,10 +89,15 @@ Ware_Themes <-
 		theme_name = "_default"
 		visual_name = "TF2Ware Ultimate"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
-			"results": 0.0
-			"victory": 0.0
+			// set to values that were present in main.nut at the relevant places before i changed to this system.
+			"boss":        4.0
+			"failure":     2.0
+			"failure_all": 2.0
+			"gameover":    5.0
+			"intro":       4.0
+			"results":     0.0
+			"speedup":     4.5
+			"victory":     2.000
 		}
 	},
 	
@@ -100,10 +105,10 @@ Ware_Themes <-
 		theme_name = "3ds_ashley"
 		visual_name = "Ashley (3DS)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
+			"failure": 1.968
+			"intro":   2.019
 			"results": 0.0
-			"victory": 0.0
+			"victory": 2.017
 		}
 	},
 	
@@ -111,10 +116,10 @@ Ware_Themes <-
 		theme_name = "3ds_jimmyt"
 		visual_name = "Jimmy T. (3DS)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
+			"failure": 2.1
+			"intro":   2.2
 			"results": 0.0
-			"victory": 0.0
+			"victory": 2.1
 		}
 	},
 	
@@ -122,10 +127,13 @@ Ware_Themes <-
 		theme_name = "ds_diy_orbulon"
 		visual_name = "Orbulon (DS - D.I.Y.)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
-			"results": 0.0
-			"victory": 0.0
+			"boss":     4.119
+			"failure":  2.034
+			"gameover": 4.267
+			"intro":    2.126
+			"results":  0.0
+			"speedup":  4.3
+			"victory":  2.100
 		}
 	},
 	
@@ -133,10 +141,13 @@ Ware_Themes <-
 		theme_name = "ds_diy_shuffle"
 		visual_name = "Shuffle (DS - D.I.Y.)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
-			"results": 0.0
-			"victory": 0.0
+			"boss":     4.008
+			"failure":  1.9
+			"gameover": 4.091
+			"intro":    2.039
+			"results":  0.0
+			"speedup":  3.8
+			"victory":  1.997
 		}
 	},
 	
@@ -144,10 +155,10 @@ Ware_Themes <-
 		theme_name = "ds_touched_jimmyt"
 		visual_name = "Jimmy T. (DS - Touched!)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
+			"failure": 2.2
+			"intro":   2.183
 			"results": 0.0
-			"victory": 0.0
+			"victory": 2.020
 		}
 	},
 	
@@ -155,10 +166,10 @@ Ware_Themes <-
 		theme_name = "ds_touched_wario"
 		visual_name = "Wario (DS - Touched!)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
+			"failure": 2.003
+			"intro":   2.067
 			"results": 0.0
-			"victory": 0.0
+			"victory": 2.05
 		}
 	},
 	
@@ -166,10 +177,10 @@ Ware_Themes <-
 		theme_name = "ds_touched_warioman"
 		visual_name = "Warioman (DS - Touched!)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
+			"failure": 1.977
+			"intro":   2.252
 			"results": 0.0
-			"victory": 0.0
+			"victory": 2.0
 		}
 	},
 	
@@ -177,10 +188,10 @@ Ware_Themes <-
 		theme_name = "wii_9volt"
 		visual_name = "9-Volt (Wii)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
+			"failure": 2.013
+			"intro":   4.025
 			"results": 0.0
-			"victory": 0.0
+			"victory": 1.999
 		}
 	},
 	
@@ -188,10 +199,10 @@ Ware_Themes <-
 		theme_name = "wii_katandana"
 		visual_name = "Kat & Ana (Wii)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
+			"failure": 2.00
+			"intro":   4.000
 			"results": 0.0
-			"victory": 0.0
+			"victory": 2.07
 		}
 	},
 	
@@ -199,10 +210,10 @@ Ware_Themes <-
 		theme_name = "wii_mona"
 		visual_name = "Mona (Wii)"
 		sounds = {
-			"failure": 0.0
-			"intro":   0.0
+			"failure": 2.000
+			"intro":   4.1
 			"results": 0.0
-			"victory": 0.0
+			"victory": 2.097
 		}
 	},
 ]

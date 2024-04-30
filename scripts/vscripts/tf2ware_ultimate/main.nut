@@ -552,6 +552,14 @@ function Ware_SetupThemeSounds()
 	}
 }
 
+function Ware_GetThemeSoundDuration(sound)
+{
+	if (sound in Ware_CurrentThemeSounds)
+		return Ware_CurrentThemeSounds[sound][1]
+	else
+		return Ware_Themes[0].sounds[sound]
+}
+
 function Ware_PlayGameSound(player, name, flags = 0)
 {
 	local path
@@ -1270,7 +1278,7 @@ function Ware_BeginIntermission(is_boss)
 		Ware_ShowScreenOverlay2(player, null)
 	}
 	
-	CreateTimer(@() Ware_StartMinigame(is_boss), 4.0)
+	CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 }
 
 function Ware_BeginBoss()
@@ -1284,7 +1292,7 @@ function Ware_BeginBoss()
 		Ware_ShowScreenOverlay2(player, null)
 	}
 	
-	CreateTimer(@() Ware_BeginIntermission(true), 4.0)
+	CreateTimer(@() Ware_BeginIntermission(true), Ware_GetThemeSoundDuration("boss"))
 }
 
 function Ware_Speedup()
@@ -1298,7 +1306,7 @@ function Ware_Speedup()
 		Ware_ShowScreenOverlay2(player, null)
 	}
 	
-	CreateTimer(@() Ware_BeginIntermission(false), 5.0)
+	CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 }
 
 function Ware_StartMinigame(is_boss)
@@ -1767,14 +1775,19 @@ function Ware_EndMinigameInternal()
 	local boss_threshold = 20
 	local speed_threshold = 5
 	
+	local sound_duration = Max(Ware_GetThemeSoundDuration("victory"), Ware_GetThemeSoundDuration("failure"))
+	
+	if (all_failed)
+		sound_duration = Ware_GetThemeSoundDuration("failure_all")
+	
 	if (Ware_MinigamesPlayed > boss_threshold || Ware_DebugGameOver)
-		CreateTimer(@() Ware_GameOver(), 2.0)
+		CreateTimer(@() Ware_GameOver(), sound_duration)
 	else if (Ware_MinigamesPlayed == boss_threshold)
-		CreateTimer(@() Ware_BeginBoss(), 2.0)
+		CreateTimer(@() Ware_BeginBoss(), sound_duration)
 	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % speed_threshold == 0)
-		CreateTimer(@() Ware_Speedup(), 2.0)
+		CreateTimer(@() Ware_Speedup(), sound_duration)
 	else
-		CreateTimer(@() Ware_BeginIntermission(false), 2.0)
+		CreateTimer(@() Ware_BeginIntermission(false), sound_duration)
 }
 
 function Ware_GameOver()
