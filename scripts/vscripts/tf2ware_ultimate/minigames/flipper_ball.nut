@@ -6,6 +6,7 @@ minigame <- Ware_MinigameData
 	author         = "ficool2"
 	description    = "Get to the end!"
 	duration       = mode == 0 ? 27.0 : 28.0
+	end_delay      = 0.5	
 	music          = mode == 0 ? "fastbros" : "letsgetquirky"
 	location       = "pinball"
 	custom_overlay = "get_end"
