@@ -527,7 +527,7 @@ function Ware_SetTheme(requested_theme)
 		}
 	}
 	
-	if (Ware_Theme == null)
+	if (Ware_Theme == {})
 	{
 		WareError("No theme named '%s' was found. Setting to default theme instead.", requested_theme)
 		Ware_Theme <- Ware_Themes[0]
