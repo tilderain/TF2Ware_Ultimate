@@ -46,7 +46,7 @@ function OnEnd()
 {
 	if (highest_height > 512.0 && highest_player.IsValid())
 	{
-		Ware_ChatPrint(null, "{player} {color}reached the highest point at {str} HU!",
+		Ware_ChatPrint(null, "{player} {color}reached the highest point at {str} units!",
 							highest_player, TF_COLOR_DEFAULT, format("%.1f", highest_height))
 	}
 }
