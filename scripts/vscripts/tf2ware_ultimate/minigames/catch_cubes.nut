@@ -55,13 +55,18 @@ function OnTakeDamage(params)
 			local attacker = FindByClassnameNearest("prop_physics", params.damage_position, 0.0)
 			if (attacker)
 			{
-				victim.EmitSound(Ware_MinigameScope.touch_sound)
+				if (!attacker.IsEFlagSet(EFL_USER))
+				{
+					victim.EmitSound(Ware_MinigameScope.touch_sound)
 
-				if (++Ware_GetPlayerMiniData(victim).points >= 3)	
-					Ware_PassPlayer(victim, true)
-					
-				EntityEntFire(attacker, "Kill");
-				return false
+					if (++Ware_GetPlayerMiniData(victim).points >= 3)	
+						Ware_PassPlayer(victim, true)
+						
+					EntityEntFire(attacker, "Kill");
+					attacker.AddEFlags(EFL_USER) // prevent multiple touches on same frame
+				}
+				
+				return false			
 			}
 		}
 	}
