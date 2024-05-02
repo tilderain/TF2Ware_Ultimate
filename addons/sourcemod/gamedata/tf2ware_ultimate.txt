@@ -7,13 +7,16 @@
 			"CBasePlayer::EquipWearable"
 			{
 				"windows"	"438"
+				"windows64"	"438"
 				"linux"		"439"
-				// TODO x64
+				"linux64"	"439"
 			}
 			"CTFPlayer::InitClass"
 			{
-				"windows"	"488"
-				// TODO x64 and linux
+				"windows"	"488
+				"windows64"	"488"
+				"linux"		"489"
+				"linux64"	"489"
 			}
 		}
 		"Functions"
