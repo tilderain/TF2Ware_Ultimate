@@ -2265,6 +2265,85 @@ function PlayerPostSpawn()
 	SetPropBool(self, "m_Shared.m_bShieldEquipped", false)
 }
 
+Ware_MeleeAttributeMap <- 
+{
+	// atomizer
+	[450] = { "air dash count" : 0 },
+	// sandman
+	[44] = { "max health additive penalty" : 0 },
+	// discipilinary action
+	[447] =
+	{ 
+		"speed buff ally" : 0,
+		"melee range multiplier" : 1,
+		"melee bounds multiplier" : 1,
+	},
+	// equalizer
+	[128] = { "mod shovel damage boost" : 0 },
+	// escape plan
+	[775] = { "mod shovel speed boost" : 0 },
+	// powerjack
+	[214] = { "move speed bonus" : 1 },	
+	// eyelander
+	[132] = { "max health additive penalty" : 0 },
+	// festive eyelander
+	[1082] = { "max health additive penalty" : 0 },
+	// nessie's nine iron
+	[482] = { "max health additive penalty" : 0 },
+	// HHH axe
+	[266] = { "max health additive penalty" : 0 },	
+	// eviction notice
+	[426] =
+	{ 
+		"mult_player_movespeed_active" : 1,
+		"mod_maxhealth_drain_rate" : 0,
+	},	
+	// gloves of running urgently
+	[239] =
+	{ 
+		"single wep holster time increased" : 1,
+		"mult_player_movespeed_active" : 1,
+		"mod_maxhealth_drain_rate" : 0,
+	},	
+	// festive gloves of running urgently
+	[1084] =
+	{ 
+		"single wep holster time increased" : 1,
+		"mult_player_movespeed_active" : 1,
+		"mod_maxhealth_drain_rate" : 0,
+	},	
+	// HHH axe
+	[266] = { "max health additive penalty" : 0 },		
+	// gunslinger
+	[142] = 
+	{ 
+		"mod wrench builds minisentry" : 0,
+		"max health additive bonus" : 0,
+	},
+	// eureka effect
+	[589] = { "alt fire teleport to spawn" : 0 },
+	// amputator
+	[304] =
+	{ 
+		"enables aoe heal" : 0,
+		"health regen" : 0,
+	},
+	// vita saw
+	[173] = { "max health additive penalty" : 0 },
+	// conniver's kunai
+	[356] = { "max health additive penalty" : 0 },
+	// spy-cicle
+	[649] = { "melts in fire" : 0 },
+	// big earner
+	[461] = { "max health additive penalty" : 0 },
+	// your eternal reward
+	[225] = 
+	{ 
+		"disguise on backstab" : 0,
+		"mod_disguise_consumes_cloak" : 0,
+	},
+}
+
 function OnGameEvent_player_spawn(params)
 {
 	local player = GetPlayerFromUserID(params.userid)
@@ -2303,6 +2382,14 @@ function OnGameEvent_player_spawn(params)
 				}
 				else if (startswith(classname, "tf_weapon_"))
 				{
+					local id = GetPropInt(child, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
+					if (id in Ware_MeleeAttributeMap)
+					{
+						local attributes = Ware_MeleeAttributeMap[id]
+						foreach (name, value in attributes)
+							child.AddAttribute(name, value, -1)
+					}
+					
 					// the plugin sets this
 					local owning_class = GetPropInt(child, "m_iHammerID")
 					// allow transparency
