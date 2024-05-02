@@ -1075,14 +1075,17 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	player.Weapon_Equip(weapon)
 	if (switch_weapon)
 	{
-		if (item_id == 25 || item_id == 27) // construction pda
+		if (item_id != 28) // toolbox
 		{
-			// build/disguise menu will not show up unless its holstered for a bit
-			EntFireByHandle(player, "CallScriptFunction", "Ware_FixupPlayerWeaponSwitch", 0.25, weapon, weapon)
-		}
-		else
-		{
-			player.Weapon_Switch(weapon)
+			if (item_id == 25 || item_id == 27) // construction pda
+			{
+				// build/disguise menu will not show up unless its holstered for a bit
+				EntFireByHandle(player, "CallScriptFunction", "Ware_FixupPlayerWeaponSwitch", 0.25, weapon, weapon)
+			}
+			else
+			{
+				player.Weapon_Switch(weapon)
+			}
 		}
 	}
 	

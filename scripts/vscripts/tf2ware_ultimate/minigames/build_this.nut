@@ -21,7 +21,7 @@ minigame <- Ware_MinigameData
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, ["Wrench", "Toolbox", "Construction PDA"])
+	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, [ "Construction PDA", "Toolbox"], {}, true)
 }
 
 function OnGameEvent_player_builtobject(params)
