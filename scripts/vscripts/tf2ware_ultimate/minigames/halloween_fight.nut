@@ -40,17 +40,17 @@ function OnStart()
 		}
 		else if (boss_idx == 1)
 		{
+			Ware_TogglePlayerWearables(player, false)		
 			Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Kukri")
 			Ware_AddPlayerAttribute(player, "max health additive bonus", 1000 - 125.0, -1)
 			player.SetModelScale(0.6, 0.0)
-			TogglePlayerWearables(player, false)
 		}
 		else if (boss_idx == 2)
 		{
+			Ware_TogglePlayerWearables(player, false)		
 			Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Horseless Headless Horseman's Headtaker")
 			Ware_AddPlayerAttribute(player, "max health additive bonus", 1000 - 150.0, -1)
 			player.SetModelScale(0.7, 0.0)
-			TogglePlayerWearables(player, false)
 			
 			local minidata = Ware_GetPlayerMiniData(player)
 			local particle_kv = 
@@ -116,7 +116,7 @@ function OnCleanup()
 		local player = data.player
 		player.SetCustomModel("")
 		player.SetModelScale(1.0, 0.0)
-		TogglePlayerWearables(player, true)
+		Ware_TogglePlayerWearables(player, true)
 	}
 }
 

@@ -94,7 +94,22 @@ const SFX_WARE_KART_HORN = "TF2Ware_Ultimate.KartHorn"
 const PFX_WARE_PASS_RED  = "teleportedin_red"
 const PFX_WARE_PASS_BLUE = "teleportedin_blue"
 
+const EFL_LOADOUT_CACHED = 1073741824 // Match the Loadout Cacher plugin
+
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
+
+TF_CLASS_ARMS <-
+{
+	[TF_CLASS_SCOUT]		= "models/weapons/c_models/c_scout_arms.mdl",
+	[TF_CLASS_SOLDIER]		= "models/weapons/c_models/c_soldier_arms.mdl",
+	[TF_CLASS_PYRO]			= "models/weapons/c_models/c_pyro_arms.mdl",
+	[TF_CLASS_DEMOMAN]		= "models/weapons/c_models/c_demo_arms.mdl",
+	[TF_CLASS_HEAVYWEAPONS]	= "models/weapons/c_models/c_heavy_arms.mdl",
+	[TF_CLASS_ENGINEER] 	= "models/weapons/c_models/c_engineer_arms.mdl",	
+	[TF_CLASS_MEDIC]		= "models/weapons/c_models/c_medic_arms.mdl",
+	[TF_CLASS_SNIPER]		= "models/weapons/c_models/c_sniper_arms.mdl",
+	[TF_CLASS_SPY]			= "models/weapons/c_models/c_spy_arms.mdl",
+}
 
 ITEM_PROJECTILE_MAP <-
 {

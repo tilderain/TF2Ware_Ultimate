@@ -72,7 +72,7 @@ function OnStart()
 			player.SetCustomModel(shark_model)
 			player.SetCustomModelRotates(true)
 			player.SetCustomModelOffset(Vector(0, 0, -48))
-			TogglePlayerWearables(shark, false)
+			Ware_TogglePlayerWearables(shark, false)
 			SetPropFloat(player, "m_PainFinished", 1e30) // disable drowning
 			Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
 		}
@@ -155,7 +155,7 @@ function OnCleanup()
 		shark.SetCustomModel("")
 		shark.SetCustomModelRotates(false)
 		shark.SetCustomModelOffset(Vector())
-		TogglePlayerWearables(shark, true)
+		Ware_TogglePlayerWearables(shark, true)
 		SetPropFloat(shark, "m_PainFinished", 0.0)
 	}
 }

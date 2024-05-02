@@ -422,33 +422,6 @@ function KillPlayerRagdoll(player)
 	}
 }
 
-function TogglePlayerWearables(player, toggle)
-{
-	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-	{
-		MarkForPurge(wearable)
-		wearable.SetDrawEnabled(toggle)
-	}
-}
-
-function ChangePlayerTeam(player, team)
-{	
-	// force cancel duels
-	SetPropBool(player, "m_bIsCoaching", true)
-	player.ForceChangeTeam(team, true)
-	SetPropBool(player, "m_bIsCoaching", false)
-	
-	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-	{
-		// cheap way to only catch weapons and cosmetics
-		if (wearable.GetTeam() > TEAM_UNASSIGNED)
-		{
-			MarkForPurge(wearable)
-			wearable.SetTeam(team)
-		}
-	}	
-}
-
 function KillWeapon(weapon)
 {
 	local wearable = GetPropEntity(weapon, "m_hExtraWearable")

@@ -2,12 +2,13 @@
 // - set sv_cheats 1 for the duration of the map
 // - allow vscript to control host_timescale
 // - block cheat commands and impulses on the server-side, as sv_cheats is required for host_timescale modification
+// - new: cache loadouts to mitigate lag with mass player respawns
 
 #include <sourcemod>
 #include <sdktools>
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
-#define PLUGIN_VERSION "1.0.0"
+#define PLUGIN_VERSION "1.1.0"
 
 public Plugin myinfo =
 {
@@ -17,6 +18,8 @@ public Plugin myinfo =
 	version     = PLUGIN_VERSION,
 	url         = "https://github.com/ficool2/TF2Ware_Ultimate"
 };
+
+#include "loadout_cacher.sp"
 
 bool g_Enabled = false;
 
@@ -101,6 +104,13 @@ void Enable()
 	
 	LogMessage("Enabling...");
 	
+	GameData gamedata = new GameData("tf2ware_ultimate");
+	if (gamedata)	
+		LoadoutCacher_Start(gamedata);
+	else
+		LogError("Failed to retrieve 'tf2ware_ultimate' gamedata, loadout caching will be unavailable");			
+	delete gamedata;
+
 	host_timescale = FindConVar("host_timescale");
 	sv_cheats = FindConVar("sv_cheats");
 	
@@ -156,6 +166,8 @@ void Disable(bool map_unload)
 	
 	LogMessage("Disabling...");
 	
+	LoadoutCacher_End();
+	
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(0, true, false);
 	
@@ -181,6 +193,16 @@ void Disable(bool map_unload)
 	g_CheatCommands.Clear();
 	g_CheatCommandsArgs.Clear();
 
+}
+
+public void OnClientPutInServer(int client)
+{
+	LoadoutCacher_InitClient(client);
+}
+
+public void OnClientDisconnect(int client)
+{
+	LoadoutCacher_DisconnectClient(client);
 }
 
 public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
@@ -229,4 +251,9 @@ public void OnMapStart()
 public void OnMapEnd()
 {
 	Disable(true);
+}
+
+public void OnGameFrame()
+{
+	LoadoutCacher_OnGameFrame();
 }

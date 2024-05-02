@@ -37,9 +37,9 @@ function OnStart()
 		{
 			Ware_SetPlayerMission(player, 1)
 			Ware_SetPlayerClass(player, TF_CLASS_PYRO)
+			Ware_SetPlayerTeam(player, pyro_team)			
 			Ware_GivePlayerWeapon(player, "Backburner")
-			Ware_SetPlayerTeam(player, pyro_team)
-			Ware_SetPlayerAmmo(player, TF_AMMO_PRIMARY, 50)
+			Ware_SetPlayerAmmo(player, TF_AMMO_PRIMARY, 100)
 			Ware_PassPlayer(player, false)
 		}
 		else

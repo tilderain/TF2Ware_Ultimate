@@ -23,7 +23,7 @@ function OnStart()
 	{
 		local player = data.player
 		player.SetCustomModel(banana_model)
-		TogglePlayerWearables(player, false)
+		Ware_TogglePlayerWearables(player, false)
 		player.AddCondEx(TF_COND_SPEED_BOOST, 6.2, null)
 	}
 	
@@ -53,7 +53,7 @@ function OnCleanup()
 	{
 		local player = data.player
 		player.SetCustomModel("")
-		TogglePlayerWearables(player, true)
+		Ware_TogglePlayerWearables(player, true)
 	}
 }
 

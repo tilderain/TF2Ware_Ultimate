@@ -1,0 +1,30 @@
+"Games"
+{
+	"tf"
+	{
+		"Offsets"
+		{
+			"CBasePlayer::EquipWearable"
+			{
+				"windows"	"438"
+				"linux"		"439"
+				// TODO x64
+			}
+			"CTFPlayer::InitClass"
+			{
+				"windows"	"488"
+				// TODO x64 and linux
+			}
+		}
+		"Functions"
+		{
+			"CTFPlayer::InitClass"
+			{
+				"offset"	"CTFPlayer::InitClass"
+				"hooktype"	"entity"
+				"return"	"void"
+				"this"		"entity"
+			}
+		}
+	}
+}

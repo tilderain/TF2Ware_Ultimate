@@ -34,14 +34,14 @@ function OnStart()
 		Ware_AddPlayerAttribute(player, "no double jump", 1, -1)
 		Ware_AddPlayerAttribute(player, "increased jump height", 0.6, -1)
 		Ware_GetPlayerMiniData(player).jumping <- false
-		TogglePlayerWearables(player, false)
+		Ware_TogglePlayerWearables(player, false)
 		player.SetCustomModelWithClassAnimations(frog_model)
 		
 		// show hats
 		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
 		{
-			if (startswith(wearable.GetClassname(), "tf_wearable") && wearable.LookupBone("bip_head") >= 0)
-				wearable.SetDrawEnabled(true)
+			if (Ware_IsWearableHat(wearable))
+				Ware_ToggleWearable(wearable, true)
 		}
 	}
 		
@@ -220,7 +220,7 @@ function OnCleanup()
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player
-		TogglePlayerWearables(player, true)
+		Ware_TogglePlayerWearables(player, true)
 		data.player.SetCustomModel("")
 	}
 }

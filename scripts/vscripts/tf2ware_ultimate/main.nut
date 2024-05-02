@@ -2,6 +2,8 @@
 
 if (!("Ware_Plugin" in this))
 {
+	Ware_LoadoutCacher <- false
+	
 	local plugin_found = Convars.GetStr("ware_version") != null
 	if (IsDedicatedServer() || plugin_found)
 	{
@@ -15,7 +17,8 @@ if (!("Ware_Plugin" in this))
 		else
 		{
 			printl("\tVScript: TF2Ware Ultimate linked to SourceMod plugin")
-			Ware_Plugin <- true
+			Ware_Plugin <- true	
+			Ware_LoadoutCacher = Convars.GetBool("loadoutcacher_enable") == true
 		}
 	}
 	else
@@ -238,6 +241,9 @@ class Ware_PlayerData
 		score			 = 0
 		horn_timer		 = 0.0
 		horn_buttons	 = 0
+		cache_init		 = false
+		cache_melees     = []
+		cache_cosmetics  = []
 	}
 	
 	player		     	= null
@@ -251,11 +257,14 @@ class Ware_PlayerData
 	attributes	     	= null
 	melee_attributes 	= null
 	start_sound      	= null
-	construction_pda 	= null
 	saved_team       	= null
 	score			 	= null
 	horn_timer		 	= null
 	horn_buttons	 	= null
+	
+	cache_init			= null
+	cache_melees		= null
+	cache_cosmetics 	= null
 }
 
 if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
@@ -271,7 +280,7 @@ if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
 			
 		if (data.saved_team != null)
 		{
-			ChangePlayerTeam(player, data.saved_team)
+			Ware_SetPlayerTeamInternal(player, data.saved_team)
 			data.saved_team = null
 		}		
 	}
@@ -324,15 +333,18 @@ Ware_MinigamesPlayed	  <- 0
 
 if (!("Ware_Players" in this))
 {
+
 	Ware_Players         <- []
 	Ware_PlayersData     <- []
 	Ware_MinigamePlayers <- []
 	
+	Ware_AnnotationIDs   <- 0
+	
+	Ware_HatIndexList 	 <- {}
+	
 	// this shuts up incursion distance warnings from the nav mesh
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
 }
-
-Ware_AnnotationIDs   <- 0
 
 function Ware_SourcemodRoutine(name, keyvalues)
 {
@@ -340,6 +352,26 @@ function Ware_SourcemodRoutine(name, keyvalues)
 	keyvalues.routine <- name
 	// unused event repurposed for vscript <-> sourcemod communication
 	SendGlobalGameEvent("player_rematch_change", keyvalues)
+}
+
+// called from the plugin
+// TODO: probably should refactor this into a more consistent interface from SM -> VScript
+function LoadoutCacherAddCosmetics()
+{
+	for (local i = 0; i < 3; i++)
+	{
+		local wearable = GetPropEntityArray(self, "m_rgEntities", i)
+		if (wearable)
+		{
+			MarkForPurge(wearable)
+		
+			if (wearable.LookupBone("bip_head") >= 0)
+			{
+				local modelindex = PrecacheModel(wearable.GetModelName())
+				Ware_HatIndexList[modelindex] <- true
+			}
+		}
+	}
 }
 
 function Ware_FindStandardEntities()
@@ -503,6 +535,59 @@ function Ware_SpawnWearable(player, model_name)
 	wearable.SetOwner(player)
 	wearable.DispatchSpawn()
 	return wearable
+}
+
+function Ware_IsWearableHat(wearable)
+{
+	if (!startswith(wearable.GetClassname(), "tf_wearable"))
+		return false
+	
+	// with loadout caching, there is no dynamic access to bones
+	if (Ware_LoadoutCacher)
+		 return GetPropInt(wearable, "m_nModelIndexOverrides") in Ware_HatIndexList
+	else
+		return wearable.LookupBone("bip_head") >= 0
+}
+
+function Ware_ToggleWearable(wearable, toggle)
+{
+	if (Ware_LoadoutCacher)
+		SetPropInt(wearable, "m_nRenderMode", kRenderNormal)	
+	else
+		wearable.SetDrawEnabled(toggle)
+}
+
+function Ware_TogglePlayerWearables(player, toggle)
+{
+	if (Ware_LoadoutCacher)
+	{
+		local data = player.GetScriptScope().ware_data
+		
+		// with loadout caching path, don't toggle nodraw because it interferes with the caching system
+		// only bother with melee for now, too expensive to iterate +10 cached melees for each player		
+		if (toggle)
+		{
+			foreach (wearable in data.cache_cosmetics)
+				SetPropInt(wearable, "m_nRenderMode", kRenderNormal)		
+			if (data.melee)
+				SetPropInt(data.melee, "m_clrRender", 0xFFFFFFFF) 
+		}
+		else
+		{
+			foreach (wearable in data.cache_cosmetics)
+				SetPropInt(wearable, "m_nRenderMode", kRenderNone)			
+			if (data.melee)
+				SetPropInt(data.melee, "m_clrRender", 0) // rendermode doesn't work		
+		}
+	}
+	else
+	{
+		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+		{
+			MarkForPurge(wearable)
+			Ware_ToggleWearable(wearable, toggle)
+		}
+	}
 }
 
 function Ware_CreateTimer(on_timer_func, delay)
@@ -734,36 +819,69 @@ function Ware_GetMinigameRemainingTime()
 
 function Ware_ParseLoadout(player)
 {
-	local melee, last_melee
-	for (local i = 0; i < MAX_WEAPONS; i++)
+	local data = player.GetScriptScope().ware_data
+		
+	if (Ware_LoadoutCacher)
 	{
-		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
-		if (!weapon)
-			continue
-			
-		weapon.ValidateScriptScope()
-		weapon.GetScriptScope().last_fire_time <- 0.0
-			
-		MarkForPurge(weapon)
-		if (weapon.GetSlot() == TF_SLOT_MELEE)
+		local melee = data.cache_melees[player.GetPlayerClass() - 1]
+		
+		if (data.melee_index != null)
 		{
-			local data = player.GetScriptScope().ware_data
-			last_melee = data.melee
-			melee = weapon
-			data.melee = weapon
-			data.melee_index = i
+			if (data.melee)
+				data.melee.DisableDraw()
+			
+			data.melee = melee
+			SetPropEntityArray(player, "m_hMyWeapons", melee, data.melee_index)
+			return melee
 		}
 		else
 		{
-			SetPropEntityArray(player, "m_hMyWeapons", null, i)
-			KillWeapon(weapon)
+			// find a free slot to put melee into
+			for (local i = 0; i < MAX_WEAPONS; i++)
+			{
+				local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
+				if (!weapon)
+				{
+					data.melee = melee
+					data.melee_index = i
+					SetPropEntityArray(player, "m_hMyWeapons", melee, i)
+					return melee
+				}
+			}	
+		
+			Ware_Error("Failed to find melee slot for %s", GetPlayerName(player))
+			return null		
 		}
 	}
-	
-	if (last_melee != null && last_melee != melee && last_melee.IsValid())
-		last_melee.Kill()
-	
-	return melee
+	else
+	{
+		local melee, last_melee
+		for (local i = 0; i < MAX_WEAPONS; i++)
+		{
+			local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
+			if (!weapon)
+				continue
+			
+			MarkForPurge(weapon)
+			if (weapon.GetSlot() == TF_SLOT_MELEE)
+			{
+				last_melee = data.melee
+				melee = weapon
+				data.melee = weapon
+				data.melee_index = i
+			}
+			else
+			{
+				SetPropEntityArray(player, "m_hMyWeapons", null, i)
+				KillWeapon(weapon)
+			}
+		}
+		
+		if (last_melee != null && last_melee != melee && last_melee.IsValid())
+			last_melee.Destroy()
+			
+		return melee
+	}
 }
 
 function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {}, keep_melee = false)
@@ -823,24 +941,23 @@ function Ware_StripPlayer(player, give_default_melee)
 		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
 		if (weapon)
 		{
-			MarkForPurge(weapon)
 			SetPropEntityArray(player, "m_hMyWeapons", null, i)
+
 			if (weapon != melee)
 				KillWeapon(weapon)
 		}
 	}
-	
-	Ware_DeferredPDAKill(data)
 	
 	if (give_default_melee)
 	{
 		if (melee != null && melee.IsValid())
 		{
 			SetPropEntityArray(player, "m_hMyWeapons", melee, data.melee_index)
+			
 			local active_weapon = player.GetActiveWeapon()
 			if (active_weapon != melee)
 			{
-				if (active_weapon)
+				if (active_weapon != null)
 				{								
 					// force switch fixes
 					local classname = active_weapon.GetClassname()
@@ -961,7 +1078,7 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 		if (item_id == 25 || item_id == 27) // construction pda
 		{
 			// build/disguise menu will not show up unless its holstered for a bit
-			EntFireByHandle(player, "CallScriptFunction", "Ware_FixupPlayerWeaponSwitch", 0.1, weapon, weapon)
+			EntFireByHandle(player, "CallScriptFunction", "Ware_FixupPlayerWeaponSwitch", 0.25, weapon, weapon)
 		}
 		else
 		{
@@ -983,48 +1100,6 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	}
 	
 	return weapon
-}
-
-function Ware_StripPlayerWeapons(player, weapons)
-{
-	for (local i = 0; i < MAX_WEAPONS; i++)
-	{
-		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
-		if (weapon)
-		{
-			local classname = weapon.GetClassname()
-			if (weapons.find(classname) != null)	
-			{
-				SetPropEntityArray(player, "m_hMyWeapons", null, i)
-				
-				// see Ware_DeferredPDAKill for why this is needed
-				if (classname == "tf_weapon_pda_engineer_build")
-				{
-					local data = player.GetScriptScope().ware_data
-					Ware_DeferredPDAKill(data)
-					data.construction_pda = weapon
-					SetPropInt(weapon, "m_iObjectType", 0xFF)
-				}
-				else
-				{
-					KillWeapon(weapon)
-				}
-			}
-		}
-	}		
-}
-
-// workaround for a tf2 bug: if a construction PDA is deleted it will hide the build menu for EVERYONE!
-// so it is deferred till the end of a minigame
-function Ware_DeferredPDAKill(data)
-{
-	local pda = data.construction_pda
-	if (pda)
-	{
-		if (pda.IsValid())
-			pda.Kill()
-		data.construction_pda = null
-	}
 }
 
 function Ware_AddPlayerAttribute(player, name, value, duration)
@@ -1059,36 +1134,6 @@ function Ware_DisablePlayerPrimaryFire(player)
 		SetPropFloat(weapon, "m_flNextPrimaryAttack", Time() + 0.2)
 }
 
-function Ware_RemoveUndesiredWearables(player)
-{
-	local player_class = player.GetPlayerClass()
-	if (player_class == TF_CLASS_DEMOMAN)
-	{
-		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-		{
-			MarkForPurge(wearable)
-			if (wearable.GetClassname() == "tf_wearable_demoshield")
-			{
-				SetPropBool(player, "m_Shared.m_bShieldEquipped", false)
-				wearable.Kill()
-				break
-			}
-		}		
-	}
-	else if (player_class == TF_CLASS_SNIPER)
-	{
-		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-		{
-			MarkForPurge(wearable)
-			if (wearable.GetClassname() == "tf_wearable_razorback")
-			{
-				wearable.Kill()
-				break
-			}
-		}	
-	}
-}
-
 function Ware_GetPlayerAmmo(player, ammo_type)
 {
 	return GetPropIntArray(player, "m_iAmmo", ammo_type)
@@ -1099,6 +1144,7 @@ function Ware_SetPlayerAmmo(player, ammo_type, ammo)
 	SetPropIntArray(player, "m_iAmmo", ammo, ammo_type)
 }
 
+local Ware_CheckTeleportEffectTimer
 function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 {
 	if (player.GetPlayerClass() == player_class)
@@ -1109,20 +1155,44 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	player.Regenerate(true)
 	player.SetCustomModel(GetPropString(player, "m_PlayerClass.m_iszCustomModel"))
 	player.SetHealth(player.GetMaxHealth())
-	Ware_RemoveUndesiredWearables(player)
-	Ware_ParseLoadout(player)
+	SetPropBool(player, "m_Shared.m_bShieldEquipped", false)
 	
-	if (Ware_MinigameHighScorers.find(player) != null)
+	local melee = Ware_ParseLoadout(player)
+	
+	// teleport effect gets cleared on class change, need to recreate it here
+	// creating timers is expensive so avoid doing that for every player
+	player.RemoveCond(TF_COND_TELEPORTED)
+	if (!Ware_CheckTeleportEffectTimer || !Ware_CheckTeleportEffectTimer.IsValid())
 	{
-		player.RemoveCond(TF_COND_TELEPORTED)
-		CreateTimer(@() player.AddCond(TF_COND_TELEPORTED), 0.25)
+		Ware_CheckTeleportEffectTimer = CreateTimer(function()
+		{
+			foreach (data in Ware_MinigamePlayers)
+			{
+				if (Ware_MinigameHighScorers.find(data.player) != null)
+					data.player.AddCond(TF_COND_TELEPORTED)
+			}
+		}, 0.25)
 	}
-	
-	if (switch_melee)
+
+	if (Ware_LoadoutCacher)
 	{
-		local data = player.GetScriptScope().ware_data
-		if (data.melee)
-			player.Weapon_Switch(data.melee)
+		// ammo isnt given back in caching system, so need to set it here
+		Ware_SetPlayerAmmo(player, TF_AMMO_PRIMARY, 200)
+		Ware_SetPlayerAmmo(player, TF_AMMO_SECONDARY, 200)
+		if (player_class == TF_CLASS_ENGINEER)
+			Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 200)
+	}
+
+	if (melee != null)
+	{
+		// not sure why this is needed
+		melee.SetModel(TF_CLASS_ARMS[player_class])
+	
+		if (switch_melee)
+		{
+			player.Weapon_Switch(melee)
+			melee.EnableDraw()
+		}
 	}
 }
 
@@ -1132,7 +1202,39 @@ function Ware_SetPlayerTeam(player, team)
 	local data = player.GetScriptScope().ware_data
 	if (data.saved_team == null)
 		data.saved_team = old_team
-	ChangePlayerTeam(player, team)
+	Ware_SetPlayerTeamInternal(player, team)
+}
+
+function Ware_SetPlayerTeamInternal(player, team)
+{
+	// force cancel duels
+	SetPropBool(player, "m_bIsCoaching", true)
+	player.ForceChangeTeam(team, true)
+	SetPropBool(player, "m_bIsCoaching", false)
+	
+	if (Ware_LoadoutCacher)
+	{
+		local data = player.GetScriptScope().ware_data
+		
+		foreach (wearable in data.cache_cosmetics)
+			wearable.SetTeam(team)
+			
+		// only bother with melee for now, too expensive to iterate +10 cached melees for each player
+		if (data.melee)
+			data.melee.SetTeam(team)
+	}
+	else
+	{
+		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+		{
+			// cheap way to only catch weapons and cosmetics
+			if (wearable.GetTeam() > TEAM_UNASSIGNED)
+			{
+				MarkForPurge(wearable)
+				wearable.SetTeam(team)
+			}
+		}		
+	}
 }
 
 function Ware_PassPlayer(player, pass)
@@ -1304,8 +1406,15 @@ function Ware_StartMinigame(is_boss)
 {	
 	local valid_players = []
 	foreach (player in Ware_Players)
+	{
 		if ((player.GetTeam() & 2) && IsEntityAlive(player))
+		{
+			if (Ware_LoadoutCacher && !player.IsEFlagSet(EFL_LOADOUT_CACHED))
+				continue
+			
 			valid_players.append(player)
+		}
+	}
 	
 	local player_count = valid_players.len()
 	local success = false
@@ -1646,7 +1755,7 @@ function Ware_EndMinigameInternal()
 		local data = player.GetScriptScope().ware_data
 		if (data.saved_team != null)
 		{
-			ChangePlayerTeam(player, data.saved_team)
+			Ware_SetPlayerTeamInternal(player, data.saved_team)
 			data.saved_team = null
 		}
 			
@@ -1828,7 +1937,7 @@ function Ware_GameOver()
 			Ware_PlayGameSound(player, "gameclear")
 			player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
 			player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_victory")
-			// TODO: give full loaodout back and add other effects
+			// TODO: give full loadout back and add other effects
 			// TODO: don't allow damage to other winners
 		}
 		else
@@ -1924,7 +2033,7 @@ function Ware_OnUpdate()
 		{
 			local player = data.player
 			local weapon = player.GetActiveWeapon()
-			if (weapon)
+			if (weapon && !weapon.IsMeleeWeapon())
 			{
 				local fire_time = GetPropFloat(weapon, "m_flLastFireTime")
 				local scope = weapon.GetScriptScope()
@@ -2150,8 +2259,7 @@ function PlayerPostSpawn()
 {
 	if (Ware_TimeScale != 1.0)
 		self.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
-		
-	Ware_RemoveUndesiredWearables(self)
+	SetPropBool(self, "m_Shared.m_bShieldEquipped", false)
 }
 
 function OnGameEvent_player_spawn(params)
@@ -2174,9 +2282,34 @@ function OnGameEvent_player_spawn(params)
 	}
 	
 	local data = player.GetScriptScope().ware_data
-	
-	Ware_DeferredPDAKill(data)
-	
+
+	if (!data.cache_init && player.IsEFlagSet(EFL_LOADOUT_CACHED))
+	{
+		data.cache_init = true		
+		data.cache_melees = array(9)
+		
+		for (local child = player.FirstMoveChild(); child; child = child.NextMovePeer())
+		{
+			MarkForPurge(child)
+			if (child.IsEFlagSet(EFL_LOADOUT_CACHED))
+			{
+				local classname = child.GetClassname()
+				if (classname == "tf_wearable")
+				{
+					data.cache_cosmetics.append(child)
+				}
+				else if (startswith(classname, "tf_weapon_"))
+				{
+					// the plugin sets this
+					local owning_class = GetPropInt(child, "m_iHammerID")
+					// allow transparency
+					SetPropInt(child, "m_nRenderMode", kRenderTransColor)						
+					data.cache_melees[owning_class - 1] = child
+				}
+			}
+		}
+	}
+
 	// this is to fix persisting attributes if restarting mid-minigame
 	local melee = data.melee
 	if (melee && melee.IsValid())
@@ -2197,12 +2330,18 @@ function OnGameEvent_player_spawn(params)
 		
 		local melee = Ware_ParseLoadout(player)
 		if (melee != null)
+		{
+			// not sure why this is needed
+			melee.SetModel(TF_CLASS_ARMS[player.GetPlayerClass()])		
 			player.Weapon_Switch(melee)
+			melee.EnableDraw()
+		}
 			
 		EntityEntFire(player, "CallScriptFunction", "PlayerPostSpawn")
 		
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
-		player.SetCustomModel("")
+		player.SetCustomModel("")		
+		player.SetHealth(player.GetMaxHealth())	
 		SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
 	}
 }

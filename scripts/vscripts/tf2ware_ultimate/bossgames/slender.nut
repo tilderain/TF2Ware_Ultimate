@@ -115,7 +115,7 @@ function OnStart()
 			Ware_StripPlayer(player, false)
 			Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
 			Ware_AddPlayerAttribute(player, "voice pitch scale", 0, -1)
-			TogglePlayerWearables(player, false)
+			Ware_TogglePlayerWearables(player, false)
 			player.SetCustomModel(slender_model)
 			player.SetModelScale(1.4, 0.0)
 		}
@@ -310,7 +310,7 @@ function OnCleanup()
 		{
 			player.SetModelScale(1.0, 0.0)
 			player.SetCustomModel("")
-			TogglePlayerWearables(player, true)
+			Ware_TogglePlayerWearables(player, true)
 		}
 	}
 }
