@@ -255,7 +255,7 @@ Ware_Location.kart_ramp <-
 
 Ware_Location.frogger <-
 {
-	center   = Vector(11488, -6150, -6448)
+	center   = Vector(11488, -6150, -6447)
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(players, 
