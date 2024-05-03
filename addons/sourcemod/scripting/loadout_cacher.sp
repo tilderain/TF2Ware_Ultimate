@@ -329,9 +329,12 @@ public void LoadoutCacher_InitClient(int client)
 
 public void LoadoutCacher_DisconnectClient(int client)
 {
-	int idx = g_Queue_LoadoutCache.FindValue(client);
-	if (idx != -1)
-		g_Queue_LoadoutCache.Erase(idx);	
+	if (g_Queue_LoadoutCache)
+	{
+		int idx = g_Queue_LoadoutCache.FindValue(client);
+		if (idx != -1)
+			g_Queue_LoadoutCache.Erase(idx);	
+	}
 	
 	InitLoadoutCache(client);
 }
