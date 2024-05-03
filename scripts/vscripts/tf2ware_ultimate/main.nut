@@ -77,6 +77,7 @@ function Ware_ErrorHandler(e)
 			t ==    "null" ? Print(format("\t[%s] NULL"  , n))    :
 			t == "integer" ? Print(format("\t[%s] %d"    , n, v)) :
 			t ==   "float" ? Print(format("\t[%s] %.14g" , n, v)) :
+			v instanceof CTFPlayer ? Print(format("\t[%s] (player) \"%s\"", n, GetPlayerName(v))) :
 			t ==  "string" ? Print(format("\t[%s] \"%s\"", n, v)) :
 							 Print(format("\t[%s] %s %s" , n, t, v.tostring()))
 		}
