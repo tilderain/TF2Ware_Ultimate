@@ -2271,6 +2271,12 @@ Ware_MeleeAttributeMap <-
 	[450] = { "air dash count" : 0 },
 	// sandman
 	[44] = { "max health additive penalty" : 0 },
+	// candy cane
+	[317] = 
+	{ 
+		"drop health pack on kill" : 0,
+		"dmg taken from blast increased" : 1,
+	},
 	// discipilinary action
 	[447] =
 	{ 
@@ -2278,10 +2284,23 @@ Ware_MeleeAttributeMap <-
 		"melee range multiplier" : 1,
 		"melee bounds multiplier" : 1,
 	},
+	// half-zatoichi
+	[357] = { "honorbound" : 0 },
 	// equalizer
-	[128] = { "mod shovel damage boost" : 0 },
+	[128] = 
+	{ 
+		"mod shovel damage boost" : 0,
+		"reduced_healing_from_medics" : 1,
+	},
 	// escape plan
-	[775] = { "mod shovel speed boost" : 0 },
+	[775] = 
+	{ 
+		"mod shovel speed boost" : 0,
+		"reduced_healing_from_medics" : 1,
+		"self mark for deat" : 0,
+	},
+	// pain train
+	[154] = { "dmg taken from bullets increased" : 1 },	
 	// powerjack
 	[214] = { "move speed bonus" : 1 },	
 	// eyelander
@@ -2292,11 +2311,26 @@ Ware_MeleeAttributeMap <-
 	[482] = { "max health additive penalty" : 0 },
 	// HHH axe
 	[266] = { "max health additive penalty" : 0 },	
+	// scotman's skullcutter
+	[172] = { "move speed penalty" : 1 },	
+	// persian persuader
+	[404] = 
+	{
+		"maxammo primary reduced" : 1,
+		"maxammo secondary reduced" : 1,
+	},	
+	// claidheamohmor
+	[327] = 
+	{
+		"dmg taken increased" : 1,
+		"maxammo secondary reduced" : 1,
+	},		
 	// eviction notice
 	[426] =
 	{ 
 		"mult_player_movespeed_active" : 1,
 		"mod_maxhealth_drain_rate" : 0,
+		"fire rate bonus" : 1.0,
 	},	
 	// gloves of running urgently
 	[239] =
@@ -2312,6 +2346,28 @@ Ware_MeleeAttributeMap <-
 		"mult_player_movespeed_active" : 1,
 		"mod_maxhealth_drain_rate" : 0,
 	},	
+	// fists of steel
+	[331] =
+	{ 
+		"dmg from ranged reduced" : 1,
+		"dmg from melee increased" : 1,
+		"single wep holster time increased" : 1,
+		"mult_patient_overheal_penalty_active" : 1,
+		"mult_health_fromhealers_penalty_active" : 1,
+	},		
+	// warrior's spirit
+	[310] =
+	{ 
+		"dmg taken increased" : 1,
+		"heal on kill" :- 0,
+	},		
+	// holiday punch
+	[656] = 
+	{ 
+		"crit does no damage" : 0,
+		"tickle enemies wielding same weapon" : 0,
+		"crit forces victim to laugh" : 0,
+	},
 	// HHH axe
 	[266] = { "max health additive penalty" : 0 },		
 	// gunslinger
@@ -2322,6 +2378,8 @@ Ware_MeleeAttributeMap <-
 	},
 	// eureka effect
 	[589] = { "alt fire teleport to spawn" : 0 },
+	// southern hospitality
+	[155] = { "dmg taken from fire increased" : 1 },	
 	// amputator
 	[304] =
 	{ 
@@ -2330,6 +2388,8 @@ Ware_MeleeAttributeMap <-
 	},
 	// vita saw
 	[173] = { "max health additive penalty" : 0 },
+	// bushwacka
+	[232] = { "dmg taken increase" : 1 },
 	// conniver's kunai
 	[356] = { "max health additive penalty" : 0 },
 	// spy-cicle
