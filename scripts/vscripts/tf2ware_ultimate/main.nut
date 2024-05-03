@@ -1,4 +1,4 @@
-// by ficool2
+// by ficool2 and pokemonpasta
 
 if (!("Ware_Plugin" in this))
 {
