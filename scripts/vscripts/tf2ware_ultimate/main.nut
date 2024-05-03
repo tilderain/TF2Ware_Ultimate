@@ -2352,7 +2352,7 @@ function OnGameEvent_teamplay_round_start(params)
 		
 	Ware_SetupThemeSounds()
 	
-	Ware_ChatPrint(null, "Theme: {str}", Ware_Theme.visual_name)
+	Ware_ChatPrint(null, "{color}Theme: {color}{str}", TF_COLOR_DEFAULT, COLOR_LIME, Ware_Theme.visual_name)
 	
 	// putting this here rather than in loop we already have since i want to go after waiting for players check. if that doesnt matter just move this in.
 	foreach(player in Ware_Players)
