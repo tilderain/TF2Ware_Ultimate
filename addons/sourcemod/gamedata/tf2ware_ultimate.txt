@@ -13,10 +13,10 @@
 			}
 			"CTFPlayer::InitClass"
 			{
-				"windows"	"488
+				"windows"	"488"
 				"windows64"	"488"
-				"linux"		"489"
-				"linux64"	"489"
+				"linux"		"495"
+				"linux64"	"495"
 			}
 		}
 		"Functions"
