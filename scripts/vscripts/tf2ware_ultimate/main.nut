@@ -2395,6 +2395,10 @@ function PlayerPostSpawn()
 		self.Weapon_Switch(melee)
 		melee.EnableDraw()
 		
+		// hack: something is not clearing the render color
+		// last minute for the playtest
+		SetPropInt(melee, "m_clrRender", 0xFFFFFFFF)
+		
 		// hack: calculates correct speed
 		self.AddCustomAttribute("is commodity", 1, 0)
 	}
