@@ -2400,7 +2400,7 @@ function PlayerPostSpawn()
 		SetPropInt(melee, "m_clrRender", 0xFFFFFFFF)
 		
 		// hack: calculates correct speed
-		self.AddCustomAttribute("is commodity", 1, 0)
+		self.AddCondEx(TF_COND_SPEED_BOOST, 0.001, null)
 	}
 }
 
