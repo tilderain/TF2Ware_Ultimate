@@ -305,6 +305,8 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceMinigameOnce <- false
 	Ware_DebugForceBossgameOnce <- false
 }
+Ware_DebugForceTheme      <- ""
+Ware_DebugOldTheme        <- ""
 Ware_DebugGameOver		  <- false
 
 Ware_TextManagerQueue     <- null
@@ -331,6 +333,14 @@ Ware_MinigameEndTimer     <- null
 Ware_MinigameEnded        <- false
 Ware_MinigameHighScorers  <- []
 Ware_MinigamesPlayed	  <- 0
+
+if (!("Ware_RoundsPlayed" in this))
+	Ware_RoundsPlayed     <- 0
+if (!("Ware_Theme" in this))
+{
+	Ware_Theme              <- Ware_Themes[0]
+	Ware_CurrentThemeSounds <- {}
+}
 
 if (!("Ware_Players" in this))
 {
@@ -598,12 +608,65 @@ function Ware_CreateTimer(on_timer_func, delay)
 	return timer
 }
 
+function Ware_SetTheme(requested_theme)
+{
+	Ware_Theme <- {}
+	
+	foreach(theme in Ware_Themes)
+	{
+		if (theme.theme_name == requested_theme)
+		{
+			Ware_Theme <- theme
+			break
+		}
+	}
+	
+	if (Ware_Theme == {})
+	{
+		WareError("No theme named '%s' was found. Setting to default theme instead.", requested_theme)
+		Ware_Theme <- Ware_Themes[0]
+	}
+	
+	Ware_SetupThemeSounds()
+}
+
+function Ware_SetupThemeSounds()
+{
+	Ware_CurrentThemeSounds <- {}
+	
+	foreach(sound_name in Ware_GameSounds)
+	{
+		if (sound_name in Ware_Theme.sounds)
+		{
+			Ware_CurrentThemeSounds[sound_name] <- [Ware_Theme.theme_name, Ware_Theme.sounds[sound_name]]
+			PrecacheSound(format("tf2ware_ultimate/music_game/%s/%s.mp3", Ware_Theme.theme_name, sound_name))
+		}
+		else if (sound_name in Ware_Themes[0].sounds)
+			Ware_CurrentThemeSounds[sound_name] <- [Ware_Themes[0].theme_name, Ware_Themes[0].sounds[sound_name]]
+	}
+}
+
+function Ware_GetThemeSoundDuration(sound)
+{
+	if (sound in Ware_CurrentThemeSounds)
+		return Ware_CurrentThemeSounds[sound][1]
+	else
+		return Ware_Themes[0].sounds[sound]
+}
+
 function Ware_PlayGameSound(player, name, flags = 0)
 {
-	if (player)
-		PlaySoundOnClient(player, format("tf2ware_ultimate/music_game/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags)
+	local path
+	
+	if (name in Ware_CurrentThemeSounds)
+		path = format("%s/%s", Ware_CurrentThemeSounds[name][0], name)
 	else
-		PlaySoundOnAllClients(format("tf2ware_ultimate/music_game/%s.mp3", name), 1.0, 100 * Ware_GetPitchFactor(), flags)
+		path = format("%s/%s", Ware_Themes[0].theme_name, name)
+	
+	if (player)
+		PlaySoundOnClient(player, format("tf2ware_ultimate/music_game/%s.mp3", path), 1.0, 100 * Ware_GetPitchFactor(), flags)
+	else
+		PlaySoundOnAllClients(format("tf2ware_ultimate/music_game/%s.mp3", path), 1.0, 100 * Ware_GetPitchFactor(), flags)
 }
 
 function Ware_PlayMinigameSound(player, name, flags = 0, volume = 1.0)
@@ -1379,6 +1442,25 @@ function Ware_BeginIntermission(is_boss)
 		return 1.0
 	}
 	
+	if (Ware_DebugForceTheme.len() > 0)
+	{
+		if (Ware_DebugOldTheme == "")
+			Ware_DebugOldTheme = Ware_Theme.theme_name
+		
+		if (Ware_DebugForceTheme == "default")
+			Ware_SetTheme("_default")
+		else
+			Ware_SetTheme(Ware_DebugForceTheme)
+	}
+	else if (Ware_DebugOldTheme != "")
+	{
+		Ware_SetTheme(Ware_DebugOldTheme)
+		Ware_DebugOldTheme = ""
+	}
+	
+	if (Ware_Theme == {})
+		Ware_SetTheme("_default")
+	
 	foreach (player in Ware_Players)
 	{
 		Ware_PlayGameSound(player, "intro")
@@ -1386,7 +1468,7 @@ function Ware_BeginIntermission(is_boss)
 		Ware_ShowScreenOverlay2(player, null)
 	}
 	
-	CreateTimer(@() Ware_StartMinigame(is_boss), 4.0)
+	CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 }
 
 function Ware_BeginBoss()
@@ -1400,7 +1482,7 @@ function Ware_BeginBoss()
 		Ware_ShowScreenOverlay2(player, null)
 	}
 	
-	CreateTimer(@() Ware_BeginIntermission(true), 4.0)
+	CreateTimer(@() Ware_BeginIntermission(true), Ware_GetThemeSoundDuration("boss"))
 }
 
 function Ware_Speedup()
@@ -1414,7 +1496,7 @@ function Ware_Speedup()
 		Ware_ShowScreenOverlay2(player, null)
 	}
 	
-	CreateTimer(@() Ware_BeginIntermission(false), 5.0)
+	CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 }
 
 function Ware_StartMinigame(is_boss)
@@ -1917,20 +1999,25 @@ function Ware_EndMinigameInternal()
 	Ware_MinigameScope.clear()
 	Ware_MinigameOverlay2Set = false
 	
+	local sound_duration = Max(Ware_GetThemeSoundDuration("victory"), Ware_GetThemeSoundDuration("failure"))
+	if (all_failed)
+		sound_duration = Ware_GetThemeSoundDuration("failure_all")
+	
 	if (Ware_MinigamesPlayed > Ware_BossThreshold || Ware_DebugGameOver)
-		CreateTimer(@() Ware_GameOver(), 2.0)
+		CreateTimer(@() Ware_GameOver(), sound_duration)
 	else if (Ware_MinigamesPlayed == Ware_BossThreshold)
-		CreateTimer(@() Ware_BeginBoss(), 2.0)
+		CreateTimer(@() Ware_BeginBoss(), sound_duration)
 	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % Ware_SpeedUpThreshold == 0)
-		CreateTimer(@() Ware_Speedup(), 2.0)
+		CreateTimer(@() Ware_Speedup(), sound_duration)
 	else
-		CreateTimer(@() Ware_BeginIntermission(false), 2.0)
+		CreateTimer(@() Ware_BeginIntermission(false), sound_duration)
 }
 
 function Ware_GameOver()
 {
 	Ware_Finished = true
-	
+	Ware_RoundsPlayed++
+
 	local highest_players = Ware_MinigameHighScorers
 	highest_players = highest_players.filter(@(i, player) player.IsValid())
 	
@@ -1962,6 +2049,11 @@ function Ware_GameOver()
 			StunPlayer(player, TF_TRIGGER_STUN_LOSER, false, delay, 0.5)
 		}
 	}
+	
+	CreateTimer(function() {
+		foreach(player in Ware_Players)
+			Ware_PlayGameSound(player, "results")
+	}, 5.0)
 	
 	if (winner_count > 1)
 	{
@@ -2234,6 +2326,7 @@ function OnGameEvent_teamplay_round_start(params)
 		player.GetScriptScope().ware_data.score = 0
 		EntFireByHandle(ClientCmd, "Command", "r_cleardecals", -1, player, null)
 		BrickPlayerScore(player)
+		Ware_PlayGameSound(player, "results", SND_STOP)
 	}
 	
 	if (IsInWaitingForPlayers())
@@ -2242,6 +2335,24 @@ function OnGameEvent_teamplay_round_start(params)
 	if (Ware_Started)
 		return
 	Ware_Started = true
+	
+	// first round always uses default theme
+	if (Ware_RoundsPlayed > 0)
+	{
+		local new_theme
+		
+		// roll til we get a new one
+		do{
+			new_theme = RandomElement(Ware_Themes)
+		}
+		while (new_theme == Ware_Theme)
+		
+		Ware_Theme <- new_theme
+	}
+		
+	Ware_SetupThemeSounds()
+	
+	Ware_ChatPrint(null, "Theme: {str}", Ware_Theme.visual_name)
 	
 	// putting this here rather than in loop we already have since i want to go after waiting for players check. if that doesnt matter just move this in.
 	foreach(player in Ware_Players)
@@ -2469,6 +2580,15 @@ Ware_DevCommands <-
 	"nextbossgame"  : function(player, text) { Ware_DevCommandForceMinigame(player, text, true, true)   }
 	"forceminigame" : function(player, text) { Ware_DevCommandForceMinigame(player, text, false, false) }
 	"forcebossgame" : function(player, text) { Ware_DevCommandForceMinigame(player, text, true, false)  }
+	"forcetheme": function(player, text)
+	{
+		local args = split(text, " ")
+		if (args.len() >= 1)
+			Ware_DebugForceTheme = args[0]
+		else
+			Ware_DebugForceTheme = ""
+		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
+	}
 	"restart" : function(player, text)
 	{
 		SetConvarValue("mp_restartgame_immediate", 1)
