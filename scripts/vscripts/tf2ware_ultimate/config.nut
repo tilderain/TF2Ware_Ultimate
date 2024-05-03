@@ -462,4 +462,15 @@ const WARE_MUSICVERSION = 1
 
 foreach (sound in Ware_GameSounds)    PrecacheSound(format("tf2ware_ultimate/v%d/music_game/_default/%s.mp3", WARE_MUSICVERSION, sound))
 foreach (sound in Ware_MinigameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_minigame/%s.mp3", WARE_MUSICVERSION, sound))
-foreach (sound in Ware_BossgameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSICVERSION, sound)) 
+foreach (sound in Ware_BossgameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSICVERSION, sound))
+
+//precache theme sounds
+foreach(theme in Ware_Themes)
+{
+	// don't precache default sounds twice
+	if (theme.theme_name == "_default")
+		continue
+	
+	foreach(sound in theme.sounds)
+		PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, theme.theme_name, sound))
+}

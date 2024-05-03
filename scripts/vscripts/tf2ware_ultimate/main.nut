@@ -637,11 +637,7 @@ function Ware_SetupThemeSounds()
 	foreach(sound_name in Ware_GameSounds)
 	{
 		if (sound_name in Ware_Theme.sounds)
-		{
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Theme.theme_name, Ware_Theme.sounds[sound_name]]
-			// TODO this should be done in config
-			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, Ware_Theme.theme_name, sound_name))
-		}
 		else if (sound_name in Ware_Themes[0].sounds)
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Themes[0].theme_name, Ware_Themes[0].sounds[sound_name]]
 	}
