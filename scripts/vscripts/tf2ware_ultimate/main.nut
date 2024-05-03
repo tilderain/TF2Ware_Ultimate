@@ -639,7 +639,8 @@ function Ware_SetupThemeSounds()
 		if (sound_name in Ware_Theme.sounds)
 		{
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Theme.theme_name, Ware_Theme.sounds[sound_name]]
-			PrecacheSound(format("tf2ware_ultimate/music_game/%s/%s.mp3", Ware_Theme.theme_name, sound_name))
+			// TODO this should be done in config
+			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, Ware_Theme.theme_name, sound_name))
 		}
 		else if (sound_name in Ware_Themes[0].sounds)
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Themes[0].theme_name, Ware_Themes[0].sounds[sound_name]]
@@ -664,18 +665,18 @@ function Ware_PlayGameSound(player, name, flags = 0)
 		path = format("%s/%s", Ware_Themes[0].theme_name, name)
 	
 	if (player)
-		PlaySoundOnClient(player, format("tf2ware_ultimate/music_game/%s.mp3", path), 1.0, 100 * Ware_GetPitchFactor(), flags)
+		PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), 1.0, 100 * Ware_GetPitchFactor(), flags)
 	else
-		PlaySoundOnAllClients(format("tf2ware_ultimate/music_game/%s.mp3", path), 1.0, 100 * Ware_GetPitchFactor(), flags)
+		PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), 1.0, 100 * Ware_GetPitchFactor(), flags)
 }
 
 function Ware_PlayMinigameSound(player, name, flags = 0, volume = 1.0)
 {
 	local gametype = Ware_Minigame.boss ? "bossgame" : "minigame"
 	if (player)
-		PlaySoundOnClient(player, format("tf2ware_ultimate/music_%s/%s.mp3", gametype, name), volume, 100 * Ware_GetPitchFactor(), flags)
+		PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100 * Ware_GetPitchFactor(), flags)
 	else
-		PlaySoundOnAllClients(format("tf2ware_ultimate/music_%s/%s.mp3", gametype, name), volume, 100 * Ware_GetPitchFactor(), flags)
+		PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100 * Ware_GetPitchFactor(), flags)
 }
 
 function Ware_SetConvarValue(convar, value)
@@ -2426,7 +2427,7 @@ function OnGameEvent_player_spawn(params)
 	local data = player.GetScriptScope().ware_data
 
 	if (!data.cache_init && player.IsEFlagSet(EFL_LOADOUT_CACHED))
-	{
+	{		
 		data.cache_init = true		
 		data.cache_melees = array(9)
 		
@@ -2452,6 +2453,8 @@ function OnGameEvent_player_spawn(params)
 				}
 			}
 		}
+		
+		Ware_ChatPrint(player, "{color}Loadout cached successfully", TF_COLOR_DEFAULT)	
 	}
 
 	// this is to fix persisting attributes if restarting mid-minigame

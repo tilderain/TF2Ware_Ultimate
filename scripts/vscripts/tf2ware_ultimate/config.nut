@@ -456,6 +456,10 @@ Ware_MeleeAttributeOverrides <-
 	},
 }
 
-foreach (sound in Ware_GameSounds)    PrecacheSound(format("tf2ware_ultimate/music_game/_default/%s.mp3", sound))
-foreach (sound in Ware_MinigameMusic) PrecacheSound(format("tf2ware_ultimate/music_minigame/%s.mp3", sound))
-foreach (sound in Ware_BossgameMusic) PrecacheSound(format("tf2ware_ultimate/music_bossgame/%s.mp3", sound)) 
+// everytime music is changed AND the map is *publicly* updated
+// this must be incremented to prevent caching errors
+const WARE_MUSICVERSION = 1
+
+foreach (sound in Ware_GameSounds)    PrecacheSound(format("tf2ware_ultimate/v%d/music_game/_default/%s.mp3", WARE_MUSICVERSION, sound))
+foreach (sound in Ware_MinigameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_minigame/%s.mp3", WARE_MUSICVERSION, sound))
+foreach (sound in Ware_BossgameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSICVERSION, sound)) 
