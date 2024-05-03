@@ -1105,6 +1105,17 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	return weapon
 }
 
+function Ware_RemoveMeleeAttributes(melee)
+{
+	local id = GetPropInt(melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
+	if (id in Ware_MeleeAttributeOverrides)
+	{
+		local attributes = Ware_MeleeAttributeOverrides[id]
+		foreach (name, value in attributes)
+			melee.AddAttribute(name, value, -1)
+	}
+}
+
 function Ware_AddPlayerAttribute(player, name, value, duration)
 {
 	player.AddCustomAttribute(name, value, duration)
@@ -2263,6 +2274,18 @@ function PlayerPostSpawn()
 	if (Ware_TimeScale != 1.0)
 		self.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
 	SetPropBool(self, "m_Shared.m_bShieldEquipped", false)
+	
+	local melee = ware_data.melee
+	if (melee != null)
+	{
+		// not sure why this is needed
+		melee.SetModel(TF_CLASS_ARMS[self.GetPlayerClass()])		
+		self.Weapon_Switch(melee)
+		melee.EnableDraw()
+		
+		// hack: calculates correct speed
+		self.AddCustomAttribute("is commodity", 1, 0)
+	}
 }
 
 function OnGameEvent_player_spawn(params)
@@ -2303,13 +2326,7 @@ function OnGameEvent_player_spawn(params)
 				}
 				else if (startswith(classname, "tf_weapon_"))
 				{
-					local id = GetPropInt(child, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
-					if (id in Ware_MeleeAttributeOverrides)
-					{
-						local attributes = Ware_MeleeAttributeOverrides[id]
-						foreach (name, value in attributes)
-							child.AddAttribute(name, value, -1)
-					}
+					Ware_RemoveMeleeAttributes(child)
 					
 					// the plugin sets this
 					local owning_class = GetPropInt(child, "m_iHammerID")
@@ -2340,13 +2357,9 @@ function OnGameEvent_player_spawn(params)
 			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 2.0)
 		
 		local melee = Ware_ParseLoadout(player)
-		if (melee != null)
-		{
-			// not sure why this is needed
-			melee.SetModel(TF_CLASS_ARMS[player.GetPlayerClass()])		
-			player.Weapon_Switch(melee)
-			melee.EnableDraw()
-		}
+		
+		if (!Ware_LoadoutCacher && melee)
+			Ware_RemoveMeleeAttributes(melee)
 			
 		EntityEntFire(player, "CallScriptFunction", "PlayerPostSpawn")
 		
