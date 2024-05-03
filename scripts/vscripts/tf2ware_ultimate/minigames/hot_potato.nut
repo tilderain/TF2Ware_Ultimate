@@ -13,9 +13,9 @@ minigame <- Ware_MinigameData
 	thirdperson   = true
 })
 
-hot_potato <- null 
-hot_potato_wearable <- null
-hot_potato_timer <- 0.0
+hot_potatos <- null 
+hot_potatos_wearable <- null
+hot_potatos_timer <- null
 
 bomb_model <- "models/props_lakeside_event/bomb_temp.mdl"
 explode_particle <- "eotl_pyro_pool_explosion"
@@ -26,37 +26,60 @@ PrecacheSound(explode_sound)
 
 function OnStart()
 {
-	SetHotPotato(RandomElement(Ware_MinigamePlayers).player)
+	local count = Ware_MinigamePlayers.len() / 12 + 1
+	hot_potatos = array(count)
+	hot_potatos_wearable = array(count)
+	hot_potatos_timer = array(count, 0.0)
+	
+	local candidates = clone(Ware_MinigamePlayers)
+	
+	for (local i = 0; i < count; i++)
+		SetHotPotato(i, RemoveRandomElement(candidates).player)
 }
 
-function SetHotPotato(player)
+function SetHotPotato(index, player)
 {
+	local hot_potato = hot_potatos[index]
 	if (hot_potato && hot_potato.IsValid())
 		hot_potato.RemoveCond(TF_COND_SPEED_BOOST)
 	
 	hot_potato = player
 	hot_potato.AddCond(TF_COND_SPEED_BOOST)
-	
+	hot_potatos[index] = player
+		
+	local hot_potato_wearable = hot_potatos_wearable[index]
 	if (hot_potato_wearable && hot_potato_wearable.IsValid())
 		hot_potato_wearable.Kill()
 	
 	hot_potato_wearable = Ware_SpawnWearable(player, bomb_model)
 	SetPropInt(hot_potato_wearable, "m_fEffects", 0)
 	SetEntityParent(hot_potato_wearable, hot_potato, "head")
-	SetPropFloat(hot_potato_wearable, "m_flModelScale", 1.5)
-	
-	hot_potato_timer = Time() + 0.5
+	hot_potato_wearable.SetModelScale(1.2, 0)
+	hot_potatos_wearable[index] = hot_potato_wearable
+	 
+	hot_potatos_timer[index] = Time() + 0.5
 }
 
 function OnPlayerTouch(player, other_player)
 {
-	if (hot_potato_timer > Time())
+	local index = hot_potatos.find(player)
+	local other_index = hot_potatos.find(other_player)
+	
+	if (index == null && other_index == null)
+		return
+	if (index != null && other_index != null)
+		return
+		
+	local time = Time()
+	if (index != null && hot_potatos_timer[index] > time)
+		return
+	if (other_index != null && hot_potatos_timer[other_index] > time)
 		return
 	
-	if (player == hot_potato)
-		SetHotPotato(other_player)
-	else if (other_player == hot_potato)
-		SetHotPotato(player)
+	if (index != null)
+		SetHotPotato(index, other_player)
+	else if (other_index != null)
+		SetHotPotato(other_index, player)
 }
 
 function OnTakeDamage(params)
@@ -66,22 +89,27 @@ function OnTakeDamage(params)
 
 function OnEnd()
 {
-	if (hot_potato.IsValid())
-	{			
-		local particle = Ware_SpawnEntity("info_particle_system",
-		{
-			origin = hot_potato.EyePosition(),
-			effect_name = explode_particle,
-			start_active = true
-		})
-		
-		hot_potato.EmitSound(explode_sound)
-		hot_potato.EmitSound(explode_sound)
-		
-		Ware_RadiusDamagePlayers(hot_potato.GetOrigin(), 250.0, 500.0, hot_potato)
-		ScreenShake(hot_potato.GetOrigin(), 1024.0, 25.0, 2.5, 1024.0, 0, true)
+	foreach (hot_potato in hot_potatos)
+	{
+		if (hot_potato.IsValid())
+		{			
+			local particle = Ware_SpawnEntity("info_particle_system",
+			{
+				origin = hot_potato.EyePosition(),
+				effect_name = explode_particle,
+				start_active = true
+			})
+			
+			hot_potato.EmitSound(explode_sound)
+			
+			Ware_RadiusDamagePlayers(hot_potato.GetOrigin(), 250.0, 500.0, hot_potato)
+			ScreenShake(hot_potato.GetOrigin(), 1024.0, 25.0, 2.5, 1024.0, 0, true)
+		}
 	}
 	
-	if (hot_potato_wearable.IsValid())
-		hot_potato_wearable.Kill()
+	foreach (hot_potato_wearable in hot_potatos_wearable)
+	{
+		if (hot_potato_wearable.IsValid())
+			hot_potato_wearable.Kill()
+	}
 }
