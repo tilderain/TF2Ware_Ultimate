@@ -634,11 +634,12 @@ function Ware_SetupThemeSounds()
 {
 	Ware_CurrentThemeSounds <- {}
 	
-	foreach(sound_name in Ware_GameSounds)
+	foreach(key, value in Ware_Themes[0].sounds)
 	{
+		local sound_name = key
 		if (sound_name in Ware_Theme.sounds)
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Theme.theme_name, Ware_Theme.sounds[sound_name]]
-		else if (sound_name in Ware_Themes[0].sounds)
+		else
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Themes[0].theme_name, Ware_Themes[0].sounds[sound_name]]
 	}
 }

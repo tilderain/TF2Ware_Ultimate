@@ -97,14 +97,21 @@ Ware_Themes <-
 		visual_name = "TF2Ware Ultimate"
 		sounds = {
 			// set to values that were present in main.nut at the relevant places before i changed to this system.
-			"boss":        4.0
-			"failure":     2.0
-			"failure_all": 2.0
-			"gameover":    5.0
-			"intro":       4.0
-			"results":     0.0
-			"speedup":     4.5
-			"victory":     2.000
+			// if any are 0.0 they arent used for intermission timings yet
+			// some like "results" will never be as it stops playing automatically on restart
+			"boss":             4.0
+			"break":            0.0
+			"break_end":        0.0
+			"failure":          2.0
+			"failure_all":      2.0
+			"gameclear":        0.0
+			"gameover":         5.0
+			"intro":            4.0
+			"lets_get_started": 0.0
+			"mapend":           0.0
+			"results":          0.0
+			"speedup":          4.5
+			"victory":          2.000
 		}
 	},
 	
@@ -223,23 +230,6 @@ Ware_Themes <-
 			"victory": 2.097
 		}
 	},
-]
-
-Ware_GameSounds <-
-[
-	"boss"
-	"break"
-	"break_end"
-	"failure"
-	"failure_all"
-	"gameclear"
-	"gameover"
-	"intro"
-	"lets_get_started"
-	"mapend"
-	"results"
-	"speedup"
-	"victory"
 ]
 
 Ware_MinigameMusic <-
@@ -460,17 +450,12 @@ Ware_MeleeAttributeOverrides <-
 // this must be incremented to prevent caching errors
 const WARE_MUSICVERSION = 1
 
-foreach (sound in Ware_GameSounds)    PrecacheSound(format("tf2ware_ultimate/v%d/music_game/_default/%s.mp3", WARE_MUSICVERSION, sound))
 foreach (sound in Ware_MinigameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_minigame/%s.mp3", WARE_MUSICVERSION, sound))
 foreach (sound in Ware_BossgameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSICVERSION, sound))
 
 //precache theme sounds
 foreach(theme in Ware_Themes)
 {
-	// don't precache default sounds twice
-	if (theme.theme_name == "_default")
-		continue
-	
-	foreach(sound in theme.sounds)
-		PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, theme.theme_name, sound))
+	foreach(key, value in theme.sounds)
+		PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, theme.theme_name, key))
 }
