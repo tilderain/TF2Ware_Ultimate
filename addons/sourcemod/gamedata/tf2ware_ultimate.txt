@@ -2,6 +2,7 @@
 {
 	"tf"
 	{
+		// all of these are for the loadout cacher and aren't critical to function
 		"Offsets"
 		{
 			"CBasePlayer::EquipWearable"
@@ -11,13 +12,20 @@
 				"linux"		"439"
 				"linux64"	"439"
 			}
-			"CTFPlayer::InitClass"
+			"CTFPlayer::InitClass"	
 			{
 				"windows"	"488"
 				"windows64"	"488"
 				"linux"		"495"
 				"linux64"	"495"
 			}
+			"CTFPlayer::RemoveAllWeapons"	
+			{
+				"windows"	"313"
+				"windows64"	"313"
+				"linux"		"314"
+				"linux64"	"314"
+			}			
 		}
 		"Functions"
 		{
@@ -28,6 +36,13 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			"CTFPlayer::RemoveAllWeapons"
+			{
+				"offset"	"CTFPlayer::RemoveAllWeapons"
+				"hooktype"	"entity"
+				"return"	"void"
+				"this"		"entity"
+			}			
 		}
 	}
 }

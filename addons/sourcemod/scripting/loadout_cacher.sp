@@ -21,6 +21,7 @@
 
 Handle g_SDKCall_CBasePlayerEquipWearable;
 DynamicHook g_DHook_CTFPlayerInitClass;
+DynamicHook g_DHook_CTFPlayerRemoveAllWeapons;
 ArrayList g_Queue_LoadoutCache;
 Profiler g_Profiler_InitClass;
 int g_PropOffset_EFlags;
@@ -44,6 +45,7 @@ enum struct LoadoutCache
 	int saved_class;
 	int cosmetic_entrefs[MAX_LOADOUT_WEARABLES];
 	ArrayList cache_class; // TF_CLASS_LAST size
+	bool disconnecting;
 }
 LoadoutCache g_ClientLoadoutCache[MAXPLAYERS + 1];
 
@@ -66,6 +68,13 @@ public void LoadoutCacher_Start(GameData gamedata)
 	if (!g_DHook_CTFPlayerInitClass)
 	{
 		LogError("Failed to setup hook for CTFPlayer::InitClass");		
+		return;
+	}
+	
+	g_DHook_CTFPlayerRemoveAllWeapons = DynamicHook.FromConf(gamedata, "CTFPlayer::RemoveAllWeapons");
+	if (!g_DHook_CTFPlayerRemoveAllWeapons)
+	{
+		LogError("Failed to setup hook for CTFPlayer::RemoveAllWeapons");		
 		return;
 	}
 
@@ -305,6 +314,8 @@ void InitLoadoutCache(int client)
 
 public void LoadoutCacher_InitClient(int client)
 {
+	g_ClientLoadoutCache[client].disconnecting = false;
+		
 	if (g_PropOffset_EFlags <= 0)
 	{
 		g_PropOffset_EFlags = FindDataMapInfo(client, "m_iEFlags");
@@ -324,11 +335,12 @@ public void LoadoutCacher_InitClient(int client)
 	{
 		g_DHook_CTFPlayerInitClass.HookEntity(Hook_Pre, client, DHookPre_CTFPlayerInitClass);
 		g_DHook_CTFPlayerInitClass.HookEntity(Hook_Post, client, DHookPost_CTFPlayerInitClass);
+		g_DHook_CTFPlayerRemoveAllWeapons.HookEntity(Hook_Pre, client, DHookPre_CTFPlayerRemoveAllWeapons);
 	}
 }
 
 public void LoadoutCacher_DisconnectClient(int client)
-{
+{	
 	if (g_Queue_LoadoutCache)
 	{
 		int idx = g_Queue_LoadoutCache.FindValue(client);
@@ -337,6 +349,7 @@ public void LoadoutCacher_DisconnectClient(int client)
 	}
 	
 	InitLoadoutCache(client);
+	g_ClientLoadoutCache[client].disconnecting = true;
 }
 
 public void LoadoutCacher_UpdateClient(int client)
@@ -437,6 +450,30 @@ static MRESReturn DHookPost_CTFPlayerInitClass(int client)
 		float time = g_Profiler_InitClass.Time;
 		LogMessage("Client '%s' took %.4f ms to spawn loadout", name, time * 1000.0);
 		delete g_Profiler_InitClass;
+	}
+	
+	return MRES_Ignored;
+}
+
+static MRESReturn DHookPre_CTFPlayerRemoveAllWeapons(int client)
+{
+	if (!g_ClientLoadoutCache[client].disconnecting && IsEntityLoadoutCached(client))
+	{
+		SetEntPropEnt(client, Prop_Send, "m_hActiveWeapon", -1);
+		
+		// discard non-cached weapons
+		for (int i = 0; i < MAX_WEAPONS; i++)
+		{
+			int weapon = GetEntPropEnt(client, Prop_Send, "m_hMyWeapons", i);
+			if (weapon > 0 && !IsEntityLoadoutCached(weapon))
+			{
+				RemoveEntity(weapon);
+				break;
+			}	
+		}		
+		
+		// keep cached cosmetic and melees intact
+		return MRES_Supercede;
 	}
 	
 	return MRES_Ignored;
