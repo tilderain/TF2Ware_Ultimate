@@ -634,14 +634,36 @@ function Ware_SetupThemeSounds()
 {
 	Ware_CurrentThemeSounds <- {}
 	
+	local parent_theme = Ware_GetParentTheme(Ware_Theme)
+	
 	foreach(key, value in Ware_Themes[0].sounds)
 	{
 		local sound_name = key
+		
 		if (sound_name in Ware_Theme.sounds)
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Theme.theme_name, Ware_Theme.sounds[sound_name]]
+		else if (parent_theme != null && sound_name in parent_theme.sounds)
+			Ware_CurrentThemeSounds[sound_name] <- [parent_theme.theme_name, parent_theme.sounds[sound_name]]
 		else
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Themes[0].theme_name, Ware_Themes[0].sounds[sound_name]]
 	}
+}
+
+function Ware_GetParentTheme(theme)
+{
+	// returns internal theme that multiple themes point to based on theme_name
+	// this is mostly used for shared sounds due to shared platform, so we don't
+	// have multiple copies of the same sound
+	
+	// note: this returns a table
+	
+	foreach(internal_theme in Ware_InternalThemes)
+	{
+		if (theme.theme_name.find(internal_theme.theme_name) != null)
+			return internal_theme
+	}
+	
+	return null
 }
 
 function Ware_GetThemeSoundDuration(sound)

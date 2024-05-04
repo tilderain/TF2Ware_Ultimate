@@ -98,14 +98,14 @@ Ware_Themes <-
 		sounds = {
 			// set to values that were present in main.nut at the relevant places before i changed to this system.
 			// if any are 0.0 they arent used for intermission timings yet
-			// some like "results" will never be as it stops playing automatically on restart
+			// some like "results" will never be greater than 0.0 as it stops playing automatically on restart
 			"boss":             4.0
 			"break":            0.0
 			"break_end":        0.0
 			"failure":          2.0
 			"failure_all":      2.0
-			"gameclear":        0.0
-			"gameover":         5.0
+			"gameclear":        5.0 // these two dont use the duration, it's always 5 seconds after this when results play
+			"gameover":         5.0 // ''
 			"intro":            4.0
 			"lets_get_started": 0.0
 			"mapend":           0.0
@@ -232,6 +232,34 @@ Ware_Themes <-
 	},
 ]
 
+Ware_InternalThemes <-
+[
+	// these aren't rolled and should never be set as Ware_Theme, but rather Ware_SetupThemeSounds() checks for them
+	// they still get a visual name just in case
+	{
+		theme_name = "3ds"
+		visual_name = "WarioWare Gold (3DS)"
+		sounds = {
+			"boss":      4.4
+			"gameclear": 3.292
+			"gameover":  3.371
+			"speedup":   4.3
+		}
+	},
+	
+	{
+		theme_name = "ds_touched"
+		visual_name = "WarioWare: Touched! (DS)"
+		sounds = {
+			"boss":      4.519
+			"gameclear": 3.579
+			"gameover":  3.684
+			"results":   0.0
+			"speedup":   4.388
+		}
+	},
+]
+
 Ware_MinigameMusic <-
 [
 	"actfast" 
@@ -271,7 +299,7 @@ Ware_MinigameMusic <-
 	"pumpit" 
 	"question"
 	"ringring"
-	"rockingout",
+	"rockingout"
 	"settingthescene" 
 	"sillytime" 
 	"slowfox" 
@@ -453,8 +481,13 @@ const WARE_MUSICVERSION = 1
 foreach (sound in Ware_MinigameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_minigame/%s.mp3", WARE_MUSICVERSION, sound))
 foreach (sound in Ware_BossgameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSICVERSION, sound))
 
-//precache theme sounds
+// precache theme sounds
 foreach(theme in Ware_Themes)
+{
+	foreach(key, value in theme.sounds)
+		PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, theme.theme_name, key))
+}
+foreach(theme in Ware_InternalThemes)
 {
 	foreach(key, value in theme.sounds)
 		PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, theme.theme_name, key))
