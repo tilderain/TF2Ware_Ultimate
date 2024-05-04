@@ -293,6 +293,7 @@ function OnMicroEnd()
 				player.RemoveCond(TF_COND_HALLOWEEN_KART)
 				break
 			case MICRO_COMB:
+				player.RemoveCond(TF_COND_DISGUISING)
 				if (player.InCond(TF_COND_DISGUISED))
 				{
 					GiocaJouer_PassPlayer(player, true)
