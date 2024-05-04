@@ -18,7 +18,7 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
 	
-	EntFire("rocketjump_train", "StartForward", "", 1.5)
+	EntFire("rocketjump_train", "StartForward", "", 3.0)
 }
 
 function OnUpdate()
