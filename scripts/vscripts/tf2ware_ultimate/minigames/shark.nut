@@ -33,7 +33,7 @@ shark_kills <- 0
 shark_model <- "models/tf2ware/shark.mdl"
 shark_sound <- "TF2Ware_Ultimate.Sharkbite"
 
-local blahaj = RandomInt(0, 99) == 0
+local blahaj = true// RandomInt(0, 99) == 0
 if (blahaj)
 	shark_model <- "models/blahaj_plush/blahaj_plush.mdl"
 
@@ -74,13 +74,14 @@ function OnStart()
 			Ware_SetPlayerClass(player, TF_CLASS_PYRO)
 			player.SetForcedTauntCam(1)
 			player.SetCustomModel(shark_model)
-			player.SetCustomModelRotates(true)
 			if (!blahaj)
+			{
+				player.SetCustomModelRotates(true)
 				player.SetCustomModelOffset(Vector(0, 0, -48))
+			}
 			else
 			{
 				player.SetCustomModelOffset(Vector(0, 0, 48))
-				player.SetCustomModelRotation(QAngle(0, 90, 0))
 				player.SetModelScale(2.0, 0.0)
 			}
 			
@@ -167,6 +168,7 @@ function OnCleanup()
 		shark.SetCustomModel("")
 		shark.SetCustomModelRotates(false)
 		shark.SetCustomModelOffset(Vector())
+		shark.SetModelScale(1.0, 0.0)
 		Ware_TogglePlayerWearables(shark, true)
 		SetPropFloat(shark, "m_PainFinished", 0.0)
 	}
