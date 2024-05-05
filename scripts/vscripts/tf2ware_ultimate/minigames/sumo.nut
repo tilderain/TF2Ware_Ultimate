@@ -20,7 +20,7 @@ minigame <- Ware_MinigameData
 	convars       =
 	{
 		tf_halloween_kart_fast_turn_speed = 200
-		tf_halloween_kart_impact_force = "2f"
+		tf_halloween_kart_impact_force = "1.25f"
 	}
 })
 
