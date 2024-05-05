@@ -75,7 +75,15 @@ function OnStart()
 			player.SetForcedTauntCam(1)
 			player.SetCustomModel(shark_model)
 			player.SetCustomModelRotates(true)
-			player.SetCustomModelOffset(Vector(0, 0, -48))
+			if (!blahaj)
+				player.SetCustomModelOffset(Vector(0, 0, -48))
+			else
+			{
+				player.SetCustomModelOffset(Vector(0, 0, 48))
+				player.SetCustomModelRotation(QAngle(0, 90, 0))
+				player.SetModelScale(2.0, 0.0)
+			}
+			
 			Ware_TogglePlayerWearables(shark, false)
 			SetPropFloat(player, "m_PainFinished", 1e30) // disable drowning
 			Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
