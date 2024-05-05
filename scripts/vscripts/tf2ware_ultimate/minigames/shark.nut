@@ -33,7 +33,7 @@ shark_kills <- 0
 shark_model <- "models/tf2ware/shark.mdl"
 shark_sound <- "TF2Ware_Ultimate.Sharkbite"
 
-local blahaj = true// RandomInt(0, 99) == 0
+local blahaj = RandomInt(0, 99) == 0
 if (blahaj)
 	shark_model <- "models/blahaj_plush/blahaj_plush.mdl"
 
