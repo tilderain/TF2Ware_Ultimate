@@ -35,8 +35,10 @@ function OnStart()
 	
 	BeepBlock_FireInput(inactive_blocks, "Disable")
 	
-	local trigger_endzone = FindByName(null, "plugin_Bossgame5_WinArea")
-	trigger_endzone.ConnectOutput("OnStartTouch", "OnEndzoneTouch")
+	local trigger = FindByName(null, "plugin_Bossgame5_WinArea")
+	trigger.ValidateScriptScope()
+	trigger.GetScriptScope().OnStartTouch <- OnEndzoneTouch
+	trigger.ConnectOutput("OnStartTouch", "OnStartTouch")
 	
 	Ware_CreateTimer(function() {
 		BeepBlock_Sequence()
@@ -92,6 +94,12 @@ function BeepBlock_Swap()
 function BeepBlock_FireInput(entity, action, params = "")
 {
 	EntFireByHandle(entity, action, params, -1, null, null)
+}
+
+function OnEnd()
+{
+	local trigger = FindByName(null, "plugin_Bossgame5_WinArea")
+	trigger.DisconnectOutput("OnStartTouch", "OnStartTouch")
 }
 
 // TODO: CheckEnd is everyone either passed or dead
