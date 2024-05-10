@@ -356,3 +356,12 @@ Ware_Location.ballcourt <-
 		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 800.0, -60.0, 60.0)
 	}	
 }
+
+Ware_Location.beepblockskyway <-
+{
+	center = Vector(-13285, -14570, -9760)
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 450, 90, 80)
+	}
+}

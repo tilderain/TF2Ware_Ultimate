@@ -76,6 +76,7 @@ Ware_Minigames <-
 Ware_Bossgames <-
 [
 	"basketball"
+	//"beep_block" // disabled until trigger_multiple at end is working (in case we do another test before its fixed)
 	"cuddly_heavies"
 	"falling_platforms"
 	"ghostbusters"
@@ -320,6 +321,7 @@ Ware_MinigameMusic <-
 Ware_BossgameMusic <-
 [
 	"basketball"
+	"beepblockskyway"
 	"cuddly"
 	"effort"
 	"falling"
