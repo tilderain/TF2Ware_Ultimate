@@ -322,6 +322,7 @@ Ware_BossgameMusic <-
 [
 	"basketball"
 	"beepblockskyway"
+	"beepblockskyway-twelve"
 	"cuddly"
 	"effort"
 	"falling"

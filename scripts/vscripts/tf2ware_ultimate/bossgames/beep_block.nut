@@ -6,14 +6,27 @@ minigame <- Ware_MinigameData
 	description    = "Get to the End!"
 	custom_overlay = "get_end"
 	duration       = 160.0
-	end_delay      = 0.5
+	end_delay      = 1.0
 	location       = "beepblockskyway"
 	music          = "beepblockskyway"
 	fail_on_death  = true
 	no_collisions  = true
 })
 
-tempo <- 120.0 // bpm
+if (RandomInt(0, 120) == 0)
+	minigame.music = "beepblockskyway-twelve"
+
+if (minigame.music == "beepblockskyway")
+{
+	tempo <- 120.0 // bpm
+	bgm_offset <- 0.02
+}
+else
+{
+	tempo <- 140.0
+	bgm_offset <- -0.1
+}
+
 beat <- 60.0 * (1 / tempo)
 
 beep_sound <- "tf2ware_ultimate/beep_block_beep.mp3"
@@ -26,16 +39,15 @@ yellow_blocks   <- FindByName(null, "beatblock_yellow")
 active_blocks   <- RandomElement([green_blocks, yellow_blocks])
 inactive_blocks <- active_blocks == green_blocks ? yellow_blocks : green_blocks
 
+trigger <- FindByName(null, "plugin_Bossgame5_WinArea")
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER)
 	
-	BeepBlock_FireInput(green_blocks, "AlternativeSorting", "true")
-	BeepBlock_FireInput(yellow_blocks, "AlternativeSorting", "true")
-	
+	BeepBlock_FireInput(active_blocks, "Enable")
 	BeepBlock_FireInput(inactive_blocks, "Disable")
 	
-	local trigger = FindByName(null, "plugin_Bossgame5_WinArea")
 	trigger.ValidateScriptScope()
 	trigger.GetScriptScope().OnStartTouch <- OnEndzoneTouch
 	trigger.ConnectOutput("OnStartTouch", "OnStartTouch")
@@ -43,7 +55,7 @@ function OnStart()
 	Ware_CreateTimer(function() {
 		BeepBlock_Sequence()
 		return (8.0 * beat)
-	}, 0.05+(6.0 * beat))
+	}, bgm_offset+(6.0 * beat))
 }
 
 function OnEndzoneTouch()
@@ -98,8 +110,25 @@ function BeepBlock_FireInput(entity, action, params = "")
 
 function OnEnd()
 {
-	local trigger = FindByName(null, "plugin_Bossgame5_WinArea")
 	trigger.DisconnectOutput("OnStartTouch", "OnStartTouch")
+	
+	BeepBlock_FireInput(green_blocks, "Alpha", "255")
+	BeepBlock_FireInput(yellow_blocks, "Alpha", "255")
 }
 
-// TODO: CheckEnd is everyone either passed or dead
+function CheckEnd()
+{
+	return BeepBlock_CheckEnd()
+}
+
+function BeepBlock_CheckEnd()
+{
+	foreach(data in Ware_MinigamePlayers)
+	{
+		local player = data.player
+		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
+			return false
+	}
+	
+	return true
+}

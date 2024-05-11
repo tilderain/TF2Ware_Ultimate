@@ -2,5 +2,5 @@
 {
 	"$basetexture" "stsv/microtextures/beatblock/greentransp"
 	"$surfaceprop" "Concrete_Block"
-	"$translucent" 1
+	"$alphatest" 1
 }
