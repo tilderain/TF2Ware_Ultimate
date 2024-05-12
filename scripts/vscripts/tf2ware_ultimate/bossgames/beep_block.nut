@@ -13,18 +13,18 @@ minigame <- Ware_MinigameData
 	no_collisions  = true
 })
 
-if (RandomInt(0, 120) == 0)
+if (RandomInt(0, 128) == 0)
 	minigame.music = "beepblockskyway-twelve"
 
 if (minigame.music == "beepblockskyway")
 {
 	tempo <- 120.0 // bpm
-	bgm_offset <- 0.02
+	bgm_offset <- 0.029
 }
 else
 {
 	tempo <- 140.0
-	bgm_offset <- -0.1
+	bgm_offset <- -0.05
 }
 
 beat <- 60.0 * (1 / tempo)
@@ -45,25 +45,49 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER)
 	
+	BeepBlock_FireInput(green_blocks, "Alpha", "255")
+	BeepBlock_FireInput(yellow_blocks, "Alpha", "255")
+	
 	BeepBlock_FireInput(active_blocks, "Enable")
 	BeepBlock_FireInput(inactive_blocks, "Disable")
 	
 	trigger.ValidateScriptScope()
 	trigger.GetScriptScope().OnStartTouch <- OnEndzoneTouch
+	trigger.GetScriptScope().first <- true
 	trigger.ConnectOutput("OnStartTouch", "OnStartTouch")
 	
-	Ware_CreateTimer(function() {
-		BeepBlock_Sequence()
-		return (8.0 * beat)
-	}, bgm_offset+(6.0 * beat))
+	// using return in the timer for each subsequent sequence seems to add up a lot of processing delays over time
+	// instead, we create all the sequences at the start, offset every 2 bars using i
+	// this has more consistent timing, though it is a bit less flexible
+	for (local i = 0; i < ceil(minigame.duration / (8.0 * beat)); i++)
+	{
+		Ware_CreateTimer(function() {
+			BeepBlock_Sequence()
+		}, bgm_offset + (6.0 * beat) + i * (8.0 * beat))
+	}
 }
 
 function OnEndzoneTouch()
 {
 	local player = activator
 	
-	if (player.IsPlayer() && player.IsValid())
+	if (player.IsPlayer() && player.IsValid() && !Ware_IsPlayerPassed(player))
+	{
+		local hms = FloatToTimeHMS(Ware_GetMinigameTime())
+		if (first)
+		{
+			Ware_ChatPrint(null, "{player} {color}reached the end first in {%d}:{%02d}!", 
+				player, TF_COLOR_DEFAULT, hms.minutes, hms.seconds)
+			first = false
+		}
+		else
+		{
+			Ware_ChatPrint(player, "{color}You reached the end in {%d}:{%02d}!", 
+				TF_COLOR_DEFAULT, hms.minutes, hms.seconds)
+		}
+		
 		Ware_PassPlayer(player, true)
+	}
 }
 
 function BeepBlock_Sequence()
@@ -86,7 +110,7 @@ function BeepBlock_Sequence()
 
 function BeepBlock_Beep()
 {
-	BeepBlock_FireInput(active_blocks, "Alpha", "200")
+	BeepBlock_FireInput(active_blocks, "Alpha", "210")
 	
 	Ware_CreateTimer(function() {
 		BeepBlock_FireInput(active_blocks, "Alpha", "255")
