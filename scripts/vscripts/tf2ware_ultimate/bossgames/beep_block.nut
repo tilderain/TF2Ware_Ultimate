@@ -219,6 +219,7 @@ function OnEnd()
 {
 	trigger.DisconnectOutput("OnStartTouch", "OnStartTouch")
 	tele1.DisconnectOutput("OnStartTouch", "OnStartTouch")
+	tele2.DisconnectOutput("OnStartTouch", "OnStartTouch")
 	
 	BeepBlock_FireInput(green_blocks, "Alpha", "255")
 	BeepBlock_FireInput(yellow_blocks, "Alpha", "255")
