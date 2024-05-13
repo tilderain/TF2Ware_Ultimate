@@ -357,11 +357,20 @@ Ware_Location.ballcourt <-
 	}	
 }
 
-Ware_Location.beepblockskyway <-
+Ware_Location.beepblockskyway_micro <-
 {
 	center = Vector(-13285, -14570, -9760)
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 450, 90, 80)
+	}
+}
+
+Ware_Location.beepblockskyway_ultimate <-
+{
+	center = Vector(-8960, -13500, -9760)
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 900, 120, 110)
 	}
 }
