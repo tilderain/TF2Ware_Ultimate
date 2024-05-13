@@ -107,14 +107,14 @@ function OnStart()
 	}
 }
 
-function OnUpdate()
-{
-	foreach(data in Ware_MinigamePlayers)
-	{
-		local player = data.player
-		SetPropEntity(player, "m_hGroundEntity", active_blocks[1])
-	}
-}
+// function OnUpdate()
+// {
+// 	foreach(data in Ware_MinigamePlayers)
+// 	{
+// 		local player = data.player
+// 		SetPropEntity(player, "m_hGroundEntity", active_blocks[1])
+// 	}
+// }
 
 // no fall damage, but trigger_hurt uses fall damage so we check for that too
 function OnTakeDamage(params)
