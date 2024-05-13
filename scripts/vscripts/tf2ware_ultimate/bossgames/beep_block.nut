@@ -2,7 +2,7 @@
 arenas <-
 [
 	"beepblockskyway_micro"
-	"beepblockskyway_ultimate"
+	//"beepblockskyway_ultimate"
 ]
 
 minigame <- Ware_MinigameData
