@@ -12,54 +12,66 @@ minigame <- Ware_MinigameData
 	description    = "Get to the End!"
 	custom_overlay = "get_end"
 	duration       = 160.0
-	end_delay      = 1.0
+	end_delay      = 1.1
 	location       = RandomElement(arenas)
 	music          = "beepblockskyway"
 	fail_on_death  = true
 	no_collisions  = true
 })
 
+// variables
+tempo           <- 0.0
+tempo_increase  <- 1.2 // after interrupt
+beat            <- 0.0
+bgm_offset      <- 0.0
+interrupted     <- false
+interrupt_timer <- 60
+
+// audio
 if (RandomInt(0, 128) == 0)
 	minigame.music = "beepblockskyway-twelve"
 
-if (minigame.music == "beepblockskyway")
-{
-	tempo <- 120.0 // bpm
-	bgm_offset <- 0.028
-}
-else
-{
-	tempo <- 140.0
-	bgm_offset <- -0.05
-}
-
-beat <- 60.0 * (1 / tempo)
-
 beep_sound <- "tf2ware_ultimate/beep_block_beep.mp3"
 swap_sound <- "tf2ware_ultimate/beep_block_door.mp3"
+hurryup_sound <- "tf2ware_ultimate/hurryup.mp3"
 tele_sound <- "Building_Teleporter.Send"
 PrecacheSound(beep_sound)
 PrecacheSound(swap_sound)
+PrecacheSound(hurryup_sound)
 PrecacheScriptSound(tele_sound)
 
+// brushes
 green_blocks    <- []
 yellow_blocks   <- []
 active_blocks   <- RandomElement([green_blocks, yellow_blocks])
 inactive_blocks <- active_blocks == green_blocks ? yellow_blocks : green_blocks
 
+// trigger brushes
 trigger <- FindByName(null, "plugin_Bossgame5_WinArea")
 tele1   <- FindByName(null, "BeepBlock_Tele1")
 tele2   <- FindByName(null, "BeepBlock_Tele2")
 
 function OnStart()
 {
+	if (minigame.music == "beepblockskyway")
+	{
+		BeepBlock_SetTempo(120.0)
+		bgm_offset = 0.028
+	}
+	else
+	{
+		BeepBlock_SetTempo(141.0)
+		bgm_offset = -0.075
+	}
+	
 	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER)
 	
 	// fixes tilting from fall damage on ramp near the end of _ultimate arena
 	Ware_SetGlobalCondition(TF_COND_GRAPPLINGHOOK)
 	
-	// separate entities are needed to keep bounding box
-	// within separate areas and not break visibility
+	// separate entities are needed to keep bounding box within separate areas and not break visibility
+	// these do/while loops append all beatblocks to their appropriate array, and then BeepBlock_FireInput
+	// checks for array and fires across all entities in array
 	local ent = null
 	do{
 		ent = FindByName(ent, "beatblock_green")
@@ -99,22 +111,27 @@ function OnStart()
 	// using return in the timer for each subsequent sequence seems to add up a lot of processing delays over time
 	// instead, we create all the sequences at the start, offset every 2 bars using i
 	// this has more consistent timing, though it is a bit less flexible
-	for (local i = 0; i < ceil(minigame.duration / (8.0 * beat)); i++)
+	local sequence_count = ceil(minigame.duration / (8.0 * beat))
+	for (local i = 0; i < sequence_count; i++)
 	{
 		Ware_CreateTimer(function() {
-			BeepBlock_Sequence()
+			if (!interrupted)
+				BeepBlock_Sequence()
 		}, bgm_offset + (6.0 * beat) + i * (8.0 * beat))
 	}
 }
 
-// function OnUpdate()
-// {
-// 	foreach(data in Ware_MinigamePlayers)
-// 	{
-// 		local player = data.player
-// 		SetPropEntity(player, "m_hGroundEntity", active_blocks[1])
-// 	}
-// }
+function OnUpdate()
+{
+	if ((!trigger.GetScriptScope().first || floor(Ware_GetMinigameRemainingTime()) == 60.0) && !interrupted)
+		BeepBlock_Interrupt()
+	
+	// 	foreach(data in Ware_MinigamePlayers)
+	// 	{
+	// 		local player = data.player
+	// 		SetPropEntity(player, "m_hGroundEntity", active_blocks[1])
+	// 	}
+}
 
 // no fall damage, but trigger_hurt uses fall damage so we check for that too
 function OnTakeDamage(params)
@@ -157,6 +174,53 @@ function BeepBlock_Swap()
 	
 	active_blocks <- inactive_blocks
 	inactive_blocks <- active_blocks == green_blocks ? yellow_blocks : green_blocks
+}
+
+function BeepBlock_Interrupt()
+{
+	if (interrupted)
+		return
+	
+	interrupted = true
+	
+	Ware_PlayMinigameSound(null, minigame.music, SND_STOP)
+	Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/minigames/hurry_up")
+	PlaySoundOnAllClients(hurryup_sound)
+	
+	Ware_CreateTimer(function() {
+		PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSICVERSION, minigame.music),
+		1.0, 100 * Ware_GetPitchFactor() * tempo_increase)
+		
+		BeepBlock_SetTempo(tempo * tempo_increase)
+		
+		local sequence_count = ceil(Ware_GetMinigameRemainingTime() / (8.0 * beat))
+		for (local i = 0; i < sequence_count; i++)
+		{
+			Ware_CreateTimer(function() {
+				BeepBlock_Sequence()
+			}, (bgm_offset / tempo_increase) + (6.0 * beat) + i * (8.0 * beat))
+		}
+		
+		interrupt_timer = Min(60, Round(Ware_GetMinigameRemainingTime()).tointeger())
+		
+		Ware_CreateTimer(function() {
+			--interrupt_timer
+			local string = interrupt_timer >= 10 ? format("0:%s", interrupt_timer.tostring()) : format("0:0%s", interrupt_timer.tostring())
+			if (interrupt_timer >= 0)
+				Ware_ShowMinigameText(null, string, "255 255 0", -1.0, 0.3)
+			else
+				Ware_ShowMinigameText(null, "")
+			
+			return 1.0
+		}, 0.0)
+	}, 3.0)
+	
+}
+
+function BeepBlock_SetTempo(desired_tempo)
+{
+	tempo = desired_tempo
+	beat = 60.0 / tempo
 }
 
 function BeepBlock_FireInput(target, action, params = "")
@@ -227,7 +291,7 @@ function OnEnd()
 
 function CheckEnd()
 {
-	return BeepBlock_CheckEnd()
+	return (BeepBlock_CheckEnd() || interrupt_timer == 0)
 }
 
 function BeepBlock_CheckEnd()
