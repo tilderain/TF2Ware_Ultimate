@@ -97,7 +97,7 @@ Ware_Themes <-
 		theme_name = "_default"
 		visual_name = "TF2Ware Ultimate"
 		sounds = {
-			// set to values that were present in main.nut at the relevant places before i changed to this system.
+			// set to values that were present in main.nut at the relevant places before we changed to this system.
 			// if any are 0.0 they arent used for intermission timings yet
 			// some like "results" will never be greater than 0.0 as it stops playing automatically on restart
 			"boss":             4.0
@@ -170,7 +170,7 @@ Ware_Themes <-
 		theme_name = "ds_touched_jimmyt"
 		visual_name = "Jimmy T. (DS - Touched!)"
 		sounds = {
-			"failure": 2.2
+			"failure": 2.1
 			"intro":   2.183
 			"results": 0.0
 			"victory": 2.020

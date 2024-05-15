@@ -340,6 +340,7 @@ if (!("Ware_Theme" in this))
 {
 	Ware_Theme              <- Ware_Themes[0]
 	Ware_CurrentThemeSounds <- {}
+	Ware_NextTheme          <- ""
 }
 
 if (!("Ware_Players" in this))
@@ -612,18 +613,21 @@ function Ware_SetTheme(requested_theme)
 {
 	Ware_Theme <- {}
 	
+	local theme_found = false
+	
 	foreach(theme in Ware_Themes)
 	{
 		if (theme.theme_name == requested_theme)
 		{
 			Ware_Theme <- theme
+			theme_found = true
 			break
 		}
 	}
 	
-	if (Ware_Theme == {})
+	if (!theme_found)
 	{
-		WareError("No theme named '%s' was found. Setting to default theme instead.", requested_theme)
+		Ware_Error("No theme named '%s' was found. Setting to default theme instead.", requested_theme)
 		Ware_Theme <- Ware_Themes[0]
 	}
 	
@@ -659,7 +663,7 @@ function Ware_GetParentTheme(theme)
 	
 	foreach(internal_theme in Ware_InternalThemes)
 	{
-		if (theme.theme_name.find(internal_theme.theme_name) != null)
+		if (startswith(theme.theme_name, internal_theme.theme_name))
 			return internal_theme
 	}
 	
@@ -669,9 +673,9 @@ function Ware_GetParentTheme(theme)
 function Ware_GetThemeSoundDuration(sound)
 {
 	if (sound in Ware_CurrentThemeSounds)
-		return Ware_CurrentThemeSounds[sound][1]
+		return Ware_CurrentThemeSounds[sound][1] * Ware_GetPitchFactor()
 	else
-		return Ware_Themes[0].sounds[sound]
+		return Ware_Themes[0].sounds[sound] * Ware_GetPitchFactor()
 }
 
 function Ware_PlayGameSound(player, name, flags = 0)
@@ -2356,12 +2360,17 @@ function OnGameEvent_teamplay_round_start(params)
 		return
 	Ware_Started = true
 	
-	// first round always uses default theme
-	if (Ware_RoundsPlayed > 0)
+	// check for next theme. otherwise first round always uses default theme
+	if (Ware_NextTheme != "")
+	{
+		Ware_SetTheme(Ware_NextTheme)
+		Ware_NextTheme = ""
+	}
+	else if (Ware_RoundsPlayed > 0)
 	{
 		local new_theme
 		
-		// roll til we get a new one
+		// roll until we get a new one
 		do{
 			new_theme = RandomElement(Ware_Themes)
 		}
@@ -2606,6 +2615,15 @@ Ware_DevCommands <-
 	"nextbossgame"  : function(player, text) { Ware_DevCommandForceMinigame(player, text, true, true)   }
 	"forceminigame" : function(player, text) { Ware_DevCommandForceMinigame(player, text, false, false) }
 	"forcebossgame" : function(player, text) { Ware_DevCommandForceMinigame(player, text, true, false)  }
+	"nexttheme": function(player, text)
+	{
+		local args = split(text, " ")
+		if (args.len() >= 1)
+			Ware_NextTheme = args[0]
+		else
+			Ware_NextTheme = ""
+		Ware_ChatPrint(player, "Setting next theme to '{str}'", Ware_NextTheme)
+	}
 	"forcetheme": function(player, text)
 	{
 		local args = split(text, " ")
