@@ -123,7 +123,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	if ((!trigger.GetScriptScope().first || floor(Ware_GetMinigameRemainingTime()) == 60.0) && !interrupted)
+	if ((!trigger.GetScriptScope().first || floor(Ware_GetMinigameRemainingTime()) == 30.0) && !interrupted)
 		BeepBlock_Interrupt()
 	
 	// 	foreach(data in Ware_MinigamePlayers)
