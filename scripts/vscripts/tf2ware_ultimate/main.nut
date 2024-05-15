@@ -1975,6 +1975,7 @@ function Ware_EndMinigameInternal()
 			sound = "failure"
 		}		
 		
+		Ware_ShowMinigameText(player, "")
 		Ware_PlayGameSound(player, sound)
 		Ware_ShowScreenOverlay(player, overlay)
 		if (Ware_MinigameOverlay2Set)

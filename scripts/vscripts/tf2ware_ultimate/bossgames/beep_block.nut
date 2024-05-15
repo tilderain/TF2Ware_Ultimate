@@ -60,8 +60,8 @@ function OnStart()
 	}
 	else
 	{
-		BeepBlock_SetTempo(141.0)
-		bgm_offset = -0.075
+		BeepBlock_SetTempo(140.0)
+		bgm_offset = -0.097
 	}
 	
 	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER)
@@ -198,7 +198,7 @@ function BeepBlock_Interrupt()
 		{
 			Ware_CreateTimer(function() {
 				BeepBlock_Sequence()
-			}, (bgm_offset / tempo_increase) + (6.0 * beat) + i * (8.0 * beat))
+			}, bgm_offset * tempo_increase + (6.0 * beat) + i * (8.0 * beat))
 		}
 		
 		interrupt_timer = Min(60, Round(Ware_GetMinigameRemainingTime()).tointeger())
