@@ -653,6 +653,20 @@ function Ware_SetupThemeSounds()
 	}
 }
 
+function Ware_IsThemeValid(test = Ware_Theme)
+{
+	if (typeof(test) != "table" || test.len() == 0)
+		return false
+	
+	foreach(theme in Ware_Themes)
+	{
+		if (theme.theme_name == test.theme_name)
+			return true
+	}
+	
+	return false
+}
+
 function Ware_GetParentTheme(theme)
 {
 	// returns internal theme that multiple themes point to based on theme_name
@@ -2378,9 +2392,18 @@ function OnGameEvent_teamplay_round_start(params)
 		while (new_theme == Ware_Theme)
 		
 		Ware_Theme <- new_theme
-	}
 		
-	Ware_SetupThemeSounds()
+		Ware_SetupThemeSounds()
+	}
+	else if (Ware_IsThemeValid())
+		Ware_SetupThemeSounds()
+	else
+	{
+		Ware_Error("Unexpected theme on round start, setting to default instead.")
+		Ware_Theme <- Ware_Themes[0]
+		Ware_SetupThemeSounds()
+	}
+	
 	
 	Ware_ChatPrint(null, "{color}Theme: {color}{str}", TF_COLOR_DEFAULT, COLOR_LIME, Ware_Theme.visual_name)
 	

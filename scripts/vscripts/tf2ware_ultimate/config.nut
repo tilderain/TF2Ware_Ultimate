@@ -217,7 +217,7 @@ Ware_Themes <-
 			"failure": 2.00
 			"intro":   4.000
 			"results": 0.0
-			"victory": 2.07
+			"victory": 2.4
 		}
 	},
 	
