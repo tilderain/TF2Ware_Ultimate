@@ -123,7 +123,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	if ((!trigger.GetScriptScope().first || floor(Ware_GetMinigameRemainingTime()) == 30.0) && !interrupted)
+	if ((!trigger.GetScriptScope().first || floor(Ware_GetMinigameRemainingTime()) == 30.0) && !interrupted && Ware_MinigamePlayers.len() > 1)
 		BeepBlock_Interrupt()
 	
 	// 	foreach(data in Ware_MinigamePlayers)
@@ -205,13 +205,14 @@ function BeepBlock_Interrupt()
 		
 		Ware_CreateTimer(function() {
 			--interrupt_timer
-			local string = interrupt_timer >= 10 ? format("0:%s", interrupt_timer.tostring()) : format("0:0%s", interrupt_timer.tostring())
 			if (interrupt_timer >= 0)
+			{
+				local string = interrupt_timer >= 10 ? format("0:%s", interrupt_timer.tostring()) : format("0:0%s", interrupt_timer.tostring())
 				Ware_ShowMinigameText(null, string, "255 255 0", -1.0, 0.3)
+				return 1.0
+			}
 			else
 				Ware_ShowMinigameText(null, "")
-			
-			return 1.0
 		}, 0.0)
 	}, 3.0)
 	
