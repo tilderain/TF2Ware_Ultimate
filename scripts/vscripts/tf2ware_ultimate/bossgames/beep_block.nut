@@ -129,7 +129,6 @@ function OnStart()
 	ramp.ValidateScriptScope()
 	ramp.GetScriptScope().OnStartTouch <- OnRampTouch
 	ramp.GetScriptScope().OnEndTouch <- OnEndRampTouch
-	ramp.GetScriptScope().active_blocks <- active_blocks
 	ramp.ConnectOutput("OnStartTouch", "OnStartTouch")
 	ramp.ConnectOutput("OnEndTouch", "OnEndTouch")
 	
