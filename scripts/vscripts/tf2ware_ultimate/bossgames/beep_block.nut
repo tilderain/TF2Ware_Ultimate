@@ -1,4 +1,12 @@
 
+// TODO:
+//		- better speed limit on ramp
+//		- prevent fuckery with jumping forever over inactive block when still in trigger. ideas:
+//			- add jump cooldown in some way?
+//			- check for active_blocks beneath you. FL_ONGROUND and m_hGroundEntity don't work.
+//		- better preserve velocity when jumping on ramp. its decent but sometimes it doesn't work, and it's weird when you're not holding W.
+//		- overall make the jumping on ramp more intuitive
+
 arenas <-
 [
 	"beepblockskyway_micro"
@@ -20,12 +28,13 @@ minigame <- Ware_MinigameData
 })
 
 // variables
-tempo           <- 0.0
-tempo_increase  <- 1.2 // after interrupt
-beat            <- 0.0
-bgm_offset      <- 0.0
-interrupted     <- false
-interrupt_timer <- 60
+tempo            <- 0.0
+tempo_increase   <- 1.2 // after interrupt
+beat             <- 0.0
+bgm_offset       <- 0.0
+interrupted      <- false
+interrupt_timer  <- 60
+ramp_speed_limit <- 800 // velocity in any axis. probably hu/s but idk. not overall magnitude.
 
 // audio
 if (RandomInt(0, 128) == 0)
@@ -47,9 +56,10 @@ active_blocks   <- RandomElement([green_blocks, yellow_blocks])
 inactive_blocks <- active_blocks == green_blocks ? yellow_blocks : green_blocks
 
 // trigger brushes
-trigger <- FindByName(null, "plugin_Bossgame5_WinArea")
+endzone <- FindByName(null, "plugin_Bossgame5_WinArea")
 tele1   <- FindByName(null, "BeepBlock_Tele1")
 tele2   <- FindByName(null, "BeepBlock_Tele2")
+ramp    <- FindByName(null, "BeepBlock_RampTrigger")
 
 function OnStart()
 {
@@ -68,6 +78,14 @@ function OnStart()
 	
 	// fixes tilting from fall damage on ramp near the end of _ultimate arena
 	Ware_SetGlobalCondition(TF_COND_GRAPPLINGHOOK)
+	
+	foreach (data in Ware_MinigamePlayers)
+	{
+		local player = data.player
+		local minidata = Ware_GetPlayerMiniData(player)
+		minidata.on_ramp <- false
+	}
+	
 	
 	// separate entities are needed to keep bounding box within separate areas and not break visibility
 	// these do/while loops append all beatblocks to their appropriate array, and then BeepBlock_FireInput
@@ -93,10 +111,10 @@ function OnStart()
 	BeepBlock_FireInput(active_blocks, "Enable")
 	BeepBlock_FireInput(inactive_blocks, "Disable")
 	
-	trigger.ValidateScriptScope()
-	trigger.GetScriptScope().OnStartTouch <- OnEndzoneTouch
-	trigger.GetScriptScope().first <- true
-	trigger.ConnectOutput("OnStartTouch", "OnStartTouch")
+	endzone.ValidateScriptScope()
+	endzone.GetScriptScope().OnStartTouch <- OnEndzoneTouch
+	endzone.GetScriptScope().first <- true
+	endzone.ConnectOutput("OnStartTouch", "OnStartTouch")
 	
 	tele1.ValidateScriptScope()
 	tele1.GetScriptScope().OnStartTouch <- OnTele1Touch
@@ -107,6 +125,13 @@ function OnStart()
 	tele2.GetScriptScope().OnStartTouch <- OnTele2Touch
 	tele2.GetScriptScope().tele_sound <- tele_sound
 	tele2.ConnectOutput("OnStartTouch", "OnStartTouch")
+	
+	ramp.ValidateScriptScope()
+	ramp.GetScriptScope().OnStartTouch <- OnRampTouch
+	ramp.GetScriptScope().OnEndTouch <- OnEndRampTouch
+	ramp.GetScriptScope().active_blocks <- active_blocks
+	ramp.ConnectOutput("OnStartTouch", "OnStartTouch")
+	ramp.ConnectOutput("OnEndTouch", "OnEndTouch")
 	
 	// using return in the timer for each subsequent sequence seems to add up a lot of processing delays over time
 	// instead, we create all the sequences at the start, offset every 2 bars using i
@@ -123,14 +148,24 @@ function OnStart()
 
 function OnUpdate()
 {
-	if (((Ware_MinigamePlayers.len() > 1 && !trigger.GetScriptScope().first) || floor(Ware_GetMinigameRemainingTime()) == 30.0) && !interrupted)
+	if (((Ware_MinigamePlayers.len() > 1 && !endzone.GetScriptScope().first) || floor(Ware_GetMinigameRemainingTime()) == 30.0) && !interrupted)
 		BeepBlock_Interrupt()
 	
-	// 	foreach(data in Ware_MinigamePlayers)
-	// 	{
-	// 		local player = data.player
-	// 		SetPropEntity(player, "m_hGroundEntity", active_blocks[1])
-	// 	}
+	// TODO: try this with slowed condition/attribute, probably better way of doing it
+	foreach(data in Ware_MinigamePlayers)
+	{
+		local player = data.player
+		local minidata = Ware_GetPlayerMiniData(player)
+		
+		if (minidata.on_ramp)
+		{
+			player.SetAbsVelocity(Vector(
+				RemapValClamped(player.GetAbsVelocity().x, -ramp_speed_limit, ramp_speed_limit, -ramp_speed_limit, ramp_speed_limit),
+				RemapValClamped(player.GetAbsVelocity().y, -ramp_speed_limit, ramp_speed_limit, -ramp_speed_limit, ramp_speed_limit),
+				RemapValClamped(player.GetAbsVelocity().z, -ramp_speed_limit, ramp_speed_limit, -ramp_speed_limit, ramp_speed_limit)))
+			//Ware_ChatPrint(null, "{str}", player.GetAbsVelocity())
+		}
+	}
 }
 
 // no fall damage, but trigger_hurt uses fall damage so we check for that too
@@ -276,15 +311,46 @@ function OnTele2Touch()
 	if (player.IsPlayer() && player.IsValid())
 	{
 		PlaySoundOnClient(player, tele_sound)
-		Ware_AddPlayerAttribute(player, "increased jump height", 1.0, Ware_GetMinigameRemainingTime())
+		player.RemoveCustomAttribute("increased jump height")
+	}
+}
+
+function OnRampTouch()
+{
+	local player = activator
+	
+	if (player.IsPlayer() && player.IsValid())
+	{
+		local minidata = Ware_GetPlayerMiniData(player)
+		minidata.on_ramp <- true
+		
+		player.AddCond(TF_COND_HALLOWEEN_SPEED_BOOST)
+		player.RemoveCond(TF_COND_SPEED_BOOST)
+		Ware_AddPlayerAttribute(player, "halloween increased jump height", 0.0, Ware_GetMinigameRemainingTime())
+	}
+}
+
+function OnEndRampTouch()
+{
+	local player = activator
+	
+	if (player.IsPlayer() && player.IsValid())
+	{
+		local minidata = Ware_GetPlayerMiniData(player)
+		minidata.on_ramp <- false
+		
+		player.RemoveCond(TF_COND_HALLOWEEN_SPEED_BOOST)
+		player.RemoveCustomAttribute("halloween increased jump height")
 	}
 }
 
 function OnEnd()
 {
-	trigger.DisconnectOutput("OnStartTouch", "OnStartTouch")
+	endzone.DisconnectOutput("OnStartTouch", "OnStartTouch")
 	tele1.DisconnectOutput("OnStartTouch", "OnStartTouch")
 	tele2.DisconnectOutput("OnStartTouch", "OnStartTouch")
+	ramp.DisconnectOutput("OnStartTouch", "OnStartTouch")
+	ramp.DisconnectOutput("OnEndTouch", "OnEndTouch")
 	
 	BeepBlock_FireInput(green_blocks, "Alpha", "255")
 	BeepBlock_FireInput(yellow_blocks, "Alpha", "255")
