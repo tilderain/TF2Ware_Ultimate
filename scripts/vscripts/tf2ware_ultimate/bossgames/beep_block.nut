@@ -1,11 +1,10 @@
 
 // TODO:
-//		- better speed limit on ramp
-//		- prevent fuckery with jumping forever over inactive block when still in trigger. ideas:
-//			- add jump cooldown in some way?
-//			- check for active_blocks beneath you. FL_ONGROUND and m_hGroundEntity don't work.
-//		- better preserve velocity when jumping on ramp. its decent but sometimes it doesn't work, and it's weird when you're not holding W.
 //		- overall make the jumping on ramp more intuitive
+//		- fix specific issues with ramp
+//			- sometimes randomly stop
+//			- can't jump if you crouch
+//			- sometimes you "jump" but you dont actually go up in any way
 
 arenas <-
 [
@@ -34,7 +33,7 @@ beat             <- 0.0
 bgm_offset       <- 0.0
 interrupted      <- false
 interrupt_timer  <- 60
-ramp_speed_limit <- 800 // velocity in any axis. probably hu/s but idk. not overall magnitude.
+ramp_speed_limit <- 600 // velocity in any axis. probably hu/s but idk. not overall magnitude.
 
 // audio
 if (RandomInt(0, 128) == 0)
@@ -150,20 +149,13 @@ function OnUpdate()
 	if (((Ware_MinigamePlayers.len() > 1 && !endzone.GetScriptScope().first) || floor(Ware_GetMinigameRemainingTime()) == 30.0) && !interrupted)
 		BeepBlock_Interrupt()
 	
-	// TODO: try this with slowed condition/attribute, probably better way of doing it
 	foreach(data in Ware_MinigamePlayers)
 	{
 		local player = data.player
 		local minidata = Ware_GetPlayerMiniData(player)
 		
-		if (minidata.on_ramp)
-		{
-			player.SetAbsVelocity(Vector(
-				RemapValClamped(player.GetAbsVelocity().x, -ramp_speed_limit, ramp_speed_limit, -ramp_speed_limit, ramp_speed_limit),
-				RemapValClamped(player.GetAbsVelocity().y, -ramp_speed_limit, ramp_speed_limit, -ramp_speed_limit, ramp_speed_limit),
-				RemapValClamped(player.GetAbsVelocity().z, -ramp_speed_limit, ramp_speed_limit, -ramp_speed_limit, ramp_speed_limit)))
-			//Ware_ChatPrint(null, "{str}", player.GetAbsVelocity())
-		}
+		if (minidata.on_ramp && !BeepBlock_ActiveBlockBelow(player))
+				player.RemoveCond(TF_COND_HALLOWEEN_SPEED_BOOST)
 	}
 }
 
@@ -269,6 +261,21 @@ function BeepBlock_FireInput(target, action, params = "")
 		EntFireByHandle(target, action, params, -1, null, null)
 }
 
+function BeepBlock_ActiveBlockBelow(player)
+{
+	local trace = {
+		start = player.GetOrigin()
+		end = player.GetOrigin() + Vector(0, 0, -100)
+		hullmin = player.GetPlayerMins()
+		hullmax = player.GetPlayerMaxs()
+		mask = (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE)
+	}
+	
+	TraceHull(trace)
+	
+	return (trace.hit && trace.enthit.GetClassname() == "func_brush")
+}
+
 function OnEndzoneTouch()
 {
 	local player = activator
@@ -323,9 +330,14 @@ function OnRampTouch()
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.on_ramp <- true
 		
+		// adding and removing this resets the "extra jump" noise so the pitch doesn't go out of bounds
+		player.AddFlag(FL_ONGROUND)
+		
 		player.AddCond(TF_COND_HALLOWEEN_SPEED_BOOST)
 		player.RemoveCond(TF_COND_SPEED_BOOST)
-		Ware_AddPlayerAttribute(player, "halloween increased jump height", 0.0, Ware_GetMinigameRemainingTime())
+		Ware_AddPlayerAttribute(player, "halloween increased jump height", 0.3, Ware_GetMinigameRemainingTime())
+		
+		player.SetGravity(0.4)
 	}
 }
 
@@ -338,8 +350,12 @@ function OnEndRampTouch()
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.on_ramp <- false
 		
+		player.RemoveFlag(FL_ONGROUND)
+		
 		player.RemoveCond(TF_COND_HALLOWEEN_SPEED_BOOST)
 		player.RemoveCustomAttribute("halloween increased jump height")
+		
+		player.SetGravity(1.0)
 	}
 }
 
@@ -353,6 +369,9 @@ function OnEnd()
 	
 	BeepBlock_FireInput(green_blocks, "Alpha", "255")
 	BeepBlock_FireInput(yellow_blocks, "Alpha", "255")
+	
+	foreach(data in Ware_MinigamePlayers)
+		data.player.SetGravity(1.0)
 }
 
 function CheckEnd()
