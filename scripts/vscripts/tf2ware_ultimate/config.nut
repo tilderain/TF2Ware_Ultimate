@@ -91,6 +91,18 @@ Ware_Bossgames <-
 	"wild_west"
 ]
 
+Ware_SpecialRounds <-
+[
+	"low_gravity"
+	
+]
+
+Ware_FakeSpecialRounds <-
+[
+	
+	
+]
+
 Ware_Themes <-
 [
 	{

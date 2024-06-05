@@ -226,6 +226,23 @@ class Ware_MinigameData
 	cb_check_end			= null
 }
 
+class Ware_SpecialRoundData
+{
+	function constructor(table = null)
+	{
+		min_players = 0
+		convars     = {}
+	}
+	
+	
+	name        = null
+	author      = null
+	description = null
+	
+	min_players = null
+	convars     = null
+}
+
 class Ware_PlayerData
 {
 	function constructor(entity)
@@ -304,6 +321,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceBossgame   	<- ""
 	Ware_DebugForceMinigameOnce <- false
 	Ware_DebugForceBossgameOnce <- false
+	Ware_DebugForceSpecialRound <- ""
 }
 Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
@@ -319,6 +337,8 @@ Ware_ParticleSpawner      <- null
 Ware_MinigameRotation     <- []
 if (!("Ware_BossgameRotation" in this))
 	Ware_BossgameRotation <- []
+if (!("Ware_SpecialRoundRotation" in this))
+	Ware_SpecialRoundRotation <- []
 
 Ware_Minigame             <- null
 Ware_MinigameScope        <- {}
@@ -341,6 +361,12 @@ if (!("Ware_Theme" in this))
 	Ware_Theme              <- Ware_Themes[0]
 	Ware_CurrentThemeSounds <- {}
 	Ware_NextTheme          <- ""
+}
+
+if (!("Ware_SpecialRound" in this))
+{
+	Ware_SpecialRound      <- null
+	Ware_SpecialRoundScope <- {}
 }
 
 if (!("Ware_Players" in this))
@@ -1472,6 +1498,100 @@ function Ware_CheckHomeLocation(player_count)
 	}
 }
 
+function Ware_BeginSpecialRound()
+{
+	local valid_players = []
+	foreach (player in Ware_Players)
+	{
+		if ((player.GetTeam() & 2) && IsEntityAlive(player))
+		{
+			if (Ware_LoadoutCacher && !player.IsEFlagSet(EFL_LOADOUT_CACHED))
+				continue
+			
+			valid_players.append(player)
+		}
+	}
+	
+	local player_count = valid_players.len()
+	local success = false
+	local try_debug = true
+	local attempts = 0
+	local round
+	
+	
+	while (!success)
+	{
+		if (++attempts > 25)
+		{
+			Ware_Error("No valid special round found to pick. There may not be enough minimum players")
+			return
+		}
+		
+		local is_forced = false
+		if (try_debug)
+		{
+			if(Ware_DebugForceSpecialRound.len() > 0)
+			{
+				round = Ware_DebugForceSpecialRound
+				Ware_DebugForceSpecialRound = ""
+				is_forced = true
+			}
+			
+			try_debug = false
+		}
+		
+		if (!is_forced)
+		{
+			if (Ware_SpecialRoundRotation.len() == 0)
+			{
+				if (Ware_SpecialRounds.len() == 0)
+				{
+					Ware_Error("Special Round rotation is empty")
+					return
+				}
+				
+				Ware_SpecialRoundRotation = Ware_SpecialRounds
+			}
+		
+			round = RemoveRandomElement(Ware_SpecialRoundRotation)
+		}
+		
+		local path = format("tf2ware_ultimate/specialrounds/%s", round)
+		
+		try
+		{
+			Ware_SpecialRoundScope.clear()
+			IncludeScript(path, Ware_SpecialRoundScope)
+			
+			local min_players = Ware_SpecialRoundScope.special_round.min_players
+			if (player_count >= min_players)
+			{
+				success = true
+			}
+			else if (is_forced)
+			{
+				Ware_Error("Not enough players to load '%s', minimum is %d", round, min_players)	
+			}
+		}
+		catch (e)
+		{
+			Ware_ErrorHandler(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
+		}
+		
+		if (is_forced && !success)
+		{
+			Ware_Error("Failed to force load '%s', picking another round", round)
+		}
+	}
+	
+	Ware_SpecialRound = Ware_SpecialRoundScope.special_round
+	
+	foreach(name, value in Ware_SpecialRound.convars)
+	{
+		SetConvarValue(name, value)
+	}
+}
+
 function Ware_BeginIntermission(is_boss)
 {
 	if (Ware_DebugStop)
@@ -2404,12 +2524,18 @@ function OnGameEvent_teamplay_round_start(params)
 		Ware_SetupThemeSounds()
 	}
 	
-	
 	Ware_ChatPrint(null, "{color}Theme: {color}{str}", TF_COLOR_DEFAULT, COLOR_LIME, Ware_Theme.visual_name)
 	
 	// putting this here rather than in loop we already have since i want to go after waiting for players check. if that doesnt matter just move this in.
 	foreach(player in Ware_Players)
 		Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
+	
+	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced.
+	if (Ware_DebugForceSpecialRound.len() > 0 ||
+		(Ware_SpecialRound.len() == 0 && RandomInt(0, 99) == 0))
+		Ware_BeginSpecialRound()
+	else if (Ware_SpecialRound.len() > 0)
+		Ware_SpecialRound.clear()
 	
 	SetPropBool(GameRules, "m_bTruceActive", true)
 	
@@ -2656,6 +2782,15 @@ Ware_DevCommands <-
 		else
 			Ware_DebugForceTheme = ""
 		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
+	}
+	"forcespecialround": function(player, text)
+	{
+		local args = split(text, " ")
+		if (args.len() >= 1)
+			Ware_DebugForceSpecialRound = args[0]
+		else
+		Ware_DebugForceSpecialRound = ""
+		Ware_ChatPrint(player, "Forced special round to '{str}'", Ware_DebugForceSpecialRound)
 	}
 	"restart" : function(player, text)
 	{
