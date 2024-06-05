@@ -1500,6 +1500,8 @@ function Ware_CheckHomeLocation(player_count)
 
 function Ware_BeginSpecialRound()
 {
+	printl("Special Round begun")
+	
 	local valid_players = []
 	foreach (player in Ware_Players)
 	{
@@ -1526,6 +1528,8 @@ function Ware_BeginSpecialRound()
 			Ware_Error("No valid special round found to pick. There may not be enough minimum players")
 			return
 		}
+		else
+			printl(attempts)
 		
 		local is_forced = false
 		if (try_debug)
@@ -1533,6 +1537,7 @@ function Ware_BeginSpecialRound()
 			if(Ware_DebugForceSpecialRound.len() > 0)
 			{
 				round = Ware_DebugForceSpecialRound
+				printl(round)
 				Ware_DebugForceSpecialRound = ""
 				is_forced = true
 			}
@@ -1584,8 +1589,9 @@ function Ware_BeginSpecialRound()
 		}
 	}
 	
-	Ware_SpecialRound = Ware_SpecialRoundScope.special_round
-	
+	Ware_SpecialRound <- Ware_SpecialRoundScope.special_round
+	printl(Ware_SpecialRound.name)
+	printl("setting convars")
 	foreach(name, value in Ware_SpecialRound.convars)
 	{
 		SetConvarValue(name, value)
@@ -2530,12 +2536,12 @@ function OnGameEvent_teamplay_round_start(params)
 	foreach(player in Ware_Players)
 		Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 	
-	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced.
+	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
 	if (Ware_DebugForceSpecialRound.len() > 0 ||
-		(Ware_SpecialRound.len() == 0 && RandomInt(0, 99) == 0))
+		(Ware_SpecialRound == null && RandomInt(0, 99) == 0))
 		Ware_BeginSpecialRound()
-	else if (Ware_SpecialRound.len() > 0)
-		Ware_SpecialRound.clear()
+	else if (Ware_SpecialRound != null)
+		Ware_SpecialRound <- null
 	
 	SetPropBool(GameRules, "m_bTruceActive", true)
 	
@@ -2783,14 +2789,14 @@ Ware_DevCommands <-
 			Ware_DebugForceTheme = ""
 		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
 	}
-	"forcespecialround": function(player, text)
+	"specialround": function(player, text)
 	{
 		local args = split(text, " ")
 		if (args.len() >= 1)
 			Ware_DebugForceSpecialRound = args[0]
 		else
-		Ware_DebugForceSpecialRound = ""
-		Ware_ChatPrint(player, "Forced special round to '{str}'", Ware_DebugForceSpecialRound)
+			Ware_DebugForceSpecialRound = ""
+		Ware_ChatPrint(player, "Forced next special round to '{str}'", Ware_DebugForceSpecialRound)
 	}
 	"restart" : function(player, text)
 	{
