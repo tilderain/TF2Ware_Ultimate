@@ -1498,6 +1498,17 @@ function Ware_CheckHomeLocation(player_count)
 	}
 }
 
+function Ware_IsSpecialRoundValid(str)
+{
+	foreach(round in Ware_SpecialRounds)
+	{
+		if (round = str)
+			return true
+	}
+	
+	return false
+}
+
 function Ware_BeginSpecialRound()
 {
 	printl("Special Round begun")
@@ -1536,10 +1547,19 @@ function Ware_BeginSpecialRound()
 		{
 			if(Ware_DebugForceSpecialRound.len() > 0)
 			{
-				round = Ware_DebugForceSpecialRound
-				printl(round)
-				Ware_DebugForceSpecialRound = ""
-				is_forced = true
+				if (Ware_IsSpecialRoundValid(Ware_DebugForceSpecialRound))
+				{
+					round = Ware_DebugForceSpecialRound
+					printl(round)
+					Ware_DebugForceSpecialRound = ""
+					is_forced = true
+				}
+				else
+				{
+					Ware_Error("No special round named %s was found. Picking another round instead.", Ware_DebugForceSpecialRound)
+					Ware_DebugForceSpecialRound = ""
+					is_forced = false
+				}
 			}
 			
 			try_debug = false
@@ -1596,6 +1616,44 @@ function Ware_BeginSpecialRound()
 	{
 		SetConvarValue(name, value)
 	}
+	
+	// ingame sequence
+	
+	Ware_PlayGameSound(null, "special_round")
+	
+	Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/special_round")
+	
+	local start_time = Time()
+	local reveal_time = Ware_GetThemeSoundDuration("special_round") * 0.6
+	local text_interval = 0.15
+	// TODO: show special rounds a better way
+	// this is just copied/adapted from Ware_ShowMinigameText
+	local showtext = function(str)
+	{
+		Ware_TextManagerQueue.push(
+			{ 
+				message  = str
+				color    = "255 255 255"
+				holdtime = text_interval
+				x		 = -1.0
+				y        = 0.3
+			})
+			
+		EntityEntFire(Ware_TextManager, "FireUser1")
+		foreach (data in Ware_MinigamePlayers)
+			EntFireByHandle(Ware_TextManager, "Display", "", -1, data.player, null)
+		EntityEntFire(Ware_TextManager, "FireUser2")
+	}
+	
+	
+	CreateTimer(function() {
+		showtext(RandomElement(Ware_FakeSpecialRounds))
+		
+		if (Time() - start_time > reveal_time)
+			showtext(Ware_SpecialRound.name)
+		else
+			return text_interval
+	}, 0.0)
 }
 
 function Ware_BeginIntermission(is_boss)
@@ -2536,20 +2594,25 @@ function OnGameEvent_teamplay_round_start(params)
 	foreach(player in Ware_Players)
 		Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 	
-	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
-	if (Ware_DebugForceSpecialRound.len() > 0 ||
-		(Ware_SpecialRound == null && RandomInt(0, 99) == 0))
-		Ware_BeginSpecialRound()
-	else if (Ware_SpecialRound != null)
-		Ware_SpecialRound <- null
-	
 	SetPropBool(GameRules, "m_bTruceActive", true)
-	
+
 	Ware_MinigameRotation.clear()
 	foreach (minigame in Ware_Minigames)
 		Ware_MinigameRotation.append(minigame)
 	
-	CreateTimer(@() Ware_BeginIntermission(false), 0.0)
+	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
+	local delay = 0.0
+	
+	if (Ware_DebugForceSpecialRound.len() > 0 ||
+		(Ware_SpecialRound == null && RandomInt(0, 99) == 0))
+	{
+		delay = Ware_GetThemeSoundDuration("special_round")
+		Ware_BeginSpecialRound()
+	}
+	else if (Ware_SpecialRound != null)
+		Ware_SpecialRound <- null
+	
+	CreateTimer(@() Ware_BeginIntermission(false), delay)
 }
 
 function OnGameEvent_recalculate_truce(params)
