@@ -33,7 +33,6 @@ beat             <- 0.0
 bgm_offset       <- 0.0
 interrupted      <- false
 interrupt_timer  <- 60
-ramp_speed_limit <- 600 // velocity in any axis. probably hu/s but idk. not overall magnitude.
 
 // audio
 if (RandomInt(0, 128) == 0)
