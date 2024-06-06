@@ -232,6 +232,12 @@ class Ware_SpecialRoundData
 	{
 		min_players = 0
 		convars     = {}
+		
+		if (table)
+		{
+			foreach (key, value in table)
+				this[key] = value
+		}
 	}
 	
 	
@@ -321,7 +327,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceBossgame   	<- ""
 	Ware_DebugForceMinigameOnce <- false
 	Ware_DebugForceBossgameOnce <- false
-	Ware_DebugForceSpecialRound <- ""
+	Ware_DebugNextSpecialRound <- ""
 }
 Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
@@ -365,8 +371,9 @@ if (!("Ware_Theme" in this))
 
 if (!("Ware_SpecialRound" in this))
 {
-	Ware_SpecialRound      <- null
-	Ware_SpecialRoundScope <- {}
+	Ware_SpecialRound             <- null
+	Ware_SpecialRoundScope        <- {}
+	Ware_SpecialRoundSavedConvars <- {}
 }
 
 if (!("Ware_Players" in this))
@@ -1511,7 +1518,7 @@ function Ware_IsSpecialRoundValid(str)
 
 function Ware_BeginSpecialRound()
 {
-	printl("Special Round begun")
+	// copied logic from minigame start
 	
 	local valid_players = []
 	foreach (player in Ware_Players)
@@ -1531,7 +1538,6 @@ function Ware_BeginSpecialRound()
 	local attempts = 0
 	local round
 	
-	
 	while (!success)
 	{
 		if (++attempts > 25)
@@ -1539,25 +1545,22 @@ function Ware_BeginSpecialRound()
 			Ware_Error("No valid special round found to pick. There may not be enough minimum players")
 			return
 		}
-		else
-			printl(attempts)
 		
 		local is_forced = false
 		if (try_debug)
 		{
-			if(Ware_DebugForceSpecialRound.len() > 0)
+			if(Ware_DebugNextSpecialRound.len() > 0)
 			{
-				if (Ware_IsSpecialRoundValid(Ware_DebugForceSpecialRound))
+				if (Ware_IsSpecialRoundValid(Ware_DebugNextSpecialRound))
 				{
-					round = Ware_DebugForceSpecialRound
-					printl(round)
-					Ware_DebugForceSpecialRound = ""
+					round = Ware_DebugNextSpecialRound
+					Ware_DebugNextSpecialRound = ""
 					is_forced = true
 				}
 				else
 				{
-					Ware_Error("No special round named %s was found. Picking another round instead.", Ware_DebugForceSpecialRound)
-					Ware_DebugForceSpecialRound = ""
+					Ware_Error("No special round named %s was found. Picking another round instead.", Ware_DebugNextSpecialRound)
+					Ware_DebugNextSpecialRound = ""
 					is_forced = false
 				}
 			}
@@ -1609,14 +1612,6 @@ function Ware_BeginSpecialRound()
 		}
 	}
 	
-	Ware_SpecialRound <- Ware_SpecialRoundScope.special_round
-	printl(Ware_SpecialRound.name)
-	printl("setting convars")
-	foreach(name, value in Ware_SpecialRound.convars)
-	{
-		SetConvarValue(name, value)
-	}
-	
 	// ingame sequence
 	
 	Ware_PlayGameSound(null, "special_round")
@@ -1628,13 +1623,13 @@ function Ware_BeginSpecialRound()
 	local text_interval = 0.15
 	// TODO: show special rounds a better way
 	// this is just copied/adapted from Ware_ShowMinigameText
-	local showtext = function(str)
+	local showtext = function(str, holdtime)
 	{
 		Ware_TextManagerQueue.push(
 			{ 
 				message  = str
 				color    = "255 255 255"
-				holdtime = text_interval
+				holdtime = holdtime
 				x		 = -1.0
 				y        = 0.3
 			})
@@ -1647,10 +1642,21 @@ function Ware_BeginSpecialRound()
 	
 	
 	CreateTimer(function() {
-		showtext(RandomElement(Ware_FakeSpecialRounds))
+		showtext(RandomElement(Ware_FakeSpecialRounds), text_interval)
 		
 		if (Time() - start_time > reveal_time)
-			showtext(Ware_SpecialRound.name)
+		{
+			// don't actually change anything until the "choosing" is done
+			Ware_SpecialRound <- Ware_SpecialRoundScope.special_round
+			foreach(name, value in Ware_SpecialRound.convars)
+			{
+				Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
+				SetConvarValue(name, value)
+			}
+			
+			showtext(Ware_SpecialRound.name, Ware_GetThemeSoundDuration("special_round") * 0.4)
+			PlaySoundOnAllClients("tf2ware_ultimate/pass.mp3")
+		}
 		else
 			return text_interval
 	}, 0.0)
@@ -2559,6 +2565,11 @@ function OnGameEvent_teamplay_round_start(params)
 		return
 	Ware_Started = true
 	
+	// reset special round convars
+	foreach (name, value in Ware_SpecialRoundSavedConvars)
+		SetConvarValue(name, value)
+	Ware_SpecialRoundSavedConvars.clear()
+	
 	// check for next theme. otherwise first round always uses default theme
 	if (Ware_NextTheme != "")
 	{
@@ -2603,7 +2614,7 @@ function OnGameEvent_teamplay_round_start(params)
 	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
 	local delay = 0.0
 	
-	if (Ware_DebugForceSpecialRound.len() > 0 ||
+	if (Ware_DebugNextSpecialRound.len() > 0 ||
 		(Ware_SpecialRound == null && RandomInt(0, 99) == 0))
 	{
 		delay = Ware_GetThemeSoundDuration("special_round")
@@ -2852,14 +2863,14 @@ Ware_DevCommands <-
 			Ware_DebugForceTheme = ""
 		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
 	}
-	"specialround": function(player, text)
+	"nextspecialround": function(player, text)
 	{
 		local args = split(text, " ")
 		if (args.len() >= 1)
-			Ware_DebugForceSpecialRound = args[0]
+			Ware_DebugNextSpecialRound = args[0]
 		else
-			Ware_DebugForceSpecialRound = ""
-		Ware_ChatPrint(player, "Forced next special round to '{str}'", Ware_DebugForceSpecialRound)
+			Ware_DebugNextSpecialRound = ""
+		Ware_ChatPrint(player, "Forced next special round to '{str}'", Ware_DebugNextSpecialRound)
 	}
 	"restart" : function(player, text)
 	{
