@@ -109,8 +109,11 @@ class Ware_MinigameCallback
 {
 	function constructor(name)
 	{
-		if (name in Ware_MinigameScope)
-			func = Ware_MinigameScope[name]
+		if (scope == null)
+			scope = Ware_MinigameScope
+		
+		if (name in scope)
+			func = scope[name]
 	}
 	
 	function _call(...)
@@ -118,13 +121,24 @@ class Ware_MinigameCallback
 		if (func != null)
 		{
 			vargv.remove(0)
-			vargv.insert(0, Ware_MinigameScope)
+			vargv.insert(0, scope)
 			return func.acall(vargv)
 		}
 		return null
 	}
 
 	func = null
+	scope = null
+}
+
+// dunno if this is the right way to do this or if i shouldve just copy pasted
+class Ware_SpecialRoundCallback extends Ware_MinigameCallback
+{
+	function constructor()
+	{
+		scope = Ware_SpecialRoundScope
+		base.constructor()
+	}
 }
 
 class Ware_MinigameData
@@ -247,6 +261,8 @@ class Ware_SpecialRoundData
 	
 	min_players = null
 	convars     = null
+	
+	cb_on_take_damage = null
 }
 
 class Ware_PlayerData
@@ -374,6 +390,7 @@ if (!("Ware_SpecialRound" in this))
 	Ware_SpecialRound             <- null
 	Ware_SpecialRoundScope        <- {}
 	Ware_SpecialRoundSavedConvars <- {}
+	Ware_SpecialRoundEvents       <- []
 }
 
 if (!("Ware_Players" in this))
@@ -1654,7 +1671,36 @@ function Ware_BeginSpecialRound()
 				SetConvarValue(name, value)
 			}
 			
+			if ("OnStart" in Ware_SpecialRoundScope)
+				Ware_SpecialRoundScope.OnStart()
+			
+			Ware_SpecialRound.cb_on_take_damage			= Ware_SpecialRoundCallback("OnTakeDamage")
+			
+			local event_prefix = "OnGameEvent_"
+			local event_prefix_len = event_prefix.len()
+			foreach (key, value in Ware_SpecialRoundScope)
+			{
+				if (typeof(value) == "function" && typeof(key) == "string" && key.find(event_prefix, 0) == 0)
+				{
+						local event_name = key.slice(event_prefix_len)
+						if (event_name.len() > 0)
+						{
+							if (!(event_name in GameEventCallbacks))
+							{
+								GameEventCallbacks[event_name] <- []
+								RegisterScriptGameEventListener(event_name)
+							}
+							
+							GameEventCallbacks[event_name].push(Ware_SpecialRoundScope)
+							Ware_SpecialRoundEvents.append(event_name)
+						}
+				}
+			}
+			
 			showtext(Ware_SpecialRound.name, Ware_GetThemeSoundDuration("special_round") * 0.4)
+			
+			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, Ware_SpecialRound.name, TF_COLOR_DEFAULT, Ware_SpecialRound.description)
+			
 			PlaySoundOnAllClients("tf2ware_ultimate/pass.mp3")
 		}
 		else
@@ -2247,6 +2293,15 @@ function Ware_GameOver()
 	Ware_Finished = true
 	Ware_RoundsPlayed++
 
+	// special round cleanup
+	if ("OnEnd" in Ware_SpecialRoundScope)
+		Ware_SpecialRoundScope.OnEnd()
+	
+	foreach (event_name in Ware_SpecialRoundEvents)
+		GameEventCallbacks[event_name].pop()
+	Ware_SpecialRoundEvents.clear()
+	
+	
 	local highest_players = Ware_MinigameHighScorers
 	highest_players = highest_players.filter(@(i, player) player.IsValid())
 	
