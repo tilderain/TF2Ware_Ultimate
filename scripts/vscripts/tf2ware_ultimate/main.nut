@@ -2118,7 +2118,7 @@ function Ware_EndMinigameInternal()
 
 		if (Ware_Minigame.no_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
-		if (Ware_Minigame.thirdperson)
+		if (Ware_Minigame.thirdperson && (Ware_SpecialRound == null || Ware_SpecialRound.name != "Thirdperson")) // don't like checking this manually but not sure what else to do - pokepasta
 			player.SetForcedTauntCam(0)
 		if (Ware_Minigame.condition != null)
 			player.RemoveCond(Ware_Minigame.condition)

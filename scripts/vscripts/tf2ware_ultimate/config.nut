@@ -93,8 +93,9 @@ Ware_Bossgames <-
 
 Ware_SpecialRounds <-
 [
+	"extended_round"
 	"low_gravity"
-	
+	"thirdperson"
 ]
 
 Ware_FakeSpecialRounds <-
