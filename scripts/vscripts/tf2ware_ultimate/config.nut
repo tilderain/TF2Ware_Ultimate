@@ -268,7 +268,7 @@ Ware_Themes <-
 			"lets_get_started": 0.0
 			"mapend":           0.0
 			"results":          0.0
-			"special_round":    15.2
+			"special_round":    15.2 // "Feline Fever ~ Jimmy T - Intro Cutscene" from Warioware Smooth Moves
 			"speedup":          4.5
 			"victory":          2.000
 		}
