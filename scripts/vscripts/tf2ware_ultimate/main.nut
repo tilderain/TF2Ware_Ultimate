@@ -2703,7 +2703,7 @@ function OnGameEvent_teamplay_round_start(params)
 	local delay = 0.0
 	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
-		(!Ware_SpecialRound && Ware_SpecialRoundChance != 0 && RandomInt(1, Ware_SpecialRoundChance) == Ware_SpecialRoundChance))
+		(Ware_RoundsPlayed > 0 && !Ware_SpecialRound && Ware_SpecialRoundChance != 0 && RandomInt(1, Ware_SpecialRoundChance) == Ware_SpecialRoundChance))
 	{
 		delay = Ware_GetThemeSoundDuration("special_round")
 		Ware_BeginSpecialRound()
