@@ -117,6 +117,17 @@ Ware_Themes <-
 	},
 	
 	{
+		theme_name = "_tf2ware_classic"
+		visual_name = "TF2Ware Classic" // one of the OG slagware themes, this one seems to be original to tf2ware.
+		sounds = {
+			"failure": 2.377
+			"intro":   2.182
+			"speedup": 3.250
+			"victory": 2.325
+		}
+	},
+	
+	{
 		theme_name = "3ds_ashley"
 		visual_name = "Ashley (3DS)"
 		sounds = {
@@ -167,6 +178,20 @@ Ware_Themes <-
 	},
 	
 	{
+		theme_name = "ds_diy_warioman" // from DIY showcase, should that be counted separately?
+		visual_name = "Wario-Man (DS - D.I.Y.)" // another of the classic tf2ware themes, this is one of the ones used in tonyware
+		sounds = {
+			"boss":     4.004
+			"failure":  2.040
+			"gameover": 4.309
+			"intro":    2.024
+			"results":  8.329
+			"speedup":  4.001
+			"victory":  2.007
+		}
+	},
+	
+	{
 		theme_name = "ds_touched_jimmyt"
 		visual_name = "Jimmy T. (DS - Touched!)"
 		sounds = {
@@ -190,7 +215,7 @@ Ware_Themes <-
 	
 	{
 		theme_name = "ds_touched_warioman"
-		visual_name = "Warioman (DS - Touched!)"
+		visual_name = "Wario-Man (DS - Touched!)"
 		sounds = {
 			"failure": 1.977
 			"intro":   2.252
@@ -207,6 +232,18 @@ Ware_Themes <-
 			"intro":   4.025
 			"results": 0.0
 			"victory": 1.999
+		}
+	},
+	
+	{
+		theme_name = "wii_18volt"
+		visual_name = "18-Volt (Wii)" // this is just the 9volt intro cutscene, but it's a tonyware classic. dunno what else to call it.
+		sounds = {
+			"failure":  2.005
+			"gameover": 4.932
+			"intro":    3.992
+			"speedup":  7.122
+			"victory":  2.003
 		}
 	},
 	
