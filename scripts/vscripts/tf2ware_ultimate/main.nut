@@ -67,7 +67,7 @@ function Ware_ErrorHandler(e)
 	Print("CALLSTACK")
 	local s, l = 2
 	while (s = getstackinfos(l++))
-		Print(format("\t*FUNCTION [%s()] %s line [%d]", sIsValid(), s.src, s.line))
+		Print(format("\t*FUNCTION [%s()] %s line [%d]", s.func, s.src, s.line))
 	Print("LOCALS")
 	if (s2)
 	{
@@ -2472,7 +2472,7 @@ function Ware_OnUpdate()
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_update()
 	
-	if (Ware_Minigame.cb_on_player_attackIsValid())
+	if (Ware_Minigame.cb_on_player_attack.IsValid())
 	{
 		foreach (data in Ware_MinigamePlayers)
 		{
@@ -2491,7 +2491,7 @@ function Ware_OnUpdate()
 		}
 	}
 	
-	if (Ware_Minigame.cb_on_player_voicelineIsValid())
+	if (Ware_Minigame.cb_on_player_voiceline.IsValid())
 	{
 		for (local scene; scene = FindByClassname(scene, "instanced_scripted_scene");)
 		{
@@ -2507,7 +2507,7 @@ function Ware_OnUpdate()
 		}
 	}
 	
-	if (Ware_Minigame.cb_on_player_touchIsValid())
+	if (Ware_Minigame.cb_on_player_touch.IsValid())
 	{
 		local candidates = []
 		local bloat_maxs = Vector(0.05, 0.05, 0.05)
