@@ -109,7 +109,7 @@ class Ware_MinigameCallback
 {
 	function constructor(name)
 	{
-		if (scope == null)
+		if (!scope)
 			scope = Ware_MinigameScope
 		
 		if (name in scope)
@@ -134,10 +134,11 @@ class Ware_MinigameCallback
 // dunno if this is the right way to do this or if i shouldve just copy pasted
 class Ware_SpecialRoundCallback extends Ware_MinigameCallback
 {
-	function constructor()
+	function constructor(name)
 	{
 		scope = Ware_SpecialRoundScope
-		base.constructor()
+		if (scope)
+			base.constructor(name)
 	}
 }
 
@@ -262,7 +263,8 @@ class Ware_SpecialRoundData
 	min_players = null
 	convars     = null
 	
-	cb_on_take_damage = null
+	cb_on_update = null
+	cb_on_ware_speedup = null
 }
 
 class Ware_PlayerData
@@ -1629,6 +1631,9 @@ function Ware_BeginSpecialRound()
 		}
 	}
 	
+	Ware_SpecialRound <- Ware_SpecialRoundScope.special_round
+	// rest happens right before intermission starts so it's not too early
+	
 	// ingame sequence
 	
 	Ware_PlayGameSound(null, "special_round")
@@ -1636,10 +1641,13 @@ function Ware_BeginSpecialRound()
 	Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/special_round")
 	
 	local start_time = Time()
-	local reveal_time = Ware_GetThemeSoundDuration("special_round") * 0.6
+	local duration = Ware_GetThemeSoundDuration("special_round")
+	local reveal_time = duration * 0.6
+	local end_time = duration - reveal_time
 	local text_interval = 0.15
 	// TODO: show special rounds a better way
 	// this is just copied/adapted from Ware_ShowMinigameText
+	// maybe just put something behind it?
 	local showtext = function(str, holdtime)
 	{
 		Ware_TextManagerQueue.push(
@@ -1659,53 +1667,74 @@ function Ware_BeginSpecialRound()
 	
 	
 	CreateTimer(function() {
-		showtext(RandomElement(Ware_FakeSpecialRounds), text_interval)
+		
+		showtext(RandomElement(Ware_FakeSpecialRounds), text_interval * 2.0)
 		
 		if (Time() - start_time > reveal_time)
 		{
-			// don't actually change anything until the "choosing" is done
-			Ware_SpecialRound <- Ware_SpecialRoundScope.special_round
-			foreach(name, value in Ware_SpecialRound.convars)
-			{
-				Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
-				SetConvarValue(name, value)
-			}
-			
-			if ("OnStart" in Ware_SpecialRoundScope)
-				Ware_SpecialRoundScope.OnStart()
-			
-			Ware_SpecialRound.cb_on_take_damage			= Ware_SpecialRoundCallback("OnTakeDamage")
-			
-			local event_prefix = "OnGameEvent_"
-			local event_prefix_len = event_prefix.len()
-			foreach (key, value in Ware_SpecialRoundScope)
-			{
-				if (typeof(value) == "function" && typeof(key) == "string" && key.find(event_prefix, 0) == 0)
-				{
-						local event_name = key.slice(event_prefix_len)
-						if (event_name.len() > 0)
-						{
-							if (!(event_name in GameEventCallbacks))
-							{
-								GameEventCallbacks[event_name] <- []
-								RegisterScriptGameEventListener(event_name)
-							}
-							
-							GameEventCallbacks[event_name].push(Ware_SpecialRoundScope)
-							Ware_SpecialRoundEvents.append(event_name)
-						}
-				}
-			}
-			
-			showtext(Ware_SpecialRound.name, Ware_GetThemeSoundDuration("special_round") * 0.4)
+			showtext(Ware_SpecialRound.name, end_time)
 			
 			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, Ware_SpecialRound.name, TF_COLOR_DEFAULT, Ware_SpecialRound.description)
 			
 			PlaySoundOnAllClients("tf2ware_ultimate/pass.mp3")
+			
+			CreateTimer(function(){
+		
+				// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
+				foreach(name, value in Ware_SpecialRound.convars)
+				{
+					Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
+					SetConvarValue(name, value)
+				}
+				
+				if ("OnStart" in Ware_SpecialRoundScope)
+					Ware_SpecialRoundScope.OnStart()
+				
+				Ware_SpecialRound.cb_on_update       = Ware_SpecialRoundCallback("OnUpdate")
+				Ware_SpecialRound.cb_on_ware_speedup = Ware_SpecialRoundCallback("OnWare_Speedup")
+				
+				local event_prefix = "OnGameEvent_"
+				local event_prefix_len = event_prefix.len()
+				foreach (key, value in Ware_SpecialRoundScope)
+				{
+					if (typeof(value) == "function" && typeof(key) == "string" && key.find(event_prefix, 0) == 0)
+					{
+							local event_name = key.slice(event_prefix_len)
+							if (event_name.len() > 0)
+							{
+								if (!(event_name in GameEventCallbacks))
+								{
+									GameEventCallbacks[event_name] <- []
+									RegisterScriptGameEventListener(event_name)
+								}
+								
+								GameEventCallbacks[event_name].push(Ware_SpecialRoundScope)
+								Ware_SpecialRoundEvents.append(event_name)
+							}
+					}
+				}
+			}, end_time)
 		}
 		else
 			return text_interval
 	}, 0.0)
+}
+
+function Ware_EndSpecialRound()
+{
+	if (!Ware_SpecialRound)
+		return
+	
+	if ("OnEnd" in Ware_SpecialRoundScope)
+		Ware_SpecialRoundScope.OnEnd()
+	
+	foreach (name, value in Ware_SpecialRoundSavedConvars)
+		SetConvarValue(name, value)
+	Ware_SpecialRoundSavedConvars.clear()
+	
+	foreach (event_name in Ware_SpecialRoundEvents)
+		GameEventCallbacks[event_name].pop()
+	Ware_SpecialRoundEvents.clear()
 }
 
 function Ware_BeginIntermission(is_boss)
@@ -1761,7 +1790,10 @@ function Ware_BeginBoss()
 
 function Ware_Speedup()
 {
-	Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
+	if (!Ware_SpecialRound || Ware_SpecialRound.cb_on_ware_speedup == null)
+		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
+	else
+		Ware_SpecialRound.cb_on_ware_speedup
 	
 	foreach (player in Ware_Players)
 	{
@@ -2118,7 +2150,7 @@ function Ware_EndMinigameInternal()
 
 		if (Ware_Minigame.no_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
-		if (Ware_Minigame.thirdperson && (Ware_SpecialRound == null || Ware_SpecialRound.name != "Thirdperson")) // don't like checking this manually but not sure what else to do - pokepasta
+		if (Ware_Minigame.thirdperson && (!Ware_SpecialRound || Ware_SpecialRound.name != "Thirdperson")) // don't like checking this manually but not sure what else to do - pokepasta
 			player.SetForcedTauntCam(0)
 		if (Ware_Minigame.condition != null)
 			player.RemoveCond(Ware_Minigame.condition)
@@ -2292,15 +2324,11 @@ function Ware_GameOver()
 {
 	Ware_Finished = true
 	Ware_RoundsPlayed++
-
-	// special round cleanup
-	if ("OnEnd" in Ware_SpecialRoundScope)
-		Ware_SpecialRoundScope.OnEnd()
 	
-	foreach (event_name in Ware_SpecialRoundEvents)
-		GameEventCallbacks[event_name].pop()
-	Ware_SpecialRoundEvents.clear()
-	
+	// TODO: move this to start of next round if it's safe to do so
+	// reason being it's more interesting to still have the special round's convars or what have you going on round end
+	if (Ware_SpecialRound != null)
+		Ware_EndSpecialRound()
 	
 	local highest_players = Ware_MinigameHighScorers
 	highest_players = highest_players.filter(@(i, player) player.IsValid())
@@ -2417,6 +2445,9 @@ function Ware_OnUpdate()
 	}
 	
 	Ware_Minigame.cb_on_update()
+	
+	if (Ware_SpecialRound)
+		Ware_SpecialRound.cb_on_update()
 	
 	if (Ware_Minigame.cb_on_player_attack.func)
 	{
@@ -2620,11 +2651,6 @@ function OnGameEvent_teamplay_round_start(params)
 		return
 	Ware_Started = true
 	
-	// reset special round convars
-	foreach (name, value in Ware_SpecialRoundSavedConvars)
-		SetConvarValue(name, value)
-	Ware_SpecialRoundSavedConvars.clear()
-	
 	// check for next theme. otherwise first round always uses default theme
 	if (Ware_NextTheme != "")
 	{
@@ -2670,12 +2696,12 @@ function OnGameEvent_teamplay_round_start(params)
 	local delay = 0.0
 	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
-		(Ware_SpecialRound == null && RandomInt(0, 99) == 0))
+		(!Ware_SpecialRound && RandomInt(0, 99) == 0))
 	{
 		delay = Ware_GetThemeSoundDuration("special_round")
 		Ware_BeginSpecialRound()
 	}
-	else if (Ware_SpecialRound != null)
+	else if (Ware_SpecialRound)
 		Ware_SpecialRound <- null
 	
 	CreateTimer(@() Ware_BeginIntermission(false), delay)
@@ -2918,7 +2944,7 @@ Ware_DevCommands <-
 			Ware_DebugForceTheme = ""
 		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
 	}
-	"nextspecialround": function(player, text)
+	"nextround": function(player, text)
 	{
 		local args = split(text, " ")
 		if (args.len() >= 1)

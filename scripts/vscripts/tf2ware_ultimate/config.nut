@@ -93,6 +93,7 @@ Ware_Bossgames <-
 
 Ware_SpecialRounds <-
 [
+	"adrenaline_shot"
 	"extended_round"
 	"low_gravity"
 	"thirdperson"
