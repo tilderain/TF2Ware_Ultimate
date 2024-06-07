@@ -1,6 +1,7 @@
-Ware_BossThreshold     <- 20
-Ware_SpeedUpThreshold  <- 5
-Ware_SpeedUpInterval   <- 0.15
+Ware_BossThreshold      <- 20
+Ware_SpeedUpThreshold   <- 5
+Ware_SpeedUpInterval    <- 0.15
+Ware_SpecialRoundChance <- 100 // e.g. 20 means 1 in 20 chance of a special round happening. set to 0 to disable.
 
 Ware_Minigames <-
 [

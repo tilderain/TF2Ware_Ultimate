@@ -264,7 +264,7 @@ class Ware_SpecialRoundData
 	convars     = null
 	
 	cb_on_update = null
-	cb_on_ware_speedup = null
+	cb_replace_ware_speedup = null
 }
 
 class Ware_PlayerData
@@ -332,6 +332,12 @@ if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
 	Ware_MinigameSavedConvars.clear()
 	
 	Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_STOP)
+}
+
+if ("Ware_SpecialRound" in this && Ware_SpecialRound) // same as above
+{
+	Ware_EndSpecialRound()
+	Ware_PlayGameSound(null, "special_round", SND_STOP)
 }
 
 Ware_Started			  <- false
@@ -1632,7 +1638,6 @@ function Ware_BeginSpecialRound()
 	}
 	
 	Ware_SpecialRound <- Ware_SpecialRoundScope.special_round
-	// rest happens right before intermission starts so it's not too early
 	
 	// ingame sequence
 	
@@ -1641,7 +1646,7 @@ function Ware_BeginSpecialRound()
 	Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/special_round")
 	
 	local start_time = Time()
-	local duration = Ware_GetThemeSoundDuration("special_round")
+	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
 	local reveal_time = duration * 0.6
 	local end_time = duration - reveal_time
 	local text_interval = 0.15
@@ -1690,8 +1695,8 @@ function Ware_BeginSpecialRound()
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
 				
-				Ware_SpecialRound.cb_on_update       = Ware_SpecialRoundCallback("OnUpdate")
-				Ware_SpecialRound.cb_on_ware_speedup = Ware_SpecialRoundCallback("OnWare_Speedup")
+				Ware_SpecialRound.cb_on_update            = Ware_SpecialRoundCallback("OnUpdate")
+				Ware_SpecialRound.cb_replace_ware_speedup = Ware_SpecialRoundCallback("Ware_Speedup")
 				
 				local event_prefix = "OnGameEvent_"
 				local event_prefix_len = event_prefix.len()
@@ -1790,19 +1795,21 @@ function Ware_BeginBoss()
 
 function Ware_Speedup()
 {
-	if (!Ware_SpecialRound || Ware_SpecialRound.cb_on_ware_speedup == null)
-		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_replace_ware_speedup)
+		Ware_SpecialRound.cb_replace_ware_speedup()
 	else
-		Ware_SpecialRound.cb_on_ware_speedup
-	
-	foreach (player in Ware_Players)
 	{
-		Ware_PlayGameSound(player, "speedup")
-		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed")
-		Ware_ShowScreenOverlay2(player, null)
+		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
+		
+		foreach (player in Ware_Players)
+		{
+			Ware_PlayGameSound(player, "speedup")
+			Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed")
+			Ware_ShowScreenOverlay2(player, null)
+		}
+		
+		CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 	}
-	
-	CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 }
 
 function Ware_StartMinigame(is_boss)
@@ -2696,7 +2703,7 @@ function OnGameEvent_teamplay_round_start(params)
 	local delay = 0.0
 	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
-		(!Ware_SpecialRound && RandomInt(0, 99) == 0))
+		(!Ware_SpecialRound && Ware_SpecialRoundChance != 0 && RandomInt(1, Ware_SpecialRoundChance) == Ware_SpecialRoundChance))
 	{
 		delay = Ware_GetThemeSoundDuration("special_round")
 		Ware_BeginSpecialRound()
