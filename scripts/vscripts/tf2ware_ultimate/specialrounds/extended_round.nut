@@ -1,20 +1,14 @@
 
+local threshold = Ware_BossThreshold + 10
+
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Extended Round"
 	author = "pokemonPasta"
-	description = "30 minigames will be played before the boss."
+	description = format("%s minigames will be played before the boss.", threshold)
 })
 
-local normal_rounds
-
-function OnStart()
+function GetBossThreshold()
 {
-	normal_rounds = Ware_BossThreshold
-	Ware_BossThreshold <- 30
-}
-
-function OnEnd()
-{
-	Ware_BossThreshold <- normal_rounds
+	return threshold
 }

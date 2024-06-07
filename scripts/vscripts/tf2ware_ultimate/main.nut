@@ -67,7 +67,7 @@ function Ware_ErrorHandler(e)
 	Print("CALLSTACK")
 	local s, l = 2
 	while (s = getstackinfos(l++))
-		Print(format("\t*FUNCTION [%s()] %s line [%d]", s.func, s.src, s.line))
+		Print(format("\t*FUNCTION [%s()] %s line [%d]", sIsValid(), s.src, s.line))
 	Print("LOCALS")
 	if (s2)
 	{
@@ -105,12 +105,12 @@ if (!Ware_Plugin)
 	SendToConsole("sv_cheats 1")
 }
 
-class Ware_MinigameCallback
+class Ware_Callback
 {
 	function constructor(name)
 	{
 		if (!scope)
-			scope = Ware_MinigameScope
+			scope = GetDefaultScope()
 		
 		if (name in scope)
 			func = scope[name]
@@ -126,20 +126,26 @@ class Ware_MinigameCallback
 		}
 		return null
 	}
+	
+	function IsValid()
+	{
+		return func != null
+	}
+	
+	function GetDefaultScope() { return null }
 
 	func = null
 	scope = null
 }
 
-// dunno if this is the right way to do this or if i shouldve just copy pasted
-class Ware_SpecialRoundCallback extends Ware_MinigameCallback
+class Ware_MinigameCallback extends Ware_Callback
 {
-	function constructor(name)
-	{
-		scope = Ware_SpecialRoundScope
-		if (scope)
-			base.constructor(name)
-	}
+	function GetDefaultScope() { return Ware_MinigameScope }
+}
+
+class Ware_SpecialRoundCallback extends Ware_Callback
+{
+	function GetDefaultScope() { return Ware_SpecialRoundScope }
 }
 
 class Ware_MinigameData
@@ -263,8 +269,9 @@ class Ware_SpecialRoundData
 	min_players = null
 	convars     = null
 	
-	cb_on_update = null
-	cb_replace_ware_speedup = null
+	cb_get_boss_threshold = null
+	cb_on_update          = null
+	cb_on_speedup         = null
 }
 
 class Ware_PlayerData
@@ -977,6 +984,14 @@ function Ware_GetMinigameRemainingTime()
 	return (Ware_MinigameStartTime + Ware_Minigame.duration + Ware_Minigame.end_delay) - Time()
 }
 
+function Ware_GetBossThreshold()
+{
+	if (Ware_SpecialRound.cb_get_boss_threshold.IsValid())
+		return Ware_SpecialRound.cb_get_boss_threshold()
+	else
+		return Ware_BossThreshold
+}
+
 function Ware_ParseLoadout(player)
 {
 	local data = player.GetScriptScope().ware_data
@@ -1534,7 +1549,7 @@ function Ware_IsSpecialRoundValid(str)
 {
 	foreach(round in Ware_SpecialRounds)
 	{
-		if (round = str)
+		if (round == str)
 			return true
 	}
 	
@@ -1695,8 +1710,9 @@ function Ware_BeginSpecialRound()
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
 				
-				Ware_SpecialRound.cb_on_update            = Ware_SpecialRoundCallback("OnUpdate")
-				Ware_SpecialRound.cb_replace_ware_speedup = Ware_SpecialRoundCallback("Ware_Speedup")
+				Ware_SpecialRound.cb_get_boss_threshold = Ware_SpecialRoundCallback("GetBossThreshold")
+				Ware_SpecialRound.cb_on_speedup         = Ware_SpecialRoundCallback("OnSpeedup")
+				Ware_SpecialRound.cb_on_update          = Ware_SpecialRoundCallback("OnUpdate")
 				
 				local event_prefix = "OnGameEvent_"
 				local event_prefix_len = event_prefix.len()
@@ -1795,8 +1811,8 @@ function Ware_BeginBoss()
 
 function Ware_Speedup()
 {
-	if (Ware_SpecialRound && Ware_SpecialRound.cb_replace_ware_speedup)
-		Ware_SpecialRound.cb_replace_ware_speedup()
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_speedup.IsValid())
+		Ware_SpecialRound.cb_on_speedup()
 	else
 	{
 		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
@@ -1807,9 +1823,9 @@ function Ware_Speedup()
 			Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed")
 			Ware_ShowScreenOverlay2(player, null)
 		}
-		
-		CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 	}
+	
+	CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 }
 
 function Ware_StartMinigame(is_boss)
@@ -2317,9 +2333,9 @@ function Ware_EndMinigameInternal()
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
 	
-	if (Ware_MinigamesPlayed > Ware_BossThreshold || Ware_DebugGameOver)
+	if (Ware_MinigamesPlayed > Ware_GetBossThreshold() || Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), sound_duration)
-	else if (Ware_MinigamesPlayed == Ware_BossThreshold)
+	else if (Ware_MinigamesPlayed == Ware_GetBossThreshold())
 		CreateTimer(@() Ware_BeginBoss(), sound_duration)
 	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % Ware_SpeedUpThreshold == 0)
 		CreateTimer(@() Ware_Speedup(), sound_duration)
@@ -2456,7 +2472,7 @@ function Ware_OnUpdate()
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_update()
 	
-	if (Ware_Minigame.cb_on_player_attack.func)
+	if (Ware_Minigame.cb_on_player_attackIsValid())
 	{
 		foreach (data in Ware_MinigamePlayers)
 		{
@@ -2475,7 +2491,7 @@ function Ware_OnUpdate()
 		}
 	}
 	
-	if (Ware_Minigame.cb_on_player_voiceline.func)
+	if (Ware_Minigame.cb_on_player_voicelineIsValid())
 	{
 		for (local scene; scene = FindByClassname(scene, "instanced_scripted_scene");)
 		{
@@ -2491,7 +2507,7 @@ function Ware_OnUpdate()
 		}
 	}
 	
-	if (Ware_Minigame.cb_on_player_touch.func)
+	if (Ware_Minigame.cb_on_player_touchIsValid())
 	{
 		local candidates = []
 		local bloat_maxs = Vector(0.05, 0.05, 0.05)
@@ -2951,7 +2967,7 @@ Ware_DevCommands <-
 			Ware_DebugForceTheme = ""
 		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
 	}
-	"nextround": function(player, text)
+	"nextspecial": function(player, text)
 	{
 		local args = split(text, " ")
 		if (args.len() >= 1)

@@ -14,7 +14,7 @@ function OnStart()
 	Ware_SetTimeScale(1.0 + high_scale)
 }
 
-function Ware_Speedup()
+function OnSpeedup()
 {
 	Ware_SetTimeScale(Ware_TimeScale - interval)
 		
@@ -24,6 +24,4 @@ function Ware_Speedup()
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/slow_down")
 		Ware_ShowScreenOverlay2(player, null)
 	}
-	
-	CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 }
