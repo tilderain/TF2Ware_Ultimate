@@ -269,9 +269,10 @@ class Ware_SpecialRoundData
 	min_players = null
 	convars     = null
 	
-	cb_get_boss_threshold = null
-	cb_on_update          = null
-	cb_on_speedup         = null
+	cb_get_boss_threshold            = null
+	cb_on_post_end_minigame_internal = null
+	cb_on_speedup                    = null
+	cb_on_update                     = null
 }
 
 class Ware_PlayerData
@@ -986,7 +987,7 @@ function Ware_GetMinigameRemainingTime()
 
 function Ware_GetBossThreshold()
 {
-	if (Ware_SpecialRound.cb_get_boss_threshold.IsValid())
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_get_boss_threshold.IsValid())
 		return Ware_SpecialRound.cb_get_boss_threshold()
 	else
 		return Ware_BossThreshold
@@ -1710,9 +1711,10 @@ function Ware_BeginSpecialRound()
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
 				
-				Ware_SpecialRound.cb_get_boss_threshold = Ware_SpecialRoundCallback("GetBossThreshold")
-				Ware_SpecialRound.cb_on_speedup         = Ware_SpecialRoundCallback("OnSpeedup")
-				Ware_SpecialRound.cb_on_update          = Ware_SpecialRoundCallback("OnUpdate")
+				Ware_SpecialRound.cb_get_boss_threshold            = Ware_SpecialRoundCallback("GetBossThreshold")
+				Ware_SpecialRound.cb_on_post_end_minigame_internal = Ware_SpecialRoundCallback("OnPostEndMinigameInternal")
+				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
+				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")
 				
 				local event_prefix = "OnGameEvent_"
 				local event_prefix_len = event_prefix.len()
@@ -2332,6 +2334,9 @@ function Ware_EndMinigameInternal()
 	local sound_duration = Max(Ware_GetThemeSoundDuration("victory"), Ware_GetThemeSoundDuration("failure"))
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
+	
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_post_end_minigame_internal.IsValid())
+		Ware_SpecialRound.cb_on_post_end_minigame_internal()
 	
 	if (Ware_MinigamesPlayed > Ware_GetBossThreshold() || Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), sound_duration)

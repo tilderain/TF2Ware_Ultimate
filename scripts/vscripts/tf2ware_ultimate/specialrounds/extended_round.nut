@@ -5,7 +5,7 @@ special_round <- Ware_SpecialRoundData
 ({
 	name = "Extended Round"
 	author = "pokemonPasta"
-	description = format("%s minigames will be played before the boss.", threshold)
+	description = format("%d minigames will be played before the boss.", threshold)
 })
 
 function GetBossThreshold()
