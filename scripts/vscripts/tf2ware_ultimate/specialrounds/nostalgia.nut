@@ -18,7 +18,7 @@ function OnStart()
 	Ware_RunClientCommand(null, "dsp_player 59")
 }
 
-function OnPostEndMinigameInternal()
+function OnMinigameEnd()
 {
 	Ware_RunClientCommand(null, "dsp_player 59")
 }
