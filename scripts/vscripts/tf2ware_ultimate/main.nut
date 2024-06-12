@@ -105,12 +105,15 @@ if (!Ware_Plugin)
 	SendToConsole("sv_cheats 1")
 }
 
-class Ware_MinigameCallback
+class Ware_Callback
 {
 	function constructor(name)
 	{
-		if (name in Ware_MinigameScope)
-			func = Ware_MinigameScope[name]
+		if (!scope)
+			scope = GetDefaultScope()
+		
+		if (name in scope)
+			func = scope[name]
 	}
 	
 	function _call(...)
@@ -118,13 +121,31 @@ class Ware_MinigameCallback
 		if (func != null)
 		{
 			vargv.remove(0)
-			vargv.insert(0, Ware_MinigameScope)
+			vargv.insert(0, scope)
 			return func.acall(vargv)
 		}
 		return null
 	}
+	
+	function IsValid()
+	{
+		return func != null
+	}
+	
+	function GetDefaultScope() { return null }
 
 	func = null
+	scope = null
+}
+
+class Ware_MinigameCallback extends Ware_Callback
+{
+	function GetDefaultScope() { return Ware_MinigameScope }
+}
+
+class Ware_SpecialRoundCallback extends Ware_Callback
+{
+	function GetDefaultScope() { return Ware_SpecialRoundScope }
 }
 
 class Ware_MinigameData
@@ -226,6 +247,34 @@ class Ware_MinigameData
 	cb_check_end			= null
 }
 
+class Ware_SpecialRoundData
+{
+	function constructor(table = null)
+	{
+		min_players = 0
+		convars     = {}
+		
+		if (table)
+		{
+			foreach (key, value in table)
+				this[key] = value
+		}
+	}
+	
+	
+	name        = null
+	author      = null
+	description = null
+	
+	min_players = null
+	convars     = null
+	
+	cb_get_boss_threshold            = null
+	cb_on_post_end_minigame_internal = null
+	cb_on_speedup                    = null
+	cb_on_update                     = null
+}
+
 class Ware_PlayerData
 {
 	function constructor(entity)
@@ -293,6 +342,12 @@ if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
 	Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_STOP)
 }
 
+if ("Ware_SpecialRound" in this && Ware_SpecialRound) // same as above
+{
+	Ware_EndSpecialRound()
+	Ware_PlayGameSound(null, "special_round", SND_STOP)
+}
+
 Ware_Started			  <- false
 Ware_Finished             <- false
 Ware_TimeScale			  <- 1.0
@@ -304,6 +359,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceBossgame   	<- ""
 	Ware_DebugForceMinigameOnce <- false
 	Ware_DebugForceBossgameOnce <- false
+	Ware_DebugNextSpecialRound <- ""
 }
 Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
@@ -319,6 +375,8 @@ Ware_ParticleSpawner      <- null
 Ware_MinigameRotation     <- []
 if (!("Ware_BossgameRotation" in this))
 	Ware_BossgameRotation <- []
+if (!("Ware_SpecialRoundRotation" in this))
+	Ware_SpecialRoundRotation <- []
 
 Ware_Minigame             <- null
 Ware_MinigameScope        <- {}
@@ -341,6 +399,14 @@ if (!("Ware_Theme" in this))
 	Ware_Theme              <- Ware_Themes[0]
 	Ware_CurrentThemeSounds <- {}
 	Ware_NextTheme          <- ""
+}
+
+if (!("Ware_SpecialRound" in this))
+{
+	Ware_SpecialRound             <- null
+	Ware_SpecialRoundScope        <- {}
+	Ware_SpecialRoundSavedConvars <- {}
+	Ware_SpecialRoundEvents       <- []
 }
 
 if (!("Ware_Players" in this))
@@ -919,6 +985,14 @@ function Ware_GetMinigameRemainingTime()
 	return (Ware_MinigameStartTime + Ware_Minigame.duration + Ware_Minigame.end_delay) - Time()
 }
 
+function Ware_GetBossThreshold()
+{
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_get_boss_threshold.IsValid())
+		return Ware_SpecialRound.cb_get_boss_threshold()
+	else
+		return Ware_BossThreshold
+}
+
 function Ware_ParseLoadout(player)
 {
 	local data = player.GetScriptScope().ware_data
@@ -1472,6 +1546,220 @@ function Ware_CheckHomeLocation(player_count)
 	}
 }
 
+function Ware_IsSpecialRoundValid(str)
+{
+	foreach(round in Ware_SpecialRounds)
+	{
+		if (round == str)
+			return true
+	}
+	
+	return false
+}
+
+function Ware_BeginSpecialRound()
+{
+	// copied logic from minigame start
+	
+	local valid_players = []
+	foreach (player in Ware_Players)
+	{
+		if ((player.GetTeam() & 2) && IsEntityAlive(player))
+		{
+			if (Ware_LoadoutCacher && !player.IsEFlagSet(EFL_LOADOUT_CACHED))
+				continue
+			
+			valid_players.append(player)
+		}
+	}
+	
+	local player_count = valid_players.len()
+	local success = false
+	local try_debug = true
+	local attempts = 0
+	local round
+	
+	while (!success)
+	{
+		if (++attempts > 25)
+		{
+			Ware_Error("No valid special round found to pick. There may not be enough minimum players")
+			return
+		}
+		
+		local is_forced = false
+		if (try_debug)
+		{
+			if(Ware_DebugNextSpecialRound.len() > 0)
+			{
+				if (Ware_IsSpecialRoundValid(Ware_DebugNextSpecialRound))
+				{
+					round = Ware_DebugNextSpecialRound
+					Ware_DebugNextSpecialRound = ""
+					is_forced = true
+				}
+				else
+				{
+					Ware_Error("No special round named %s was found. Picking another round instead.", Ware_DebugNextSpecialRound)
+					Ware_DebugNextSpecialRound = ""
+					is_forced = false
+				}
+			}
+			
+			try_debug = false
+		}
+		
+		if (!is_forced)
+		{
+			if (Ware_SpecialRoundRotation.len() == 0)
+			{
+				if (Ware_SpecialRounds.len() == 0)
+				{
+					Ware_Error("Special Round rotation is empty")
+					return
+				}
+				
+				Ware_SpecialRoundRotation = Ware_SpecialRounds
+			}
+		
+			round = RemoveRandomElement(Ware_SpecialRoundRotation)
+		}
+		
+		local path = format("tf2ware_ultimate/specialrounds/%s", round)
+		
+		try
+		{
+			Ware_SpecialRoundScope.clear()
+			IncludeScript(path, Ware_SpecialRoundScope)
+			
+			local min_players = Ware_SpecialRoundScope.special_round.min_players
+			if (player_count >= min_players)
+			{
+				success = true
+			}
+			else if (is_forced)
+			{
+				Ware_Error("Not enough players to load '%s', minimum is %d", round, min_players)	
+			}
+		}
+		catch (e)
+		{
+			Ware_ErrorHandler(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
+		}
+		
+		if (is_forced && !success)
+		{
+			Ware_Error("Failed to force load '%s', picking another round", round)
+		}
+	}
+	
+	Ware_SpecialRound <- Ware_SpecialRoundScope.special_round
+	
+	// ingame sequence
+	
+	Ware_PlayGameSound(null, "special_round")
+	
+	Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/special_round")
+	
+	local start_time = Time()
+	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
+	local reveal_time = duration * 0.6
+	local end_time = duration - reveal_time
+	local text_interval = 0.15
+	// TODO: show special rounds a better way
+	// this is just copied/adapted from Ware_ShowMinigameText
+	// maybe just put something behind it?
+	local showtext = function(str, holdtime)
+	{
+		Ware_TextManagerQueue.push(
+			{ 
+				message  = str
+				color    = "255 255 255"
+				holdtime = holdtime
+				x		 = -1.0
+				y        = 0.3
+			})
+			
+		EntityEntFire(Ware_TextManager, "FireUser1")
+		foreach (data in Ware_MinigamePlayers)
+			EntFireByHandle(Ware_TextManager, "Display", "", -1, data.player, null)
+		EntityEntFire(Ware_TextManager, "FireUser2")
+	}
+	
+	
+	CreateTimer(function() {
+		
+		showtext(RandomElement(Ware_FakeSpecialRounds), text_interval * 2.0)
+		
+		if (Time() - start_time > reveal_time)
+		{
+			showtext(Ware_SpecialRound.name, end_time)
+			
+			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, Ware_SpecialRound.name, TF_COLOR_DEFAULT, Ware_SpecialRound.description)
+			
+			PlaySoundOnAllClients("tf2ware_ultimate/pass.mp3")
+			
+			CreateTimer(function(){
+		
+				// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
+				foreach(name, value in Ware_SpecialRound.convars)
+				{
+					Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
+					SetConvarValue(name, value)
+				}
+				
+				if ("OnStart" in Ware_SpecialRoundScope)
+					Ware_SpecialRoundScope.OnStart()
+				
+				Ware_SpecialRound.cb_get_boss_threshold            = Ware_SpecialRoundCallback("GetBossThreshold")
+				Ware_SpecialRound.cb_on_post_end_minigame_internal = Ware_SpecialRoundCallback("OnPostEndMinigameInternal")
+				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
+				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")
+				
+				local event_prefix = "OnGameEvent_"
+				local event_prefix_len = event_prefix.len()
+				foreach (key, value in Ware_SpecialRoundScope)
+				{
+					if (typeof(value) == "function" && typeof(key) == "string" && key.find(event_prefix, 0) == 0)
+					{
+							local event_name = key.slice(event_prefix_len)
+							if (event_name.len() > 0)
+							{
+								if (!(event_name in GameEventCallbacks))
+								{
+									GameEventCallbacks[event_name] <- []
+									RegisterScriptGameEventListener(event_name)
+								}
+								
+								GameEventCallbacks[event_name].push(Ware_SpecialRoundScope)
+								Ware_SpecialRoundEvents.append(event_name)
+							}
+					}
+				}
+			}, end_time)
+		}
+		else
+			return text_interval
+	}, 0.0)
+}
+
+function Ware_EndSpecialRound()
+{
+	if (!Ware_SpecialRound)
+		return
+	
+	if ("OnEnd" in Ware_SpecialRoundScope)
+		Ware_SpecialRoundScope.OnEnd()
+	
+	foreach (name, value in Ware_SpecialRoundSavedConvars)
+		SetConvarValue(name, value)
+	Ware_SpecialRoundSavedConvars.clear()
+	
+	foreach (event_name in Ware_SpecialRoundEvents)
+		GameEventCallbacks[event_name].pop()
+	Ware_SpecialRoundEvents.clear()
+}
+
 function Ware_BeginIntermission(is_boss)
 {
 	if (Ware_DebugStop)
@@ -1525,13 +1813,18 @@ function Ware_BeginBoss()
 
 function Ware_Speedup()
 {
-	Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
-	
-	foreach (player in Ware_Players)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_speedup.IsValid())
+		Ware_SpecialRound.cb_on_speedup()
+	else
 	{
-		Ware_PlayGameSound(player, "speedup")
-		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed")
-		Ware_ShowScreenOverlay2(player, null)
+		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
+		
+		foreach (player in Ware_Players)
+		{
+			Ware_PlayGameSound(player, "speedup")
+			Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed")
+			Ware_ShowScreenOverlay2(player, null)
+		}
 	}
 	
 	CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
@@ -1882,7 +2175,7 @@ function Ware_EndMinigameInternal()
 
 		if (Ware_Minigame.no_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
-		if (Ware_Minigame.thirdperson)
+		if (Ware_Minigame.thirdperson && (!Ware_SpecialRound || Ware_SpecialRound.name != "Thirdperson")) // don't like checking this manually but not sure what else to do - pokepasta
 			player.SetForcedTauntCam(0)
 		if (Ware_Minigame.condition != null)
 			player.RemoveCond(Ware_Minigame.condition)
@@ -2042,9 +2335,12 @@ function Ware_EndMinigameInternal()
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
 	
-	if (Ware_MinigamesPlayed > Ware_BossThreshold || Ware_DebugGameOver)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_post_end_minigame_internal.IsValid())
+		Ware_SpecialRound.cb_on_post_end_minigame_internal()
+	
+	if (Ware_MinigamesPlayed > Ware_GetBossThreshold() || Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), sound_duration)
-	else if (Ware_MinigamesPlayed == Ware_BossThreshold)
+	else if (Ware_MinigamesPlayed == Ware_GetBossThreshold())
 		CreateTimer(@() Ware_BeginBoss(), sound_duration)
 	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % Ware_SpeedUpThreshold == 0)
 		CreateTimer(@() Ware_Speedup(), sound_duration)
@@ -2056,7 +2352,12 @@ function Ware_GameOver()
 {
 	Ware_Finished = true
 	Ware_RoundsPlayed++
-
+	
+	// TODO: move this to start of next round if it's safe to do so
+	// reason being it's more interesting to still have the special round's convars or what have you going on round end
+	if (Ware_SpecialRound != null)
+		Ware_EndSpecialRound()
+	
 	local highest_players = Ware_MinigameHighScorers
 	highest_players = highest_players.filter(@(i, player) player.IsValid())
 	
@@ -2173,7 +2474,10 @@ function Ware_OnUpdate()
 	
 	Ware_Minigame.cb_on_update()
 	
-	if (Ware_Minigame.cb_on_player_attack.func)
+	if (Ware_SpecialRound)
+		Ware_SpecialRound.cb_on_update()
+	
+	if (Ware_Minigame.cb_on_player_attack.IsValid())
 	{
 		foreach (data in Ware_MinigamePlayers)
 		{
@@ -2192,7 +2496,7 @@ function Ware_OnUpdate()
 		}
 	}
 	
-	if (Ware_Minigame.cb_on_player_voiceline.func)
+	if (Ware_Minigame.cb_on_player_voiceline.IsValid())
 	{
 		for (local scene; scene = FindByClassname(scene, "instanced_scripted_scene");)
 		{
@@ -2208,7 +2512,7 @@ function Ware_OnUpdate()
 		}
 	}
 	
-	if (Ware_Minigame.cb_on_player_touch.func)
+	if (Ware_Minigame.cb_on_player_touch.IsValid())
 	{
 		local candidates = []
 		local bloat_maxs = Vector(0.05, 0.05, 0.05)
@@ -2404,7 +2708,6 @@ function OnGameEvent_teamplay_round_start(params)
 		Ware_SetupThemeSounds()
 	}
 	
-	
 	Ware_ChatPrint(null, "{color}Theme: {color}{str}", TF_COLOR_DEFAULT, COLOR_LIME, Ware_Theme.visual_name)
 	
 	// putting this here rather than in loop we already have since i want to go after waiting for players check. if that doesnt matter just move this in.
@@ -2412,12 +2715,24 @@ function OnGameEvent_teamplay_round_start(params)
 		Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 	
 	SetPropBool(GameRules, "m_bTruceActive", true)
-	
+
 	Ware_MinigameRotation.clear()
 	foreach (minigame in Ware_Minigames)
 		Ware_MinigameRotation.append(minigame)
 	
-	CreateTimer(@() Ware_BeginIntermission(false), 0.0)
+	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
+	local delay = 0.0
+	
+	if (Ware_DebugNextSpecialRound.len() > 0 ||
+		(Ware_RoundsPlayed > 0 && !Ware_SpecialRound && Ware_SpecialRoundChance != 0 && RandomInt(1, Ware_SpecialRoundChance) == Ware_SpecialRoundChance))
+	{
+		delay = Ware_GetThemeSoundDuration("special_round")
+		Ware_BeginSpecialRound()
+	}
+	else if (Ware_SpecialRound)
+		Ware_SpecialRound <- null
+	
+	CreateTimer(@() Ware_BeginIntermission(false), delay)
 }
 
 function OnGameEvent_recalculate_truce(params)
@@ -2656,6 +2971,15 @@ Ware_DevCommands <-
 		else
 			Ware_DebugForceTheme = ""
 		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
+	}
+	"nextspecial": function(player, text)
+	{
+		local args = split(text, " ")
+		if (args.len() >= 1)
+			Ware_DebugNextSpecialRound = args[0]
+		else
+			Ware_DebugNextSpecialRound = ""
+		Ware_ChatPrint(player, "Forced next special round to '{str}'", Ware_DebugNextSpecialRound)
 	}
 	"restart" : function(player, text)
 	{
