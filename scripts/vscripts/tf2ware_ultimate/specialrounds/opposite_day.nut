@@ -6,10 +6,10 @@ special_round <- Ware_SpecialRoundData
 	description = "Lowest score at the end wins."
 })
 
+local lowest_score = Ware_GetBossThreshold() + 5
+
 function OnCalculateScores(data, player, highest_score, highest_players)
 {
-	local lowest_score = Ware_GetBossThreshold() + 5
-	
 	if (data.passed)
 		data.score += Ware_Minigame.boss ? 5 : 1
 	
