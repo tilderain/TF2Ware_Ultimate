@@ -234,3 +234,12 @@ TF2Ware_Ultimate.KartHorn
 		wave	 tf2ware_ultimate/kart_horns/horn5.mp3
 	}
 }
+
+TF2Ware_Ultimate.BonkBatHit
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_70dB
+	wave			tf2ware_ultimate/bonk_bat_hit.wav
+}

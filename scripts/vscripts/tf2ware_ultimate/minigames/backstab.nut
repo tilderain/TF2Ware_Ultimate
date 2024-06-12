@@ -8,6 +8,7 @@ minigame <- Ware_MinigameData
 	music          = "heat"
 	min_players    = 2
 	allow_damage   = true
+	force_backstab = true
 	custom_overlay = "backstab_player"
 })
 

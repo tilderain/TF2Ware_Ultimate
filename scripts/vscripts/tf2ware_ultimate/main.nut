@@ -156,6 +156,7 @@ class Ware_MinigameData
 		min_players    = 0
 		start_pass     = false
 		allow_damage   = false
+		force_backstab = false
 		fail_on_death  = false
 		suicide_on_end = false
 		no_collisions  = false
@@ -176,8 +177,8 @@ class Ware_MinigameData
 		}
 	}
 	
-	// Mandatory parameters
-	// Internal name
+	// Mandatory settings
+	// Visual name
 	name			= null
 	// Who made the minigame?
 	// Unused for now but might be used for credits in the future
@@ -190,7 +191,7 @@ class Ware_MinigameData
 	// Music to play
 	music			= null
 	
-	// Optional parameters
+	// Optional settings
 	// Map location to teleport to (Ware_Location enum), default is home
 	location		= null
 	// Minimum amount of players needed to start, default is 0
@@ -199,6 +200,8 @@ class Ware_MinigameData
 	start_pass		= null
 	// Is damage to other players allowed? Default is false
 	allow_damage	= null
+	// Allow backstabs with any weapon
+	force_backstab  = null
 	// Whether players should be automatically failed when they die, default is false
 	fail_on_death	= null
 	// Whether players should suicide if they haven't passed when minigame ends, default is false
@@ -224,6 +227,8 @@ class Ware_MinigameData
 	// Internal use only
 	// Is a boss game?
 	boss			= null
+	// File name
+	file_name       = null
 	// Entities spawned by the minigame, to remove after it ends
 	entities		= null
 	// Entity names to delete after minigame ends (e.g. projectiles)
@@ -254,6 +259,7 @@ class Ware_SpecialRoundData
 		min_players = 0
 		convars     = {}
 		reverse_text = false
+		allow_damage = false
 		
 		if (table)
 		{
@@ -268,18 +274,20 @@ class Ware_SpecialRoundData
 	description  = null
 	
 	reverse_text = null
+	allow_damage = null
 	
 	min_players  = null
 	convars      = null
 	
-	cb_get_boss_threshold            = null
-	cb_get_overlay2                  = null
-	cb_get_player_roll               = null
-	cb_on_begin_intermission         = null
-	cb_on_player_spawn               = null
-	cb_on_minigame_end               = null
-	cb_on_speedup                    = null
-	cb_on_update                     = null
+	cb_get_boss_threshold    = null
+	cb_get_overlay2          = null
+	cb_get_player_roll       = null
+	cb_on_player_spawn       = null
+	cb_on_begin_intermission = null
+	cb_on_minigame_end       = null
+	cb_on_speedup            = null
+	cb_on_take_damage        = null
+	cb_on_update             = null
 }
 
 class Ware_PlayerData
@@ -311,6 +319,8 @@ class Ware_PlayerData
 	mission		     	= null
 	melee		     	= null
 	melee_index      	= null
+	special_melee       = null
+	special_vm          = null
 	attributes	     	= null
 	melee_attributes 	= null
 	start_sound      	= null
@@ -322,37 +332,6 @@ class Ware_PlayerData
 	cache_init			= null
 	cache_melees		= null
 	cache_cosmetics 	= null
-}
-
-if ("Ware_Minigame" in this && Ware_Minigame) // when restarted mid-minigame
-{
-	if ("OnCleanup" in Ware_MinigameScope) 
-		Ware_MinigameScope.OnCleanup()
-	
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
-		if (!player.IsValid())
-			continue
-			
-		if (data.saved_team != null)
-		{
-			Ware_SetPlayerTeamInternal(player, data.saved_team)
-			data.saved_team = null
-		}		
-	}
-	
-	foreach (name, value in Ware_MinigameSavedConvars)
-		SetConvarValue(name, value)
-	Ware_MinigameSavedConvars.clear()
-	
-	Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_STOP)
-}
-
-if ("Ware_SpecialRound" in this && Ware_SpecialRound) // same as above
-{
-	Ware_EndSpecialRound()
-	Ware_PlayGameSound(null, "special_round", SND_STOP)
 }
 
 Ware_Started			  <- false
@@ -401,6 +380,7 @@ Ware_MinigamesPlayed	  <- 0
 
 if (!("Ware_RoundsPlayed" in this))
 	Ware_RoundsPlayed     <- 0
+
 if (!("Ware_Theme" in this))
 {
 	Ware_Theme              <- Ware_Themes[0]
@@ -414,11 +394,11 @@ if (!("Ware_SpecialRound" in this))
 	Ware_SpecialRoundScope        <- {}
 	Ware_SpecialRoundSavedConvars <- {}
 	Ware_SpecialRoundEvents       <- []
+	Ware_SpecialRoundPrevious     <- false
 }
 
 if (!("Ware_Players" in this))
 {
-
 	Ware_Players         <- []
 	Ware_PlayersData     <- []
 	Ware_MinigamePlayers <- []
@@ -659,14 +639,18 @@ function Ware_TogglePlayerWearables(player, toggle)
 		if (toggle)
 		{
 			foreach (wearable in data.cache_cosmetics)
-				SetPropInt(wearable, "m_nRenderMode", kRenderNormal)		
+				SetPropInt(wearable, "m_nRenderMode", kRenderNormal)
+			if (data.special_melee)
+				SetPropInt(data.special_melee, "m_clrRender", 0xFFFFFFFF) 
 			if (data.melee)
 				SetPropInt(data.melee, "m_clrRender", 0xFFFFFFFF) 
 		}
 		else
 		{
 			foreach (wearable in data.cache_cosmetics)
-				SetPropInt(wearable, "m_nRenderMode", kRenderNone)			
+				SetPropInt(wearable, "m_nRenderMode", kRenderNone)		
+			if (data.special_melee)
+				SetPropInt(data.special_melee, "m_clrRender", 0) // rendermode doesn't work					
 			if (data.melee)
 				SetPropInt(data.melee, "m_clrRender", 0) // rendermode doesn't work		
 		}
@@ -992,8 +976,16 @@ function Ware_GetPlayerMiniData(player)
 	return player.GetScriptScope().ware_minidata
 }
 
+function Ware_UngroundPlayer(player)
+{
+	SetPropEntity(player, "m_hGroundEntity", null)
+	player.RemoveFlag(FL_ONGROUND)
+}
+
 function Ware_PushPlayer(player, scale)
 {
+	Ware_UngroundPlayer(player)
+	
 	local dir = player.EyeAngles().Forward()
 	dir.x *= scale
 	dir.y *= scale
@@ -1003,6 +995,8 @@ function Ware_PushPlayer(player, scale)
 
 function Ware_PushPlayerFromOther(player, other_player, scale)
 {
+	Ware_UngroundPlayer(player)
+	
 	local dir = player.GetOrigin() - other_player.GetOrigin()
 	dir.Norm()
 	dir.x *= scale
@@ -1030,6 +1024,22 @@ function Ware_GetMinigameRemainingTime()
 	return (Ware_MinigameStartTime + Ware_Minigame.duration + Ware_Minigame.end_delay) - Time()
 }
 
+function Ware_ToggleTruce(toggle)
+{
+	if (toggle)
+	{
+		// special round that requires damage must never have truce enabled (OnTakeDamage will cancel it)
+		if (!Ware_SpecialRound || !Ware_SpecialRound.allow_damage)
+			SetPropBool(GameRules, "m_bTruceActive", true)
+		else
+			SetPropBool(GameRules, "m_bTruceActive", false)
+	}
+	else
+	{
+		SetPropBool(GameRules, "m_bTruceActive", false)
+	}
+}
+
 function Ware_GetBossThreshold()
 {
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_get_boss_threshold.IsValid())
@@ -1041,6 +1051,37 @@ function Ware_GetBossThreshold()
 function Ware_ParseLoadout(player)
 {
 	local data = player.GetScriptScope().ware_data
+	
+	local special_melee = data.special_melee
+	if (special_melee)
+	{
+		if (Ware_LoadoutCacher)
+		{
+			// shouldn't happen, if it does, this logic needs rewriting
+			if (data.melee_index == null)
+			{
+				Ware_Error("Failed to find special melee slot for %s", GetPlayerName(player))
+				return null					
+			}
+			
+			SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)
+			return special_melee		
+		}
+		else
+		{
+			for (local i = 0; i < MAX_WEAPONS; i++)
+			{
+				local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)	
+				if (weapon && weapon.GetSlot() == TF_SLOT_MELEE)
+				{
+					if (weapon != special_melee)
+						KillWeapon(weapon)
+					SetPropEntityArray(player, "m_hMyWeapons", special_melee, i)
+					return special_melee
+				}
+			}
+		}		
+	}	
 		
 	if (Ware_LoadoutCacher)
 	{
@@ -1132,17 +1173,24 @@ function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {},
 		{
 			player.RemoveCond(TF_COND_TAUNTING)
 			
-			local melee = data.melee
-			if (melee)
+			if (data.special_melee)
 			{
-				if (item_attributes.len() > 0)
+				player.Weapon_Switch(data.special_melee)
+			}
+			else
+			{
+				local melee = data.melee
+				if (melee)
 				{
-					foreach (attribute, value in item_attributes)
-						melee.AddAttribute(attribute, value, -1.0)
-					data.melee_attributes = clone(item_attributes)
+					if (item_attributes.len() > 0)
+					{
+						foreach (attribute, value in item_attributes)
+							melee.AddAttribute(attribute, value, -1.0)
+						data.melee_attributes = clone(item_attributes)
+					}
+					
+					player.Weapon_Switch(melee)
 				}
-				
-				player.Weapon_Switch(melee)
 			}
 		}
 	}	
@@ -1157,6 +1205,8 @@ function Ware_StripPlayer(player, give_default_melee)
 		
 	local data = player.GetScriptScope().ware_data
 	local melee = data.melee
+	local special_melee = data.special_melee
+	
 	for (local i = 0; i < MAX_WEAPONS; i++)
 	{
 		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
@@ -1164,19 +1214,25 @@ function Ware_StripPlayer(player, give_default_melee)
 		{
 			SetPropEntityArray(player, "m_hMyWeapons", null, i)
 
-			if (weapon != melee)
+			if (weapon != melee && weapon != special_melee)
 				KillWeapon(weapon)
 		}
 	}
 	
 	if (give_default_melee)
 	{
-		if (melee != null && melee.IsValid())
+		local use_melee
+		if (special_melee != null && special_melee.IsValid())
+			use_melee = special_melee
+		else if (melee != null && melee.IsValid())
+			use_melee = melee
+		
+		if (use_melee)
 		{
-			SetPropEntityArray(player, "m_hMyWeapons", melee, data.melee_index)
+			SetPropEntityArray(player, "m_hMyWeapons", use_melee, data.melee_index)
 			
 			local active_weapon = player.GetActiveWeapon()
-			if (active_weapon != melee)
+			if (active_weapon != use_melee)
 			{
 				if (active_weapon != null)
 				{								
@@ -1203,7 +1259,7 @@ function Ware_StripPlayer(player, give_default_melee)
 					}
 				}
 				
-				player.Weapon_Switch(melee)
+				player.Weapon_Switch(use_melee)
 			}
 		}
 	}
@@ -1455,6 +1511,8 @@ function Ware_SetPlayerTeamInternal(player, team)
 			wearable.SetTeam(team)
 			
 		// only bother with melee for now, too expensive to iterate +10 cached melees for each player
+		if (data.special_melee)
+			data.special_melee.SetTeam(team)
 		if (data.melee)
 			data.melee.SetTeam(team)
 	}
@@ -1598,6 +1656,22 @@ function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 		return Ware_MinigamePlayers.filter(@(i, data) IsEntityAlive(data.player))
 }
 
+function Ware_GetValidPlayers()
+{
+	local valid_players = []
+	foreach (player in Ware_Players)
+	{
+		if ((player.GetTeam() & 2) && IsEntityAlive(player))
+		{
+			if (Ware_LoadoutCacher && !player.IsEFlagSet(EFL_LOADOUT_CACHED))
+				continue
+			
+			valid_players.append(player)
+		}
+	}
+	return valid_players
+}
+
 function Ware_CheckHomeLocation(player_count)
 {
 	local prev_location = Ware_MinigameHomeLocation
@@ -1630,20 +1704,9 @@ function Ware_IsSpecialRoundValid(str)
 function Ware_BeginSpecialRound()
 {
 	// copied logic from minigame start
-	
-	local valid_players = []
-	foreach (player in Ware_Players)
-	{
-		if ((player.GetTeam() & 2) && IsEntityAlive(player))
-		{
-			if (Ware_LoadoutCacher && !player.IsEFlagSet(EFL_LOADOUT_CACHED))
-				continue
-			
-			valid_players.append(player)
-		}
-	}
-	
+	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
+	
 	local success = false
 	local try_debug = true
 	local attempts = 0
@@ -1723,10 +1786,10 @@ function Ware_BeginSpecialRound()
 		}
 	}
 	
+	Ware_SpecialRoundPrevious = true
+	
 	// ingame sequence
-	
 	Ware_PlayGameSound(null, "special_round")
-	
 	Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/special_round")
 	
 	local start_time = Time()
@@ -1762,8 +1825,6 @@ function Ware_BeginSpecialRound()
 		
 		if (Time() - start_time > reveal_time)
 		{
-			Ware_SpecialRound = special_round
-			
 			ShowText(special_round.name, end_time)
 			
 			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, special_round.name, TF_COLOR_DEFAULT, special_round.description)
@@ -1772,6 +1833,8 @@ function Ware_BeginSpecialRound()
 			
 			CreateTimer(function()
 			{	
+				Ware_SpecialRound = special_round
+						
 				// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
 				foreach(name, value in special_round.convars)
 				{
@@ -1782,13 +1845,17 @@ function Ware_BeginSpecialRound()
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
 					
+				if (special_round.allow_damage)
+					Ware_ToggleTruce(false)
+					
 				Ware_SpecialRound.cb_get_boss_threshold            = Ware_SpecialRoundCallback("GetBossThreshold")
 				Ware_SpecialRound.cb_get_overlay2                  = Ware_SpecialRoundCallback("GetOverlay2")
-				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")
+				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")		
+				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")	
 				Ware_SpecialRound.cb_on_begin_intermission         = Ware_SpecialRoundCallback("OnBeginIntermission")
-				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")
 				Ware_SpecialRound.cb_on_minigame_end               = Ware_SpecialRoundCallback("OnMinigameEnd")
 				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
+				Ware_SpecialRound.cb_on_take_damage                = Ware_SpecialRoundCallback("OnTakeDamage")
 				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")
 				
 				local event_prefix = "OnGameEvent_"
@@ -1835,6 +1902,8 @@ function Ware_EndSpecialRound()
 	foreach (event_name in Ware_SpecialRoundEvents)
 		GameEventCallbacks[event_name].pop()
 	Ware_SpecialRoundEvents.clear()
+	
+	Ware_SpecialRound = null
 }
 
 function Ware_BeginIntermission(is_boss)
@@ -1865,7 +1934,9 @@ function Ware_BeginIntermission(is_boss)
 		Ware_SetTheme("_default")
 	
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_intermission.IsValid())
+	{
 		Ware_SpecialRound.cb_on_begin_intermission(is_boss)
+	}
 	else
 	{
 		foreach (player in Ware_Players)
@@ -1896,7 +1967,9 @@ function Ware_BeginBoss()
 function Ware_Speedup()
 {
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_speedup.IsValid())
+	{
 		Ware_SpecialRound.cb_on_speedup()
+	}
 	else
 	{
 		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
@@ -1914,19 +1987,9 @@ function Ware_Speedup()
 
 function Ware_StartMinigame(is_boss)
 {	
-	local valid_players = []
-	foreach (player in Ware_Players)
-	{
-		if ((player.GetTeam() & 2) && IsEntityAlive(player))
-		{
-			if (Ware_LoadoutCacher && !player.IsEFlagSet(EFL_LOADOUT_CACHED))
-				continue
-			
-			valid_players.append(player)
-		}
-	}
-	
+	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
+	
 	local success = false
 	local try_debug = true
 	local prev_is_boss = is_boss
@@ -2029,7 +2092,8 @@ function Ware_StartMinigame(is_boss)
 		{
 			Ware_MinigameScope.clear()
 			IncludeScript(path, Ware_MinigameScope)
-				
+			
+			
 			local min_players = Ware_MinigameScope.minigame.min_players
 			if (player_count >= min_players)
 			{
@@ -2054,6 +2118,7 @@ function Ware_StartMinigame(is_boss)
 	Ware_MinigameEnded = false
 	Ware_Minigame = Ware_MinigameScope.minigame
 	Ware_Minigame.boss = is_boss
+	Ware_Minigame.file_name = minigame
 	Ware_MinigameStartTime = Time()
 	
 	foreach (name, value in Ware_Minigame.convars)
@@ -2097,7 +2162,7 @@ function Ware_StartMinigame(is_boss)
 		Ware_MinigameScope.OnTeleport(Ware_MinigamePlayers.map(@(data) data.player))
 	
 	if (Ware_Minigame.allow_damage)
-		SetPropBool(GameRules, "m_bTruceActive", false)
+		Ware_ToggleTruce(false)
 	
 	if ("OnStart" in Ware_MinigameScope)
 		Ware_MinigameScope.OnStart()
@@ -2322,7 +2387,7 @@ function Ware_EndMinigameInternal()
 	}
 	
 	if (Ware_Minigame.allow_damage)
-		SetPropBool(GameRules, "m_bTruceActive", true)
+		Ware_ToggleTruce(true)
 		
 	Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_STOP)
 
@@ -2408,9 +2473,9 @@ function Ware_EndMinigameInternal()
 		
 	foreach (annotation in Ware_Minigame.annotations)
 		Ware_HideAnnotation(annotation)
-	
+		
 	if (Ware_SpecialRound)
-		Ware_SpecialRound.cb_on_minigame_end()
+		Ware_SpecialRound.cb_on_minigame_end()		
 	
 	Ware_Minigame = null
 	Ware_MinigameScope.clear()
@@ -2450,7 +2515,7 @@ function Ware_GameOver()
 		highest_score = highest_players[0].GetScriptScope().ware_data.score
 	
 	local delay = GetConvarValue("mp_bonusroundtime").tofloat()
-	SetPropBool(GameRules, "m_bTruceActive", false)
+	Ware_ToggleTruce(false)
 	
 	foreach (data in Ware_PlayersData)
 	{
@@ -2523,6 +2588,9 @@ function Ware_GameOver()
 
 function Ware_OnUpdate()
 {
+	if (Ware_SpecialRound)
+		Ware_SpecialRound.cb_on_update()
+		
 	if (Ware_Minigame == null)
 		return
 		
@@ -2555,9 +2623,6 @@ function Ware_OnUpdate()
 	}
 	
 	Ware_Minigame.cb_on_update()
-	
-	if (Ware_SpecialRound)
-		Ware_SpecialRound.cb_on_update()
 	
 	if (Ware_Minigame.cb_on_player_attack.IsValid())
 	{
@@ -2664,17 +2729,39 @@ function OnScriptHook_OnTakeDamage(params)
 	if (params.damage_custom == TF_DMG_CUSTOM_SUICIDE)
 		return
 		
+	if (Ware_SpecialRound)
+	{
+		if (Ware_SpecialRound.cb_on_take_damage(params) == false)
+		{
+			params.damage = 0
+			params.early_out = true
+			return
+		}
+	}
+	
 	if (Ware_Minigame == null)
 	{
 		if (params.damage_type & DMG_FALL)
 		{
 			params.damage = 0
 			params.early_out = true
+			return
 		}
 	}
-		
+	
 	local victim = params.const_entity
 	local attacker = params.attacker
+	
+	// handle the case where truce is disabled but don't want damage between players
+	if (victim != attacker && victim.IsPlayer() && attacker.IsPlayer())
+	{
+		if (Ware_Started && (Ware_Minigame == null || !Ware_Minigame.allow_damage))
+		{
+			params.damage = 0
+			params.early_out = true	
+			return
+		}
+	}
 
 	local same_team = false
 	if (victim.IsPlayer()
@@ -2691,10 +2778,11 @@ function OnScriptHook_OnTakeDamage(params)
 		params.force_friendly_fire = true
 		
 		// replicate backstabs for teammates
-		if (same_team)
+		local force_backstabs = Ware_Minigame && Ware_Minigame.force_backstab
+		if (same_team || force_backstabs)
 		{
 			local weapon = attacker.GetActiveWeapon()
-			if (weapon && weapon.GetClassname() == "tf_weapon_knife")
+			if (force_backstabs || (weapon && weapon.GetClassname() == "tf_weapon_knife"))
 			{
 				local to_target = victim.GetCenter() - attacker.GetCenter()
 				to_target.z = 0.0
@@ -2796,7 +2884,7 @@ function OnGameEvent_teamplay_round_start(params)
 	foreach(player in Ware_Players)
 		Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 	
-	SetPropBool(GameRules, "m_bTruceActive", true)
+	Ware_ToggleTruce(true)
 
 	Ware_MinigameRotation.clear()
 	foreach (minigame in Ware_Minigames)
@@ -2806,17 +2894,55 @@ function OnGameEvent_teamplay_round_start(params)
 	local delay = 0.0
 	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
-		(Ware_RoundsPlayed > 0 && !Ware_SpecialRound && Ware_SpecialRoundChance != 0 && RandomInt(1, Ware_SpecialRoundChance) == Ware_SpecialRoundChance))
+		(Ware_RoundsPlayed > 0
+		&& !Ware_SpecialRoundPrevious 
+		&& Ware_SpecialRoundChance != 0 
+		&& RandomInt(1, Ware_SpecialRoundChance) == Ware_SpecialRoundChance))
 	{
 		delay = Ware_GetThemeSoundDuration("special_round")
 		Ware_BeginSpecialRound()
 	}
 	else
 	{
-		Ware_SpecialRound = null
+		Ware_SpecialRoundPrevious = false
 	}
 	
 	CreateTimer(@() Ware_BeginIntermission(false), delay)
+}
+
+// called right before the map is reset for a new round
+function OnGameEvent_scorestats_accumulated_update(params)
+{
+	if (Ware_Minigame) // when restarted mid-minigame
+	{
+		if ("OnCleanup" in Ware_MinigameScope) 
+			Ware_MinigameScope.OnCleanup()
+		
+		foreach (data in Ware_MinigamePlayers)
+		{
+			local player = data.player
+			if (!player.IsValid())
+				continue
+				
+			if (data.saved_team != null)
+			{
+				Ware_SetPlayerTeamInternal(player, data.saved_team)
+				data.saved_team = null
+			}		
+		}
+		
+		foreach (name, value in Ware_MinigameSavedConvars)
+			SetConvarValue(name, value)
+		Ware_MinigameSavedConvars.clear()
+		
+		Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_STOP)
+	}
+
+	if (Ware_SpecialRound) // same as above
+	{
+		Ware_EndSpecialRound()
+		Ware_PlayGameSound(null, "special_round", SND_STOP)
+	}
 }
 
 function OnGameEvent_recalculate_truce(params)
@@ -2825,11 +2951,11 @@ function OnGameEvent_recalculate_truce(params)
 	if (Ware_Minigame)
 	{
 		if (!Ware_Minigame.allow_damage)
-			SetPropBool(GameRules, "m_bTruceActive", true)
+			Ware_ToggleTruce(true)
 	}
 	else
 	{
-		SetPropBool(GameRules, "m_bTruceActive", true)
+		Ware_ToggleTruce(true)
 	}
 }
 
@@ -2839,7 +2965,10 @@ function PlayerPostSpawn()
 		self.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
 	SetPropBool(self, "m_Shared.m_bShieldEquipped", false)
 	
-	local melee = ware_data.melee
+	local melee = ware_data.special_melee
+	if (melee == null)
+		melee = ware_data.melee
+	
 	if (melee != null)
 	{
 		// not sure why this is needed
