@@ -102,6 +102,7 @@ Ware_SpecialRounds <-
 	"no_movingback"
 	"nostalgia"
 	"thirdperson"
+	"time_attack"
 ]
 
 Ware_FakeSpecialRounds <-
