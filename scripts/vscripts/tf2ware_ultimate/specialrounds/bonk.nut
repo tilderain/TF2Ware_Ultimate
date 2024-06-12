@@ -15,41 +15,47 @@ special_round <- Ware_SpecialRoundData
 function GiveSpecialMelee(player)
 {
 	local data = player.GetScriptScope().ware_data
-	if (data.special_melee)
-		return
-		
-    local special_melee = CreateEntitySafe("tf_weapon_bat")
-	SetPropInt(special_melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 1123)
-    SetPropBool(special_melee, "m_AttributeManager.m_Item.m_bInitialized", true)
-    special_melee.DispatchSpawn()
 	
-	for (local i = 0; i < 4; i++)
-		SetPropIntArray(special_melee, "m_nModelIndexOverrides", bat_modelindex, i)
-	SetPropBool(special_melee, "m_bBeingRepurposedForTaunt", true)
-	SetPropInt(special_melee, "m_nRenderMode", kRenderTransColor)
-		
-	player.Weapon_Equip(special_melee)
-	for (local i = 0; i < MAX_WEAPONS; i++)
+	local special_melee = data.special_melee
+	if (!special_melee || !special_melee.IsValid())
 	{
-		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
-		if (weapon == special_melee)
+		special_melee = CreateEntitySafe("tf_weapon_bat")
+		SetPropInt(special_melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 1123)
+		SetPropBool(special_melee, "m_AttributeManager.m_Item.m_bInitialized", true)
+		special_melee.DispatchSpawn()
+		
+		for (local i = 0; i < 4; i++)
+			SetPropIntArray(special_melee, "m_nModelIndexOverrides", bat_modelindex, i)
+		SetPropBool(special_melee, "m_bBeingRepurposedForTaunt", true)
+		SetPropInt(special_melee, "m_nRenderMode", kRenderTransColor)
+			
+		player.Weapon_Equip(special_melee)
+		for (local i = 0; i < MAX_WEAPONS; i++)
 		{
-			SetPropEntityArray(player, "m_hMyWeapons", null, i)
-			break
+			local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
+			if (weapon == special_melee)
+			{
+				SetPropEntityArray(player, "m_hMyWeapons", null, i)
+				break
+			}
 		}
+		
+		SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)
+		player.Weapon_Switch(special_melee)
+		data.special_melee = special_melee
 	}
 	
-	SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)
-	player.Weapon_Switch(special_melee)
-	data.special_melee = special_melee
-	
-	local special_vm = Entities.CreateByClassname("tf_wearable_vm")
-	SetPropInt(special_vm, "m_nModelIndex", bat_modelindex)
-	SetPropBool(special_vm, "m_bValidatedAttachedEntity", true)
-	special_vm.DispatchSpawn()
-	player.EquipWearableViewModel(special_vm)
-	special_vm.KeyValueFromString("classname", "ware_specialvm")
-	data.special_vm = special_vm
+	local special_vm = data.special_vm
+	if (!special_vm || !special_vm.IsValid())
+	{
+		special_vm = Entities.CreateByClassname("tf_wearable_vm")
+		SetPropInt(special_vm, "m_nModelIndex", bat_modelindex)
+		SetPropBool(special_vm, "m_bValidatedAttachedEntity", true)
+		special_vm.DispatchSpawn()
+		player.EquipWearableViewModel(special_vm)
+		special_vm.KeyValueFromString("classname", "ware_specialvm")
+		data.special_vm = special_vm
+	}
 }
 
 function OnStart()
@@ -64,9 +70,21 @@ function OnStart()
 	}
 }
 
-function OnPlayerSpawn(player)
+// hacky but melee gets removed when player regenerates
+// but with loadout caching, the inventory never regenerates
+if (Ware_LoadoutCacher)
 {
-	GiveSpecialMelee(player)
+	function OnPlayerSpawn(player)
+	{
+		GiveSpecialMelee(player)
+	}
+}
+else
+{
+	function OnPlayerInventory(player)
+	{
+		GiveSpecialMelee(player)
+	}
 }
 
 function OnUpdate()

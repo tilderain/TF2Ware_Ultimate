@@ -283,6 +283,7 @@ class Ware_SpecialRoundData
 	cb_get_overlay2          = null
 	cb_get_player_roll       = null
 	cb_on_player_spawn       = null
+	cb_on_player_inventory   = null
 	cb_on_begin_intermission = null
 	cb_on_minigame_end       = null
 	cb_on_speedup            = null
@@ -1055,32 +1056,35 @@ function Ware_ParseLoadout(player)
 	local special_melee = data.special_melee
 	if (special_melee)
 	{
-		if (Ware_LoadoutCacher)
+		// shouldn't happen, if it does, this logic needs rewriting
+		if (data.melee_index == null)
 		{
-			// shouldn't happen, if it does, this logic needs rewriting
-			if (data.melee_index == null)
-			{
-				Ware_Error("Failed to find special melee slot for %s", GetPlayerName(player))
-				return null					
-			}
+			Ware_Error("Failed to find special melee slot for %s", GetPlayerName(player))
+			return null					
+		}
 			
-			SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)
-			return special_melee		
+		if (Ware_LoadoutCacher)
+		{		
+			SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)	
 		}
 		else
 		{
 			for (local i = 0; i < MAX_WEAPONS; i++)
 			{
-				local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)	
-				if (weapon && weapon.GetSlot() == TF_SLOT_MELEE)
-				{
-					if (weapon != special_melee)
-						KillWeapon(weapon)
-					SetPropEntityArray(player, "m_hMyWeapons", special_melee, i)
-					return special_melee
-				}
+				local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
+				if (!weapon)
+					continue
+				MarkForPurge(weapon)
+				
+				if (weapon != special_melee)
+					KillWeapon(weapon)
+				SetPropEntityArray(player, "m_hMyWeapons", null, i)
 			}
-		}		
+			
+			SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)			
+		}
+		
+		return special_melee	
 	}	
 		
 	if (Ware_LoadoutCacher)
@@ -1193,6 +1197,8 @@ function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {},
 				}
 			}
 		}
+			
+		SetPropEntity(player, "m_hLastWeapon", null)		
 	}	
 }
 
@@ -1218,7 +1224,7 @@ function Ware_StripPlayer(player, give_default_melee)
 				KillWeapon(weapon)
 		}
 	}
-	
+
 	if (give_default_melee)
 	{
 		local use_melee
@@ -1852,6 +1858,7 @@ function Ware_BeginSpecialRound()
 				Ware_SpecialRound.cb_get_overlay2                  = Ware_SpecialRoundCallback("GetOverlay2")
 				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")		
 				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")	
+				Ware_SpecialRound.cb_on_player_inventory           = Ware_SpecialRoundCallback("OnPlayerInventory")	
 				Ware_SpecialRound.cb_on_begin_intermission         = Ware_SpecialRoundCallback("OnBeginIntermission")
 				Ware_SpecialRound.cb_on_minigame_end               = Ware_SpecialRoundCallback("OnMinigameEnd")
 				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
@@ -3079,6 +3086,16 @@ function OnGameEvent_player_spawn(params)
 			Ware_SpecialRound.cb_on_player_spawn(player)
 		}
 	}
+}
+
+function OnGameEvent_post_inventory_application(params)
+{
+	local player = GetPlayerFromUserID(params.userid)
+	if (player == null)
+		return
+	
+	if (Ware_SpecialRound)
+		Ware_SpecialRound.cb_on_player_inventory(player)
 }
 
 function OnGameEvent_player_initial_spawn(params)
