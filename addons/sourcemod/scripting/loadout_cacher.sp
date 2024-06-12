@@ -51,6 +51,7 @@ LoadoutCache g_ClientLoadoutCache[MAXPLAYERS + 1];
 
 ConVar loadoutcacher_enable;
 ConVar loadoutcacher_profile; 	
+ConVar loadoutcacher_cosmetics;
 
 public void LoadoutCacher_Start(GameData gamedata)
 {
@@ -80,6 +81,7 @@ public void LoadoutCacher_Start(GameData gamedata)
 
 	loadoutcacher_enable = CreateConVar("loadoutcacher_enable", "1", ""); // allows VScript to detect its loaded
 	loadoutcacher_profile = CreateConVar("loadoutcacher_profile", "0", "Measure cost of loadout spawning");
+	loadoutcacher_cosmetics = CreateConVar("loadoutcacher_cosmetics", "0", "Enable cosmetic visibility"); 	// disabling cosmetics until new system is ready
 	
 	g_Queue_LoadoutCache = new ArrayList();
 	g_LoadoutCacheParity = true;
@@ -223,6 +225,10 @@ public void LoadoutCacher_OnGameFrame()
 						class_cache.cosmetic_ids[class_cache.cosmetic_count] = GetEntProp(child, Prop_Send, "m_iItemDefinitionIndex");
 						// TODO paint
 						class_cache.cosmetic_count++;
+						
+						// don't want client to try render these
+						if (!loadoutcacher_cosmetics.BoolValue)
+							SetEntityDraw(child, false);
 					}
 				}				
 			}
@@ -367,7 +373,7 @@ public void LoadoutCacher_UpdateClient(int client)
 		int wearable = EntRefToEntIndex(cache.cosmetic_entrefs[i]);
 		if (wearable > 0)
 		{
-			if (i < class_cache.cosmetic_count)
+			if (i < class_cache.cosmetic_count && loadoutcacher_cosmetics.BoolValue)
 			{
 				SetEntityDraw(wearable, true);
 				

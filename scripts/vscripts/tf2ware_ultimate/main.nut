@@ -3066,7 +3066,7 @@ function OnGameEvent_player_spawn(params)
 			}
 		}
 		
-		Ware_ChatPrint(player, "{color}Loadout cached successfully", TF_COLOR_DEFAULT)	
+		Ware_ChatPrint(player, "{color}Loadout cached successfully. NOTE: cosmetics are temporarily disabled", TF_COLOR_DEFAULT)	
 	}
 
 	// this is to fix persisting attributes if restarting mid-minigame
