@@ -275,6 +275,7 @@ class Ware_SpecialRoundData
 	cb_get_boss_threshold            = null
 	cb_get_overlay2                  = null
 	cb_get_player_roll               = null
+	cb_on_begin_intermission         = null
 	cb_on_player_spawn               = null
 	cb_on_minigame_end               = null
 	cb_on_speedup                    = null
@@ -1783,11 +1784,12 @@ function Ware_BeginSpecialRound()
 					
 				Ware_SpecialRound.cb_get_boss_threshold            = Ware_SpecialRoundCallback("GetBossThreshold")
 				Ware_SpecialRound.cb_get_overlay2                  = Ware_SpecialRoundCallback("GetOverlay2")
-				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")		
-				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")	
+				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")
+				Ware_SpecialRound.cb_on_begin_intermission         = Ware_SpecialRoundCallback("OnBeginIntermission")
+				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")
 				Ware_SpecialRound.cb_on_minigame_end               = Ware_SpecialRoundCallback("OnMinigameEnd")
 				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
-				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")					
+				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")
 				
 				local event_prefix = "OnGameEvent_"
 				local event_prefix_len = event_prefix.len()
@@ -1862,14 +1864,19 @@ function Ware_BeginIntermission(is_boss)
 	if (Ware_Theme == {})
 		Ware_SetTheme("_default")
 	
-	foreach (player in Ware_Players)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_intermission)
+		Ware_SpecialRound.cb_on_begin_intermission(is_boss)
+	else
 	{
-		Ware_PlayGameSound(player, "intro")
-		Ware_ShowScreenOverlay(player, null)
-		Ware_ShowScreenOverlay2(player, null)
+		foreach (player in Ware_Players)
+		{
+			Ware_PlayGameSound(player, "intro")
+			Ware_ShowScreenOverlay(player, null)
+			Ware_ShowScreenOverlay2(player, null)
+		}
+		
+		CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 	}
-	
-	CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 }
 
 function Ware_BeginBoss()

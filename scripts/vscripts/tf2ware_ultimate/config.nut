@@ -100,6 +100,7 @@ Ware_SpecialRounds <-
 	"inverted_control"
 	"low_gravity"
 	"no_movingback"
+	"non_stop"
 	"nostalgia"
 	"reversed_text"
 	"slow_mo"
