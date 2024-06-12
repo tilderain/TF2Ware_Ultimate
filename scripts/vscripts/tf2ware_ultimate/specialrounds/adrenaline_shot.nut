@@ -6,7 +6,7 @@ special_round <- Ware_SpecialRoundData
 	description = "The round starts fast, then slows down."
 })
 
-local interval = Ware_SpeedUpInterval * 2
+local interval = Ware_SpeedUpInterval * 1.5
 
 function OnStart()
 {
@@ -24,4 +24,6 @@ function OnSpeedup()
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/slow_down")
 		Ware_ShowScreenOverlay2(player, null)
 	}
+	
+	CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 }

@@ -102,6 +102,7 @@ Ware_SpecialRounds <-
 	"no_movingback"
 	"nostalgia"
 	"reversed_text"
+	"slow_mo"
 	"thirdperson"
 	"time_attack"
 ]
