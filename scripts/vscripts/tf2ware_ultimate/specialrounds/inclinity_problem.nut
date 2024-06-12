@@ -15,7 +15,7 @@ function OnStart()
 		{
 			local eye_angles = player.EyeAngles()
 			eye_angles.z = GetPlayerRollAngle(player)
-			player.ViewPunch(QAngle(0, 0, -roll));
+			player.ViewPunch(QAngle(0, 0, -roll))
 			player.SnapEyeAngles(eye_angles)
 		}
 	}

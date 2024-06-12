@@ -270,7 +270,9 @@ class Ware_SpecialRoundData
 	convars     = null
 	
 	cb_get_boss_threshold            = null
+	cb_get_overlay2                  = null
 	cb_get_player_roll               = null
+	cb_on_player_spawn               = null
 	cb_on_post_end_minigame_internal = null
 	cb_on_speedup                    = null
 	cb_on_update                     = null
@@ -791,6 +793,19 @@ function Ware_SetConvarValue(convar, value)
 	SetConvarValue(name, value)
 }
 
+function Ware_RunClientCommand(player, command)
+{
+	if (player)
+	{
+		EntFireByHandle(ClientCmd, "Command", command, 0, player, null)		
+	}
+	else
+	{
+		foreach (player in Ware_Players)
+			EntFireByHandle(ClientCmd, "Command", command, 0, player, null)		
+	}
+}
+
 function Ware_ShowScreenOverlay(player, name)
 {
 	player.SetScriptOverlayMaterial(name ? name : "")
@@ -801,7 +816,12 @@ function Ware_ShowScreenOverlay2(player, name)
 	if (!name)
 	{
 		player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
-		EntFireByHandle(ClientCmd, "Command", "r_screenoverlay off", -1, player, null)
+		
+		local overlay_name = "off";
+		if (Ware_SpecialRound && Ware_SpecialRound.cb_get_overlay2.IsValid())
+			overlay_name = Ware_SpecialRound.cb_get_overlay2()
+			
+		EntFireByHandle(ClientCmd, "Command", format("r_screenoverlay %s", overlay_name), -1, player, null)
 	}
 	else
 	{
@@ -814,6 +834,12 @@ function Ware_ShowGlobalScreenOverlay(name)
 {
 	foreach (data in Ware_MinigamePlayers)
 		Ware_ShowScreenOverlay(data.player, name)
+}
+
+function Ware_ShowGlobalScreenOverlay2(name)
+{
+	foreach (data in Ware_MinigamePlayers)
+		Ware_ShowScreenOverlay2(data.player, name)
 }
 
 function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y = 0.3)
@@ -1739,7 +1765,9 @@ function Ware_BeginSpecialRound()
 					Ware_SpecialRoundScope.OnStart()
 					
 				Ware_SpecialRound.cb_get_boss_threshold            = Ware_SpecialRoundCallback("GetBossThreshold")
+				Ware_SpecialRound.cb_get_overlay2                  = Ware_SpecialRoundCallback("GetOverlay2")
 				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")		
+				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")	
 				Ware_SpecialRound.cb_on_post_end_minigame_internal = Ware_SpecialRoundCallback("OnPostEndMinigameInternal")
 				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
 				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")					
@@ -2884,11 +2912,16 @@ function OnGameEvent_player_spawn(params)
 		player.SetHealth(player.GetMaxHealth())	
 		SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
 		
-		if (Ware_SpecialRound && Ware_SpecialRound.cb_get_player_roll.IsValid())
+		if (Ware_SpecialRound)
 		{
-			local eye_angles = player.EyeAngles()
-			eye_angles.z = Ware_SpecialRound.cb_get_player_roll(player)
-			player.SnapEyeAngles(eye_angles)
+			if (Ware_SpecialRound.cb_get_player_roll.IsValid())
+			{
+				local eye_angles = player.EyeAngles()
+				eye_angles.z = Ware_SpecialRound.cb_get_player_roll(player)
+				player.SnapEyeAngles(eye_angles)
+			}
+			
+			Ware_SpecialRound.cb_on_player_spawn(player)
 		}
 	}
 }
