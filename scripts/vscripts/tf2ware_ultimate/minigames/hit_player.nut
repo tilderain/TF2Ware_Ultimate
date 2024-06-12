@@ -17,7 +17,7 @@ minigame <- Ware_MinigameData
 
 loadouts <-
 {
-	[TF_CLASS_SCOUT]        = "Scattergun",
+	[TF_CLASS_SCOUT]        = RandomElement(["Boston Basher", "Scattergun"]),
 	[TF_CLASS_SOLDIER]      = "Direct Hit",
 	[TF_CLASS_PYRO]         = "Dragon's Fury",
 	[TF_CLASS_DEMOMAN]      = "Loch-n-Load",
@@ -63,4 +63,10 @@ function OnPlayerDeath(params)
 	if (victim == attacker)
 		return
 	Ware_PassPlayer(attacker, !mode_nobody)
+}
+
+function OnEnd()
+{
+	foreach(data in Ware_MinigamePlayers)
+		data.player.RemoveCond(TF_COND_BLEEDING)
 }
