@@ -5,7 +5,7 @@ special_round <- Ware_SpecialRoundData
 	description = "The round keeps speeding up after every minigame."
 })
 	
-function OnPostEndMinigameInternal()
+function OnMinigameEnd()
 {
 	Ware_SetTimeScale(Ware_TimeScale + 0.05)
 }

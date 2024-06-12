@@ -273,7 +273,7 @@ class Ware_SpecialRoundData
 	cb_get_overlay2                  = null
 	cb_get_player_roll               = null
 	cb_on_player_spawn               = null
-	cb_on_post_end_minigame_internal = null
+	cb_on_minigame_end               = null
 	cb_on_speedup                    = null
 	cb_on_update                     = null
 }
@@ -1768,7 +1768,7 @@ function Ware_BeginSpecialRound()
 				Ware_SpecialRound.cb_get_overlay2                  = Ware_SpecialRoundCallback("GetOverlay2")
 				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")		
 				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")	
-				Ware_SpecialRound.cb_on_post_end_minigame_internal = Ware_SpecialRoundCallback("OnPostEndMinigameInternal")
+				Ware_SpecialRound.cb_on_minigame_end               = Ware_SpecialRoundCallback("OnMinigameEnd")
 				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
 				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")					
 				
@@ -2393,8 +2393,8 @@ function Ware_EndMinigameInternal()
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
 	
-	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_post_end_minigame_internal.IsValid())
-		Ware_SpecialRound.cb_on_post_end_minigame_internal()
+	if (Ware_SpecialRound)
+		Ware_SpecialRound.cb_on_minigame_end()
 	
 	if (Ware_MinigamesPlayed > Ware_GetBossThreshold() || Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), sound_duration)
@@ -2787,8 +2787,10 @@ function OnGameEvent_teamplay_round_start(params)
 		delay = Ware_GetThemeSoundDuration("special_round")
 		Ware_BeginSpecialRound()
 	}
-	else if (Ware_SpecialRound)
-		Ware_SpecialRound <- null
+	else
+	{
+		Ware_SpecialRound = null
+	}
 	
 	CreateTimer(@() Ware_BeginIntermission(false), delay)
 }
