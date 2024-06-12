@@ -101,6 +101,7 @@ Ware_SpecialRounds <-
 	"low_gravity"
 	"no_movingback"
 	"nostalgia"
+	"reversed_text"
 	"thirdperson"
 	"time_attack"
 ]

@@ -253,6 +253,7 @@ class Ware_SpecialRoundData
 	{
 		min_players = 0
 		convars     = {}
+		reverse_text = false
 		
 		if (table)
 		{
@@ -262,12 +263,14 @@ class Ware_SpecialRoundData
 	}
 	
 	
-	name        = null
-	author      = null
-	description = null
+	name         = null
+	author       = null
+	description  = null
 	
-	min_players = null
-	convars     = null
+	reverse_text = null
+	
+	min_players  = null
+	convars      = null
 	
 	cb_get_boss_threshold            = null
 	cb_get_overlay2                  = null
@@ -464,6 +467,7 @@ function Ware_FindStandardEntities()
 	ClientCmd <- CreateEntitySafe("point_clientcommand")
 	
 	MarkForPurge(WaterLOD)
+	SetPropFloat(WaterLOD, "m_flCheapWaterEndDistance", 0)
 	
 	// avoid adding the think again to not break global execution order
 	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
@@ -525,7 +529,9 @@ function Ware_GetPitchFactor()
 
 function Ware_ChatPrint(target, fmt, ...) 
 {
-	local result = "\x07FFCC22[TF2Ware] "
+	local reversed = Ware_SpecialRound && Ware_SpecialRound.reverse_text
+	local result = reversed ? "" : "\x07FFCC22[TF2Ware] "
+	
 	local start = 0
 	local end = fmt.find("{")
 	local i = 0
@@ -574,6 +580,9 @@ function Ware_ChatPrint(target, fmt, ...)
 	
 	result += fmt.slice(start)
 	
+	if (reversed)
+		result = "\x07FFCC22[eraW2FT] \x07" + TF_COLOR_DEFAULT + ReverseString(result)
+
 	ClientPrint(target, HUD_PRINTTALK, result)
 }
 
@@ -844,6 +853,9 @@ function Ware_ShowGlobalScreenOverlay2(name)
 
 function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y = 0.3)
 {
+	if (Ware_SpecialRound && Ware_SpecialRound.reverse_text)
+		text = ReverseString(text)
+	
 	Ware_TextManagerQueue.push(
 	{ 
 		message  = text
@@ -886,7 +898,12 @@ function Ware_ShowAnnotation(pos, text, lifetime = -1)
 		entindex = pos.entindex()
 	}
 	else
+	{
 		return
+	}
+	
+	if (Ware_SpecialRound && Ware_SpecialRound.reverse_text)
+		text = ReverseString(text)
 
 	SendGlobalGameEvent("show_annotation",
 		{

@@ -90,6 +90,34 @@ function RemoveRandomElement(arr)
 	return arr.remove(RandomIndex(arr))
 }
 
+function ReverseString(str)
+{
+	local result = ""
+	local stack = []
+	
+	local len = str.len()
+	for (local i = 0; i < len; i++) 
+	{
+		local c = str.slice(i, i + 1)
+		if (c == "\x07" && i + 6 < len) 
+		{
+			// TODO this doesn't work right, no color markers for now
+			//stack.push(str.slice(i, i + 7))
+			i += 6;
+		} 
+		else 
+		{
+			stack.push(c)
+		}
+	}
+	
+	len = stack.len()
+	for (local i = 0; i < len; i++)
+		result += stack.pop()
+	
+	return result
+}
+
 function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs) 
 {
     return (a_mins.x <= b_maxs.x && a_maxs.x >= b_mins.x) &&
