@@ -95,6 +95,7 @@ Ware_Bossgames <-
 Ware_SpecialRounds <-
 [
 	"adrenaline_shot"
+	"all_in"
 	"bonk"
 	"extended_round"
 	"inclinity_problem"
