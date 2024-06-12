@@ -6,17 +6,30 @@ special_round <- Ware_SpecialRoundData
 	description = "If you lose one microgame, you lose ALL your points."
 })
 
-function OnMinigameEnd()
+function OnCalculateScores(data, player, highest_score, highest_players)
 {
-	foreach(data in Ware_MinigamePlayers)
+
+	if (data.passed)
 	{
-		local player = data.player
-		if (!data.passed)
+		data.score += Ware_Minigame.boss ? 5 : 1
+		if (data.score > highest_score)
 		{
-			data.score = 0
-			local idx = Ware_MinigameHighScorers.find(player)
-			if (idx != null)
-				Ware_MinigameHighScorers.remove(idx)
+			highest_score = data.score
+			highest_players.clear()
+			highest_players.append(player)
+		}
+		else if (data.score == highest_score)
+		{
+			highest_players.append(player)
 		}
 	}
+	else
+	{
+		data.score = 0
+		local idx = highest_players.find(player)
+		if (idx != null)
+			highest_players.remove(idx)
+	}
+	
+	return highest_players
 }

@@ -282,6 +282,7 @@ class Ware_SpecialRoundData
 	cb_get_boss_threshold    = null
 	cb_get_overlay2          = null
 	cb_get_player_roll       = null
+	cb_on_calculate_scores   = null
 	cb_on_player_spawn       = null
 	cb_on_player_inventory   = null
 	cb_on_begin_intermission = null
@@ -1854,9 +1855,10 @@ function Ware_BeginSpecialRound()
 					
 				Ware_SpecialRound.cb_get_boss_threshold            = Ware_SpecialRoundCallback("GetBossThreshold")
 				Ware_SpecialRound.cb_get_overlay2                  = Ware_SpecialRoundCallback("GetOverlay2")
-				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")		
-				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")	
-				Ware_SpecialRound.cb_on_player_inventory           = Ware_SpecialRoundCallback("OnPlayerInventory")	
+				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")
+				Ware_SpecialRound.cb_on_calculate_scores           = Ware_SpecialRoundCallback("OnCalculateScores")
+				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")
+				Ware_SpecialRound.cb_on_player_inventory           = Ware_SpecialRoundCallback("OnPlayerInventory")
 				Ware_SpecialRound.cb_on_begin_intermission         = Ware_SpecialRoundCallback("OnBeginIntermission")
 				Ware_SpecialRound.cb_on_minigame_end               = Ware_SpecialRoundCallback("OnMinigameEnd")
 				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
@@ -2445,18 +2447,27 @@ function Ware_EndMinigameInternal()
 		if (Ware_MinigameOverlay2Set)
 			Ware_ShowScreenOverlay2(player, null)
 		
-		if (data.passed)
-			data.score += Ware_Minigame.boss ? 5 : 1
-			
-		if (data.score > highest_score)
+		if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_scores.IsValid())
 		{
-			highest_score = data.score
-			highest_players.clear()
-			highest_players.append(player)
+			local ret = Ware_SpecialRound.cb_on_calculate_scores(data, player, highest_score, highest_players)
+			if (ret)
+				highest_players = ret
 		}
-		else if (data.score == highest_score)
+		else
 		{
-			highest_players.append(player)
+			if (data.passed)
+				data.score += Ware_Minigame.boss ? 5 : 1
+				
+			if (data.score > highest_score)
+			{
+				highest_score = data.score
+				highest_players.clear()
+				highest_players.append(player)
+			}
+			else if (data.score == highest_score)
+			{
+				highest_players.append(player)
+			}
 		}
 	}
 	

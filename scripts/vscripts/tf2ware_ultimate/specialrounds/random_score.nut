@@ -44,31 +44,26 @@ function OnBeginIntermission(is_boss)
 	CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 }
 
-function OnMinigameEnd()
+function OnCalculateScores(data, player, highest_score, highest_players)
 {
-	local highest_score = 1
-	local highest_players = Ware_MinigameHighScorers
-	highest_players.clear()
+
+	local player = data.player
 	
-	foreach(data in Ware_MinigamePlayers)
+	if (data.passed)
 	{
-		local player = data.player
-		
-		if (data.passed)
-		{
-			data.score -= Ware_Minigame.boss ? 5 : 1
-			data.score += random_score
-		}
-			
-		if (data.score > highest_score)
-		{
-			highest_score = data.score
-			highest_players.clear()
-			highest_players.append(player)
-		}
-		else if (data.score == highest_score)
-		{
-			highest_players.append(player)
-		}
+		data.score += random_score
 	}
+		
+	if (data.score > highest_score)
+	{
+		highest_score = data.score
+		highest_players.clear()
+		highest_players.append(player)
+	}
+	else if (data.score == highest_score)
+	{
+		highest_players.append(player)
+	}
+	
+	return highest_players
 }
