@@ -102,6 +102,7 @@ Ware_SpecialRounds <-
 	"no_movingback"
 	"non_stop"
 	"nostalgia"
+	"opposite_day"
 	"reversed_text"
 	"slow_mo"
 	"thirdperson"

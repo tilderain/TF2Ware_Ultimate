@@ -1864,7 +1864,7 @@ function Ware_BeginIntermission(is_boss)
 	if (Ware_Theme == {})
 		Ware_SetTheme("_default")
 	
-	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_intermission)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_intermission.IsValid())
 		Ware_SpecialRound.cb_on_begin_intermission(is_boss)
 	else
 	{
