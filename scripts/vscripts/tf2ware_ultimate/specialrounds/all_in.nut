@@ -14,8 +14,9 @@ function OnMinigameEnd()
 		if (!data.passed)
 		{
 			data.score = 0
-			if (Ware_MinigameHighScorers.find(player))
-				Ware_MinigameHighScorers.remove(Ware_MinigameHighScorers.find(player))
+			local idx = Ware_MinigameHighScorers.find(player)
+			if (idx != null)
+				Ware_MinigameHighScorers.remove(idx)
 		}
 	}
 }
