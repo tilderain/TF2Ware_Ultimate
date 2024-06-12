@@ -2449,9 +2449,7 @@ function Ware_EndMinigameInternal()
 		
 		if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_scores.IsValid())
 		{
-			local ret = Ware_SpecialRound.cb_on_calculate_scores(data, player, highest_score, highest_players)
-			if (ret)
-				highest_players = ret
+			highest_players = Ware_SpecialRound.cb_on_calculate_scores(data, player, highest_score, highest_players)
 		}
 		else
 		{
