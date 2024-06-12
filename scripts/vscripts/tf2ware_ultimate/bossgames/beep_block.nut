@@ -241,6 +241,7 @@ function OnEndzoneTouch()
 		}
 		
 		Ware_PassPlayer(player, true)
+		Ware_CreateTimer(@() Ware_ShowScreenOverlay(player, null), 0.02)
 	}
 }
 
