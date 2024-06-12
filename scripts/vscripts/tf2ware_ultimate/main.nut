@@ -1177,24 +1177,22 @@ function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {},
 		{
 			player.RemoveCond(TF_COND_TAUNTING)
 			
+			local melee
 			if (data.special_melee)
-			{
-				player.Weapon_Switch(data.special_melee)
-			}
+				melee = data.special_melee
 			else
+				melee = data.melee
+
+			if (melee)
 			{
-				local melee = data.melee
-				if (melee)
+				if (item_attributes.len() > 0)
 				{
-					if (item_attributes.len() > 0)
-					{
-						foreach (attribute, value in item_attributes)
-							melee.AddAttribute(attribute, value, -1.0)
-						data.melee_attributes = clone(item_attributes)
-					}
-					
-					player.Weapon_Switch(melee)
+					foreach (attribute, value in item_attributes)
+						melee.AddAttribute(attribute, value, -1.0)
+					data.melee_attributes = clone(item_attributes)
 				}
+				
+				player.Weapon_Switch(melee)
 			}
 		}
 			
@@ -2343,7 +2341,12 @@ function Ware_EndMinigameInternal()
 			
 		if (IsEntityAlive(player))
 		{
-			local melee = data.melee
+			local melee
+			if (data.special_melee)
+				melee = data.special_melee
+			else
+				melee = data.melee
+			
 			if (melee)
 			{
 				foreach (attribute, value in data.melee_attributes)
