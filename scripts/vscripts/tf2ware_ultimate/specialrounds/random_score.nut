@@ -46,9 +46,6 @@ function OnBeginIntermission(is_boss)
 
 function OnCalculateScores(data, player, highest_score, highest_players)
 {
-
-	local player = data.player
-	
 	if (data.passed)
 	{
 		data.score += random_score

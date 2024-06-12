@@ -8,7 +8,6 @@ special_round <- Ware_SpecialRoundData
 
 function OnCalculateScores(data, player, highest_score, highest_players)
 {
-
 	if (data.passed)
 	{
 		data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
