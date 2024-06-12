@@ -99,6 +99,7 @@ Ware_SpecialRounds <-
 	"inclinity_problem"
 	"inverted_control"
 	"low_gravity"
+	"no_movingback"
 	"thirdperson"
 ]
 
