@@ -1,15 +1,7 @@
-
-// TODO:
-//		- overall make the jumping on ramp more intuitive
-//		- fix specific issues with ramp
-//			- sometimes randomly stop
-//			- can't jump if you crouch
-//			- sometimes you "jump" but you dont actually go up in any way
-
 arenas <-
 [
 	"beepblockskyway_micro"
-	//"beepblockskyway_ultimate"
+	"beepblockskyway_ultimate"
 ]
 
 minigame <- Ware_MinigameData
@@ -23,7 +15,10 @@ minigame <- Ware_MinigameData
 	location       = RandomElement(arenas)
 	music          = "beepblockskyway"
 	fail_on_death  = true
-	no_collisions  = true
+	convars =
+	{
+		tf_avoidteammates = 0
+	}
 })
 
 // variables
@@ -32,10 +27,10 @@ tempo_increase   <- 1.2 // after interrupt
 beat             <- 0.0
 bgm_offset       <- 0.0
 interrupted      <- false
-interrupt_timer  <- 60
+interrupt_timer  <- FLT_MAX
 
 // audio
-if (RandomInt(0, 128) == 0)
+if (RandomInt(0, 9) == 0)
 	minigame.music = "beepblockskyway-twelve"
 
 beep_sound <- "tf2ware_ultimate/beep_block_beep.mp3"
@@ -77,31 +72,14 @@ function OnStart()
 	// fixes tilting from fall damage on ramp near the end of _ultimate arena
 	Ware_SetGlobalCondition(TF_COND_GRAPPLINGHOOK)
 	
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
-		local minidata = Ware_GetPlayerMiniData(player)
-		minidata.on_ramp <- false
-	}
-	
-	
 	// separate entities are needed to keep bounding box within separate areas and not break visibility
 	// these do/while loops append all beatblocks to their appropriate array, and then BeepBlock_FireInput
 	// checks for array and fires across all entities in array
-	local ent = null
-	do{
-		ent = FindByName(ent, "beatblock_green")
-		if (ent)
-			green_blocks.append(ent)
-	}
-	while (ent)
-	
-	do{
-		ent = FindByName(ent, "beatblock_yellow")
-		if (ent)
-			yellow_blocks.append(ent)
-	}
-	while (ent)
+	for (local ent; ent = FindByName(ent, "beatblock_green");)
+		green_blocks.append(ent)
+
+	for (local ent; ent = FindByName(ent, "beatblock_yellow");)
+		yellow_blocks.append(ent)
 	
 	BeepBlock_FireInput(green_blocks, "Alpha", "255")
 	BeepBlock_FireInput(yellow_blocks, "Alpha", "255")
@@ -124,12 +102,6 @@ function OnStart()
 	tele2.GetScriptScope().tele_sound <- tele_sound
 	tele2.ConnectOutput("OnStartTouch", "OnStartTouch")
 	
-	ramp.ValidateScriptScope()
-	ramp.GetScriptScope().OnStartTouch <- OnRampTouch
-	ramp.GetScriptScope().OnEndTouch <- OnEndRampTouch
-	ramp.ConnectOutput("OnStartTouch", "OnStartTouch")
-	ramp.ConnectOutput("OnEndTouch", "OnEndTouch")
-	
 	// using return in the timer for each subsequent sequence seems to add up a lot of processing delays over time
 	// instead, we create all the sequences at the start, offset every 2 bars using i
 	// this has more consistent timing, though it is a bit less flexible
@@ -147,15 +119,6 @@ function OnUpdate()
 {
 	if (((Ware_MinigamePlayers.len() > 1 && !endzone.GetScriptScope().first) || floor(Ware_GetMinigameRemainingTime()) == 30.0) && !interrupted)
 		BeepBlock_Interrupt()
-	
-	foreach(data in Ware_MinigamePlayers)
-	{
-		local player = data.player
-		local minidata = Ware_GetPlayerMiniData(player)
-		
-		if (minidata.on_ramp && !BeepBlock_ActiveBlockBelow(player))
-				player.RemoveCond(TF_COND_HALLOWEEN_SPEED_BOOST)
-	}
 }
 
 // no fall damage, but trigger_hurt uses fall damage so we check for that too
@@ -226,19 +189,17 @@ function BeepBlock_Interrupt()
 			}, bgm_offset * tempo_increase + (6.0 * beat) + i * (8.0 * beat))
 		}
 		
-		interrupt_timer = Min(60, Round(Ware_GetMinigameRemainingTime()).tointeger())
+		local length = Min(60, Round(Ware_GetMinigameRemainingTime()).tointeger())
+		interrupt_timer = Time() + length - 1.0
 		
-		Ware_CreateTimer(function() {
-			--interrupt_timer
-			if (interrupt_timer >= 0)
-			{
-				local string = interrupt_timer >= 10 ? format("0:%s", interrupt_timer.tostring()) : format("0:0%s", interrupt_timer.tostring())
-				Ware_ShowMinigameText(null, string, "255 255 0", -1.0, 0.3)
-				return 1.0
-			}
-			else
-				Ware_ShowMinigameText(null, "")
-		}, 0.0)
+		local timer = Ware_SpawnEntity("team_round_timer",
+		{
+			timer_length   = length,
+			auto_countdown = false,
+			show_in_hud    = true,
+			show_time_remaining = true,
+		})
+		EntityEntFire(timer, "Resume")
 	}, 3.0)
 	
 }
@@ -258,21 +219,6 @@ function BeepBlock_FireInput(target, action, params = "")
 	}
 	else
 		EntFireByHandle(target, action, params, -1, null, null)
-}
-
-function BeepBlock_ActiveBlockBelow(player)
-{
-	local trace = {
-		start = player.GetOrigin()
-		end = player.GetOrigin() + Vector(0, 0, -100)
-		hullmin = player.GetPlayerMins()
-		hullmax = player.GetPlayerMaxs()
-		mask = (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE)
-	}
-	
-	TraceHull(trace)
-	
-	return (trace.hit && trace.enthit.GetClassname() == "func_brush")
 }
 
 function OnEndzoneTouch()
@@ -320,51 +266,11 @@ function OnTele2Touch()
 	}
 }
 
-function OnRampTouch()
-{
-	local player = activator
-	
-	if (player.IsPlayer() && player.IsValid())
-	{
-		local minidata = Ware_GetPlayerMiniData(player)
-		minidata.on_ramp <- true
-		
-		// adding and removing this resets the "extra jump" noise so the pitch doesn't go out of bounds
-		player.AddFlag(FL_ONGROUND)
-		
-		player.AddCond(TF_COND_HALLOWEEN_SPEED_BOOST)
-		player.RemoveCond(TF_COND_SPEED_BOOST)
-		Ware_AddPlayerAttribute(player, "halloween increased jump height", 0.3, Ware_GetMinigameRemainingTime())
-		
-		player.SetGravity(0.4)
-	}
-}
-
-function OnEndRampTouch()
-{
-	local player = activator
-	
-	if (player.IsPlayer() && player.IsValid())
-	{
-		local minidata = Ware_GetPlayerMiniData(player)
-		minidata.on_ramp <- false
-		
-		player.RemoveFlag(FL_ONGROUND)
-		
-		player.RemoveCond(TF_COND_HALLOWEEN_SPEED_BOOST)
-		player.RemoveCustomAttribute("halloween increased jump height")
-		
-		player.SetGravity(1.0)
-	}
-}
-
 function OnEnd()
 {
 	endzone.DisconnectOutput("OnStartTouch", "OnStartTouch")
 	tele1.DisconnectOutput("OnStartTouch", "OnStartTouch")
 	tele2.DisconnectOutput("OnStartTouch", "OnStartTouch")
-	ramp.DisconnectOutput("OnStartTouch", "OnStartTouch")
-	ramp.DisconnectOutput("OnEndTouch", "OnEndTouch")
 	
 	BeepBlock_FireInput(green_blocks, "Alpha", "255")
 	BeepBlock_FireInput(yellow_blocks, "Alpha", "255")
@@ -375,7 +281,7 @@ function OnEnd()
 
 function CheckEnd()
 {
-	return (BeepBlock_CheckEnd() || interrupt_timer == 0)
+	return BeepBlock_CheckEnd() || Time() >= interrupt_timer
 }
 
 function BeepBlock_CheckEnd()

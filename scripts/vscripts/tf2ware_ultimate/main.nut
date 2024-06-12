@@ -1677,6 +1677,19 @@ function Ware_GetValidPlayers()
 	return valid_players
 }
 
+function Ware_GetSortedScorePlayers(reverse)
+{
+	local players = clone(Ware_MinigamePlayers)
+	
+	if (reverse)
+		players.sort(@(a, b) b.score <=> a.score)
+	else
+		players.sort(@(a, b) a.score <=> b.score)
+		
+	players = players.map(@(data) data.player)
+	return players
+}
+
 function Ware_CheckHomeLocation(player_count)
 {
 	local prev_location = Ware_MinigameHomeLocation

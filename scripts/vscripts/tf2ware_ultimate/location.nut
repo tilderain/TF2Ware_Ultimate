@@ -340,11 +340,7 @@ Ware_Location.obstaclecourse <-
 	Teleport = function(players) 
 	{ 
 		// highest scoring players start last
-		players = clone(Ware_MinigamePlayers)
-		players.sort(@(a, b) a.score <=> b.score)
-		players = players.map(@(data) data.player)
-		
-		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 600.0, -60.0, 60.0)
+		Ware_TeleportPlayersRow(Ware_GetSortedScorePlayers(false), center, QAngle(0, 90, 0), 600.0, -60.0, 60.0)
 	}	
 }
 
@@ -362,7 +358,8 @@ Ware_Location.beepblockskyway_micro <-
 	center = Vector(-13285, -14570, -9760)
 	Teleport = function(players)
 	{
-		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 450, 90, 80)
+		// highest scoring players start last
+		Ware_TeleportPlayersRow(Ware_GetSortedScorePlayers(true), center, QAngle(0, 90, 0), 450, 90, 80)
 	}
 }
 
@@ -370,7 +367,8 @@ Ware_Location.beepblockskyway_ultimate <-
 {
 	center = Vector(-8960, -13500, -9760)
 	Teleport = function(players)
-	{
-		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 900, 120, 110)
+	{	
+		// highest scoring players start last
+		Ware_TeleportPlayersRow(Ware_GetSortedScorePlayers(true), center, QAngle(0, 90, 0), 900, 120, 110)
 	}
 }
