@@ -104,7 +104,7 @@ Ware_SpecialRounds <-
 	"no_movingback"
 	"non_stop"
 	"nostalgia"
-	"opposite_day"
+	//"opposite_day"
 	"random_score"
 	"reversed_text"
 	"slow_mo"
