@@ -353,7 +353,7 @@ Ware_Themes <-
 			"boss":     4.004
 			"failure":  2.040
 			"gameover": 4.309
-			"intro":    2.024
+			"intro":    2.4
 			"results":  8.329
 			"speedup":  4.001
 			"victory":  2.007
