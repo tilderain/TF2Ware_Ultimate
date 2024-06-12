@@ -118,16 +118,16 @@ function OnTouchTreasure()
 	local player = activator
 	if (player)
 	{
-		player.Teleport(true, Ware_Location.beach.center, true, QAngle(), true, Vector())
-		Ware_ShowScreenOverlay(player, null);	
+		Ware_TeleportPlayer(player, Ware_Location.beach.center, ang_zero, vec3_zero)
+		Ware_ShowScreenOverlay(player, null)
 		Ware_CreateTimer(function()
+		{
+			if (player) 
 			{
-				if (player) 
-				{
-					player.EmitSound(Ware_MinigameScope.find_sound)
-					Ware_PassPlayer(player, true)
-					Ware_StripPlayer(player, true)
-				}
-			}, 0.1)
+				player.EmitSound(Ware_MinigameScope.find_sound)
+				Ware_PassPlayer(player, true)
+				Ware_StripPlayer(player, true)
+			}
+		}, 0.1)
 	}
 }

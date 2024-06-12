@@ -12,7 +12,7 @@ function Ware_TeleportPlayersCircle(players, origin, radius)
 			origin.y + radius * sin(angle * PI / 180.0),
 			origin.z)
 		local ang = QAngle(0.0, angle + 180.0, 0.0)
-		player.Teleport(true, pos, true, ang, true, Vector())
+		Ware_TeleportPlayer(player, pos, ang, vec3_zero)
 	}
 }
 
@@ -35,7 +35,7 @@ function Ware_TeleportPlayersRow(players, origin, angles, max_width, offset_horz
 		}
 		
 		center[axis_vert] = origin[axis_vert] - max_width * 0.5 + accum
-		player.Teleport(true, center, true, angles, true, Vector())
+		Ware_TeleportPlayer(player, center, angles, vec3_zero)
 		accum += offset_vert
 	}	
 }
@@ -75,7 +75,7 @@ Ware_Location.home <-
 		{
 			local spawn = spawns[spawn_idx]
 			spawn_idx = (spawn_idx + 1) % spawn_len
-			player.Teleport(true, spawn.GetOrigin(), true, spawn.GetAbsAngles(), true, Vector())
+			Ware_TeleportPlayer(player, spawn.GetOrigin(), spawn.GetAbsAngles(), vec3_zero)
 		}
 	}
 }
@@ -145,7 +145,7 @@ Ware_Location.targetrange <-
 			}
 			
 			pos.x = center.x + (x / 2) * ((x & 1) ? offset : -offset)
-			player.Teleport(true, pos, true, ang, true, Vector())
+			Ware_TeleportPlayer(player, pos, ang, vec3_zero)
 		}
 	}
 }
@@ -279,7 +279,7 @@ Ware_Location.mandrill <-
 	Teleport = function(players)
 	{
 		foreach (player in players)
-			player.Teleport(true, start, true, QAngle(0, 180, 0), true, Vector())
+			Ware_TeleportPlayer(player, start, QAngle(0, 180, 0), vec3_zero)
 	}
 }
 

@@ -173,10 +173,7 @@ function OnTeleport(players)
 	foreach (player in spies)
 	{
 		local spawn = spy_spawns[spawn_idx]
-		player.Teleport(
-			true, Ware_MinigameLocation.center + spawn[0], 
-			true, QAngle(0, spawn[1], 0), 
-			true, Vector())
+		Ware_TeleportPlayer(player, Ware_MinigameLocation.center + spawn[0], QAngle(0, spawn[1], 0), vec3_zero)
 		spawn_idx = (spawn_idx + 1) % spawn_len
 	}
 }

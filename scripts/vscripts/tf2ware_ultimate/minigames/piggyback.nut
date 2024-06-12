@@ -38,10 +38,7 @@ function OnTeleport(players)
 {
 	piggybacker = RemoveRandomElement(players)
 
-	piggybacker.Teleport(
-		true, Ware_MinigameLocation.center_top + Vector(0, 2912, -777),
-		true, QAngle(0, 90, 0),
-		true, Vector())
+	Ware_TeleportPlayer(piggybacker, Ware_MinigameLocation.center_top + Vector(0, 2912, -777), QAngle(0, 90, 0), vec3_zero)
 	
 	Ware_TeleportPlayersRow(players,
 		Ware_MinigameLocation.center_top,

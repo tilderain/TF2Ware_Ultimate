@@ -66,7 +66,7 @@ function OnUpdate()
 		
 		if (player.GetFlags() & FL_INWATER)
 		{
-			player.Teleport(true, Ware_MinigameLocation.center, true, QAngle(), true, Vector())
+			Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
 			continue
 		}
 		
@@ -78,7 +78,7 @@ function OnUpdate()
 			{
 				Ware_ShowScreenOverlay(player, null)
 				Ware_CreateTimer(@() Ware_PassPlayer(player, true), 0.1)
-				player.Teleport(true, Ware_MinigameLocation.center, true, QAngle(), true, Vector())
+				Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
 			}
 		}
 		else if (team == TF_TEAM_BLUE)
@@ -87,7 +87,7 @@ function OnUpdate()
 			{
 				Ware_ShowScreenOverlay(player, null);	
 				Ware_CreateTimer(@() Ware_PassPlayer(player, true), 0.1)
-				player.Teleport(true, Ware_MinigameLocation.center, true, QAngle(), true, Vector())
+				Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
 			}			
 		}
 	}

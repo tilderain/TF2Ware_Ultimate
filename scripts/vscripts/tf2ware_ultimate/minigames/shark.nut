@@ -50,7 +50,7 @@ function OnTeleport(players)
 		1300.0,
 		65.0, 65.0)
 		
-	shark.Teleport(true, Ware_MinigameLocation.center + Vector(1500, 0, -200), true, QAngle(), true, Vector())
+	Ware_TeleportPlayer(shark, Ware_MinigameLocation.center + Vector(1500, 0, -200), ang_zero, vec3_zero)
 }
 
 function OnStart()

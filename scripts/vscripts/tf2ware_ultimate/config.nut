@@ -96,6 +96,7 @@ Ware_SpecialRounds <-
 [
 	"adrenaline_shot"
 	"extended_round"
+	"inclinity_problem"
 	"low_gravity"
 	"thirdperson"
 ]

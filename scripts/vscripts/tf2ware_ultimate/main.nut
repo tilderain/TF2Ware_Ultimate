@@ -270,6 +270,7 @@ class Ware_SpecialRoundData
 	convars     = null
 	
 	cb_get_boss_threshold            = null
+	cb_get_player_roll               = null
 	cb_on_post_end_minigame_internal = null
 	cb_on_speedup                    = null
 	cb_on_update                     = null
@@ -1492,6 +1493,31 @@ function Ware_RadiusDamagePlayers(origin, radius, damage, attacker)
 	}	
 }
 
+function Ware_TeleportPlayer(player, origin, angles, velocity)
+{
+	local has_origin = true, has_angles = true, has_velocity = true
+	if (origin == null)
+	{
+		has_origin = false
+		origin = vec3_zero
+	}
+	if (angles == null)
+	{
+		has_angles = false
+		angles = ang_zero
+	}
+	if (velocity == null)
+	{
+		has_velocity = false
+		velocity = vec3_zero
+	}
+	
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_get_player_roll.IsValid())
+		angles = QAngle(angles.x, angles.y, Ware_SpecialRound.cb_get_player_roll(player))
+		
+	player.Teleport(has_origin, origin, has_angles, angles, has_velocity, velocity)
+}
+
 function Ware_GetPlayerHeight(player)
 {
 	return player.GetOrigin().z - Ware_MinigameLocation.center.z
@@ -1653,8 +1679,6 @@ function Ware_BeginSpecialRound()
 		}
 	}
 	
-	Ware_SpecialRound <- Ware_SpecialRoundScope.special_round
-	
 	// ingame sequence
 	
 	Ware_PlayGameSound(null, "special_round")
@@ -1669,7 +1693,7 @@ function Ware_BeginSpecialRound()
 	// TODO: show special rounds a better way
 	// this is just copied/adapted from Ware_ShowMinigameText
 	// maybe just put something behind it?
-	local showtext = function(str, holdtime)
+	local ShowText = function(str, holdtime)
 	{
 		Ware_TextManagerQueue.push(
 			{ 
@@ -1686,23 +1710,26 @@ function Ware_BeginSpecialRound()
 		EntityEntFire(Ware_TextManager, "FireUser2")
 	}
 	
-	
-	CreateTimer(function() {
+	local special_round = Ware_SpecialRoundScope.special_round
 		
-		showtext(RandomElement(Ware_FakeSpecialRounds), text_interval * 2.0)
+	CreateTimer(function() 
+	{	
+		ShowText(RandomElement(Ware_FakeSpecialRounds), text_interval * 2.0)
 		
 		if (Time() - start_time > reveal_time)
 		{
-			showtext(Ware_SpecialRound.name, end_time)
+			Ware_SpecialRound = special_round
 			
-			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, Ware_SpecialRound.name, TF_COLOR_DEFAULT, Ware_SpecialRound.description)
+			ShowText(special_round.name, end_time)
 			
-			PlaySoundOnAllClients("tf2ware_ultimate/pass.mp3")
+			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, special_round.name, TF_COLOR_DEFAULT, special_round.description)
 			
-			CreateTimer(function(){
-		
+			PlaySoundOnAllClients(SFX_WARE_PASS)
+			
+			CreateTimer(function()
+			{	
 				// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
-				foreach(name, value in Ware_SpecialRound.convars)
+				foreach(name, value in special_round.convars)
 				{
 					Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
 					SetConvarValue(name, value)
@@ -1710,11 +1737,12 @@ function Ware_BeginSpecialRound()
 				
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
-				
+					
 				Ware_SpecialRound.cb_get_boss_threshold            = Ware_SpecialRoundCallback("GetBossThreshold")
+				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")		
 				Ware_SpecialRound.cb_on_post_end_minigame_internal = Ware_SpecialRoundCallback("OnPostEndMinigameInternal")
 				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
-				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")
+				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")					
 				
 				local event_prefix = "OnGameEvent_"
 				local event_prefix_len = event_prefix.len()
@@ -1739,7 +1767,9 @@ function Ware_BeginSpecialRound()
 			}, end_time)
 		}
 		else
+		{
 			return text_interval
+		}
 	}, 0.0)
 }
 
@@ -2853,6 +2883,13 @@ function OnGameEvent_player_spawn(params)
 		player.SetCustomModel("")		
 		player.SetHealth(player.GetMaxHealth())	
 		SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
+		
+		if (Ware_SpecialRound && Ware_SpecialRound.cb_get_player_roll.IsValid())
+		{
+			local eye_angles = player.EyeAngles()
+			eye_angles.z = Ware_SpecialRound.cb_get_player_roll(player)
+			player.SnapEyeAngles(eye_angles)
+		}
 	}
 }
 

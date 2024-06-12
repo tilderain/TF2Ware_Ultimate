@@ -157,10 +157,7 @@ function OnTeleport(players)
 		origin.z += 801.0
 		hex_idx = (hex_idx + 1) % hex_len
 
-		player.Teleport(
-			true, origin
-			false, QAngle(),
-			true, Vector())
+		Ware_TeleportPlayer(player, origin, null, vec3_zero)
 	}
 }
 

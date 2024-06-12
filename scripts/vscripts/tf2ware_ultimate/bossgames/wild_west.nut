@@ -95,19 +95,13 @@ function PlacePlayers(players)
 				Ware_GetPlayerMiniData(last_player).opponent <- player
 			}
 			
-			player.Teleport(
-				true, Ware_MinigameLocation.center + Vector(x_offset, -y_spacing, 0),
-				true, QAngle(0, 90, 0),
-				true, Vector())
+			Ware_TeleportPlayer(player, Ware_MinigameLocation.center + Vector(x_offset, -y_spacing, 0), QAngle(0, 90, 0), vec3_zero)
 				
 			x_offset += x_offset < 0.0 ? -x_spacing : x_spacing
 		}
 		else
 		{
-			player.Teleport(
-				true, Ware_MinigameLocation.center + Vector(x_offset, y_spacing, 0),
-				true, QAngle(0, 270, 0),
-				true, Vector())
+			Ware_TeleportPlayer(player, Ware_MinigameLocation.center + Vector(x_offset, y_spacing, 0), QAngle(0, 270, 0), vec3_zero)
 		}
 		
 		last_player = player

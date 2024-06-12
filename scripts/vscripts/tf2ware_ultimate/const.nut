@@ -7,6 +7,9 @@ const FLT_MAX = 3.402823466e+38
 const RAD2DEG = 57.295779513
 const DEG2RAD = 0.0174532924
 
+vec3_zero <- Vector()
+ang_zero <- QAngle()
+
 const MASK_PLAYERSOLID_BRUSHONLY = 81931
 
 const MAX_WEAPONS = 7
