@@ -103,6 +103,7 @@ Ware_SpecialRounds <-
 	"non_stop"
 	"nostalgia"
 	"opposite_day"
+	"random_score"
 	"reversed_text"
 	"slow_mo"
 	"thirdperson"

@@ -2409,6 +2409,9 @@ function Ware_EndMinigameInternal()
 	foreach (annotation in Ware_Minigame.annotations)
 		Ware_HideAnnotation(annotation)
 	
+	if (Ware_SpecialRound)
+		Ware_SpecialRound.cb_on_minigame_end()
+	
 	Ware_Minigame = null
 	Ware_MinigameScope.clear()
 	Ware_MinigameOverlay2Set = false
@@ -2416,9 +2419,6 @@ function Ware_EndMinigameInternal()
 	local sound_duration = Max(Ware_GetThemeSoundDuration("victory"), Ware_GetThemeSoundDuration("failure"))
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
-	
-	if (Ware_SpecialRound)
-		Ware_SpecialRound.cb_on_minigame_end()
 	
 	if (Ware_MinigamesPlayed > Ware_GetBossThreshold() || Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), sound_duration)
