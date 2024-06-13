@@ -96,6 +96,12 @@ public Action ListenerVScript(Event event, const char[] name, bool dontBroadcast
 	return Plugin_Continue;
 }
 
+public void OnCheatsChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	// cheats must be enabled for host_timescale to function
+	sv_cheats.SetInt(1, true, false);
+}
+
 void Enable()
 {
 	if (g_Enabled || !ShouldEnable())
@@ -116,6 +122,8 @@ void Enable()
 	
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(1, true, false);
+	
+	HookConVarChange(sv_cheats, OnCheatsChanged);
 	
 	CreateConVar("ware_version", PLUGIN_VERSION, "TF2Ware Ultimate plugin version");
 	ware_cheats = CreateConVar("ware_cheats", "0", "Enable sv_cheats commands");
@@ -170,6 +178,8 @@ void Disable(bool map_unload)
 	
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(0, true, false);
+	
+	UnhookConVarChange(sv_cheats, OnCheatsChanged);
 	
 	UnhookEvent("player_rematch_change", ListenerVScript, EventHookMode_Pre);
 	
