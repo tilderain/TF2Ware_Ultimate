@@ -79,7 +79,7 @@ public void LoadoutCacher_Start(GameData gamedata)
 		return;
 	}
 
-	loadoutcacher_enable = CreateConVar("loadoutcacher_enable", "0", ""); // allows VScript to detect its loaded
+	loadoutcacher_enable = CreateConVar("loadoutcacher_enable", "1", ""); // allows VScript to detect its loaded
 	loadoutcacher_profile = CreateConVar("loadoutcacher_profile", "0", "Measure cost of loadout spawning");
 	loadoutcacher_cosmetics = CreateConVar("loadoutcacher_cosmetics", "0", "Enable cosmetic visibility"); 	// disabling cosmetics until new system is ready
 	

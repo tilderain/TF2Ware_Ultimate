@@ -2,9 +2,10 @@
 {
 	"tf"
 	{
-		// all of these are for the loadout cacher and aren't critical to function
+		// note: all gamedata here is optional and not required for the gamemode to function
 		"Offsets"
 		{
+			// loadout cacher
 			"CBasePlayer::EquipWearable"
 			{
 				"windows"	"438"
@@ -25,10 +26,22 @@
 				"windows64"	"313"
 				"linux"		"314"
 				"linux64"	"314"
-			}			
+			}
+		}
+		"Signatures"
+		{
+			// loadout whitelister
+			"CTFPlayer::GetLoadoutItem"
+			{
+				"library"		"server"
+				// TODO: 64-bit gamedata if this approach is a success
+				"linux"			"@_ZN9CTFPlayer14GetLoadoutItemEiib"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x10\x53\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A"
+			}
 		}
 		"Functions"
 		{
+			// loadout cacher + whitelister
 			"CTFPlayer::InitClass"
 			{
 				"offset"	"CTFPlayer::InitClass"
@@ -42,6 +55,29 @@
 				"hooktype"	"entity"
 				"return"	"void"
 				"this"		"entity"
+			}
+			// loadout whitelister
+			"CTFPlayer::GetLoadoutItem"
+			{
+				"signature"		"CTFPlayer::GetLoadoutItem"
+				"callconv"		"thiscall"
+				"return"		"charptr" // objectptr
+				"this"			"entity"
+				"arguments"
+				{
+					"class"
+					{
+						"type"	"int"
+					}
+					"slot"
+					{
+						"type"	"int"
+					}
+					"print_failure"
+					{
+						"type"	"bool"
+					}
+				}
 			}			
 		}
 	}
