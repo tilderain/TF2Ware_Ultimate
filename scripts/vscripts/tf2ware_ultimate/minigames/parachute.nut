@@ -20,7 +20,7 @@ PrecacheModel(platform_model)
 
 function OnTeleport(players)
 {
-	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 1000), 512.0)
+	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 1400), 768.0)
 }
 
 function OnStart()
