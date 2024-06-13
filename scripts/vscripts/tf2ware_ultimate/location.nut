@@ -114,7 +114,7 @@ Ware_Location.sawrun <-
 		Ware_TeleportPlayersRow(players,
 			center - Vector(40, 0, 0),
 			QAngle(0, 90, 0),
-			512.0,
+			480.0,
 			-50.0, 50.0)
 	}
 }
