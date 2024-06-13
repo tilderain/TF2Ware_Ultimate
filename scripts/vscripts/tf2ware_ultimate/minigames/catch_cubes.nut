@@ -13,7 +13,7 @@ touch_sound <- "Player.HitSoundSpace"
 PrecacheModel(cube_model)
 PrecacheScriptSound(touch_sound)
 
-spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 1.0, 0.02)
+spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 1.0, 0.05)
 
 function OnStart()
 {
