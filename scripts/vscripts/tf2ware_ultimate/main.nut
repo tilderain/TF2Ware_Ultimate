@@ -29,6 +29,9 @@ if (!("Ware_Plugin" in this))
 	printl("\tVScript: TF2Ware Ultimate Started")
 }
 
+// force a game restart if an error occurs while inside code marked as "critical"
+Ware_CriticalZone <- false
+
 // override vscript's own error handler for telemetry purposes
 Ware_ListenHost <- GetListenServerHost()
 Ware_LastErrorTime <- 0.0
@@ -82,6 +85,13 @@ function Ware_ErrorHandler(e)
 							 Print(format("\t[%s] %s %s" , n, t, v.tostring()))
 		}
 	}
+	
+	if (Ware_CriticalZone)
+	{
+		Ware_CriticalZone = false	
+		SetConvarValue("mp_restartgame", 5)
+		Ware_Error("Critical error detected. Restarting in 5 seconds...")
+	}
 }
 seterrorhandler(Ware_ErrorHandler)
 
@@ -107,13 +117,11 @@ if (!Ware_Plugin)
 
 class Ware_Callback
 {
-	function constructor(name)
+	function constructor(_scope, name)
 	{
-		if (!scope)
-			scope = GetDefaultScope()
-		
-		if (name in scope)
-			func = scope[name]
+		scope = _scope
+		if (name in _scope)
+			func = _scope[name]
 	}
 	
 	function _call(...)
@@ -136,16 +144,6 @@ class Ware_Callback
 
 	func = null
 	scope = null
-}
-
-class Ware_MinigameCallback extends Ware_Callback
-{
-	function GetDefaultScope() { return Ware_MinigameScope }
-}
-
-class Ware_SpecialRoundCallback extends Ware_Callback
-{
-	function GetDefaultScope() { return Ware_SpecialRoundScope }
 }
 
 class Ware_MinigameData
@@ -1737,6 +1735,24 @@ function Ware_IsSpecialRoundValid(str)
 	return false
 }
 
+function Ware_SetupSpecialRoundCallbacks()
+{
+	local special_round = Ware_SpecialRound
+	local scope = Ware_SpecialRoundScope
+	
+	special_round.cb_get_boss_threshold      = Ware_Callback(scope, "GetBossThreshold")
+	special_round.cb_get_overlay2            = Ware_Callback(scope, "GetOverlay2")
+	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")
+	special_round.cb_on_calculate_scores     = Ware_Callback(scope, "OnCalculateScores")
+	special_round.cb_on_player_spawn         = Ware_Callback(scope, "OnPlayerSpawn")
+	special_round.cb_on_player_inventory     = Ware_Callback(scope, "OnPlayerInventory")
+	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
+	special_round.cb_on_minigame_end         = Ware_Callback(scope, "OnMinigameEnd")
+	special_round.cb_on_speedup              = Ware_Callback(scope, "OnSpeedup")
+	special_round.cb_on_take_damage          = Ware_Callback(scope, "OnTakeDamage")
+	special_round.cb_on_update               = Ware_Callback(scope, "OnUpdate")
+}
+
 function Ware_BeginSpecialRound()
 {
 	// copied logic from minigame start
@@ -1870,6 +1886,8 @@ function Ware_BeginSpecialRound()
 			CreateTimer(function()
 			{	
 				Ware_SpecialRound = special_round
+					
+				Ware_SetupSpecialRoundCallbacks()	
 						
 				// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
 				foreach(name, value in special_round.convars)
@@ -1883,18 +1901,6 @@ function Ware_BeginSpecialRound()
 					
 				if (special_round.allow_damage)
 					Ware_ToggleTruce(false)
-					
-				Ware_SpecialRound.cb_get_boss_threshold            = Ware_SpecialRoundCallback("GetBossThreshold")
-				Ware_SpecialRound.cb_get_overlay2                  = Ware_SpecialRoundCallback("GetOverlay2")
-				Ware_SpecialRound.cb_get_player_roll               = Ware_SpecialRoundCallback("GetPlayerRollAngle")
-				Ware_SpecialRound.cb_on_calculate_scores           = Ware_SpecialRoundCallback("OnCalculateScores")
-				Ware_SpecialRound.cb_on_player_spawn               = Ware_SpecialRoundCallback("OnPlayerSpawn")
-				Ware_SpecialRound.cb_on_player_inventory           = Ware_SpecialRoundCallback("OnPlayerInventory")
-				Ware_SpecialRound.cb_on_begin_intermission         = Ware_SpecialRoundCallback("OnBeginIntermission")
-				Ware_SpecialRound.cb_on_minigame_end               = Ware_SpecialRoundCallback("OnMinigameEnd")
-				Ware_SpecialRound.cb_on_speedup                    = Ware_SpecialRoundCallback("OnSpeedup")
-				Ware_SpecialRound.cb_on_take_damage                = Ware_SpecialRoundCallback("OnTakeDamage")
-				Ware_SpecialRound.cb_on_update                     = Ware_SpecialRoundCallback("OnUpdate")
 				
 				local event_prefix = "OnGameEvent_"
 				local event_prefix_len = event_prefix.len()
@@ -2021,6 +2027,23 @@ function Ware_Speedup()
 		
 		CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 	}
+}
+
+function Ware_SetupMinigameCallbacks()
+{
+	local minigame = Ware_Minigame
+	local scope = Ware_MinigameScope
+	
+	minigame.cb_on_take_damage			= Ware_Callback(scope, "OnTakeDamage")
+	minigame.cb_on_player_attack		= Ware_Callback(scope, "OnPlayerAttack")
+	minigame.cb_on_player_death			= Ware_Callback(scope, "OnPlayerDeath")
+	minigame.cb_on_player_disconnect	= Ware_Callback(scope, "OnPlayerDisconnect")
+	minigame.cb_on_player_say			= Ware_Callback(scope, "OnPlayerSay")
+	minigame.cb_on_player_voiceline		= Ware_Callback(scope, "OnPlayerVoiceline")
+	minigame.cb_on_player_horn			= Ware_Callback(scope, "OnPlayerHorn")
+	minigame.cb_on_player_touch			= Ware_Callback(scope, "OnPlayerTouch")
+	minigame.cb_on_update				= Ware_Callback(scope, "OnUpdate")
+	minigame.cb_check_end				= Ware_Callback(scope, "CheckEnd")	
 }
 
 function Ware_StartMinigame(is_boss)
@@ -2152,6 +2175,8 @@ function Ware_StartMinigame(is_boss)
 			Ware_Error("Failed to force load '%s', fallbacking to rotation", minigame)
 		}
 	}
+	
+	Ware_CriticalZone = true
 
 	Ware_MinigameEnded = false
 	Ware_Minigame = Ware_MinigameScope.minigame
@@ -2196,6 +2221,8 @@ function Ware_StartMinigame(is_boss)
 			location.Teleport(Ware_MinigamePlayers.map(@(data) data.player))
 	}
 	
+	Ware_SetupMinigameCallbacks()	
+	
 	if (custom_teleport)
 		Ware_MinigameScope.OnTeleport(Ware_MinigamePlayers.map(@(data) data.player))
 		
@@ -2206,18 +2233,7 @@ function Ware_StartMinigame(is_boss)
 	
 	if ("OnStart" in Ware_MinigameScope)
 		Ware_MinigameScope.OnStart()
-	
-	Ware_Minigame.cb_on_take_damage			= Ware_MinigameCallback("OnTakeDamage")
-	Ware_Minigame.cb_on_player_attack		= Ware_MinigameCallback("OnPlayerAttack")
-	Ware_Minigame.cb_on_player_death		= Ware_MinigameCallback("OnPlayerDeath")
-	Ware_Minigame.cb_on_player_disconnect	= Ware_MinigameCallback("OnPlayerDisconnect")
-	Ware_Minigame.cb_on_player_say			= Ware_MinigameCallback("OnPlayerSay")
-	Ware_Minigame.cb_on_player_voiceline	= Ware_MinigameCallback("OnPlayerVoiceline")
-	Ware_Minigame.cb_on_player_horn			= Ware_MinigameCallback("OnPlayerHorn")
-	Ware_Minigame.cb_on_player_touch		= Ware_MinigameCallback("OnPlayerTouch")
-	Ware_Minigame.cb_on_update				= Ware_MinigameCallback("OnUpdate")
-	Ware_Minigame.cb_check_end				= Ware_MinigameCallback("CheckEnd")
-	
+
 	local event_prefix = "OnGameEvent_"
 	local event_prefix_len = event_prefix.len()
 	foreach (key, value in Ware_MinigameScope)
@@ -2309,10 +2325,13 @@ function Ware_StartMinigame(is_boss)
 			Ware_SuicideFailedPlayers()
 	}, Ware_Minigame.duration)
 	
-	Ware_MinigameEndTimer = CreateTimer(
+	Ware_MinigameEndTimer = CreateTimer
+	(
 		@() Ware_EndMinigameInternal(), 
 		Ware_Minigame.duration + Ware_Minigame.end_delay
 	)
+	
+	Ware_CriticalZone = false
 }
 
 function Ware_EndMinigame()
@@ -2338,6 +2357,8 @@ function Ware_DeferredPlayerTeleport()
 
 function Ware_EndMinigameInternal()
 {
+	Ware_CriticalZone = true
+	
 	if ("OnCleanup" in Ware_MinigameScope) 
 		Ware_MinigameScope.OnCleanup()
 				
@@ -2545,6 +2566,8 @@ function Ware_EndMinigameInternal()
 		CreateTimer(@() Ware_Speedup(), sound_duration)
 	else
 		CreateTimer(@() Ware_BeginIntermission(false), sound_duration)
+		
+	Ware_CriticalZone = false
 }
 
 function Ware_GameOver()
@@ -2644,9 +2667,6 @@ function Ware_OnUpdate()
 		Ware_SpecialRound.cb_on_update()
 		
 	if (Ware_Minigame == null)
-		return
-		
-	if (!Ware_Minigame.cb_on_update) // implies a minigame script errors on load
 		return
 		
 	if (!Ware_MinigameEnded)
