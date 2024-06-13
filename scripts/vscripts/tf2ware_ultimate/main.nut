@@ -450,7 +450,6 @@ function Ware_FindStandardEntities()
 	ClientCmd <- CreateEntitySafe("point_clientcommand")
 	
 	MarkForPurge(WaterLOD)
-	SetPropFloat(WaterLOD, "m_flCheapWaterEndDistance", 0)
 	
 	// avoid adding the think again to not break global execution order
 	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
@@ -458,6 +457,8 @@ function Ware_FindStandardEntities()
 		AddThinkToEnt(World, "Ware_OnUpdate")
 		AddThinkToEnt(PlayerMgr, "Ware_LeaderboardUpdate")
 	}
+	
+	Ware_UpdateGlobalMaterialState()
 	
 	Ware_TextManagerQueue <- []
 	Ware_TextManager = SpawnEntityFromTableSafe("game_text",
@@ -503,6 +504,23 @@ function Ware_SetTimeScale(timescale)
 	
 	foreach (data in Ware_MinigamePlayers)
 		data.player.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
+}
+
+function Ware_UpdateGlobalMaterialState()
+{
+	// water_lod_control provides 2 global float variables that are read by client material proxies
+	// overlays use this to reverse their text
+	// unfortunately, mastercomfig overrides these and it results in corrupted rendering
+	// to prevent that, do a dummy update of the network vars so the entity is re-transmitted
+	
+	if (WaterLOD && WaterLOD.IsValid())
+		WaterLOD.Kill()
+	
+	WaterLOD = SpawnEntityFromTableSafe("water_lod_control",
+	{
+		cheapwaterstartdistance = 0
+		cheapwaterenddistance = Ware_SpecialRound && Ware_SpecialRound.reverse_text ? 1 : 0
+	})
 }
 
 function Ware_GetPitchFactor()
@@ -2180,6 +2198,8 @@ function Ware_StartMinigame(is_boss)
 	
 	if (custom_teleport)
 		Ware_MinigameScope.OnTeleport(Ware_MinigamePlayers.map(@(data) data.player))
+		
+	Ware_UpdateGlobalMaterialState()
 	
 	if (Ware_Minigame.allow_damage)
 		Ware_ToggleTruce(false)
