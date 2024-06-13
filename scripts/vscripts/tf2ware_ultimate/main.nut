@@ -2202,6 +2202,7 @@ function Ware_StartMinigame(is_boss)
 			player.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(1)
+		player.RemoveCond(TF_COND_TAUNTING)
 
 		local scope = player.GetScriptScope()
 		local data = scope.ware_data
