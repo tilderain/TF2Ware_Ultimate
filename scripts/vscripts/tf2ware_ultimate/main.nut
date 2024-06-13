@@ -2179,6 +2179,8 @@ function Ware_StartMinigame(is_boss)
 		}
 	}
 	
+	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
+	
 	Ware_CriticalZone = true
 
 	Ware_MinigameEnded = false
