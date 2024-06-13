@@ -17,7 +17,7 @@ count <- 0
 
 function OnStart()
 {
-	count = RandomInt(6, 15)
+	count = RandomInt(6, 10)
 	
 	for (local i = 0; i < count; i++)
 	{
