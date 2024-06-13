@@ -8,11 +8,10 @@ special_round <- Ware_SpecialRoundData
 
 function OnStart()
 {
-	// the text reads the water_lod_control entity to check if it should reverse
-	SetPropFloat(WaterLOD, "m_flCheapWaterEndDistance", 1)
+	Ware_UpdateGlobalMaterialState()
 }
 
 function OnEnd()
 {
-	SetPropFloat(WaterLOD, "m_flCheapWaterEndDistance", 0)
+	Ware_UpdateGlobalMaterialState()
 }
