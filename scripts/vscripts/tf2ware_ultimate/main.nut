@@ -1648,7 +1648,10 @@ function Ware_GetPlayerHeight(player)
 
 function Ware_PlayStartSound()
 {
-	self.GetScriptScope().ware_data.start_sound = true
+	if (ware_data.start_sound)
+		return
+	
+	ware_data.start_sound = true
 	 
 	if (IsInWaitingForPlayers())
 		Ware_PlayGameSound(self, "lets_get_started")
