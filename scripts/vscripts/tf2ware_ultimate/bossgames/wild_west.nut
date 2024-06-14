@@ -14,8 +14,8 @@ minigame <- Ware_MinigameData
 	fail_on_death  = true
 })
 
-// 1v1 mode, currently disabled
-dueling <- false
+// 1v1 mode
+dueling <- true
 
 mexican_standoff <- false
 game_over <- false
@@ -216,7 +216,7 @@ function StopShootout()
 						}
 						else
 						{
-							Ware_ChatPrint(player, "{color}Your opponent had disconnected so you have been spared...", TF_COLOR_DEFAULT)
+							Ware_ChatPrint(player, "{color}Your opponent disconnected so you have been spared...", TF_COLOR_DEFAULT)
 						}
 					}
 					else if (!mexican_standoff)
