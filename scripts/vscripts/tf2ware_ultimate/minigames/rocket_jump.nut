@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Rocket Jump"
 	author         = "ficool2"
 	description    = "Get to the top!"
-	duration       = 30.0
+	duration       = 37.0
 	end_delay      = 1.0
 	location       = "rocketjump"
 	music          = "steadynow"
