@@ -68,9 +68,6 @@ function Ware_ErrorHandler(e)
 	
 	Print(format("\n[TF2Ware] AN ERROR HAS OCCURRED [%s]", e))
 	
-	// I'm suspecting this is bugged so printing it out for now
-	Print(format("Minigame player count: %d", Ware_MinigamePlayers.len()))
-	
 	if (info)
 	{
 		local i = 2
@@ -1339,30 +1336,8 @@ SaxxyToClassnameMap <-
 	[TF_CLASS_SPY]          = "tf_weapon_knife",
 }
 
-Ware_DebugWeaponCounter <- 0
-Ware_DebugWeaponLimit <- 500
-
 function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon = true)
 {
-	// temporary code to track down a crash bug
-	Ware_DebugWeaponCounter++
-	if (Ware_DebugWeaponCounter >= Ware_DebugWeaponLimit)
-	{
-		if (Ware_DebugWeaponCounter == Ware_DebugWeaponLimit)
-		{
-			Ware_CriticalZone = true
-			Ware_ErrorHandler("Weapon overflow")
-			Ware_Error("Detected weapon overflow bug")
-			
-			local weapons = []
-			for (local weapon; weapon = FindByClassname(weapon, "tf_weapon_*");)
-				weapons.append(weapon)
-			foreach (weapon in weapons)
-				KillWeapon(weapon)
-		}
-		return
-	}
-	
 	local item = ITEM_MAP[item_name]
 	local item_id = item.id
 	local item_classname = item.classname
@@ -2245,8 +2220,7 @@ function Ware_StartMinigame(is_boss)
 	}
 	
 	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
-	Ware_DebugWeaponCounter = 0
-	
+
 	Ware_CriticalZone = true
 
 	Ware_MinigameEnded = false
