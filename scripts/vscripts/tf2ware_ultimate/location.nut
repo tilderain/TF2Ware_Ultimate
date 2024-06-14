@@ -138,7 +138,7 @@ Ware_Location.targetrange <-
 		local x = 0
 		foreach (player in players)
 		{
-			if (++x > 21)
+			if (++x > 27)
 			{
 				pos.y += offset
 				x = 1
