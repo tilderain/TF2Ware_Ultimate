@@ -2970,6 +2970,7 @@ function OnGameEvent_teamplay_round_start(params)
 	foreach (player in Ware_Players)
 	{
 		player.GetScriptScope().ware_data.score = 0
+		player.SetScriptOverlayMaterial("")
 		EntFireByHandle(ClientCmd, "Command", "r_cleardecals", -1, player, null)
 		BrickPlayerScore(player)
 		Ware_PlayGameSound(player, "results", SND_STOP)
