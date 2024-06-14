@@ -19,7 +19,7 @@ PrecacheModel(train_model)
 function OnStart()
 {
 	if (mode == 0)
-		PlaySoundOnAllClients(start_sound)
+		Ware_PlaySoundOnAllClients(start_sound)
 	
 	local minigame_players = clone(Ware_MinigamePlayers)
 	

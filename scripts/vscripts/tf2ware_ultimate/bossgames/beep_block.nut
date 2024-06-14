@@ -134,13 +134,13 @@ function BeepBlock_Sequence()
 	Ware_CreateTimer(function() {
 		if (i++ < 3)
 		{
-			PlaySoundOnAllClients(beep_sound, 0.6)
+			Ware_PlaySoundOnAllClients(beep_sound, 0.6)
 			BeepBlock_Beep()
 			return beat
 		}
 		else
 		{
-			PlaySoundOnAllClients(swap_sound)
+			Ware_PlaySoundOnAllClients(swap_sound)
 			BeepBlock_Swap()
 		}
 	}, 0.0)
@@ -173,10 +173,10 @@ function BeepBlock_Interrupt()
 	
 	Ware_PlayMinigameSound(null, minigame.music, SND_STOP)
 	Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/minigames/hurry_up")
-	PlaySoundOnAllClients(hurryup_sound)
+	Ware_PlaySoundOnAllClients(hurryup_sound)
 	
 	Ware_CreateTimer(function() {
-		PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSICVERSION, minigame.music),
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSICVERSION, minigame.music),
 		1.0, 100 * Ware_GetPitchFactor() * tempo_increase)
 		
 		BeepBlock_SetTempo(tempo * tempo_increase)
@@ -251,7 +251,7 @@ function OnTele1Touch()
 	
 	if (player.IsPlayer() && player.IsValid())
 	{
-		PlaySoundOnClient(player, tele_sound)
+		Ware_PlaySoundOnClient(player, tele_sound)
 		Ware_AddPlayerAttribute(player, "increased jump height", 1.28, Ware_GetMinigameRemainingTime())
 	}
 }
@@ -262,7 +262,7 @@ function OnTele2Touch()
 	
 	if (player.IsPlayer() && player.IsValid())
 	{
-		PlaySoundOnClient(player, tele_sound)
+		Ware_PlaySoundOnClient(player, tele_sound)
 		player.RemoveCustomAttribute("increased jump height")
 	}
 }

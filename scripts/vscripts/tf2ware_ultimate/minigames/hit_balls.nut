@@ -93,8 +93,8 @@ function SpawnBalls()
 
 function OnEnd()
 {
-	PlaySoundOnAllClients(end_sound)
-	PlaySoundOnAllClients(end_sound)
+	Ware_PlaySoundOnAllClients(end_sound)
+	Ware_PlaySoundOnAllClients(end_sound)
 	
 	local red_score = 0
 	local blue_score = 0

@@ -775,6 +775,16 @@ function Ware_GetThemeSoundDuration(sound)
 		return Ware_Themes[0].sounds[sound] * Ware_GetPitchFactor()
 }
 
+function Ware_PlaySoundOnClient(player, name, volume = 1.0, pitch = 100, flags = 0)
+{
+	PlaySoundOnClient(player, name, volume, pitch * Ware_GetPitchFactor(), flags)
+}
+
+function Ware_PlaySoundOnAllClients(name, volume = 1.0, pitch = 100, flags = 0)
+{
+	PlaySoundOnAllClients(name, volume, pitch * Ware_GetPitchFactor(), flags)
+}
+
 function Ware_PlayGameSound(player, name, flags = 0)
 {
 	local path
@@ -785,18 +795,18 @@ function Ware_PlayGameSound(player, name, flags = 0)
 		path = format("%s/%s", Ware_Themes[0].theme_name, name)
 	
 	if (player)
-		PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), 1.0, 100 * Ware_GetPitchFactor(), flags)
+		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), 1.0, 100, flags)
 	else
-		PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), 1.0, 100 * Ware_GetPitchFactor(), flags)
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), 1.0, 100, flags)
 }
 
 function Ware_PlayMinigameSound(player, name, flags = 0, volume = 1.0)
 {
 	local gametype = Ware_Minigame.boss ? "bossgame" : "minigame"
 	if (player)
-		PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100 * Ware_GetPitchFactor(), flags)
+		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100, flags)
 	else
-		PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100 * Ware_GetPitchFactor(), flags)
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100, flags)
 }
 
 function Ware_SetConvarValue(convar, value)
@@ -1889,7 +1899,7 @@ function Ware_BeginSpecialRound()
 			
 			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, special_round.name, TF_COLOR_DEFAULT, special_round.description)
 			
-			PlaySoundOnAllClients("tf2ware_ultimate/pass.mp3")
+			Ware_PlaySoundOnAllClients("tf2ware_ultimate/pass.mp3")
 			
 			CreateTimer(function()
 			{	

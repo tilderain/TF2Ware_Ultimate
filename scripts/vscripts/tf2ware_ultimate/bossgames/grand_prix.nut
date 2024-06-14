@@ -60,7 +60,7 @@ function OnStart()
 		if (timer > 0)
 		{
 			PrecacheSound(format("vo/announcer_begins_%ssec.mp3", timer.tostring()))
-			PlaySoundOnAllClients(format("vo/announcer_begins_%ssec.mp3", timer.tostring()), 1.0, 100 * Ware_GetPitchFactor())
+			Ware_PlaySoundOnAllClients(format("vo/announcer_begins_%ssec.mp3", timer.tostring()), 1.0, 100 * Ware_GetPitchFactor())
 		}
 		
 		timer--

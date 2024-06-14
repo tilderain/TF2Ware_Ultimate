@@ -148,7 +148,7 @@ function OnStart()
 		pages.append(page)
 	}
 	
-	PlaySoundOnAllClients(sound_intro)
+	Ware_PlaySoundOnAllClients(sound_intro)
 	
 	end_time = Time() + (minigame.duration - pages_max * page_add_time)
 	end_time_max = end_time
