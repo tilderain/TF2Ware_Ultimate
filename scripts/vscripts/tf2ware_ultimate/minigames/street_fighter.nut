@@ -11,7 +11,6 @@ minigame <- Ware_MinigameData
 	friendly_fire  = false
 	collisions     = true
 	min_players    = 2
-	custom_overlay = "taunt_kill"
 })
 
 fire_sound <- "TF2Ware_Ultimate.Hadoken"
