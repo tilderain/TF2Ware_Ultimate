@@ -259,6 +259,7 @@ class Ware_SpecialRoundData
 		reverse_text     = false
 		allow_damage     = false
 		force_collisions = false
+		boss_count       = 1
 		
 		if (table)
 		{
@@ -275,6 +276,7 @@ class Ware_SpecialRoundData
 	reverse_text     = null
 	allow_damage     = null
 	force_collisions = null
+	boss_count       = null
 	
 	min_players      = null
 	convars          = null
@@ -379,6 +381,7 @@ Ware_MinigameEndTimer     <- null
 Ware_MinigameEnded        <- false
 Ware_MinigameHighScorers  <- []
 Ware_MinigamesPlayed	  <- 0
+Ware_BossgamesPlayed         <- 0
 
 if (!("Ware_RoundsPlayed" in this))
 	Ware_RoundsPlayed     <- 0
@@ -1076,6 +1079,14 @@ function Ware_GetBossThreshold()
 		return Ware_SpecialRound.cb_get_boss_threshold()
 	else
 		return Ware_BossThreshold
+}
+
+function Ware_GetBossCount()
+{
+	if (Ware_SpecialRound)
+		return Ware_SpecialRound.boss_count
+	else
+		return 1
 }
 
 function Ware_ParseLoadout(player)
@@ -2386,6 +2397,8 @@ function Ware_EndMinigameInternal()
 		Ware_MinigameScope.OnCleanup()
 				
 	Ware_MinigamesPlayed++
+	if (Ware_Minigame.boss)
+		Ware_BossgamesPlayed++
 	
 	foreach (name, value in Ware_MinigameSavedConvars)
 		SetConvarValue(name, value)
@@ -2583,9 +2596,9 @@ function Ware_EndMinigameInternal()
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
 	
-	if (Ware_MinigamesPlayed > Ware_GetBossThreshold() || Ware_DebugGameOver)
+	if ((Ware_MinigamesPlayed > Ware_GetBossThreshold() && Ware_BossgamesPlayed >= Ware_GetBossCount()) || Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), sound_duration)
-	else if (Ware_MinigamesPlayed == Ware_GetBossThreshold())
+	else if (Ware_MinigamesPlayed >= Ware_GetBossThreshold() && Ware_BossgamesPlayed < Ware_GetBossCount())
 		CreateTimer(@() Ware_BeginBoss(), sound_duration)
 	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % Ware_SpeedUpThreshold == 0)
 		CreateTimer(@() Ware_Speedup(), sound_duration)

@@ -113,6 +113,7 @@ Ware_SpecialRounds <-
 	"slow_mo"
 	"thirdperson"
 	"time_attack"
+	"two_bosses"
 	"up_down"
 ]
 
