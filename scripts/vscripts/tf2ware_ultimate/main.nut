@@ -1353,7 +1353,7 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 			for (local weapon; weapon = FindByClassname(weapon, "tf_weapon_*");)
 				weapons.append(weapon)
 			foreach (weapon in weapons)
-				weapon.Kill()
+				KillWeapon(weapon)
 		}
 		return
 	}
