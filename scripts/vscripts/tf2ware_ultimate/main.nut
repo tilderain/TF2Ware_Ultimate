@@ -2437,6 +2437,7 @@ function Ware_EndMinigameInternal()
 			continue
 			
 		player.RemoveAllObjects(false)
+		player.SetGrapplingHookTarget(null, false)
 
 		if (restore_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
