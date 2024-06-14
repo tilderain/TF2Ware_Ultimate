@@ -20,6 +20,7 @@ minigame <- Ware_MinigameData
 	start_pass     = true
 	allow_damage   = true
 	friendly_fire  = false
+	collisions     = true
 	convars        =
 	{
 		mp_teams_unbalance_limit = 0

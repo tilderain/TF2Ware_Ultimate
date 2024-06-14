@@ -8,7 +8,6 @@ minigame <- Ware_MinigameData
 	location      = "mandrill"
 	music         = "mandrill"
 	start_pass    = false
-	no_collisions = true
 	fail_on_death = true
 })
 

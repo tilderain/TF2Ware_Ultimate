@@ -13,6 +13,7 @@ minigame <- Ware_MinigameData
 	allow_damage   = true
 	fail_on_death  = true
 	thirdperson    = true
+	collisions     = true
 	convars =
 	{
 		tf_avoidteammates = 0

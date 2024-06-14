@@ -8,7 +8,6 @@ minigame <- Ware_MinigameData
 	music          = "getmoving"
 	custom_overlay = "get_end"
 	start_pass     = false
-	no_collisions  = true
 })
 
 function OnStart()

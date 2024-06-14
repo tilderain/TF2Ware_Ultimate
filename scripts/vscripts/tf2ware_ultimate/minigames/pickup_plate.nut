@@ -19,7 +19,6 @@ minigame <- Ware_MinigameData
 	music          = "catchme"
 	location       = "beach"
 	custom_overlay = chosen_item[1]
-	no_collisions  = true
 	thirdperson    = true
 })
 

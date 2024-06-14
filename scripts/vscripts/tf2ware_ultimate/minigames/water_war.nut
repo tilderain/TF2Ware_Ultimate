@@ -8,6 +8,7 @@ minigame <- Ware_MinigameData
 	music          = "adventuretime"
 	min_players    = 2
 	allow_damage   = true
+	collisions     = true
 	custom_overlay = "kill_player"
 	convars =
 	{

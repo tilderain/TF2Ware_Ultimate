@@ -8,7 +8,6 @@ minigame <- Ware_MinigameData
 	location       = "ballcourt"
 	music          = "basketball"
 	start_pass     = false
-	no_collisions  = true
 })
 
 trigger <- null

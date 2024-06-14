@@ -9,6 +9,7 @@ minigame <- Ware_MinigameData
 	music          = "streetfighter"
 	allow_damage   = true
 	friendly_fire  = false
+	collisions     = true
 	min_players    = 2
 	custom_overlay = "taunt_kill"
 })

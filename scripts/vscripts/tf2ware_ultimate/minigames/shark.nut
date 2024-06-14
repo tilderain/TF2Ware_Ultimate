@@ -13,7 +13,6 @@ minigame <- Ware_MinigameData
 	location       = "beach"
 	allow_damage   = true
 	fail_on_death  = true
-	no_collisions  = true
 	min_players    = 4
 	custom_overlay = 
 	[

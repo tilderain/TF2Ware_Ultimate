@@ -9,6 +9,7 @@ minigame <- Ware_MinigameData
 	min_players   = 2
 	start_pass    = true
 	fail_on_death = true
+	collisions    = true
 	convars       = 
 	{
 		sv_gravity        = 2000

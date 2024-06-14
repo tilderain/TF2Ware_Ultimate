@@ -4,7 +4,6 @@ minigame <- Ware_MinigameData
 	author         = "ficool2"
 	description    = "Shoot the Barrel!"
 	location       = "targetrange"
-	no_collisions  = true
 	duration       = 5.0
 	music          = "wildwest"
 	custom_overlay = "shoot_barrel"

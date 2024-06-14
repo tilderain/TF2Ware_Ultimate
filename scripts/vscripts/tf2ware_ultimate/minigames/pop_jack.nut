@@ -6,7 +6,6 @@ minigame <- Ware_MinigameData
 	duration      = 7.3
 	location      = "boxarena"
 	music         = "drumdance"
-	no_collisions = true
 	convars       =
 	{
 		phys_timescale = 0.5

@@ -10,7 +10,6 @@ minigame <- Ware_MinigameData
 	duration       = 12.0
 	music          = "piper"
 	location       = "beach"
-	no_collisions  = true
 	custom_overlay = 
 	[
 		"pirate_red"

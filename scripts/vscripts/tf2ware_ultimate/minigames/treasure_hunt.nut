@@ -35,7 +35,6 @@ minigame <- Ware_MinigameData
 	music          = "undergroundbros"
 	location       = treasure[0]
 	custom_overlay = "treasure_hunt_" + treasure[2]
-	no_collisions  = true
 })
 
 debug_spawns <- false

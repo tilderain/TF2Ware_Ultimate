@@ -157,7 +157,7 @@ class Ware_MinigameData
 		force_backstab = false
 		fail_on_death  = false
 		suicide_on_end = false
-		no_collisions  = false
+		collisions 	   = false
 		friendly_fire  = true
 		thirdperson    = false
 		boss		   = false
@@ -204,8 +204,8 @@ class Ware_MinigameData
 	fail_on_death	= null
 	// Whether players should suicide if they haven't passed when minigame ends, default is false
 	suicide_on_end	= null
-	// Disables collisions between players, default is false
-	no_collisions	= null
+	// Enables collisions between players, default is false
+	collisions    	= null
 	// Toggle friendlyfire, default is true
 	friendly_fire	= null
 	// Force players into thirdperson? Default is false
@@ -2198,8 +2198,8 @@ function Ware_StartMinigame(is_boss)
 	Ware_MinigamePlayers.clear()
 	foreach (player in valid_players)
 	{
-		if (Ware_Minigame.no_collisions)
-			player.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+		if (Ware_Minigame.collisions)
+			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(1)
 		player.RemoveCond(TF_COND_TAUNTING)
@@ -2387,8 +2387,8 @@ function Ware_EndMinigameInternal()
 			
 		player.RemoveAllObjects(false)
 
-		if (Ware_Minigame.no_collisions)
-			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
+		if (Ware_Minigame.collisions)
+			player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		if (Ware_Minigame.thirdperson && (!Ware_SpecialRound || Ware_SpecialRound.name != "Thirdperson")) // don't like checking this manually but not sure what else to do - pokepasta
 			player.SetForcedTauntCam(0)
 		if (Ware_Minigame.condition != null)
@@ -3143,6 +3143,7 @@ function OnGameEvent_player_spawn(params)
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
 		player.SetCustomModel("")		
 		player.SetHealth(player.GetMaxHealth())	
+		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY);
 		SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
 		
 		if (Ware_SpecialRound)

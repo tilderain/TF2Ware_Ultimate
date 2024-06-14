@@ -10,7 +10,6 @@ minigame <- Ware_MinigameData
 	music          = mode == 0 ? "fastbros" : "letsgetquirky"
 	location       = "pinball"
 	custom_overlay = "get_end"
-	no_collisions  = true
 })
 
 balls <- []

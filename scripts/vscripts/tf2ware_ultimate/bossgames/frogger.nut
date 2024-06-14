@@ -9,7 +9,6 @@ minigame <- Ware_MinigameData
 	music          = "frogger"
 	custom_overlay = "get_end"
 	start_pass     = false
-	no_collisions  = true
 	thirdperson    = true
 })
 

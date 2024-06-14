@@ -12,6 +12,7 @@ minigame <- Ware_MinigameData
 	start_pass     = true
 	fail_on_death  = true
 	allow_damage   = true
+	collisions     = true
 	convars =
 	{
 		tf_avoidteammates = 0

@@ -9,7 +9,6 @@ minigame <- Ware_MinigameData
 	music          = "steadynow"
 	custom_overlay = "get_top"
 	start_pass     = false
-	no_collisions  = true
 })
 
 first <- true

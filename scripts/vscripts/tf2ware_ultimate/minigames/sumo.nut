@@ -17,6 +17,7 @@ minigame <- Ware_MinigameData
 	allow_damage  = true
 	fail_on_death = true
 	start_pass    = true
+	collisions    = true
 	convars       =
 	{
 		tf_halloween_kart_fast_turn_speed = 200

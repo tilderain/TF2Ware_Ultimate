@@ -10,6 +10,7 @@ minigame <- Ware_MinigameData
 	min_players   = 2
 	allow_damage  = true
 	friendly_fire = false
+	collisions    = true
 })
 
 loadouts <-

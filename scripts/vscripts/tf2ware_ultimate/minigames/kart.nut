@@ -7,6 +7,7 @@ minigame <- Ware_MinigameData
 	end_delay     = 0.5
 	allow_damage  = true
 	fail_on_death = true
+	collisions    = true
 })
 
 tracks <-

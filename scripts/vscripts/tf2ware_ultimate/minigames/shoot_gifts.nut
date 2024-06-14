@@ -7,7 +7,6 @@ minigame <- Ware_MinigameData
 	music          = "pumpit"
 	location       = "targetrange"
 	custom_overlay = "shoot_gift_10"
-	no_collisions  = true
 	convars        =
 	{
 		// make this easier on higher timescales or its near impossible

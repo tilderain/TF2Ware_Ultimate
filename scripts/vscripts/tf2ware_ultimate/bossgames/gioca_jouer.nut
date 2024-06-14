@@ -36,7 +36,6 @@ minigame <- Ware_MinigameData
 	location      = "boxarena"
 	music         = "giocajouer"
 	start_pass    = false
-	no_collisions = true
 })
 
 pass_sound <- "Halloween.PumpkinDrop"

@@ -10,7 +10,6 @@ minigame <- Ware_MinigameData
 	duration       = 4.0
 	music          = "cheerful"
 	custom_overlay = "shoot_target_" + target_class.tolower()
-	no_collisions  = true
 })
 
 foreach (name in target_names) PrecacheModel(format("models/props_training/target_%s.mdl", name.tolower()))

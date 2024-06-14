@@ -14,6 +14,7 @@ minigame <- Ware_MinigameData
 	min_players    = 5
 	location       = "pinball"
 	music          = "makemegroove"
+	collisions     = true
 	custom_overlay = 
 	[
 		"piggyback_end"
@@ -22,7 +23,6 @@ minigame <- Ware_MinigameData
 	convars        =
 	{
 		mp_teams_unbalance_limit = 0
-		tf_avoidteammates        = 0
 		tf_allow_sliding_taunt   = 1
 	}
 })

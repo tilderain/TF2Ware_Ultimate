@@ -19,6 +19,7 @@ minigame <- Ware_MinigameData
 	min_players     = 6
 	start_pass      = true
 	allow_damage    = true
+	collisions      = true
 	convars         =
 	{
 		mp_teams_unbalance_limit = 0,
