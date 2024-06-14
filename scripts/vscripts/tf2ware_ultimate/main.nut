@@ -1335,7 +1335,7 @@ SaxxyToClassnameMap <-
 }
 
 Ware_DebugWeaponCounter <- 0
-Ware_DebugWeaponLimit <- 5
+Ware_DebugWeaponLimit <- 500
 
 function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon = true)
 {
