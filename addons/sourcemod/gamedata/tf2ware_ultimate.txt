@@ -5,27 +5,13 @@
 		// note: all gamedata here is optional and not required for the gamemode to function
 		"Offsets"
 		{
-			// loadout cacher
-			"CBasePlayer::EquipWearable"
-			{
-				"windows"	"438"
-				"windows64"	"438"
-				"linux"		"439"
-				"linux64"	"439"
-			}
+			// loadout whitelister
 			"CTFPlayer::InitClass"	
 			{
 				"windows"	"488"
 				"windows64"	"488"
 				"linux"		"495"
 				"linux64"	"495"
-			}
-			"CTFPlayer::RemoveAllWeapons"	
-			{
-				"windows"	"313"
-				"windows64"	"313"
-				"linux"		"314"
-				"linux64"	"314"
 			}
 		}
 		"Signatures"
@@ -34,14 +20,15 @@
 			"CTFPlayer::GetLoadoutItem"
 			{
 				"library"		"server"
-				// TODO: 64-bit gamedata if this approach is a success
-				"linux"			"@_ZN9CTFPlayer14GetLoadoutItemEiib"
 				"windows"		"\x55\x8B\xEC\x83\xEC\x10\x53\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A"
+				"windows64"		"\x48\x89\x5C\x24\x2A\x48\x89\x6C\x24\x2A\x48\x89\x74\x24\x2A\x44\x88\x4C\x24\x2A\x57\x41\x54"
+				"linux"			"@_ZN9CTFPlayer14GetLoadoutItemEiib"
+				"linux64"		"@_ZN9CTFPlayer14GetLoadoutItemEiib"				
 			}
 		}
 		"Functions"
 		{
-			// loadout cacher + whitelister
+			// loadout whitelister
 			"CTFPlayer::InitClass"
 			{
 				"offset"	"CTFPlayer::InitClass"
@@ -49,14 +36,6 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			"CTFPlayer::RemoveAllWeapons"
-			{
-				"offset"	"CTFPlayer::RemoveAllWeapons"
-				"hooktype"	"entity"
-				"return"	"void"
-				"this"		"entity"
-			}
-			// loadout whitelister
 			"CTFPlayer::GetLoadoutItem"
 			{
 				"signature"		"CTFPlayer::GetLoadoutItem"

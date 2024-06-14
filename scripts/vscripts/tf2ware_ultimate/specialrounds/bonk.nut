@@ -70,21 +70,9 @@ function OnStart()
 	}
 }
 
-// hacky but melee gets removed when player regenerates
-// but with loadout caching, the inventory never regenerates
-if (Ware_LoadoutCacher)
+function OnPlayerInventory(player)
 {
-	function OnPlayerSpawn(player)
-	{
-		GiveSpecialMelee(player)
-	}
-}
-else
-{
-	function OnPlayerInventory(player)
-	{
-		GiveSpecialMelee(player)
-	}
+	GiveSpecialMelee(player)
 }
 
 function OnUpdate()

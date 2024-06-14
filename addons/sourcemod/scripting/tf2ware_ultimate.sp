@@ -2,19 +2,13 @@
 // - set sv_cheats 1 for the duration of the map
 // - allow vscript to control host_timescale
 // - block cheat commands and impulses on the server-side, as sv_cheats is required for host_timescale modification
-// - cache loadouts to mitigate lag with mass player respawns
-// -- attempt 2: use the tournament whitelist system instead
+// - use tournament whitelist system to block weapons/body cosmetics/taunts to prevent spawn lagspikes
 
 #include <sourcemod>
 #include <sdktools>
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
 #define PLUGIN_VERSION "1.1.0"
-
-// 0 - none
-// 1 - cacher
-// 2 - whitelister
-#define LOADOUT_CACHE_TYPE 2
 
 public Plugin myinfo =
 {
@@ -25,11 +19,7 @@ public Plugin myinfo =
 	url         = "https://github.com/ficool2/TF2Ware_Ultimate"
 };
 
-#if LOADOUT_CACHE_TYPE == 1
-#include "loadout_cacher.sp"
-#elseif LOADOUT_CACHE_TYPE == 2
 #include "loadout_whitelister.sp"
-#endif
 
 bool g_Enabled = false;
 
@@ -123,16 +113,12 @@ void Enable()
 	GameData gamedata = new GameData("tf2ware_ultimate");
 	if (gamedata)	
 	{
-#if LOADOUT_CACHE_TYPE == 1
-		LoadoutCacher_Start(gamedata);
-#elseif	LOADOUT_CACHE_TYPE == 2
 		LoadoutWhitelister_Start(gamedata);
-#endif
 	}
 	else
 	{
 		LogError("Failed to retrieve 'tf2ware_ultimate' gamedata, loadout caching will be unavailable");	
-	}		
+	}
 	delete gamedata;
 
 	host_timescale = FindConVar("host_timescale");
@@ -192,11 +178,7 @@ void Disable(bool map_unload)
 	
 	LogMessage("Disabling...");
 	
-#if LOADOUT_CACHE_TYPE == 1
-	LoadoutCacher_End();
-#elseif	LOADOUT_CACHE_TYPE == 2
 	LoadoutWhitelister_End(map_unload);
-#endif
 	
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(0, true, false);
@@ -229,18 +211,7 @@ void Disable(bool map_unload)
 
 public void OnClientPutInServer(int client)
 {
-#if LOADOUT_CACHE_TYPE == 1
-	LoadoutCacher_InitClient(client);
-#elseif LOADOUT_CACHE_TYPE == 2
 	LoadoutWhitelister_InitClient(client);
-#endif
-}
-
-public void OnClientDisconnect(int client)
-{
-#if LOADOUT_CACHE_TYPE == 1
-	LoadoutCacher_DisconnectClient(client);
-#endif
 }
 
 public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
@@ -285,19 +256,10 @@ public void OnMapStart()
 {
 	Enable();
 	
-#if LOADOUT_CACHE_TYPE == 2
 	LoadoutWhitelister_ReloadWhitelist();
-#endif
 }
 
 public void OnMapEnd()
 {
 	Disable(true);
-}
-
-public void OnGameFrame()
-{
-#if LOADOUT_CACHE_TYPE == 1
-	LoadoutCacher_OnGameFrame();
-#endif
 }

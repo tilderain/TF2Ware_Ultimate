@@ -97,8 +97,6 @@ const SFX_WARE_KART_HORN = "TF2Ware_Ultimate.KartHorn"
 const PFX_WARE_PASS_RED  = "teleportedin_red"
 const PFX_WARE_PASS_BLUE = "teleportedin_blue"
 
-const EFL_LOADOUT_CACHED = 1073741824 // Match the Loadout Cacher plugin
-
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
 TF_CLASS_ARMS <-
