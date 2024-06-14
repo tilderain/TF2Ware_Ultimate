@@ -70,7 +70,7 @@ function OnStart()
 	
 	Ware_SetGlobalAttribute("no_attack", 1, -1)
 	
-	EntFire("love_door*", "SetSpeed", "7")
+	EntFire("love_door*", "SetSpeed", "10")
 	EntFire("love_door*", "Open", "", 0.5)
 	
 	vo_count = vo_heavies.len()
