@@ -8,7 +8,7 @@ def textsize(text, font):
     _, _, width, height = draw.textbbox((0, 0), text=text, font=font)
     return width, height
 
-def generate_image_internal(name, text, idx):
+def generate_image_internal(name, text, color, idx):
 
     # Set the image size
     vmt_scale_x = 3
@@ -54,7 +54,7 @@ def generate_image_internal(name, text, idx):
         draw.text((x - border * math.cos(angle), y - border * math.sin(angle)), text, border_color, font)
 
     # Draw the text
-    draw.text((x, y), text, font=font, fill='white')
+    draw.text((x, y), text, font=font, fill=color)
 
     image = image.transform(image.size, Image.AFFINE, (1, 0.2, 0, 0, 1, 0))
 
@@ -90,15 +90,21 @@ def generate_image_internal(name, text, idx):
             
     return file_name
 
-def generate_image(name, text):
-    name1 = generate_image_internal(name, text, 0)
-    name2 = generate_image_internal(name, text, 1)
+def generate_image(name, text, color):
+    name1 = generate_image_internal(name, text, color, 0)
+    name2 = generate_image_internal(name, text, color, 1)
     
-    os.system(f"VTFCmd.exe -file {name1} -file {name2} -outname {name} -output \"../materials/hud/tf2ware_ultimate/minigames\" -format \"dxt5\" -alphaformat \"dxt5\" -flag CLAMPS -flag CLAMPT -nomipmaps -animated")
+    command = f"VTFCmd.exe -file {name1} -file {name2} -outname {name} -output \"../materials/hud/tf2ware_ultimate/minigames\" -format \"dxt5\" -alphaformat \"dxt5\" -flag CLAMPS -flag CLAMPT -nomipmaps -animated"
+    
+    if(os.name == "posix"):
+        command = "wine " + command
+    
+    os.system(command)
     
     os.remove(name1)
     os.remove(name2)
 
 file_name = str(input("Input file name, e.g. 'flash_flood'\n"))
 the_text = str(input("Input text to display, e.g. 'FLASH FLOOD'\n"))
-generate_image(file_name, the_text);
+color = str(input("Color of the text, e.g. 'white' or '#123ABC'\n"))
+generate_image(file_name, the_text, color);
