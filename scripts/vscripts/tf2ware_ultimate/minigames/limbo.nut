@@ -19,7 +19,7 @@ function OnTeleport(players)
 		Ware_MinigameLocation.center + Vector(0, -600, 0), 
 		QAngle(0, 90, 0), 
 		1600.0, 
-		128.0, 128.0)
+		128.0, 120.0)
 }
 
 function OnStart()
