@@ -1473,6 +1473,9 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	
 	local melee = Ware_ParseLoadout(player)
 	
+	if (!Ware_LoadoutCacher && melee)
+		Ware_RemoveMeleeAttributes(melee)
+	
 	// teleport effect gets cleared on class change, need to recreate it here
 	// creating timers is expensive so avoid doing that for every player
 	player.RemoveCond(TF_COND_TELEPORTED)
