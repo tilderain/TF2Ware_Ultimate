@@ -121,32 +121,41 @@ Ware_Location.sawrun <-
 
 Ware_Location.targetrange <-
 {
-	center   = Vector(2303, -5340, -3999)
+	left     = Vector(2303, -5340, -3999)
+	right    = Vector(2303, -2450, -3999)
 	lines	 = 
 	[
-		[Vector(1535, -4023, -3999), Vector(2080, -4023, -3999)],
-		[Vector(1535, -3735, -3999), Vector(2080, -3735, -3999)],
-		[Vector(2015, -3896, -3999), Vector(2560, -3896, -3999)],
-		[Vector(2400, -4023, -3999), Vector(2944, -4023, -3999)],
-		[Vector(2495, -3656, -3999), Vector(3040, -3656, -3999)],
+		[Vector(2400, -4056, -3999), Vector(2944, -4056, -3999)],
+		[Vector(1536, -4056, -3999), Vector(2080, -4056, -3999)],
+		[Vector(2016, -3896, -3999), Vector(2560, -3896, -3999)],
+		[Vector(2496, -3712, -3999), Vector(3040, -3712, -3999)],
+		[Vector(1536, -3712, -3999), Vector(2080, -3712, -3999)],
 	]
 	Teleport = function(players)
 	{
-		local offset = 64.0
-		local pos = center * 1.0
-		local ang = QAngle(0, 90, 0)
-		local x = 0
-		foreach (player in players)
+		local players_left = players.slice(0, players.len() / 2)
+		local players_right = players.slice(players.len() / 2)
+		
+		local PlaceSide = function(players, origin, angles, y_offset)
 		{
-			if (++x > 27)
+			local x_offset = 80.0
+			local pos = origin * 1.0
+			local x = 0
+			foreach (player in players)
 			{
-				pos.y += offset
-				x = 1
-			}
-			
-			pos.x = center.x + (x / 2) * ((x & 1) ? offset : -offset)
-			Ware_TeleportPlayer(player, pos, ang, vec3_zero)
+				if (++x > 20)
+				{
+					pos.y += y_offset
+					x = 1
+				}
+				
+				pos.x = origin.x + (x / 2) * ((x & 1) ? x_offset : -x_offset)
+				Ware_TeleportPlayer(player, pos, angles, vec3_zero)
+			}		
 		}
+		
+		PlaceSide(players_left, left, QAngle(0, 90, 0), 80.0)
+		PlaceSide(players_right, right, QAngle(0, 270, 0), -80.0)
 	}
 }
 
@@ -346,10 +355,15 @@ Ware_Location.obstaclecourse <-
 
 Ware_Location.ballcourt <-
 {
-	center      = Vector(5792, -3064, -7199)
+	left        = Vector(5792, -3064, -7199)
+	right       = Vector(5792, -1278, -7199)
 	Teleport = function(players) 
 	{ 
-		Ware_TeleportPlayersRow(players, center, QAngle(0, 90, 0), 800.0, -60.0, 60.0)
+		local players_left = players.slice(0, players.len() / 2)
+		local players_right = players.slice(players.len() / 2)
+		local width = 1200.0
+		Ware_TeleportPlayersRow(players_left, left, QAngle(0, 90, 0), width, -60.0, 59.0)
+		Ware_TeleportPlayersRow(players_right, right, QAngle(0, 270, 0), width, 60.0, 59.0)
 	}	
 }
 

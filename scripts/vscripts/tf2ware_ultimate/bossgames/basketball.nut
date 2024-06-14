@@ -10,13 +10,8 @@ minigame <- Ware_MinigameData
 	start_pass     = false
 })
 
-trigger <- null
-
 hoop_sound <- "Halloween.PumpkinDrop"
-prop_model <- "models/props_training/target_demoman.mdl"
-
 PrecacheScriptSound(hoop_sound)
-PrecacheModel(prop_model)
 
 function OnStart()
 {
@@ -25,27 +20,24 @@ function OnStart()
 	foreach (data in Ware_MinigamePlayers)
 	{
 		// make grenades pass through
+		local player = data.player
+		player.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 		SetPropInt(data.player, "m_takedamage", DAMAGE_NO)
 		Ware_GetPlayerMiniData(data.player).points <- 0
 	}
 	
 	EntFire("boss4_door", "Unlock")
+	EntFire("boss4_door2", "Unlock")
 	EntFire("boss4_door", "Open")
-		
-	trigger = FindByName(null, "basketball_trigger")
-	MarkForPurge(trigger)
-	trigger.ValidateScriptScope()
-	trigger.GetScriptScope().OnHoopTouch <- OnHoopTouch
-	trigger.ConnectOutput("OnStartTouch", "OnHoopTouch")
+	EntFire("boss4_door2", "Open")
 	
-	local prop = Ware_SpawnEntity("prop_dynamic_override",
+	for (local trigger; trigger = FindByName(trigger, "basketball_trigger");)
 	{
-		origin  = Ware_MinigameLocation.center + Vector(0, 850, 0)
-		angles  = QAngle(0, -90, 0)
-		model   = prop_model
-		health  = 300
-		OnBreak = "barkley,Disable"
-	})
+		MarkForPurge(trigger)
+		trigger.ValidateScriptScope()
+		trigger.GetScriptScope().OnHoopTouch <- OnHoopTouch
+		trigger.ConnectOutput("OnStartTouch", "OnHoopTouch")
+	}
 }
 
 function OnHoopTouch()
@@ -56,8 +48,9 @@ function OnHoopTouch()
 		EmitSoundOnClient(Ware_MinigameScope.hoop_sound, owner)
 		if (++Ware_GetPlayerMiniData(owner).points >= 7)
 			Ware_PassPlayer(owner, true)
-		activator.Kill()
 	}
+	
+	activator.Kill()
 }
 
 function OnUpdate()
@@ -79,15 +72,21 @@ function OnUpdate()
 
 function OnEnd()
 {
-	EntFire("barkley", "Enable")
 	EntFire("boss4_door", "Close")
+	EntFire("boss4_door2", "Close")
  	EntFire("boss4_door", "Lock")
+ 	EntFire("boss4_door2", "Lock")
 	
-	trigger.DisconnectOutput("OnStartTouch", "OnHoopTouch")
+	for (local trigger; trigger = FindByName(trigger, "basketball_trigger");)
+		trigger.DisconnectOutput("OnStartTouch", "OnHoopTouch")
 }
 
 function OnCleanup()
 {
 	foreach (data in Ware_MinigamePlayers)
-		SetPropInt(data.player, "m_takedamage", DAMAGE_YES)
+	{
+		local player = data.player
+		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
+		SetPropInt(player, "m_takedamage", DAMAGE_YES)
+	}
 }
