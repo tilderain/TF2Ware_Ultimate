@@ -136,6 +136,10 @@ Ware_Location.targetrange <-
 		local players_left = players.slice(0, players.len() / 2)
 		local players_right = players.slice(players.len() / 2)
 		
+		TeleportSides(players_left, players_right)
+	}
+	TeleportSides = function(players_left, players_right)
+	{
 		local PlaceSide = function(players, origin, angles, y_offset)
 		{
 			local x_offset = 80.0
@@ -154,8 +158,9 @@ Ware_Location.targetrange <-
 			}		
 		}
 		
+		
 		PlaceSide(players_left, left, QAngle(0, 90, 0), 80.0)
-		PlaceSide(players_right, right, QAngle(0, 270, 0), -80.0)
+		PlaceSide(players_right, right, QAngle(0, 270, 0), -80.0)	
 	}
 }
 
