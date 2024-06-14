@@ -2903,7 +2903,7 @@ function OnScriptHook_OnTakeDamage(params)
 		
 		// replicate backstabs for teammates
 		local force_backstabs = Ware_Minigame && Ware_Minigame.force_backstab
-		if (same_team || force_backstabs)
+		if ((same_team || force_backstabs) && attacker && attacker.IsPlayer())
 		{
 			local weapon = attacker.GetActiveWeapon()
 			if (force_backstabs || (weapon && weapon.GetClassname() == "tf_weapon_knife"))
