@@ -13,22 +13,6 @@ minigame <- Ware_MinigameData
 	custom_overlay = "snipe_player"
 })
 
-function OnTeleport(players)
-{
-	local red_players = []
-	local blue_players = []
-	foreach (player in players)
-	{
-		local team = player.GetTeam()
-		if (team == TF_TEAM_RED)
-			red_players.append(player)
-		else if (team == TF_TEAM_BLUE)
-			blue_players.append(player)
-	}
-
-	Ware_MinigameLocation.TeleportSides(red_players, blue_players)
-}
-
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Hitman's Heatmaker")

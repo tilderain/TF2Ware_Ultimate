@@ -133,10 +133,14 @@ Ware_Location.targetrange <-
 	]
 	Teleport = function(players)
 	{
-		local players_left = players.slice(0, players.len() / 2)
-		local players_right = players.slice(players.len() / 2)
+		local red_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED)
+		local blue_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_BLUE)	
+		local left_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 		
-		TeleportSides(players_left, players_right)
+		if (left_team == TF_TEAM_RED)
+			TeleportSides(red_players, blue_players)
+		else
+			TeleportSides(blue_players, red_players)
 	}
 	TeleportSides = function(players_left, players_right)
 	{
