@@ -32,8 +32,10 @@ function OnStart()
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player
+		local minidata = Ware_GetPlayerMiniData(player)
+		minidata.holding_attack <- 0
+		minidata.hold_warning <- false
 		player.AddFlag(FL_ATCONTROLS)
-		Ware_GetPlayerMiniData(player).holding_attack <- 0
 	}
 }
 
@@ -295,28 +297,38 @@ function OnUpdate()
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player
-		local minidata = Ware_GetPlayerMiniData(player)
+		local weapon = player.GetActiveWeapon()
+		if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY)
+		{		
+			local minidata = Ware_GetPlayerMiniData(player)
 		
-		// block holding attack before shootout
-		local buttons = GetPropInt(player, "m_nButtons")
-		if (!shootout)
-		{
-			if (buttons & IN_ATTACK)
+			// block holding attack before shootout
+			local buttons = GetPropInt(player, "m_nButtons")
+			if (!shootout)
 			{
-				SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 0.1)
-				minidata.holding_attack = true
+				if (buttons & IN_ATTACK)
+				{
+					SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 0.1)
+					minidata.holding_attack = true
+				}
+				else
+				{
+					minidata.holding_attack = false
+				}
 			}
-			else
+			else if (shootout)
 			{
-				minidata.holding_attack = false
+				if (minidata.holding_attack && (buttons & IN_ATTACK))
+					SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 0.2)
+				else
+					minidata.holding_attack = false
 			}
-		}
-		else if (shootout)
-		{
-			if (minidata.holding_attack && (buttons & IN_ATTACK))
-				SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 0.2)
-			else
-				minidata.holding_attack = false
+			
+			if (minidata.holding_attack && !minidata.hold_warning)
+			{
+				minidata.hold_warning = true
+				Ware_ChatPrint(player, "{color}Do not hold the attack button. {color}Your gun will not fire!", TF_COLOR_DEFAULT, COLOR_YELLOW)
+			}
 		}
 	}
 }
