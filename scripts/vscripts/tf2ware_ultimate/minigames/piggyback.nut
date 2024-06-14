@@ -30,6 +30,7 @@ minigame <- Ware_MinigameData
 piggybacker <- null
 piggybacker_dummy <- null
 piggybacked_count <- 0
+piggybacker_killed <- false
 
 dummy_model <- "models/tf2ware_ultimate/dummy_sphere.mdl"
 PrecacheModel(dummy_model)
@@ -104,6 +105,9 @@ function PiggybackUnparent(player, invis_hack)
 
 function PiggybackKilled(invis_hack)
 {
+	Ware_ChatPrint(null, "{color}Heavy {str}, so pyros win!", TF_COLOR_DEFAULT, invis_hack ? "disconnected" : "died")
+	Ware_CreateTimer(function(){piggybacker_killed <- true}, 2.0)
+	
 	foreach (data in Ware_MinigamePlayers)
 	{
 		local player = data.player
@@ -197,4 +201,9 @@ function OnEnd()
 	// must delay this or unparented players will go invisible
 	if (piggybacker_dummy.IsValid())
 		EntFireByHandle(piggybacker_dummy, "Kill", "", 0.5, null, null)
+}
+
+function CheckEnd()
+{
+	return piggybacker_killed
 }
