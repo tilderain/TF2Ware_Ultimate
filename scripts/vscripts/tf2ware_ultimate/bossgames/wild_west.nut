@@ -188,7 +188,7 @@ function StopShootout()
 			if (IsEntityAlive(player))
 			{
 				Ware_ChatPrint(player, "{color} You have all been disqualified for surviving. Cowards!", TF_COLOR_DEFAULT)
-				player.TakeDamageCustom(player, player, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_SUICIDE)
+				Ware_SuicidePlayer(player)
 			}
 		}
 	}
@@ -208,8 +208,8 @@ function StopShootout()
 						{
 							if (IsEntityAlive(opponent))
 							{
-								player.TakeDamageCustom(player, player, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_SUICIDE)
-								opponent.TakeDamageCustom(player, player, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_SUICIDE)
+								Ware_SuicidePlayer(player)
+								Ware_SuicidePlayer(opponent)
 								local msg = "{color}You and your opponent have been disqualified for missing!"
 								Ware_ChatPrint(player, msg, TF_COLOR_DEFAULT)
 								Ware_ChatPrint(opponent, msg, TF_COLOR_DEFAULT)

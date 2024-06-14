@@ -53,7 +53,7 @@ function OnTakeDamage(params)
 			if (class_name == target_class.tolower())
 				Ware_PassPlayer(attacker, true)
 			else
-				attacker.TakeDamageCustom(victim, victim, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_SUICIDE)
+				Ware_SuicidePlayer(attacker)
 			
 			EmitSoundOnClient(class_name + ".PainSevere01", attacker)
 		}
