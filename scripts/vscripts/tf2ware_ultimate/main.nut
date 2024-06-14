@@ -2266,13 +2266,13 @@ function Ware_StartMinigame(is_boss)
 	{
 		Ware_MinigameLocation = location
 		if (!custom_teleport)
-			location.Teleport(Ware_MinigamePlayers.map(@(data) data.player))
+			location.Teleport(clone(valid_players))
 	}
 	
 	Ware_SetupMinigameCallbacks()	
 	
 	if (custom_teleport)
-		Ware_MinigameScope.OnTeleport(Ware_MinigamePlayers.map(@(data) data.player))
+		Ware_MinigameScope.OnTeleport(clone(valid_players))
 		
 	Ware_UpdateGlobalMaterialState()
 	
