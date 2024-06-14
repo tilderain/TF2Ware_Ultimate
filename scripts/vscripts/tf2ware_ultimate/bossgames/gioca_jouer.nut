@@ -83,8 +83,8 @@ function OnStart()
 	// increments "micro", and starts the next one.
 	foreach (microgame in microgame_info)
 	{
-		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[2])
-		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[3])
+		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[2] * Ware_GetPitchFactor())
+		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[3] * Ware_GetPitchFactor())
 	}
 }
 
@@ -98,14 +98,14 @@ function GiocaJouer_Countdown(delay)
 			// count up to 8
 			Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%s", timer.tostring()))
 			timer++
-			return 0.489
+			return 0.489 * Ware_GetPitchFactor()
 		}
 		else
 		{
 			// kill the overlay
 			Ware_ShowGlobalScreenOverlay(null)
 		}
-	}, delay)
+	}, delay * Ware_GetPitchFactor())
 }
 
 function GiocaJouer_Clock()

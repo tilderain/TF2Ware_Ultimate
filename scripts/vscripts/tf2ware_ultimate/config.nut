@@ -112,6 +112,7 @@ Ware_SpecialRounds <-
 	"slow_mo"
 	"thirdperson"
 	"time_attack"
+	"up_down"
 ]
 
 Ware_FakeSpecialRounds <-
