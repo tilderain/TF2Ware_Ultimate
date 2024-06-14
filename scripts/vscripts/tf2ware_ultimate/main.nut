@@ -1205,54 +1205,56 @@ function Ware_ParseLoadout(player)
 	}
 }
 
-function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {}, keep_melee = false)
+function Ware_SetPlayerLoadout(player, player_class, items = null, item_attributes = {}, keep_melee = false)
 {
-	local is_list = typeof(items) == "array"
-	foreach (data in Ware_MinigamePlayers)
+	Ware_SetPlayerClass(player, player_class, false)
+	
+	if (items)
 	{
-		local player = data.player
-		Ware_SetPlayerClass(player, player_class, false)
+		Ware_StripPlayer(player, keep_melee)
 		
-		if (items)
+		if (typeof(items) == "array")
 		{
-			Ware_StripPlayer(player, keep_melee)
-			
-			if (is_list)
-			{
-				local last_item = items[items.len() - 1]
-				foreach (item in items)
-					Ware_GivePlayerWeapon(player, item, {}, item == last_item)
-			}
-			else
-			{
-				Ware_GivePlayerWeapon(player, items, item_attributes)
-			}
+			local last_item = items[items.len() - 1]
+			foreach (item in items)
+				Ware_GivePlayerWeapon(player, item, {}, item == last_item)
 		}
 		else
 		{
-			player.RemoveCond(TF_COND_TAUNTING)
-			
-			local melee
-			if (data.special_melee)
-				melee = data.special_melee
-			else
-				melee = data.melee
-
-			if (melee)
-			{
-				if (item_attributes.len() > 0)
-				{
-					foreach (attribute, value in item_attributes)
-						melee.AddAttribute(attribute, value, -1.0)
-					data.melee_attributes = clone(item_attributes)
-				}
-				
-				player.Weapon_Switch(melee)
-			}
+			Ware_GivePlayerWeapon(player, items, item_attributes)
 		}
+	}
+	else
+	{
+		player.RemoveCond(TF_COND_TAUNTING)
+		
+		local data = player.GetScriptScope().ware_data
+		local melee
+		if (data.special_melee)
+			melee = data.special_melee
+		else
+			melee = data.melee
+
+		if (melee)
+		{
+			if (item_attributes.len() > 0)
+			{
+				foreach (attribute, value in item_attributes)
+					melee.AddAttribute(attribute, value, -1.0)
+				data.melee_attributes = clone(item_attributes)
+			}
 			
-		SetPropEntity(player, "m_hLastWeapon", null)		
-	}	
+			player.Weapon_Switch(melee)
+		}
+	}
+		
+	SetPropEntity(player, "m_hLastWeapon", null)	
+}
+
+function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {}, keep_melee = false)
+{
+	foreach (data in Ware_MinigamePlayers)
+		Ware_SetPlayerLoadout(data.player, player_class, items, item_attributes, keep_melee)		
 }
 
 function Ware_StripPlayer(player, give_default_melee)

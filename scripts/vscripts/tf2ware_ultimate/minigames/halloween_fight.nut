@@ -36,20 +36,20 @@ function OnStart()
 		local player = data.player
 		if (boss_idx == 0)
 		{
-			Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Bat Outta Hell")
+			Ware_SetPlayerLoadout(player, TF_CLASS_SNIPER, "Bat Outta Hell")
 			Ware_AddPlayerAttribute(player, "max health additive bonus", 1000 - 125.0, -1)
 		}
 		else if (boss_idx == 1)
 		{
 			Ware_TogglePlayerWearables(player, false)		
-			Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Kukri")
+			Ware_SetPlayerLoadout(player, TF_CLASS_SNIPER, "Kukri")
 			Ware_AddPlayerAttribute(player, "max health additive bonus", 1000 - 125.0, -1)
 			player.SetModelScale(0.6, 0.0)
 		}
 		else if (boss_idx == 2)
 		{
 			Ware_TogglePlayerWearables(player, false)		
-			Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Horseless Headless Horseman's Headtaker")
+			Ware_SetPlayerLoadout(player, TF_CLASS_DEMOMAN, "Horseless Headless Horseman's Headtaker")
 			Ware_AddPlayerAttribute(player, "max health additive bonus", 1000 - 150.0, -1)
 			player.SetModelScale(0.7, 0.0)
 			
