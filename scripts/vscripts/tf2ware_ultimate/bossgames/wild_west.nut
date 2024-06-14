@@ -48,12 +48,11 @@ function PlacePlayers(players)
 {
 	EntFire("tf_ragdoll", "Kill")
 	
-	Shuffle(players)
-	
 	if (players.len() <= 3)
 	{
 		mexican_standoff = true
 		
+		Shuffle(players)
 		Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center, 135.0)
 
 		foreach (player in players)
@@ -78,8 +77,15 @@ function PlacePlayers(players)
 	
 	local last_player = null
 	
+	local candidates = []
 	foreach (player in players)
+		candidates.append({player = player, latency = GetPlayerLatency(player)})
+	candidates.sort(@(a, b) a.latency <=> b.latency)
+	
+	foreach (candidate in candidates)
 	{
+		local player = candidate.player
+
 		if (flip % 4 == 0)
 		{
 			x_offset *= -1.0

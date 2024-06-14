@@ -351,6 +351,11 @@ function GetPlayerSteamID3(player)
     return GetPropString(player, "m_szNetworkIDString")
 }
 
+function GetPlayerLatency(player)
+{
+	return GetPropIntArray(PlayerMgr, "m_iPing", player.entindex()) * 0.001;
+}
+
 function BrickPlayerScore(player)
 {
 	// spoof as bot so this doesn't upload stats to steam
