@@ -91,8 +91,16 @@ function OnUpdate()
 {
 	foreach (data in Ware_PlayersData)
 	{
-		SetPropBool(data.special_melee, "m_bBeingRepurposedForTaunt", true)
-		data.special_vm.SetDrawEnabled(data.player.GetActiveWeapon() == data.special_melee)
+		local special_melee = data.special_melee
+		local special_vm = data.special_vm
+				
+		if (special_melee && special_melee.IsValid())
+			SetPropBool(special_melee, "m_bBeingRepurposedForTaunt", true)
+		else
+			special_melee = null
+		
+		if (special_vm && special_vm.IsValid())
+			special_vm.SetDrawEnabled(data.player.GetActiveWeapon() == data.special_melee)
 	}
 }
 
