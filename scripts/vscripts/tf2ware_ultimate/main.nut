@@ -38,8 +38,8 @@ Ware_LastErrorTime <- 0.0
 function Ware_ErrorHandler(e)
 {
 	// discard cascading error messages from input hooks
-	local s2 = getstackinfos(2)
-	if (s2 && "post_func" in s2.locals)
+	local info = getstackinfos(2)
+	if (info && "post_func" in info.locals)
 		return
 		
 	local developers = Ware_Players.filter(@(i, player) GetPlayerSteamID3(player) in DEVELOPER_STEAMID3)
@@ -67,22 +67,34 @@ function Ware_ErrorHandler(e)
 	}
 	
 	Print(format("\n[TF2Ware] AN ERROR HAS OCCURRED [%s]", e))
-	Print("CALLSTACK")
-	local s, l = 2
-	while (s = getstackinfos(l++))
-		Print(format("\t*FUNCTION [%s()] %s line [%d]", s.func, s.src, s.line))
-	Print("LOCALS")
-	if (s2)
+	
+	// I'm suspecting this is bugged so printing it out for now
+	Print(format("Minigame player count: %d", Ware_MinigamePlayers.len()))
+	
+	if (info)
 	{
-		foreach (n, v in s2.locals) 
+		local i = 2
+		for (;;)
 		{
-			local t = type(v)
-			t ==    "null" ? Print(format("\t[%s] NULL"  , n))    :
-			t == "integer" ? Print(format("\t[%s] %d"    , n, v)) :
-			t ==   "float" ? Print(format("\t[%s] %.14g" , n, v)) :
-			v instanceof CTFPlayer ? Print(format("\t[%s] (player) \"%s\"", n, GetPlayerName(v))) :
-			t ==  "string" ? Print(format("\t[%s] \"%s\"", n, v)) :
-							 Print(format("\t[%s] %s %s" , n, t, v.tostring()))
+			if (info == null || info == ROOT)
+				break
+			
+			Print(format("* %s (%s, line %d)", info.func, info.src, info.line))
+			
+			foreach (n, v in info.locals) 
+			{
+				local t = type(v)
+				t ==    "null" ? Print(format("\t[%s] NULL"  , n))    :
+				t == "integer" ? Print(format("\t[%s] %d"    , n, v)) :
+				t ==   "float" ? Print(format("\t[%s] %.14g" , n, v)) :
+				v instanceof CTFPlayer ? Print(format("\t[%s] (player) \"%s\"", n, GetPlayerName(v))) :
+				t ==  "string" ? Print(format("\t[%s] \"%s\"", n, v)) :
+				t ==  "array"  ? Print(format("\t[%s] array (%d)", n, v.len())) :
+				t ==  "table"  ? Print(format("\t[%s] table (%d)", n, v.len())) :
+								 Print(format("\t[%s] %s %s" , n, t, v.tostring()))
+			}
+			
+			info = getstackinfos(++i)
 		}
 	}
 	
@@ -1322,8 +1334,30 @@ SaxxyToClassnameMap <-
 	[TF_CLASS_SPY]          = "tf_weapon_knife",
 }
 
+Ware_DebugWeaponCounter <- 0
+Ware_DebugWeaponLimit <- 5
+
 function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon = true)
 {
+	// temporary code to track down a crash bug
+	Ware_DebugWeaponCounter++
+	if (Ware_DebugWeaponCounter >= Ware_DebugWeaponLimit)
+	{
+		if (Ware_DebugWeaponCounter == Ware_DebugWeaponLimit)
+		{
+			Ware_CriticalZone = true
+			Ware_ErrorHandler("Weapon overflow")
+			Ware_Error("Detected weapon overflow bug")
+			
+			local weapons = []
+			for (local weapon; weapon = FindByClassname(weapon, "tf_weapon_*");)
+				weapons.append(weapon)
+			foreach (weapon in weapons)
+				weapon.Kill()
+		}
+		return
+	}
+	
 	local item = ITEM_MAP[item_name]
 	local item_id = item.id
 	local item_classname = item.classname
@@ -2206,6 +2240,7 @@ function Ware_StartMinigame(is_boss)
 	}
 	
 	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
+	Ware_DebugWeaponCounter = 0
 	
 	Ware_CriticalZone = true
 
