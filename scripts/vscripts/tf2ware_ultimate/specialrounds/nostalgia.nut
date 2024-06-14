@@ -18,6 +18,11 @@ function OnStart()
 	Ware_RunClientCommand(null, "dsp_player 59")
 }
 
+function OnMinigameStart()
+{
+	Ware_ShowGlobalScreenOverlay2(overlay)
+}
+
 function OnMinigameEnd()
 {
 	Ware_RunClientCommand(null, "dsp_player 59")

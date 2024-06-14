@@ -297,6 +297,7 @@ class Ware_SpecialRoundData
 	cb_on_player_spawn       = null
 	cb_on_player_inventory   = null
 	cb_on_begin_intermission = null
+	cb_on_minigame_start     = null
 	cb_on_minigame_end       = null
 	cb_on_speedup            = null
 	cb_on_take_damage        = null
@@ -1790,6 +1791,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_on_player_spawn         = Ware_Callback(scope, "OnPlayerSpawn")
 	special_round.cb_on_player_inventory     = Ware_Callback(scope, "OnPlayerInventory")
 	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
+	special_round.cb_on_minigame_start       = Ware_Callback(scope, "OnMinigameStart")
 	special_round.cb_on_minigame_end         = Ware_Callback(scope, "OnMinigameEnd")
 	special_round.cb_on_speedup              = Ware_Callback(scope, "OnSpeedup")
 	special_round.cb_on_take_damage          = Ware_Callback(scope, "OnTakeDamage")
@@ -2350,6 +2352,9 @@ function Ware_StartMinigame(is_boss)
 	}
 	
 	Ware_PlayMinigameSound(null, Ware_Minigame.music)
+	
+	if (Ware_SpecialRound)
+		Ware_SpecialRound.cb_on_minigame_start()
 	
 	Ware_MinigamePreEndTimer = CreateTimer(function() 
 	{ 
