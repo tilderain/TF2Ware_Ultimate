@@ -17,7 +17,8 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
 	
-	EntFire("rocketjump_train", "StartForward", "", 3.0)
+	// this gets very difficult with higher timescale so make the train start later
+	EntFire("rocketjump_train", "StartForward", "", RemapValClamped(Ware_TimeScale, 1.0, 2.0, 3.0, 10.0))
 }
 
 function OnUpdate()
