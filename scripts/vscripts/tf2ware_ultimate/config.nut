@@ -265,6 +265,18 @@ Ware_FakeSpecialRounds <-
 	"The Flowey Map"
 	"28 Stab Wounds"
 	"Marioooooo?"
+	"Fake Crash"
+	
+	// from forum post
+	"Mandrill Maze Mayhem"
+	"A Normal Round"
+	"Lag Spike"
+	"Family Guy Funny Moments"
+	"It's Raw"
+	"iFunny Watermark"
+	"Feed And Seed"
+	"With A Free Toy"
+	
 ]
 
 Ware_Themes <-
