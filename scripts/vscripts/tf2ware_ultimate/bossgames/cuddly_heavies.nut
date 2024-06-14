@@ -63,6 +63,7 @@ function OnStart()
 			Ware_SetPlayerMission(player, 0)
 			Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT)
+			Ware_AddPlayerAttribute(player, "no double jump", 1, -1)
 			vo_scouts.append(player)
 		}
 	}
