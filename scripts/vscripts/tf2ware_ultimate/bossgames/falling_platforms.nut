@@ -150,6 +150,8 @@ function OnTeleport(players)
 	
 	lower_delay = (minigame.duration - 17.0) / hexes.len().tofloat()
 	Ware_CreateTimer(@() LowerPlatform(), 10.0)
+	
+	printf("*** Platform count: %d, player count %d\n", hexes.len(), players.len())
 
 	local hex_len = hexes.len()
 	local hex_idx = 0
@@ -160,6 +162,8 @@ function OnTeleport(players)
 		hex_idx = (hex_idx + 1) % hex_len
 
 		Ware_TeleportPlayer(player, origin, null, vec3_zero)
+
+		printf("\t* %s - teleported to %s (platform %d)\n", GetPlayerName(player), origin.ToKVString(), hex_idx)
 	}
 }
 
