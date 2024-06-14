@@ -182,7 +182,7 @@ function OnUpdate()
 			player.SetAbsVelocity(Vector())
 			player.RemoveCond(TF_COND_SPEED_BOOST)
 			player.SetModelScale(0.25, 0.0)
-			player.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+			player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 			SetPlayerParent(player, piggybacker_dummy, "static_prop")
 			piggybacked_count++
 		}
