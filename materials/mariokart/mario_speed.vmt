@@ -1,27 +1,6 @@
 "lightmappedGeneric"
 {
 	"$baseTexture" "mariokart/mario_speed"
-      	"%keywords" "mario"
-
-"Proxies" 
-
-	{
-
-		
-
-	 "TextureScroll"
-
-	{
-
-	"texturescrollvar" "$basetexturetransform"
-
-	"texturescrollrate" 2
-
-	"texturescrollangle" 90
-
-	} 
-
-
-
-	}
+	"%keywords" "mario"
+	"$color" "[0.7 0.3 0.3]"
 }
