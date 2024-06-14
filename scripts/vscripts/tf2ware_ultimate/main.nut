@@ -395,6 +395,9 @@ Ware_MinigameHighScorers  <- []
 Ware_MinigamesPlayed	  <- 0
 Ware_BossgamesPlayed         <- 0
 
+// dunno where to put this
+Ware_RoundEndMusicTimer <- null
+
 if (!("Ware_RoundsPlayed" in this))
 	Ware_RoundsPlayed     <- 0
 
@@ -2685,7 +2688,7 @@ function Ware_GameOver()
 		}
 	}
 	
-	CreateTimer(function() {
+	Ware_RoundEndMusicTimer <- CreateTimer(function() {
 		foreach(player in Ware_Players)
 			Ware_PlayGameSound(player, "results")
 	}, 5.0)
@@ -2977,6 +2980,9 @@ function OnScriptHook_OnTakeDamage(params)
 
 function OnGameEvent_teamplay_round_start(params)
 {
+	// kill results music if it's playing from a previous round
+	Ware_PlayGameSound(null, "results", SND_STOP)
+	
 	Ware_SetTimeScale(1.0)
 	
 	foreach (player in Ware_Players)
@@ -3306,8 +3312,9 @@ function OnGameEvent_player_disconnect(params)
 function OnGameEvent_teamplay_game_over(params)
 {
 	// map end
-	foreach(player in Ware_Players)
-		Ware_PlayGameSound(player, "mapend")
+	KillTimer(Ware_RoundEndMusicTimer)
+	Ware_PlayGameSound(null, "results", SND_STOP)
+	Ware_PlayGameSound(null, "mapend")
 }
 
 function Ware_DevCommandForceMinigame(player, text, is_boss, once)
