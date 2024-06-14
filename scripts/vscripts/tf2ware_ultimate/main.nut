@@ -254,10 +254,11 @@ class Ware_SpecialRoundData
 {
 	function constructor(table = null)
 	{
-		min_players = 0
-		convars     = {}
-		reverse_text = false
-		allow_damage = false
+		min_players      = 0
+		convars          = {}
+		reverse_text     = false
+		allow_damage     = false
+		force_collisions = false
 		
 		if (table)
 		{
@@ -267,15 +268,16 @@ class Ware_SpecialRoundData
 	}
 	
 	
-	name         = null
-	author       = null
-	description  = null
+	name             = null
+	author           = null
+	description      = null
 	
-	reverse_text = null
-	allow_damage = null
+	reverse_text     = null
+	allow_damage     = null
+	force_collisions = null
 	
-	min_players  = null
-	convars      = null
+	min_players      = null
+	convars          = null
 	
 	cb_get_boss_threshold    = null
 	cb_get_overlay2          = null
@@ -2195,10 +2197,12 @@ function Ware_StartMinigame(is_boss)
 		SetConvarValue(name, value)
 	}
 	
+	local enable_collisions = Ware_Minigame.collisions || (Ware_SpecialRound && Ware_SpecialRound.force_collisions)
+	
 	Ware_MinigamePlayers.clear()
 	foreach (player in valid_players)
 	{
-		if (Ware_Minigame.collisions)
+		if (enable_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(1)
@@ -2378,6 +2382,8 @@ function Ware_EndMinigameInternal()
 	local highest_players = Ware_MinigameHighScorers
 	highest_players.clear()
 	
+	local restore_collisions = Ware_Minigame.collisions && (!Ware_SpecialRound || !Ware_SpecialRound.force_collisions)
+	
 	local player_count = 0
 	local respawn_players = []
 	foreach (player in Ware_Players)
@@ -2387,7 +2393,7 @@ function Ware_EndMinigameInternal()
 			
 		player.RemoveAllObjects(false)
 
-		if (Ware_Minigame.collisions)
+		if (restore_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		if (Ware_Minigame.thirdperson && (!Ware_SpecialRound || Ware_SpecialRound.name != "Thirdperson")) // don't like checking this manually but not sure what else to do - pokepasta
 			player.SetForcedTauntCam(0)

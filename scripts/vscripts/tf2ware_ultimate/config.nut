@@ -99,6 +99,7 @@ Ware_SpecialRounds <-
 	"adrenaline_shot"
 	"all_in"
 	"bonk"
+	"collisions"
 	"extended_round"
 	"inclinity_problem"
 	"inverted_control"
