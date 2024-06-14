@@ -11,7 +11,7 @@ function OnCalculateScores(data, player, highest_score, highest_players)
 
 	if (data.passed)
 	{
-		data.score += Ware_Minigame.boss ? 5 : 1
+		data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
 		if (data.score > highest_score)
 		{
 			highest_score = data.score

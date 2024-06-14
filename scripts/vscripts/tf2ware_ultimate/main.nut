@@ -2514,7 +2514,7 @@ function Ware_EndMinigameInternal()
 		else
 		{
 			if (data.passed)
-				data.score += Ware_Minigame.boss ? 5 : 1
+				data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
 				
 			if (data.score > highest_score)
 			{
