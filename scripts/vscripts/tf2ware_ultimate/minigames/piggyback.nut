@@ -204,7 +204,7 @@ function OnEnd()
 	
 	// must delay this or unparented players will go invisible
 	if (piggybacker_dummy.IsValid())
-		EntFireByHandle(piggybacker_dummy, "Kill", "", 0.5, null, null)
+		EntityEntFire(piggybacker_dummy, "Kill", "", 0.5)
 }
 
 function CheckEnd()

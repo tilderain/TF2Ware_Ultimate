@@ -49,7 +49,7 @@ function SpawnGift()
 	})
 	gift.AddEFlags(EFL_NO_DAMAGE_FORCES)
 	gift.SetPhysVelocity(Vector(RandomFloat(-500, 500), 0, RandomFloat(800, 1000)))
-	EntFireByHandle(gift, "Kill", "", RemapValClamped(Ware_TimeScale, 1.0, 2.0, 1.5, 2.5), null, null)
+	EntityEntFire(gift, "Kill", "", RemapValClamped(Ware_TimeScale, 1.0, 2.0, 1.5, 2.5))
 	
 	return RandomFloat(1.7, 2.1)
 }

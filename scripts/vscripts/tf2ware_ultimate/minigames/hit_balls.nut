@@ -62,7 +62,7 @@ function OnStart()
 	beam.DispatchSpawn()
 	SetPropFloat(beam, "m_fWidth", 7.0)
 	SetPropFloat(beam, "m_fEndWidth", 7.0)
-	EntFireByHandle(beam, "TurnOn", "", -1, null, null)
+	EntityEntFire(beam, "TurnOn")
 	
 	local barrier = Ware_CreateEntity("func_brush")
 	barrier.SetOrigin(Ware_MinigameLocation.center)

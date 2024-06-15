@@ -219,10 +219,10 @@ function BeepBlock_FireInput(target, action, params = "")
 	if (typeof(target) == "array")
 	{
 		foreach(ent in target)
-			EntFireByHandle(ent, action, params, -1, null, null)
+			EntityEntFire(ent, action, params)
 	}
 	else
-		EntFireByHandle(target, action, params, -1, null, null)
+		EntityEntFire(target, action, params)
 }
 
 function OnEndzoneTouch()
