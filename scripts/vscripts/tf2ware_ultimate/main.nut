@@ -2929,9 +2929,9 @@ function OnScriptHook_OnTakeDamage(params)
 
 function OnGameEvent_teamplay_round_start(params)
 {
-	local map_version = GetMapName().slice(17)
-	if (map_version != WARE_MAPVERSION)
+	if (!endswith(GetMapName(), WARE_MAPVERSION))
 	{
+		local map_version = GetMapName().slice(17)
 		Ware_Error("Map version does not match script version. Some minigames may not function correctly due to missing geometry.\nMap Version: %s\nScript Version: %s",
 		map_version,
 		WARE_MAPVERSION)
