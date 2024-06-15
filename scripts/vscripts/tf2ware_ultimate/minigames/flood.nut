@@ -15,7 +15,11 @@ minigame <- Ware_MinigameData
 platform_index <- 0
 
 waterfall_model <- "models/props_forest/waterfall001.mdl"
-PrecacheModel(waterfall_model)
+
+function OnPrecache()
+{
+	PrecacheModel(waterfall_model)
+}
 
 function OnStart()
 {

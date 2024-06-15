@@ -8,6 +8,11 @@ minigame <- Ware_MinigameData
 	start_pass  = true
 })
 
+function OnPrecache()
+{
+	PrecacheEntityFromTable({classname = "ghost"})
+}
+
 function OnStart()
 {
 	Ware_CreateTimer(@() SpawnGhost(), 1.2)

@@ -12,7 +12,14 @@ minigame <- Ware_MinigameData
 	custom_overlay = "shoot_target_" + target_class.tolower()
 })
 
-foreach (name in target_names) PrecacheModel(format("models/props_training/target_%s.mdl", name.tolower()))
+function OnPrecache()
+{
+	foreach (name in target_names)
+	{
+		PrecacheModel(format("models/props_training/target_%s.mdl", name.tolower()))
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/shoot_target_" + name.tolower())
+	}
+}
 
 function OnStart()
 {

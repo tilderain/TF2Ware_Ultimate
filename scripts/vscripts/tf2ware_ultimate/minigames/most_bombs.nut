@@ -16,7 +16,13 @@ bomb_queue <- []
 
 prop_model  <- "models/tf2ware_ultimate/dummy_sphere.mdl"
 bomb_sprite <- "sprites/tf2ware_ultimate/bomb_%s.vmt"
-PrecacheModel(prop_model)
+
+function OnPrecache()
+{
+	PrecacheModel(prop_model)
+	foreach (color in colors)
+		PrecacheSprite(format(bomb_sprite, color))
+}
 
 function CreateBomb()
 {

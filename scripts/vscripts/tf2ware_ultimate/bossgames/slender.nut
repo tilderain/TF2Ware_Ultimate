@@ -33,16 +33,12 @@ MISSION_SLENDER  <- 1
 fog <- null
 slenders <- []
 pages <- []
+debug_pages <- false
 
 sound_intro <- "TF2Ware_Ultimate.SlenderIntro"
 sound_page <- "TF2Ware_Ultimate.SlenderPage"
 slender_model <- "models/arrival/slenderman.mdl"
 page_model <- "models/slender/sheet.mdl"
-
-PrecacheScriptSound(sound_intro)
-PrecacheScriptSound(sound_page)
-PrecacheModel(slender_model)
-PrecacheModel(page_model)
 
 local pages_info =
 [
@@ -93,6 +89,14 @@ local pages_max = pages_info.len()
 
 local end_time = 0.0
 local end_time_max = 0.0
+
+function OnPrecache()
+{
+	PrecacheScriptSound(sound_intro)
+	PrecacheScriptSound(sound_page)
+	PrecacheModel(slender_model)
+	PrecacheModel(page_model)
+}
 
 function OnStart()
 {
@@ -219,16 +223,19 @@ function OnUpdate()
 		}
 	}
 	
-	//foreach (page in pages)
-	//{
-	//	if (page.IsValid())
-	//	{
-	//		DebugDrawText(
-	//			page.GetOrigin(), 
-	//			(page.GetOrigin() - Ware_MinigameLocation.center).tostring(), 
-	//			false, 0.03)
-	//	}
-	//}		
+	if (debug_pages)
+	{
+		foreach (page in pages)
+		{
+			if (page.IsValid())
+			{
+				DebugDrawText(
+					page.GetOrigin(), 
+					(page.GetOrigin() - Ware_MinigameLocation.center).tostring(), 
+					false, 0.03)
+			}
+		}
+	}
 }
 
 function OnTakeDamage(params)

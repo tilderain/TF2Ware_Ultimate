@@ -19,6 +19,12 @@ minigame <- Ware_MinigameData
 	custom_overlay = building_mode[1]
 })
 
+function OnPrecache()
+{
+	foreach (mode in building_modes)
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/" + building_mode[1])
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, [ "Construction PDA", "Toolbox"], {}, true)

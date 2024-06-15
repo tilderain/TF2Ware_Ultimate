@@ -349,7 +349,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceBossgame   	<- ""
 	Ware_DebugForceMinigameOnce <- false
 	Ware_DebugForceBossgameOnce <- false
-	Ware_DebugNextSpecialRound <- ""
+	Ware_DebugNextSpecialRound  <- ""
 }
 Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
@@ -381,39 +381,32 @@ Ware_MinigameEndTimer     <- null
 Ware_MinigameEnded        <- false
 Ware_MinigameHighScorers  <- []
 Ware_MinigamesPlayed	  <- 0
-Ware_BossgamesPlayed         <- 0
+Ware_BossgamesPlayed      <- 0
 
 // dunno where to put this
-Ware_RoundEndMusicTimer <- null
+Ware_RoundEndMusicTimer   <- null
 
-if (!("Ware_RoundsPlayed" in this))
-	Ware_RoundsPlayed     <- 0
-
-if (!("Ware_Theme" in this))
+if (!("Ware_Players" in this))
 {
-	Ware_Theme              <- Ware_Themes[0]
-	Ware_CurrentThemeSounds <- {}
-	Ware_NextTheme          <- ""
-}
-
-if (!("Ware_SpecialRound" in this))
-{
+	Ware_Precached                <- false
+	
+	Ware_Players                  <- []
+	Ware_PlayersData              <- []
+	Ware_MinigamePlayers          <- []
+	
+	Ware_RoundsPlayed             <- 0
+	
+	Ware_Theme              	  <- Ware_Themes[0]
+	Ware_CurrentThemeSounds 	  <- {}
+	Ware_NextTheme          	  <- ""
+	
 	Ware_SpecialRound             <- null
 	Ware_SpecialRoundScope        <- {}
 	Ware_SpecialRoundSavedConvars <- {}
 	Ware_SpecialRoundEvents       <- []
 	Ware_SpecialRoundPrevious     <- false
-}
-
-if (!("Ware_Players" in this))
-{
-	Ware_Players         <- []
-	Ware_PlayersData     <- []
-	Ware_MinigamePlayers <- []
 	
-	Ware_AnnotationIDs   <- 0
-	
-	Ware_HatIndexList 	 <- {}
+	Ware_AnnotationIDs            <- 0
 	
 	// this shuts up incursion distance warnings from the nav mesh
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
@@ -463,6 +456,86 @@ function Ware_FindStandardEntities()
 	Ware_ParticleSpawner <- CreateEntitySafe("trigger_particle")
 	Ware_ParticleSpawner.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)
 	SetInputHook(Ware_ParticleSpawner, "StartTouch", Ware_ParticleHook, null)
+}
+
+Ware_PrecacheGenerator <- null
+function Ware_PrecacheNext()
+{
+	local PrecacheFile = function(folder, name)
+	{
+		local path = format("tf2ware_ultimate/%s/%s", folder, name)
+		try
+		{
+			local scope = {}
+			IncludeScript(path, scope)
+			if ("OnPrecache" in scope)
+				scope.OnPrecache()
+				
+			if ("minigame" in scope)
+			{
+				local minigame = scope.minigame
+				
+				local overlays = [], overlays2 = []
+				if (minigame.custom_overlay == null)
+					overlays = ["hud/tf2ware_ultimate/minigames/" + name]
+				else
+					overlays = Ware_GetOverlays(minigame.custom_overlay)
+				
+				if (minigame.custom_overlay2 != null)
+					overlays2 = Ware_GetOverlays(minigame.custom_overlay2)			
+				
+				foreach (overlay in overlays)
+				{
+					if (overlay)
+						PrecacheOverlay(overlay)
+				}
+				foreach (overlay in overlays2)
+				{
+					if (overlay)
+						PrecacheOverlay(overlay)
+				}					
+			}
+		}
+		catch (e)
+		{
+			Ware_ErrorHandler(format("Failed to precache '%s.nut'. Missing from disk or syntax error", path))
+		}
+		
+		return true
+	}
+	
+	foreach (overlay in Ware_GameOverlays)
+		yield PrecacheOverlay("hud/tf2ware_ultimate/" + overlay)	
+	foreach (minigame in Ware_Minigames)
+		yield PrecacheFile("minigames", minigame)
+	foreach (bossgame in Ware_Bossgames)
+		yield PrecacheFile("bossgames", bossgame)
+	foreach (special in Ware_SpecialRounds)
+		yield PrecacheFile("specialrounds", special)
+		
+	printf("[TF2Ware] Precached %d minigames, %d bossgames, %d special rounds\n", 
+		Ware_Minigames.len(), Ware_Bossgames.len(), Ware_SpecialRounds.len())
+	return null
+}
+
+function Ware_PrecacheStep()
+{
+	if (resume Ware_PrecacheGenerator)
+		EntityEntFire(World, "CallScriptFunction", "Ware_PrecacheStep")
+}
+
+function Ware_PrecacheEverything()
+{
+	if (Ware_Precached)
+		return
+	Ware_Precached = true
+	
+	// the precaching can take so long that the script is terminated for taking too long
+	// as a workaround, spread it out across I/O events
+	// note: normally a co-routine would workaround that
+	// but it seems to crash the VM here if using nested IncludeScript
+	Ware_PrecacheGenerator = Ware_PrecacheNext()
+	EntityEntFire(World, "CallScriptFunction", "Ware_PrecacheStep")
 }
 
 function Ware_SetupLocations()
@@ -1630,6 +1703,27 @@ function Ware_CheckHomeLocation(player_count)
 	}
 }
 
+function Ware_GetOverlays(overlays) 
+{
+	local FixupOverlay = function(name)
+	{
+		if (name.len() > 0)
+		{
+			if (name.slice(0, 3) == "../")
+				return "hud/tf2ware_ultimate/" + name.slice(3)
+			else
+				return "hud/tf2ware_ultimate/minigames/" + name
+		}
+		
+		return null
+	}
+		
+	if (typeof(overlays) == "array")
+		return overlays.map(@(name) FixupOverlay(name))
+	else
+		return [FixupOverlay(overlays)]
+}
+	
 function Ware_IsSpecialRoundValid(str)
 {
 	foreach(round in Ware_SpecialRounds)
@@ -2135,6 +2229,10 @@ function Ware_StartMinigame(is_boss)
 	
 	Ware_SetupMinigameCallbacks()	
 	
+	// late precache if new minigames are added at runtime
+	if (developer() > 0 && "OnPrecache" in Ware_MinigameScope)
+		Ware_MinigameScope.OnPrecache()
+	
 	if (custom_teleport)
 		Ware_MinigameScope.OnTeleport(clone(valid_players))
 		
@@ -2169,36 +2267,15 @@ function Ware_StartMinigame(is_boss)
 	
 	Ware_TextManager.KeyValueFromFloat("holdtime", Ware_Minigame.duration + Ware_Minigame.end_delay)
 	
-	local GetOverlays = function(overlays) 
-	{
-		local FixupOverlay = function(name)
-		{
-			if (name.len() > 0)
-			{
-				if (name.slice(0, 3) == "../")
-					return "hud/tf2ware_ultimate/" + name.slice(3)
-				else
-					return "hud/tf2ware_ultimate/minigames/" + name
-			}
-			
-			return null
-		}
-			
-		if (typeof(overlays) == "array")
-			return overlays.map(@(name) FixupOverlay(name))
-		else
-			return [FixupOverlay(overlays)]
-	}
-	
 	local overlays = [], overlays2 = []
 	if (Ware_Minigame.custom_overlay == null)
 		overlays = ["hud/tf2ware_ultimate/minigames/" + minigame]
 	else
-		overlays = GetOverlays(Ware_Minigame.custom_overlay)
+		overlays = Ware_GetOverlays(Ware_Minigame.custom_overlay)
 	
 	if (Ware_Minigame.custom_overlay2 != null)
 	{
-		overlays2 = GetOverlays(Ware_Minigame.custom_overlay2)
+		overlays2 = Ware_GetOverlays(Ware_Minigame.custom_overlay2)
 		Ware_MinigameOverlay2Set = true
 	}
 
@@ -3296,3 +3373,4 @@ __CollectGameEventCallbacks(this)
 
 Ware_FindStandardEntities()
 Ware_SetupLocations()
+Ware_PrecacheEverything()

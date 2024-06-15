@@ -27,6 +27,12 @@ minigame <- Ware_MinigameData
 	}
 })
 
+function OnPrecache()
+{
+	foreach (mode in mode_infos)
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/" + mode[1])
+}
+
 function OnStart()
 {
 	local player_class, weapon

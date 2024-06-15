@@ -30,8 +30,6 @@ minigame <- Ware_MinigameData
 
 ghost_model <- "models/props_halloween/ghost.mdl"
 vo_ghost_sound <- "TF2Ware_Ultimate.GhostLaugh"
-PrecacheModel(ghost_model)
-PrecacheScriptSound(vo_ghost_sound)
 
 MISSION_GHOST <- 0
 MISSION_MEDIC <- 1
@@ -81,6 +79,12 @@ spy_powerplay_vo <-
 [
 	"scenes/player/spy/low/4705.vcd"
 ]
+
+function OnPrecache()
+{
+	PrecacheModel(ghost_model)
+	PrecacheScriptSound(vo_ghost_sound)
+}
 
 function OnStart()
 {

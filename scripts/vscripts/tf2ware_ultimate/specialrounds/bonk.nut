@@ -2,7 +2,6 @@ bat_model <- "models/weapons/c_models/tf2ware/c_bonk_bat.mdl"
 bat_modelindex <- PrecacheModel(bat_model)
 
 bat_hit_sound <- "TF2Ware_Ultimate.BonkBatHit"
-PrecacheScriptSound(bat_hit_sound)
 
 special_round <- Ware_SpecialRoundData
 ({
@@ -11,6 +10,12 @@ special_round <- Ware_SpecialRoundData
 	description = "Everyone gets a BONK BAT!"
 	allow_damage = true
 })
+
+function OnPrecache()
+{
+	PrecacheModel(bat_model)
+	PrecacheScriptSound(bat_hit_sound)
+}
 
 function GiveSpecialMelee(player)
 {

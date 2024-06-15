@@ -118,6 +118,31 @@ Ware_SpecialRounds <-
 	"up_down"
 ]
 
+// only for precaching purposes
+Ware_GameOverlays <-
+[
+	"chalkboard"
+	"countdown_1"
+	"countdown_2"
+	"countdown_3"
+	"countdown_4"
+	"countdown_5"
+	"countdown_6"
+	"countdown_7"
+	"countdown_8"
+	"countdown_9"
+	"countdown_10"
+	"default_boss"
+	"default_failure"
+	"default_failure_all"
+	"default_speed"
+	"default_victory"
+	"default_victory_all"
+	"minigame_blank"
+	"slow_down"
+	"special_round"
+]
+
 Ware_FakeSpecialRounds <-
 [
 	// imported from micro

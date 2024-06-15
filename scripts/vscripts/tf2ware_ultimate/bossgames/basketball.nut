@@ -11,7 +11,11 @@ minigame <- Ware_MinigameData
 })
 
 hoop_sound <- "Halloween.PumpkinDrop"
-PrecacheScriptSound(hoop_sound)
+
+function OnPrecache()
+{
+	PrecacheScriptSound(hoop_sound)
+}
 
 function OnStart()
 {

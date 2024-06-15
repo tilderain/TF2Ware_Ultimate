@@ -14,7 +14,11 @@ minigame <- Ware_MinigameData
 })
 
 fire_sound <- "TF2Ware_Ultimate.Hadoken"
-PrecacheScriptSound(fire_sound)
+
+function OnPrecache()
+{
+	PrecacheScriptSound(fire_sound)
+}
 
 function OnTeleport(players)
 {

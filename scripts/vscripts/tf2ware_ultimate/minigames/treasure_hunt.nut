@@ -41,8 +41,16 @@ debug_spawns <- false
 
 find_sound <- "MatchMaking.MedalClickRare"
 
-PrecacheModel(treasure[4])
-PrecacheScriptSound(find_sound)
+function OnPrecache()
+{
+	foreach (treasure in treasures)
+	{
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/treasure_hunt_" + treasure[2])
+		PrecacheModel(treasure[4])
+	}
+	
+	PrecacheScriptSound(find_sound)
+}
 
 function OnTeleport(players)
 {

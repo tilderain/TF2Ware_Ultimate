@@ -14,7 +14,11 @@ minigame <- Ware_MinigameData
 
 balls <- []
 ball_model <- "models/tf2ware_ultimate/big_soccer_ball.mdl"
-PrecacheModel(ball_model)
+
+function OnPrecache()
+{
+	PrecacheModel(ball_model)
+}
 
 function OnTeleport(players)
 {

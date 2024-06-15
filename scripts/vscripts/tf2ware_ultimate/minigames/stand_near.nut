@@ -15,6 +15,12 @@ minigame <- Ware_MinigameData
 	custom_overlay = mode == 1 ? "stand_away" : "stand_near"
 })
 
+function OnPrecache()
+{
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/stand_away")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/stand_near")
+}
+
 function OnEnd()
 {
 	local threshold = 96.0

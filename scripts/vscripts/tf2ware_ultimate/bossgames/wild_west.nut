@@ -21,7 +21,13 @@ mexican_standoff <- false
 game_over <- false
 shootout <- false
 sound_standoff <- "tf2ware_ultimate/mexican_standoff.mp3"
-PrecacheSound(sound_standoff)
+
+function OnPrecache()
+{
+	PrecacheSound(sound_standoff)
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/wildwest_ready")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/wildwest_shoot")
+}
 
 function OnStart()
 {

@@ -8,6 +8,11 @@ special_round <- Ware_SpecialRoundData
 
 local interval = Ware_SpeedUpInterval * 1.5
 
+function OnPrecache()
+{
+	PrecacheOverlay("hud/tf2ware_ultimate/slow_down")
+}
+
 function OnStart()
 {
 	local high_scale = (Ware_BossThreshold / Ware_SpeedUpThreshold) * interval

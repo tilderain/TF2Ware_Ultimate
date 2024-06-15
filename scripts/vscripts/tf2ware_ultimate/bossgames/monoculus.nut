@@ -18,6 +18,11 @@ minigame <- Ware_MinigameData
 monoculuses <- []
 offset <- Vector(0, 0, 256)
 
+function OnPrecache()
+{
+	PrecacheEntityFromTable({classname = "eyeball_boss"})
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower")

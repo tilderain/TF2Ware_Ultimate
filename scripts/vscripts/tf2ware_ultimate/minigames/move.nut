@@ -12,6 +12,12 @@ minigame <- Ware_MinigameData
 	custom_overlay = mode == 0 ? "move" : "dont_move"
 })
 
+function OnPrecache()
+{
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/dont_move")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/move")
+}
+
 function OnUpdate()
 {
 	if (Ware_GetMinigameTime() < 2.0)

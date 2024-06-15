@@ -11,6 +11,13 @@ minigame <- Ware_MinigameData
 	fail_on_death  = true
 })
 
+function OnPrecache()
+{
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/double_jump")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/double_jump_fail")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/triple_jump")
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Atomizer")

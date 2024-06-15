@@ -11,9 +11,14 @@ minigame <- Ware_MinigameData
 
 prop_model <- "models/tf2ware_ultimate/dummy_sphere.mdl"
 sprite_model <- "sprites/tf2ware_ultimate/bomb_red.vmt"
-PrecacheModel(prop_model)
 
 count <- 0
+
+function OnPrecache()
+{
+	PrecacheModel(prop_model)
+	PrecacheSprite(sprite_model)
+}
 
 function OnStart()
 {

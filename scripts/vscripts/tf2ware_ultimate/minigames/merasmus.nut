@@ -13,6 +13,11 @@ minigame <- Ware_MinigameData
 
 merasmus <- null
 
+function OnPrecache()
+{
+	PrecacheEntityFromTable({classname = "merasmus"})
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower")

@@ -11,6 +11,11 @@ minigame <- Ware_MinigameData
 
 sprite_model <- "sprites/tf2ware_ultimate/spycrab.vmt"
 
+function OnPrecache()
+{
+	PrecacheSprite(sprite_model)
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SPY)

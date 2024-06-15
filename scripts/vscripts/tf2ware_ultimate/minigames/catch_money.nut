@@ -24,15 +24,20 @@ cash_amounts <-
 bomb_model <- "models/props_lakeside_event/bomb_temp.mdl"
 touch_sound <- "MVM.MoneyPickup"
 explode_sound <- "Weapon_LooseCannon.Explode"
-
-foreach (model in cash_models) PrecacheModel(model)
 bomb_modelindex <- PrecacheModel(bomb_model)
-PrecacheScriptSound(touch_sound)
-PrecacheScriptSound(explode_sound)
 
 spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 16.0, 0.5, 0.02)
 
 cash_spawned <- 0
+
+function OnPrecache()
+{
+	foreach (model in cash_models) 
+		PrecacheModel(model)
+	PrecacheModel(bomb_model)
+	PrecacheScriptSound(touch_sound)
+	PrecacheScriptSound(explode_sound)
+}
 
 function OnStart()
 {

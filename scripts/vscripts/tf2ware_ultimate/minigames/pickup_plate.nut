@@ -22,7 +22,16 @@ minigame <- Ware_MinigameData
 	thirdperson    = true
 })
 
-foreach (item in items) PrecacheModel(item[3])
+function OnPrecache()
+{
+	foreach (item in items) 
+	{
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/" + item[1])
+		PrecacheModel(item[3])
+	}
+	
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/pickup_plate_fail")
+}
 
 function OnTeleport(players)
 {
@@ -77,7 +86,7 @@ function OnTouchPlate()
 		}
 		else
 		{
-			Ware_ShowScreenOverlay(activator, "hud/tf2ware_ultimate/minigames/" + "pickup_plate_fail")
+			Ware_ShowScreenOverlay(activator, "hud/tf2ware_ultimate/minigames/pickup_plate_fail")
 			StunPlayer(activator, TF_TRIGGER_STUN_LOSER, true, 10.0, 0.6)
 		}
 	}

@@ -33,7 +33,11 @@ piggybacked_count <- 0
 piggybacker_killed <- false
 
 dummy_model <- "models/tf2ware_ultimate/dummy_sphere.mdl"
-PrecacheModel(dummy_model)
+
+function OnPrecache()
+{
+	PrecacheModel(dummy_model)
+}
 
 function OnTeleport(players)
 {

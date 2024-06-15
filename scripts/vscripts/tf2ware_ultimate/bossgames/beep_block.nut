@@ -37,10 +37,6 @@ beep_sound <- "tf2ware_ultimate/beep_block_beep.mp3"
 swap_sound <- "tf2ware_ultimate/beep_block_door.mp3"
 hurryup_sound <- "tf2ware_ultimate/hurryup.mp3"
 tele_sound <- "Building_Teleporter.Send"
-PrecacheSound(beep_sound)
-PrecacheSound(swap_sound)
-PrecacheSound(hurryup_sound)
-PrecacheScriptSound(tele_sound)
 
 // brushes
 green_blocks    <- []
@@ -53,6 +49,14 @@ endzone <- FindByName(null, "plugin_Bossgame5_WinArea")
 tele1   <- FindByName(null, "BeepBlock_Tele1")
 tele2   <- FindByName(null, "BeepBlock_Tele2")
 ramp    <- FindByName(null, "BeepBlock_RampTrigger")
+
+function OnPrecache()
+{
+	PrecacheSound(beep_sound)
+	PrecacheSound(swap_sound)
+	PrecacheSound(hurryup_sound)
+	PrecacheScriptSound(tele_sound)
+}
 
 function OnStart()
 {

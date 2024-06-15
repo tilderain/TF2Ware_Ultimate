@@ -12,8 +12,11 @@ minigame <- Ware_MinigameData
 barrel_model <- "models/props_farm/wooden_barrel.mdl"
 hit_sound <- "Player.HitSoundBeepo"
 
-PrecacheModel(barrel_model)
-PrecacheScriptSound(hit_sound)
+function OnPrecache()
+{
+	PrecacheModel(barrel_model)
+	PrecacheScriptSound(hit_sound)
+}
 
 function OnStart()
 {

@@ -33,10 +33,15 @@ warning_sound <- "items/cart_explode_trigger.wav"
 explode_particle <- "hightower_explosion"
 explode_sound <- "items/cart_explode.wav"
 
-PrecacheModel(bomb_model)
-PrecacheSound(bomb_sound)
-PrecacheSound(warning_sound)
-PrecacheSound(explode_sound)
+function OnPrecache()
+{
+	PrecacheModel(bomb_model)
+	PrecacheSound(bomb_sound)
+	PrecacheParticle(bomb_particle)
+	PrecacheSound(warning_sound)
+	PrecacheParticle(explode_particle)
+	PrecacheSound(explode_sound)
+}
 
 function OnStart()
 {

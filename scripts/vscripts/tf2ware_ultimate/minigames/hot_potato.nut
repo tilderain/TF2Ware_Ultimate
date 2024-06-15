@@ -22,7 +22,13 @@ explode_particle <- "eotl_pyro_pool_explosion"
 explode_sound <- "vo/taunts/demo/taunt_demo_nuke_8_explosion.mp3"
 
 bomb_modelindex <- PrecacheModel(bomb_model)
-PrecacheSound(explode_sound)
+
+function OnPrecache()
+{
+	PrecacheModel(bomb_model)
+	PrecacheParticle(explode_particle)
+	PrecacheSound(explode_sound)
+}
 
 function OnStart()
 {

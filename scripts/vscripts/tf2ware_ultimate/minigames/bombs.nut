@@ -10,6 +10,13 @@ minigame <- Ware_MinigameData
 	fail_on_death = true
 })
 
+bomb_model <- "models/workshop/weapons/c_models/c_quadball/w_quadball_grenade.mdl"
+
+function OnPrecache()
+{
+	PrecacheModel(bomb_model)
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower")
@@ -45,6 +52,6 @@ function SpawnBombs()
 		Ware_SlapEntity(pipe, 160.0)
 		
 		pipe.DispatchSpawn()
-		pipe.SetModelSimple("models/workshop/weapons/c_models/c_quadball/w_quadball_grenade.mdl")
+		pipe.SetModel(bomb_model)
 	}
 }

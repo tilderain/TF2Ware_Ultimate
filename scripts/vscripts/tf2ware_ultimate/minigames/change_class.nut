@@ -25,6 +25,12 @@ desc_class <-
 minigame.description    = desc_class[desired_class][0]
 minigame.custom_overlay = desc_class[desired_class][1]
 
+function OnPrecache()
+{
+	foreach (_, desired in desc_class)
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/" + desired[1])
+}
+
 function OnStart()
 {
 	// set everyone to non-desired class

@@ -20,9 +20,12 @@ frog_model <- "models/tf2ware_ultimate/frog.mdl"
 jump_sound <- "TF2Ware_Ultimate.FroggerHop"
 death_sound <- "TF2Ware_Ultimate.FroggerSquash"
 
-PrecacheModel(frog_model)
-PrecacheScriptSound(jump_sound)
-PrecacheScriptSound(death_sound)
+function OnPrecache()
+{
+	PrecacheModel(frog_model)
+	PrecacheScriptSound(jump_sound)
+	PrecacheScriptSound(death_sound)
+}
 
 function OnStart()
 {

@@ -13,8 +13,12 @@ mode <- RandomInt(0, 1)
 
 start_sound <- "tf2ware_ultimate/train_rain.wav"
 train_model <- "models/props_vehicles/train_enginecar.mdl"
-PrecacheSound(start_sound)
-PrecacheModel(train_model)
+
+function OnPrecache()
+{
+	PrecacheSound(start_sound)
+	PrecacheModel(train_model)
+}
 
 function OnStart()
 {

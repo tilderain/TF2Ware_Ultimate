@@ -18,7 +18,11 @@ minigame <- Ware_MinigameData
 })
 
 bump_sound <- "BumperCar.BumpIntoAir"
-PrecacheScriptSound(bump_sound)
+
+function OnPrecache()
+{
+	PrecacheScriptSound(bump_sound)
+}
 
 function OnStart()
 {

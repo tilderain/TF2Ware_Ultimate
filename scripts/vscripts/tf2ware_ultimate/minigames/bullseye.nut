@@ -9,7 +9,13 @@ minigame <- Ware_MinigameData
 
 prop_model <- "models/tf2ware_ultimate/dummy_sphere.mdl"
 sprite_model <- "sprites/tf2ware_ultimate/" + (RandomInt(0, 100) <= 5 ? "bullseye_gabe.vmt" : "bullseye.vmt")
-PrecacheModel(prop_model)
+
+function OnPrecache()
+{
+	PrecacheModel(prop_model)
+	PrecacheSprite("sprites/tf2ware_ultimate/bullseye.vmt")
+	PrecacheSprite("sprites/tf2ware_ultimate/bullseye_gabe.vmt")
+}
 
 function OnStart()
 {

@@ -1,4 +1,4 @@
-minigame <- Ware_MinigameData
+	minigame <- Ware_MinigameData
 ({
 	name        = "Parachute"
 	author      = "ficool2"
@@ -16,7 +16,11 @@ minigame <- Ware_MinigameData
 platform <- null
 
 platform_model <- "models/props_coldfront/waste_base.mdl"
-PrecacheModel(platform_model)
+
+function OnPrecache()
+{
+	PrecacheModel(platform_model)
+}
 
 function OnTeleport(players)
 {

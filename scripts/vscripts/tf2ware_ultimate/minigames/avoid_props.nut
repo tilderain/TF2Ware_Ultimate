@@ -26,12 +26,16 @@ prop_models <-
 ]
 
 prop_model <- RandomElement(prop_models)
-PrecacheModel(prop_model)
-
 is_sawblade <- prop_model.find("saw_blade") != null
-
 kill_sound <- is_sawblade ? "SawMill.BladeImpact" : "Halloween.skeleton_break"
-PrecacheScriptSound(kill_sound)
+
+function OnPrecache()
+{
+	foreach (model in prop_models)
+		PrecacheModel(prop_model)
+	PrecacheScriptSound("SawMill.BladeImpact")
+	PrecacheScriptSound("Halloween.skeleton_break")
+}
 
 function OnStart()
 {

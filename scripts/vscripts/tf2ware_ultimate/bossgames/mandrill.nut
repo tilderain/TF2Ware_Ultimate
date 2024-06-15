@@ -12,7 +12,11 @@ minigame <- Ware_MinigameData
 })
 
 banana_model <- "models/tf2ware_ultimate/banana.mdl"
-PrecacheModel(banana_model)
+
+function OnPrecache()
+{
+	PrecacheModel(banana_model)
+}
 
 function OnStart()
 {

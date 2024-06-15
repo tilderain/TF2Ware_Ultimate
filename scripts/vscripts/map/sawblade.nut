@@ -3,8 +3,12 @@ touched <- false
 
 move_sound <- "SawMill.Blade"
 touch_sound <- "SawMill.BladeImpact"
-PrecacheScriptSound(move_sound)
-PrecacheScriptSound(touch_sound)
+
+function Precache()
+{
+	PrecacheScriptSound(move_sound)
+	PrecacheScriptSound(touch_sound)
+}
 
 function OnPostSpawn()
 {

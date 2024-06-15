@@ -18,10 +18,14 @@ minigame <- Ware_MinigameData
 })
  
 ship_model <- "models/marioragdoll/super mario galaxy/bj ship/bjship.mdl"
-PrecacheModel(ship_model)
 
 red_ship  <- null
 blue_ship <- null
+
+function OnPrecache()
+{
+	PrecacheModel(ship_model)
+}
 
 function OnStart()
 {

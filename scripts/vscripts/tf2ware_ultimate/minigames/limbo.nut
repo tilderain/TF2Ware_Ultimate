@@ -11,7 +11,11 @@ minigame <- Ware_MinigameData
 goal_vectors <- null
 
 beam_model <- "sprites/laser.vmt"
-PrecacheModel(beam_model)
+
+function OnPrecache()
+{
+	PrecacheSprite(beam_model)
+}
 
 function OnTeleport(players)
 {

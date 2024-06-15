@@ -1,5 +1,4 @@
-
-local threshold = Ware_BossThreshold + 10
+threshold <- Ware_BossThreshold + 10
 
 special_round <- Ware_SpecialRoundData
 ({

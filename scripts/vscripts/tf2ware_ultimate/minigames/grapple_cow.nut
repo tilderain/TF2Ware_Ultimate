@@ -9,7 +9,11 @@ minigame <- Ware_MinigameData
 })
 
 cow_model <- "models/props_2fort/cow001_reference.mdl"
-PrecacheModel(cow_model)
+
+function OnPrecache()
+{
+	PrecacheModel(cow_model)
+}
 
 function OnTeleport(players)
 {

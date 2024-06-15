@@ -8,7 +8,11 @@ minigame <- Ware_MinigameData
 })
 
 barrel_model <- "models/props_farm/wooden_barrel.mdl"
-PrecacheModel(barrel_model)
+
+function OnPrecache()
+{
+	PrecacheModel(barrel_model)
+}
 
 function OnStart()
 {

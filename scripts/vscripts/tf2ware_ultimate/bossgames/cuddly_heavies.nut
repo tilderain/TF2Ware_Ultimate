@@ -33,10 +33,13 @@ vo_love_sound <- "TF2Ware_Ultimate.GeavyLove"
 vo_disgust_sound <- "TF2Ware_Ultimate.ScoutDisgust"
 vo_kiss_sound <- "Heavy.Generic01"
 
-PrecacheModel(heavy_model)
-PrecacheScriptSound(vo_love_sound)
-PrecacheScriptSound(vo_disgust_sound)
-PrecacheScriptSound(vo_kiss_sound)
+function OnPrecache()
+{
+	PrecacheModel(heavy_model)
+	PrecacheScriptSound(vo_love_sound)
+	PrecacheScriptSound(vo_disgust_sound)
+	PrecacheScriptSound(vo_kiss_sound)
+}
 
 function OnStart()
 {

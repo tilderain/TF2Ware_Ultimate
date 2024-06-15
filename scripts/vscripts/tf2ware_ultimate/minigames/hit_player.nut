@@ -28,6 +28,12 @@ loadouts <-
 	[TF_CLASS_SPY]          = "Revolver",
 }
 
+function OnPrecache()
+{
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/hit_nobody")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/hit_player")
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(player_class, loadouts[player_class])

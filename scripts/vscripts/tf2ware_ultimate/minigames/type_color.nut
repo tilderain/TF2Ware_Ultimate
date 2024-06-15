@@ -35,6 +35,12 @@ text_colors <-
 	"BLUE"
 ]
 
+function OnPrecache()
+{
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/type_text")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/type_color")
+}
+
 function OnStart()
 {
 	local text_idx   = RandomIndex(text_colors)

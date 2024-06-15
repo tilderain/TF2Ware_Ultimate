@@ -14,6 +14,17 @@ minigame <- Ware_MinigameData
 	description    = format("%s says %s!", simon ? "Simon" : "Someone", suffixes[mode])
 })
 
+function OnPrecache()
+{
+	foreach (suffix in suffixes)
+	{
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/simon_says_" + suffix.tolower())
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/someone_says_" + suffix.tolower())
+	}
+	
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/simon_says_fail")
+}
+
 function OnStart()
 {
 	if (mode == 4)
@@ -32,7 +43,7 @@ function PassOrFailPlayer(player, pass)
 {
 	Ware_PassPlayer(player, pass)
 	if (!pass)
-		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/" + "simon_says_fail")
+		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/simon_says_fail")
 }
 	
 if (mode == 3 || mode == 4 || mode == 5)

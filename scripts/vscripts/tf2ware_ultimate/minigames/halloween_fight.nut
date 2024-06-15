@@ -27,7 +27,13 @@ boss_models <-
 	"models/bots/headless_hatman.mdl",
 ]
 boss_idx <- RandomIndex(boss_models)
-PrecacheModel(boss_models[boss_idx])
+
+function OnPrecache()
+{
+	foreach (model in boss_models)
+		PrecacheModel(model)
+	PrecacheParticle("halloween_boss_eye_glow")
+}
 
 function OnStart()
 {

@@ -23,6 +23,14 @@ minigame.location    = tracks[mode][0]
 endzone_vector      <- tracks[mode][1]
 minigame.duration    = tracks[mode][2]
 
+function OnPrecache()
+{
+	for (local i = 1; i <= 3; i++)
+		PrecacheSound(format("vo/announcer_begins_%dsec.mp3", i))
+	
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/kart")
+}
+
 function OnStart()
 {
 	// put everyone in karts and freeze them
@@ -37,12 +45,9 @@ function OnStart()
 	local timer = 3
 	Ware_CreateTimer(function()
 	{
-		Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%s", timer.tostring()))
+		Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%d", timer))
 		if (timer > 0)
-		{
-			PrecacheSound(format("vo/announcer_begins_%ssec.mp3", timer.tostring()))
-			Ware_PlaySoundOnAllClients(format("vo/announcer_begins_%ssec.mp3", timer.tostring()), 1.0, 100 * Ware_GetPitchFactor())
-		}
+			Ware_PlaySoundOnAllClients(format("vo/announcer_begins_%dsec.mp3", timer), 1.0, 100 * Ware_GetPitchFactor())
 		
 		timer--
 		

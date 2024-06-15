@@ -141,6 +141,33 @@ function MarkForPurge(entity)
 	SetPropBool(entity, "m_bForcePurgeFixedupStrings", true)
 }
 
+function PrecacheMaterial(material)
+{
+    local entity = SpawnEntityFromTableSafe("vgui_screen", { overlaymaterial = material })
+    local index = GetPropInt(entity, "m_nOverlayMaterial")
+    entity.Destroy()
+    return index
+}
+
+// these exist to prevent confusion, PrecacheModel is really the intended way to precache these
+function PrecacheSprite(sprite)
+{
+	PrecacheModel(sprite)
+	return true
+}
+
+function PrecacheOverlay(overlay)
+{
+	PrecacheModel(overlay + ".vmt")
+	return true
+}
+
+function PrecacheParticle(name)
+{
+	PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = name })
+	return true
+}
+
 function CreateEntitySafe(classname)
 {
 	local entity = Entities.CreateByClassname(classname)

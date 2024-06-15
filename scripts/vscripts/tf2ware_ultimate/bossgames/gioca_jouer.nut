@@ -39,7 +39,6 @@ minigame <- Ware_MinigameData
 })
 
 pass_sound <- "Halloween.PumpkinDrop"
-PrecacheScriptSound(pass_sound)
 
 microgame_info <-
 [
@@ -63,6 +62,11 @@ microgame_info <-
 	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump",          79.432, 130.411 ], // MICRO_SUPER
 	[ null,                          null,                                                  82.961, 132.342 ], // MICRO_RESET
 ]
+
+function OnPrecache()
+{
+	PrecacheScriptSound(pass_sound)
+}
 
 function OnStart()
 {

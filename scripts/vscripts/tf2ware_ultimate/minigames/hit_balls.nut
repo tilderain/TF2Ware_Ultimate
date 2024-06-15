@@ -13,12 +13,16 @@ minigame <- Ware_MinigameData
 ball_model <- "models/player/items/scout/soccer_ball.mdl"
 beam_model <- "sprites/laser.vmt"
 end_sound <- "player/taunt_bell.wav"
-PrecacheModel(ball_model)
-PrecacheModel(beam_model)
-PrecacheSound(end_sound)
 
 ball_count <- 0
 ball_max_count <- 0
+
+function OnPrecache()
+{
+	PrecacheModel(ball_model)
+	PrecacheSprite(beam_model)
+	PrecacheSound(end_sound)
+}
 
 function OnTeleport(players)
 {

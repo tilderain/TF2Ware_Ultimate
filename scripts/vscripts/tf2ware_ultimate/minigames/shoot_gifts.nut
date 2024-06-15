@@ -17,8 +17,11 @@ minigame <- Ware_MinigameData
 gift_model <- "models/tf2ware_ultimate/gift.mdl"
 hit_sound  <- "Player.HitSoundBeepo"
 
-PrecacheModel(gift_model)
-PrecacheScriptSound(hit_sound)
+function OnPrecache()
+{
+	PrecacheModel(gift_model)
+	PrecacheScriptSound(hit_sound)
+}
 
 function OnStart()
 {

@@ -36,8 +36,12 @@ local blahaj = RandomInt(0, 99) == 0
 if (blahaj)
 	shark_model <- "models/blahaj_plush/blahaj_plush.mdl"
 
-PrecacheModel(shark_model)
-PrecacheScriptSound(shark_sound)
+function OnPrecache()
+{
+	PrecacheModel("models/tf2ware/shark.mdl")
+	PrecacheModel("models/blahaj_plush/blahaj_plush.mdl")
+	PrecacheScriptSound(shark_sound)
+}
 
 function OnTeleport(players)
 {

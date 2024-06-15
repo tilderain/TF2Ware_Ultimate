@@ -15,8 +15,13 @@ minigame <- Ware_MinigameData
 pop_sound <- "TF2Ware_Ultimate.BalloonPop"
 jack_model <- RandomInt(0, 100) <= 10 ? "models/passtime/ball/passtime_ball_halloween.mdl" : "models/passtime/ball/passtime_ball.mdl"
 
-PrecacheModel(jack_model)
-PrecacheScriptSound(pop_sound)
+
+function OnPrecache()
+{
+	PrecacheModel("models/passtime/ball/passtime_ball.mdl")
+	PrecacheModel("models/passtime/ball/passtime_ball_halloween.mdl")
+	PrecacheScriptSound(pop_sound)
+}
 
 function OnStart()
 {

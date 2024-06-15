@@ -19,8 +19,18 @@ first <- true
 
 lap_sound <- "RD.TeamScoreCore"
 finish_sound <- "Hud.EndRoundScored"
-PrecacheScriptSound(lap_sound)
-PrecacheScriptSound(finish_sound)
+
+function OnPrecache()
+{
+	for (local i = 1; i <= 3; i++)
+		PrecacheSound(format("vo/announcer_begins_%dsec.mp3", i))
+	
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/grand_prix")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/grand_prix_turbo_boost")
+	
+	PrecacheScriptSound(lap_sound)
+	PrecacheScriptSound(finish_sound)
+}
 
 function IsInEndZone(player)
 {
@@ -56,12 +66,9 @@ function OnStart()
 	local timer = 5
 	Ware_CreateTimer(function()
 	{
-		Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%s", timer.tostring()))
+		Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%d", timer))
 		if (timer > 0)
-		{
-			PrecacheSound(format("vo/announcer_begins_%ssec.mp3", timer.tostring()))
-			Ware_PlaySoundOnAllClients(format("vo/announcer_begins_%ssec.mp3", timer.tostring()), 1.0, 100 * Ware_GetPitchFactor())
-		}
+			Ware_PlaySoundOnAllClients(format("vo/announcer_begins_%dsec.mp3", timer), 1.0, 100 * Ware_GetPitchFactor())
 		
 		timer--
 		
