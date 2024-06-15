@@ -338,6 +338,12 @@ Ware_FakeSpecialRounds <-
 	"Netflix Adaptation"
 	"Persona 6"
 	"Quirky Earthbound-Inspired Boss Round"
+	"Player Versus Map"
+	"Competitive Mode"
+	"Rocket Jump!"
+	"Turtle Only"
+	"Randomized Music"
+	"High Gravity"
 	
 ]
 
