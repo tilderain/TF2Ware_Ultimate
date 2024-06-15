@@ -395,7 +395,7 @@ function BrickPlayerScore(player)
 	SendGlobalGameEvent("player_escort_score", 
 	{
 		player = player.entindex(),
-		points = -1
+		points = -9999999
 	})
 
 	if (!is_bot) 
