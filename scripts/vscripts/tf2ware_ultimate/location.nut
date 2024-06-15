@@ -57,6 +57,7 @@ Ware_Location.home <-
 	center     = Vector(-512, 760, -512)
 	mins       = Vector(-896, 376, -512)
 	maxs       = Vector(-128, 1144, 3550)
+	cameras    = ["home_camera"]
 	spawns     = []
 	spawn_name = "home_spawns"
 	spawn_idx  = 0
@@ -85,6 +86,7 @@ Ware_Location.home_big <-
 	center     = Vector(1688, 1560, -864)
 	mins       = Vector(946, 820, -864)
 	maxs       = Vector(2428, 2298, 3198)
+	cameras    = ["home_big_camera"]
 	spawns     = []
 	spawn_name = "home_big_spawns"
 	spawn_idx  = 0
@@ -123,6 +125,7 @@ Ware_Location.targetrange <-
 {
 	left     = Vector(2303, -5340, -3999)
 	right    = Vector(2303, -2450, -3999)
+	cameras  = ["targetrange_camera1", "targetrange_camera2"]
 	lines	 = 
 	[
 		[Vector(2400, -4056, -3999), Vector(2944, -4056, -3999)],
@@ -174,6 +177,7 @@ Ware_Location.boxarena <-
 	mins     = Vector(-2736, 7248, -7135)
 	maxs     = Vector(-832, 9152, -5552)
 	radius   = 512.0
+	cameras  = ["boxarena_camera"]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 
@@ -182,6 +186,7 @@ Ware_Location.beach <-
 	center   = Vector(4400, 6668, -3790)
 	mins     = Vector(4112, 5656, -4200)
 	maxs     = Vector(8192, 7680, -3296)
+	cameras  = ["beach_camera"]
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(players, 
@@ -202,6 +207,7 @@ Ware_Location.pinball <-
 {
 	center_top    = Vector(-3840, -5344, -5679)
 	center_bottom = Vector(-3840, 1984, -7599)
+	cameras       = ["pinball_camera"]
 }
 
 Ware_Location.factoryplatform <-
@@ -215,11 +221,13 @@ Ware_Location.love <-
 {
 	center_left    = Vector(6160, -984, -5919)
 	center_right   = Vector(6160, -2200, -5919)
+	cameras        = ["love_camera"]
 }
 
 Ware_Location.kart_containers <-
 {
 	center         = Vector(-1200, 3450, -6718)
+	cameras        = ["kartcontainers_camera"]
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(players, 
@@ -274,6 +282,7 @@ Ware_Location.kart_ramp <-
 Ware_Location.frogger <-
 {
 	center   = Vector(11488, -6150, -6447)
+	cameras  = ["frogger_camera1", "frogger_camera2", "frogger_camera3"]
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(players, 
@@ -288,12 +297,14 @@ Ware_Location.sumobox <-
 {
 	center   = Vector(-4600, -9500, -6142)
 	radius   = 400
+	cameras  = ["sumobox_camera"]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 
 Ware_Location.mandrill <-
 {
 	start    = Vector(2274, -13562, -5343)
+	cameras  = ["mandrill_camera"]
 	Teleport = function(players)
 	{
 		foreach (player in players)
@@ -305,12 +316,14 @@ Ware_Location.rocketjump <-
 {
 	center   = Vector(128, -3344, -7392)
 	radius   = 400
+	cameras  = ["rocketjump_camera"]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 
 Ware_Location.hexplatforms <-
 {
 	center      = Vector(2304, -8448, -4880)
+	cameras     = ["hexplatforms_camera"]
 	plat_models = []
 	Init        = function()
 	{
@@ -330,6 +343,7 @@ Ware_Location.hexplatforms <-
 Ware_Location.dirtsquare <-
 {
 	center      = Vector(1648, -1776, -511)
+	camaeras    = ["dirtsquare_camera"]
 	Teleport = function(players) 
 	{ 
 		// TODO
@@ -355,6 +369,7 @@ Ware_Location.jumprope <-
 Ware_Location.obstaclecourse <-
 {
 	center      = Vector(-1696, -4068, -3927)
+	cameras     = ["obstaclecourse_camera"]
 	Teleport = function(players) 
 	{ 
 		// highest scoring players start last
@@ -366,6 +381,7 @@ Ware_Location.ballcourt <-
 {
 	left        = Vector(5792, -3064, -7199)
 	right       = Vector(5792, -1278, -7199)
+	cameras     = ["basketball_camera", "basketball_camera2"]
 	Teleport = function(players) 
 	{ 
 		local players_left = players.slice(0, players.len() / 2)
@@ -379,6 +395,7 @@ Ware_Location.ballcourt <-
 Ware_Location.beepblockskyway_micro <-
 {
 	center = Vector(-13285, -14570, -9760)
+	cameras = ["Beatblock_Camera1", "Beatblock_Camera2", "Beatblock_Camera3"	]
 	Teleport = function(players)
 	{
 		// highest scoring players start last
@@ -389,6 +406,7 @@ Ware_Location.beepblockskyway_micro <-
 Ware_Location.beepblockskyway_ultimate <-
 {
 	center = Vector(-8960, -13500, -9760)
+	cameras = ["Beatblock_Camera4", "Beatblock_Camera5", "Beatblock_Camera6"]
 	Teleport = function(players)
 	{	
 		// highest scoring players start last

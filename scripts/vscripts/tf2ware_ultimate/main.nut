@@ -546,6 +546,19 @@ function Ware_SetupLocations()
 		location.setdelegate(Ware_LocationParent)
 		if ("Init" in location)
 			location.Init()
+			
+		local cameras = []
+		if ("cameras" in location)
+		{
+			foreach (camera_name in location.cameras)
+			{
+				local camera = FindByName(null, camera_name)
+				if (camera)
+					cameras.append(camera)
+			}
+		}
+
+		location.cameras <- cameras
 	}
 
 	Ware_CheckHomeLocation(Ware_Players.len())
@@ -1687,18 +1700,23 @@ function Ware_GetSortedScorePlayers(reverse)
 
 function Ware_CheckHomeLocation(player_count)
 {
-	local prev_location = Ware_MinigameHomeLocation
-	Ware_MinigameHomeLocation = Ware_Location[player_count > 12 ? "home_big" : "home"]
+	local old_location = Ware_MinigameHomeLocation
+	local new_location = Ware_Location[player_count > 12 ? "home_big" : "home"]
+	Ware_MinigameHomeLocation = new_location
 	
-	if (Ware_MinigameHomeLocation != prev_location)
+	if (new_location != old_location)
 	{
-		if (prev_location)
+		if (old_location)
 		{
-			foreach (spawn in prev_location.spawns)
+			foreach (camera in old_location.cameras)
+				EntityEntFire(camera, "Disable")		
+			foreach (spawn in old_location.spawns)
 				SetPropBool(spawn, "m_bDisabled", true)
 		}
-		
-		foreach (spawn in Ware_MinigameHomeLocation.spawns)
+
+		foreach (camera in new_location.cameras)
+			EntityEntFire(camera, "Enable")		
+		foreach (spawn in new_location.spawns)
 			SetPropBool(spawn, "m_bDisabled", false)
 	}
 }
@@ -2222,6 +2240,11 @@ function Ware_StartMinigame(is_boss)
 	local custom_teleport = "OnTeleport" in Ware_MinigameScope
 	if (location != Ware_MinigameLocation)
 	{
+		foreach (camera in Ware_MinigameLocation.cameras)
+			EntityEntFire(camera, "Disable")		
+		foreach (camera in location.cameras)
+			EntityEntFire(camera, "Enable")
+		
 		Ware_MinigameLocation = location
 		if (!custom_teleport)
 			location.Teleport(clone(valid_players))
@@ -2431,6 +2454,11 @@ function Ware_EndMinigameInternal()
 	
 	if (Ware_MinigameLocation != Ware_MinigameHomeLocation)
 	{
+		foreach (camera in Ware_MinigameLocation.cameras)
+			EntityEntFire(camera, "Disable")	
+		foreach (camera in Ware_MinigameHomeLocation.cameras)
+			EntityEntFire(camera, "Enable")
+			
 		local players = []
 		foreach (data in Ware_MinigamePlayers)
 		{
