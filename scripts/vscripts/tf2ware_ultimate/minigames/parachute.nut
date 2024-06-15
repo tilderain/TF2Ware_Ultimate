@@ -39,7 +39,7 @@ function OnStart()
 		solid = SOLID_VPHYSICS,
 	})
 	
-	Ware_CreateTimer(@() AutodeployParachutes(), 1.1)
+	Ware_CreateTimer(@() AutodeployParachutes(), 1.2)
 }
 
 function AutodeployParachutes()
