@@ -2929,8 +2929,6 @@ function OnScriptHook_OnTakeDamage(params)
 
 function OnGameEvent_teamplay_round_start(params)
 {
-	// kill results music if it's playing from a previous round
-	Ware_PlayGameSound(null, "results", SND_STOP)
 	
 	Ware_SetTimeScale(1.0)
 	
