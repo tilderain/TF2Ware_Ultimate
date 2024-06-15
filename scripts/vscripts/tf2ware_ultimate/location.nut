@@ -413,3 +413,19 @@ Ware_Location.beepblockskyway_ultimate <-
 		Ware_TeleportPlayersRow(Ware_GetSortedScorePlayers(true), center, QAngle(0, 90, 0), 900, 120, 110)
 	}
 }
+
+Ware_Location.warehouse <-
+{
+	center = Vector(1000, 6160, -4159)
+	mins   = Vector(480, 6544, -4160)
+	maxs   = Vector(1560, 7472, -3648)
+	cameras = ["warehouse_camera"]
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players, 
+			center,
+			QAngle(0, 90, 0),
+			900.0,
+			64.0, 64.0)
+	}	
+}
