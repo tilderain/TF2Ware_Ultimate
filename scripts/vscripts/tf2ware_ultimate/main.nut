@@ -3312,6 +3312,16 @@ Ware_DevCommands <-
 		Ware_DebugStop = false
 		Ware_ChatPrint(player, "Resuming...")
 	}
+	"end": function(player, text)
+	{
+		if (Ware_Minigame)
+		{
+			Ware_ChatPrint(player, "Ending current {str}..." Ware_Minigame.boss ? "bossgame" : "minigame")
+			Ware_EndMinigame()
+		}
+		else
+			Ware_ChatPrint(player, "No minigame is currently running.")
+	}
 	"run" : function(player, text)
 	{
 		try
