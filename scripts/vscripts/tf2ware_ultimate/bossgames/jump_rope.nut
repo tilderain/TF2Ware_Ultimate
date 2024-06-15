@@ -31,11 +31,14 @@ function OnStart()
 
 function IncreaseRopeSpeed()
 {
-	local speed = fabs(GetPropFloat(jumprope_door, "m_flSpeed"))
-	local dir = RandomInt(1, 10) == 1 ? -1.0 : 1.0
-	SetPropFloat(jumprope_door, "m_flSpeed", (speed + 25.0) * dir)
-	SetPropInt(jumprope_door, "m_toggle_state", 1)
-	EntityEntFire(jumprope_door, "Open")
+	local speed = GetPropFloat(jumprope_door, "m_flSpeed")
+	SetPropFloat(jumprope_door, "m_flSpeed", speed + 25.0)
+	
+	local input = RandomInt(1, 5) == 1 ? "Close" : "Open"
+	if (input == "Open")
+		SetPropInt(jumprope_door, "m_toggle_state", 1)
+	EntityEntFire(jumprope_door, input)
+	
 	return 5.0
 }
 
