@@ -4,6 +4,7 @@ minigame <- Ware_MinigameData
 	author        = "ficool2"
 	description   = "Grapple a player!"
 	duration      = 4.0
+	min_players   = 2
 	music         = "ridealong"
 })
 
