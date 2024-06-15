@@ -123,6 +123,7 @@ ITEM_PROJECTILE_MAP <-
 	[44]   = "tf_projectile_stun_ball",
 	[56]   = "tf_projectile_arrow",
 	[58]   = "tf_projectile_jar",
+	[1152] = "tf_projectile_grapplinghook",
 }
 
 DEVELOPER_STEAMID3 <-
