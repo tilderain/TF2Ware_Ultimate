@@ -75,7 +75,8 @@ Ware_Minigames <-
 	"touch_sky"       
 	"treasure_hunt"   
 	"type_color"      
-	"water_war"       
+	"watch_fall"
+	"water_war"
 ]
 
 Ware_Bossgames <-
