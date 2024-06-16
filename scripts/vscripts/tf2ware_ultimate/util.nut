@@ -544,13 +544,17 @@ function HealPlayer(player, amount)
 // Stop a player's taunt and cancel the taunt cooldown
 function ForceRemovePlayerTaunt(player)
 {
-    player.RemoveCond(TF_COND_TAUNTING)
-    
-    // remove the cooldown for next taunt
-    player.AddCustomAttribute("gesture speed increase", 99999, -1)
-    player.Taunt(TAUNT_BASE_WEAPON, 0)
-    player.RemoveCond(TF_COND_TAUNTING)
-    player.RemoveCustomAttribute("gesture speed increase")
+	player.RemoveCond(TF_COND_TAUNTING)
+
+	// remove the cooldown for next taunt
+	// allow this to work in midair
+	local ground = GetPropEntity(player, "m_hGroundEntity")
+	SetPropEntity(player, "m_hGroundEntity", World)
+	player.AddCustomAttribute("gesture speed increase", 99999, -1)
+	player.Taunt(TAUNT_BASE_WEAPON, 0)
+	player.RemoveCond(TF_COND_TAUNTING)
+	player.RemoveCustomAttribute("gesture speed increase")
+	SetPropEntity(player, "m_hGroundEntity", ground)
 }
 
 // Removes a player's ragdoll, if it exists
