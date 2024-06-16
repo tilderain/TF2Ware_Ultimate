@@ -32,7 +32,8 @@ function OnBeginIntermission(is_boss)
 	if (RandomInt(0, 19) == 0)
 		random_score *= -1
 	
-	Ware_ShowText(Ware_Players, CHANNEL_MINIGAME, format("The next minigame will be worth %d point%s.", random_score, random_score == 1 ? "" : "s"), Ware_GetThemeSoundDuration("intro"))
+	Ware_ShowText(Ware_Players, CHANNEL_MINIGAME, format("The next %s will be worth %d point%s", 
+		is_boss ? "boss" : "minigame", random_score, random_score == 1 ? "" : "s"), Ware_GetThemeSoundDuration("intro"))
 	
 	foreach (player in Ware_Players)
 	{
