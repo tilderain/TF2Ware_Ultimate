@@ -1,9 +1,11 @@
+local bonus_time = Ware_MinigameLocation.name.find("big") != null ? 2.0 : 0.0
+
 minigame <- Ware_MinigameData
 ({
 	name           = "Flood"
 	author         = "ficool2"
 	description    = "Get on a Platform!"
-	duration       = 4.0
+	duration       = 4.0 + bonus_time
 	end_delay      = 0.5
 	music          = "ohno"
 	custom_overlay = "get_platform"
@@ -29,8 +31,8 @@ function OnStart()
 	
 	local platform_name = format("%s_platform_%d", location_name, platform_index)
 	
-	EntFire(location_name + "_flood", "Open", "", 2)
-	EntFire(location_name + "_croc", "Enable", "", 2)
+	EntFire(location_name + "_flood", "Open", "", 2.0 + bonus_time)
+	EntFire(location_name + "_croc", "Enable", "", 2.0 + bonus_time)
 	EntFire(platform_name, "Close")
 	
 	Ware_ShowAnnotation(Entities.FindByName(null, platform_name).GetOrigin() + Vector(0, 0, 100), "GET ON ME!")
