@@ -364,6 +364,11 @@ function OnGameEvent_player_changeclass(params)
 		SetPropFloat(player, "m_flDeathTime", Time()) // no late respawns
 }
 
+function PlayerPostDeath()
+{
+	self.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
+}
+
 function OnGameEvent_player_death(params)
 {
 	local ammos = []
@@ -375,15 +380,18 @@ function OnGameEvent_player_death(params)
 	
 	foreach (ammo in ammos)
 		ammo.Kill()
+		
+	local player = GetPlayerFromUserID(params.userid)
+	if (player)
+		EntityEntFire(player, "CallScriptFunction", "PlayerPostDeath")
 	
 	if (Ware_Minigame == null)
 		return
 		
 	if (Ware_Minigame.fail_on_death == true)
 	{
-		local victim = GetPlayerFromUserID(params.userid)
-		if (victim != null)
-			Ware_PassPlayer(victim, false)
+		if (player)
+			Ware_PassPlayer(player, false)
 	}
 	
 	Ware_Minigame.cb_on_player_death(params)
