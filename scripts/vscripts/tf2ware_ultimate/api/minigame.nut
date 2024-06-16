@@ -179,16 +179,6 @@ function Ware_ToggleWearable(wearable, toggle)
 	wearable.SetDrawEnabled(toggle)
 }
 
-// Toggles the visibility of all wearables (including weapons!) on a player
-function Ware_TogglePlayerWearables(player, toggle)
-{
-	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-	{
-		MarkForPurge(wearable)
-		Ware_ToggleWearable(wearable, toggle)
-	}
-}
-
 // Shows a 2D annotation positioned in the 3D world
 // Annotations are automatically hidden when a minigame ends
 // "input" can be a vector or an entity handle

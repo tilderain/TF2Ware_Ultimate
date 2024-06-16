@@ -380,6 +380,16 @@ function Ware_SetPlayerTeam(player, team)
 	Ware_SetPlayerTeamInternal(player, team)
 }
 
+// Toggles the visibility of all wearables (including weapons!) on a player
+function Ware_TogglePlayerWearables(player, toggle)
+{
+	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+	{
+		MarkForPurge(wearable)
+		Ware_ToggleWearable(wearable, toggle)
+	}
+}
+
 // Gets a list of alive players on the given team
 function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 {
