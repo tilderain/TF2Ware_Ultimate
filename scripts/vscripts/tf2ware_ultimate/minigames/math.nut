@@ -20,8 +20,7 @@ first <- true
 
 function OnStart()
 {
-	//local mode = RandomInt(0, 3)
-	local mode = 3
+	local mode = RandomInt(0, 3)
 	if (mode == 0)
 	{
 		if (RandomInt(0, 49) == 0)
