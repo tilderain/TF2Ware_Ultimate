@@ -126,10 +126,17 @@ ITEM_PROJECTILE_MAP <-
 	[1152] = "tf_projectile_grapplinghook",
 }
 
-DEVELOPER_STEAMID3 <-
+SAXXY_CLASSNAME_MAP <-
 {
-	"[U:1:53275741]"  : 1 // ficool2
-	"[U:1:111328277]" : 1 // pokemonPasta
+	[TF_CLASS_SCOUT]        = "tf_weapon_bat",
+	[TF_CLASS_SOLDIER]      = "tf_weapon_shovel",
+	[TF_CLASS_PYRO]         = "tf_weapon_fireaxe",
+	[TF_CLASS_DEMOMAN]      = "tf_weapon_bottle",
+	[TF_CLASS_HEAVYWEAPONS] = "tf_weapon_fists",
+	[TF_CLASS_ENGINEER]     = "tf_weapon_wrench",
+	[TF_CLASS_MEDIC]        = "tf_weapon_bonesaw",
+	[TF_CLASS_SNIPER]       = "tf_weapon_club",
+	[TF_CLASS_SPY]          = "tf_weapon_knife",
 }
 
 foreach (key, value in CONST)

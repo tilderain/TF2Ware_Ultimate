@@ -159,7 +159,7 @@ function OnStart()
 	
 	Ware_CreateTimer(function() 
 	{
-		Ware_PlayMinigameSound(null, Ware_Minigame.music)
+		Ware_PlayMinigameMusic(null, Ware_Minigame.music)
 		return 28.5
 	}, 28.5)
 	

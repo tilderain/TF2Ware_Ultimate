@@ -64,7 +64,7 @@ function PlacePlayers(players)
 		foreach (player in players)
 			Ware_GetPlayerMiniData(player).opponent <- null
 
-		Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_STOP)
+		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
 		Ware_PlaySoundOnAllClients(sound_standoff)
 		
 		Ware_CreateTimer(@() GiveGuns(), 2.0)
@@ -164,7 +164,7 @@ function StartShootout()
 	if (mexican_standoff)
 		Ware_PlaySoundOnAllClients(sound_standoff, 0.2, 100, SND_CHANGE_VOL)
 	else
-		Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_CHANGE_VOL, 0.2)
+		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_CHANGE_VOL, 0.2)
 	
 	foreach (data in Ware_MinigamePlayers)
 	{
@@ -251,7 +251,7 @@ function StopShootout()
 	if (count > 1)
 	{
 		if (count > 3)
-			Ware_PlayMinigameSound(null, Ware_Minigame.music, SND_CHANGE_VOL, 1.0)
+			Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_CHANGE_VOL, 1.0)
 		
 		PlacePlayers(final_players)
 	}

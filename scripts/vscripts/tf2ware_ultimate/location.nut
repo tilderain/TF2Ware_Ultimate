@@ -1,47 +1,17 @@
 // by ficool2
 
-function Ware_TeleportPlayersCircle(players, origin, radius)
-{
-	local inv = 360.0 / players.len().tofloat()
-	local i = 0
-	foreach (player in players)
-	{
-		local angle = i++ * inv
-		local pos = Vector(
-			origin.x + radius * cos(angle * PI / 180.0),
-			origin.y + radius * sin(angle * PI / 180.0),
-			origin.z)
-		local ang = QAngle(0.0, angle + 180.0, 0.0)
-		Ware_TeleportPlayer(player, pos, ang, vec3_zero)
-	}
-}
-
-function Ware_TeleportPlayersRow(players, origin, angles, max_width, offset_horz, offset_vert)
-{
-	// TODO should make this work for non-cardinal axes
-	local axis_horz = (angles.y == 0.0 || fabs(angles.y) == 180.0) ? "x" : "y"
-	local axis_vert = axis_horz == "x" ? "y" : "x"
-	
-	local center = origin * 1.0
-	local reset = center[axis_vert]
-	local accum = 0.0
-	foreach (player in players)
-	{
-		if (accum >= max_width)
-		{
-			center[axis_vert] = reset
-			center[axis_horz] += offset_horz
-			accum = 0.0
-		}
-		
-		center[axis_vert] = origin[axis_vert] - max_width * 0.5 + accum
-		Ware_TeleportPlayer(player, center, angles, vec3_zero)
-		accum += offset_vert
-	}	
-}
-
+// Stores list of locations
+// Each location shares these in common:
+// - "Init()" function
+// -- Called when the map starts, allows locations to setup their own data
+// - "Teleport(players)" function
+// -- Executed when players are about to be teleported into this location
+// - "cameras" array
+// -- Optional list info_observer_point names associated with the location
+//    These are automatically enabled/disabled
 Ware_Location <- {}
 
+// Internal use only
 Ware_LocationParent <-
 {
 	function DebugDraw()
@@ -51,6 +21,8 @@ Ware_LocationParent <-
 			DebugDrawBox(Vector(), mins, maxs, 255, 0, 0, 50, 10.0)
 	}
 }
+
+// == Locations ==
 
 Ware_Location.home <-
 {
@@ -427,5 +399,49 @@ Ware_Location.warehouse <-
 			QAngle(0, 90, 0),
 			900.0,
 			64.0, 64.0)
+	}	
+}
+
+// == Teleport helpers ==
+
+// Place the given array of players in a circle
+function Ware_TeleportPlayersCircle(players, origin, radius)
+{
+	local inv = 360.0 / players.len().tofloat()
+	local i = 0
+	foreach (player in players)
+	{
+		local angle = i++ * inv
+		local pos = Vector(
+			origin.x + radius * cos(angle * PI / 180.0),
+			origin.y + radius * sin(angle * PI / 180.0),
+			origin.z)
+		local ang = QAngle(0.0, angle + 180.0, 0.0)
+		Ware_TeleportPlayer(player, pos, ang, vec3_zero)
+	}
+}
+
+// Place the given array of players in a rectangular formation
+function Ware_TeleportPlayersRow(players, origin, angles, max_width, offset_horz, offset_vert)
+{
+	// TODO should make this work for non-cardinal axes
+	local axis_horz = (angles.y == 0.0 || fabs(angles.y) == 180.0) ? "x" : "y"
+	local axis_vert = axis_horz == "x" ? "y" : "x"
+	
+	local center = origin * 1.0
+	local reset = center[axis_vert]
+	local accum = 0.0
+	foreach (player in players)
+	{
+		if (accum >= max_width)
+		{
+			center[axis_vert] = reset
+			center[axis_horz] += offset_horz
+			accum = 0.0
+		}
+		
+		center[axis_vert] = origin[axis_vert] - max_width * 0.5 + accum
+		Ware_TeleportPlayer(player, center, angles, vec3_zero)
+		accum += offset_vert
 	}	
 }

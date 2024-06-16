@@ -42,7 +42,7 @@ function OnStart()
 		// show hats
 		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
 		{
-			if (Ware_IsWearableHat(wearable))
+			if (IsWearableHat(wearable))
 				Ware_ToggleWearable(wearable, true)
 		}
 	}

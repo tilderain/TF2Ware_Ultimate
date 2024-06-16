@@ -52,7 +52,7 @@ function OnStart()
 		operator = "*"
 	}
 	
-	Ware_ShowMinigameText(null, Ware_Format("%d %s %d = ?", a, operator, b))
+	Ware_ShowMinigameText(null, format("%d %s %d = ?", a, operator, b))
 }
 
 function OnEnd()
@@ -72,7 +72,7 @@ function OnPlayerSay(player, text)
 		if (!IsEntityAlive(player))
 			return false
 			
-		local text = Ware_Format("%d %s %d = %d", a, operator, b, num)
+		local text = format("%d %s %d = %d", a, operator, b, num)
 		Ware_ShowMinigameText(player, text)
 		Ware_PassPlayer(player, true)
 		
@@ -88,7 +88,7 @@ function OnPlayerSay(player, text)
 	{
 		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
 		{
-			local text = Ware_Format("%d %s %d = %s", a, operator, b, text)
+			local text = format("%d %s %d = %s", a, operator, b, text)
 			Ware_ShowMinigameText(player, text)
 			Ware_SuicidePlayer(player)
 		}

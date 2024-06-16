@@ -1,3 +1,5 @@
+// TODO: load these from a file
+
 Ware_BossThreshold      <- 20   // amount of minigames played before boss
 Ware_SpeedUpThreshold   <- 5    // number of minigames before applying speedup
 Ware_SpeedUpInterval    <- 0.15 // speedup factor

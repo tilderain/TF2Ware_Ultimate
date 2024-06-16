@@ -14,6 +14,8 @@ IncludeScript("tf2ware_ultimate/vcd",      ROOT)
 IncludeScript("tf2ware_ultimate/util",     ROOT)
 IncludeScript("tf2ware_ultimate/config",   ROOT)
 IncludeScript("tf2ware_ultimate/location", ROOT)
+IncludeScript("tf2ware_ultimate/dev",      ROOT)
 IncludeScript("tf2ware_ultimate/main",     ROOT)
+IncludeScript("tf2ware_ultimate/events",   ROOT)
 
 MarkForPurge(self)
