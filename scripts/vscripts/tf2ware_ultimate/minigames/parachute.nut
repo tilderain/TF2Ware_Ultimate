@@ -38,20 +38,6 @@ function OnStart()
 		model = platform_model,
 		solid = SOLID_VPHYSICS,
 	})
-	
-	Ware_CreateTimer(@() AutodeployParachutes(), 1.2)
-}
-
-function AutodeployParachutes()
-{
-	foreach (player in Ware_MinigamePlayers)
-	{
-		if (!player.InCond(TF_COND_PARACHUTE_ACTIVE))
-		{
-			EmitSoundOnClient("Parachute_open", player)
-			player.AddCond(TF_COND_PARACHUTE_ACTIVE)
-		}
-	}
 }
 
 function OnUpdate()
