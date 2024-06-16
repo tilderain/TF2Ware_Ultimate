@@ -20,7 +20,8 @@ first <- true
 
 function OnStart()
 {
-	local mode = RandomInt(0, 2)
+	//local mode = RandomInt(0, 3)
+	local mode = 3
 	if (mode == 0)
 	{
 		if (RandomInt(0, 49) == 0)
@@ -51,13 +52,21 @@ function OnStart()
 		answer = a * b
 		operator = "*"
 	}
+	else if (mode == 3)
+	{
+		// always leaves no remainder
+		b = RandomInt(2, 10)
+		a = b * RandomInt(1, 10)
+		answer = a / b
+		operator = "/"		
+	}
 	
 	Ware_ShowMinigameText(null, format("%d %s %d = ?", a, operator, b))
 }
 
 function OnEnd()
 {
-	Ware_ChatPrint(null, "The correct answer was {color}{int}", COLOR_LIME, answer)
+	Ware_ChatPrint(null, "The correct answer was {int} {str} {int} = {color}{int}", a, operator, b, COLOR_LIME, answer)
 }
 
 function OnPlayerSay(player, text)
