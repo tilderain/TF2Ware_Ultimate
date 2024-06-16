@@ -107,6 +107,7 @@ Ware_SpecialRounds <-
 	"bonk"
 	"collisions"
 	"extended_round"
+	"fov"
 	"inclinity_problem"
 	"inverted_control"
 	"low_gravity"
