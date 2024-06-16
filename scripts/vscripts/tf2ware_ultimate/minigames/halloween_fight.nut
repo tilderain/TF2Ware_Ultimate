@@ -55,7 +55,12 @@ function OnStart()
 		else if (boss_idx == 2)
 		{
 			Ware_SetPlayerLoadout(player, TF_CLASS_DEMOMAN, "Horseless Headless Horseman's Headtaker")
-			Ware_TogglePlayerWearables(player, false)					
+			Ware_TogglePlayerWearables(player, false)
+			
+			local weapon = player.GetActiveWeapon()
+			if (weapon)
+				Ware_ToggleWearable(weapon, true)
+			
 			Ware_AddPlayerAttribute(player, "max health additive bonus", 1000 - 150.0, -1)
 			player.SetModelScale(0.7, 0.0)
 			
