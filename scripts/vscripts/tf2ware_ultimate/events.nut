@@ -247,6 +247,9 @@ function OnGameEvent_scorestats_accumulated_update(params)
 
 function OnGameEvent_recalculate_truce(params)
 {
+	if (!Ware_Started)
+		return
+
 	// minigames can spawn bosses like merasmus which will revert truce to false after its over
 	if (Ware_Minigame)
 	{
