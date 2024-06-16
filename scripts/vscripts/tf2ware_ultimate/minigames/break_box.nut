@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Break the Boxes"
 	author         = "ficool2"	
 	description    = "Find the Australium!"
-	duration       = 25.0
+	duration       = 20.0
 	location       = "warehouse"
 	music          = "digging"
 	custom_overlay = "find_australium"
@@ -48,17 +48,12 @@ function OnStart()
 	local mins = Ware_MinigameLocation.mins
 	local maxs = Ware_MinigameLocation.maxs
 	
-	local gold_count = 2
+	local gold_count = 1
 	local shrink = 0.0
 	if (Ware_MinigamePlayers.len() < 6)
-	{
 		shrink = box_size * 3.1
-		gold_count = 1
-	}
 	else if (Ware_MinigamePlayers.len() < 12)
-	{
 		shrink = box_size * 2.1
-	}
 	
 	local box_size_half = box_size * 0.5
 	local mins_x = mins.x + (box_size_half) + shrink
