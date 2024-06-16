@@ -12,10 +12,12 @@ UnlitGeneric
         WaterLOD
         {
         }
-        Equals
+        Clamp
         {
             srcVar1		$CHEAPWATERENDDISTANCE
-            resultVar	$frame
+            min			0.0
+            max			1.0
+            resultVar   $frame
         }
     }            
 }
