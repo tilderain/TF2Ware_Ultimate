@@ -189,12 +189,13 @@ Ware_MinigameStartTime    <- 0.0
 Ware_MinigamePreEndTimer  <- null
 Ware_MinigameEndTimer     <- null
 Ware_MinigameEnded        <- false
-Ware_MinigameHighScorers  <- []
+Ware_MinigameTopScorers   <- []
 Ware_MinigamesPlayed	  <- 0
 Ware_BossgamesPlayed      <- 0
 
 // dunno where to put this
 Ware_RoundEndMusicTimer   <- null
+Ware_BlockPassEffects     <- false
 
 if (!("Ware_Precached" in this))
 {
@@ -675,7 +676,8 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_get_minigame            = Ware_Callback(scope, "GetMinigameName")
 	special_round.cb_get_overlay2            = Ware_Callback(scope, "GetOverlay2")
 	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")
-	special_round.cb_on_calculate_scores     = Ware_Callback(scope, "OnCalculateScores")
+	special_round.cb_on_calculate_score      = Ware_Callback(scope, "OnCalculateScore")
+	special_round.cb_on_calculate_topscorers = Ware_Callback(scope, "OnCalculateTopScorers")
 	special_round.cb_on_player_spawn         = Ware_Callback(scope, "OnPlayerSpawn")
 	special_round.cb_on_player_inventory     = Ware_Callback(scope, "OnPlayerInventory")
 	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
@@ -1191,9 +1193,12 @@ function Ware_StartMinigameInternal(is_boss)
 	
 	if (Ware_Minigame.allow_damage)
 		Ware_ToggleTruce(false)
-	
+		
+	// bit hacky but does the job
+	Ware_BlockPassEffects = Ware_SpecialRound && Ware_SpecialRound.opposite_win
 	if ("OnStart" in Ware_MinigameScope)
-		Ware_MinigameScope.OnStart()
+		Ware_MinigameScope.OnStart()	
+	Ware_BlockPassEffects = false
 
 	local event_prefix = "OnGameEvent_"
 	local event_prefix_len = event_prefix.len()
@@ -1252,11 +1257,13 @@ function Ware_StartMinigameInternal(is_boss)
 		if ("OnEnd" in Ware_MinigameScope) 
 			Ware_MinigameScope.OnEnd()
 			
-		if (Ware_Minigame.start_pass)
+		local pass_flag = !(Ware_SpecialRound && Ware_SpecialRound.opposite_win)
+			
+		if (Ware_Minigame.start_pass || pass_flag == false)
 		{
 			foreach (data in minigame_playersdata)
 			{
-				if (data.passed && !data.passed_effects)
+				if (data.passed == pass_flag && !data.passed_effects)
 				{
 					Ware_ShowPassEffects(data.player)
 					data.passed_effects = true
@@ -1312,10 +1319,6 @@ function Ware_FinishMinigameInternal()
 	foreach (name, value in Ware_MinigameSavedConvars)
 		SetConvarValue(name, value)
 	Ware_MinigameSavedConvars.clear()
-	
-	local highest_score = 1
-	local highest_players = Ware_MinigameHighScorers
-	highest_players.clear()
 	
 	local restore_collisions = Ware_Minigame.collisions && (!Ware_SpecialRound || !Ware_SpecialRound.force_collisions)
 	
@@ -1412,9 +1415,11 @@ function Ware_FinishMinigameInternal()
 	local all_passed = true
 	local all_failed = true
 	
+	local pass_flag = !(Ware_SpecialRound && Ware_SpecialRound.opposite_win)
+	
 	foreach (data in Ware_MinigamePlayersData)
 	{
-		if (data.passed)
+		if (data.passed == pass_flag)
 			all_failed = false
 		else
 			all_passed = false
@@ -1436,7 +1441,7 @@ function Ware_FinishMinigameInternal()
 			overlay = "hud/tf2ware_ultimate/default_failure_all"
 			sound = "failure_all"
 		}
-		else if (data.passed)
+		else if (data.passed == pass_flag)
 		{
 			overlay = "hud/tf2ware_ultimate/default_victory"
 			sound = "victory"
@@ -1453,31 +1458,40 @@ function Ware_FinishMinigameInternal()
 		if (Ware_MinigameOverlay2Set)
 			Ware_ShowScreenOverlay2(player, null)
 		
-		if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_scores.IsValid())
+		if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_score.IsValid())
+			Ware_SpecialRound.cb_on_calculate_score(data)
+		else if (data.passed)
+			data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
+	}
+	
+	local top_players = Ware_MinigameTopScorers
+	top_players.clear()	
+	
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_topscorers.IsValid())
+	{
+		Ware_SpecialRound.cb_on_calculate_topscorers(top_players)
+	}
+	else
+	{
+		local top_score = 1
+		foreach (data in Ware_MinigamePlayersData)
 		{
-			highest_players = Ware_SpecialRound.cb_on_calculate_scores(data, player, highest_score, highest_players)
-		}
-		else
-		{
-			if (data.passed)
-				data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
-				
-			if (data.score > highest_score)
+			if (data.score > top_score)
 			{
-				highest_score = data.score
-				highest_players.clear()
-				highest_players.append(player)
+				top_score = data.score
+				top_players.clear()
+				top_players.append(data.player)
 			}
-			else if (data.score == highest_score)
+			else if (data.score == top_score)
 			{
-				highest_players.append(player)
-			}
+				top_players.append(data.player)
+			}	
 		}
 	}
 	
 	CreateTimer(function()
 	{
-		foreach (player in highest_players)
+		foreach (player in top_players)
 			if (player.IsValid())
 				player.AddCond(TF_COND_TELEPORTED)
 	}, 0.25)
@@ -1532,14 +1546,14 @@ function Ware_GameOverInternal()
 	if (Ware_SpecialRound != null)
 		Ware_EndSpecialRound()
 	
-	local highest_players = Ware_MinigameHighScorers
-	highest_players = highest_players.filter(@(i, player) player.IsValid())
+	local top_players = Ware_MinigameTopScorers
+	top_players = top_players.filter(@(i, player) player.IsValid())
 	
-	local highest_score = 0
-	local winner_count = highest_players.len()
+	local top_score = 0
+	local winner_count = top_players.len()
 	
 	if (winner_count > 0)
-		highest_score = highest_players[0].GetScriptScope().ware_data.score
+		top_score = top_players[0].GetScriptScope().ware_data.score
 	
 	local delay = GetConvarValue("mp_bonusroundtime").tofloat()
 	Ware_ToggleTruce(false)
@@ -1548,7 +1562,7 @@ function Ware_GameOverInternal()
 	{
 		local player = data.player
 		
-		if (highest_players.find(player) != null)
+		if (top_players.find(player) != null)
 		{
 			Ware_PlayGameSound(player, "gameclear")
 			player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
@@ -1571,13 +1585,13 @@ function Ware_GameOverInternal()
 	
 	if (winner_count > 1)
 	{
-		Ware_ChatPrint(null, "{color}The winners each with {int} points:", TF_COLOR_DEFAULT, highest_score)
-		foreach (player in highest_players)
+		Ware_ChatPrint(null, "{color}The winners each with {int} points:", TF_COLOR_DEFAULT, top_score)
+		foreach (player in top_players)
 			Ware_ChatPrint(null, "> {player} {color}!", player, TF_COLOR_DEFAULT)
 	}
 	else if (winner_count == 1)
 	{
-		Ware_ChatPrint(null, "{player} {color}won with {int} points!", highest_players[0], TF_COLOR_DEFAULT, highest_score)
+		Ware_ChatPrint(null, "{player} {color}won with {int} points!", top_players[0], TF_COLOR_DEFAULT, top_score)
 	}	
 	else if (winner_count == 0)
 	{

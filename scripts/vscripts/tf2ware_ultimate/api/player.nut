@@ -70,11 +70,15 @@ function Ware_PassPlayer(player, pass)
 	local data = player.GetScriptScope().ware_data
 	if (data.passed == pass)
 		return
-		
-	if (pass && !data.passed_effects)
+	
+	if (!Ware_BlockPassEffects)
 	{
-		Ware_ShowPassEffects(player)
-		data.passed_effects = true
+		local pass_flag = !(Ware_SpecialRound && Ware_SpecialRound.opposite_win)
+		if (pass == pass_flag && !data.passed_effects)
+		{
+			Ware_ShowPassEffects(player)
+			data.passed_effects = true
+		}
 	}
 	
 	data.passed = pass
@@ -369,9 +373,10 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	{
 		Ware_CheckTeleportEffectTimer = CreateTimer(function()
 		{
+			local top_scorers = Ware_MinigameTopScorers
 			foreach (player in Ware_MinigamePlayers)
 			{
-				if (Ware_MinigameHighScorers.find(player) != null)
+				if (top_scorers.find(player) != null)
 					player.AddCond(TF_COND_TELEPORTED)
 			}
 		}, 0.25)

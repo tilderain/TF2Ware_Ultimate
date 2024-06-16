@@ -274,6 +274,7 @@ function PlayerPostSpawn()
 	
 	if (melee != null)
 	{
+		// TODO: is this code even needed now that loadout cacher is removed?
 		// not sure why this is needed
 		melee.SetModel(TF_CLASS_ARMS[self.GetPlayerClass()])		
 		self.Weapon_Switch(melee)
@@ -282,9 +283,6 @@ function PlayerPostSpawn()
 		// hack: something is not clearing the render color
 		// last minute for the playtest
 		SetPropInt(melee, "m_clrRender", 0xFFFFFFFF)
-		
-		// hack: calculates correct speed
-		self.AddCondEx(TF_COND_SPEED_BOOST, 0.001, null)
 	}
 }
 
@@ -321,7 +319,7 @@ function OnGameEvent_player_spawn(params)
 	
 	if (params.team & 2)
 	{
-		if (Ware_MinigameHighScorers.find(player) != null)
+		if (Ware_MinigameTopScorers.find(player) != null)
 			player.AddCond(TF_COND_TELEPORTED)
 		
 		if (!data.start_sound)

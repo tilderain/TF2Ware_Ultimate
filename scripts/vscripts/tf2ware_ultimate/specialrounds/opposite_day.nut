@@ -4,25 +4,23 @@ special_round <- Ware_SpecialRoundData
 	name = "Opposite Day"
 	author = "pokemonPasta"
 	description = "Lowest score at the end wins."
+	opposite_win = true
 })
 
-local lowest_score = Ware_GetBossThreshold() + Ware_PointsBossgame
-
-function OnCalculateScores(data, player, highest_score, highest_players)
+function OnCalculateTopScorers(top_players)
 {
-	if (data.passed)
-		data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
-	
-	if (data.score < lowest_score)
+	local top_score = INT_MAX
+	foreach (data in Ware_MinigamePlayersData)
 	{
-		lowest_score = data.score
-		highest_players.clear()
-		highest_players.append(player)
-	}
-	else if (data.score == lowest_score)
-	{
-		highest_players.append(player)
-	}
-	
-	return highest_players
+		if (data.score < top_score)
+		{
+			top_score = data.score
+			top_players.clear()
+			top_players.append(data.player)
+		}
+		else if (data.score == top_score)
+		{
+			top_players.append(data.player)
+		}	
+	}	
 }

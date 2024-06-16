@@ -10,6 +10,7 @@ class Ware_SpecialRoundData
 		reverse_text     = false
 		allow_damage     = false
 		force_collisions = false
+		opposite_win     = false
 		boss_count       = 1
 		
 		if (table)
@@ -41,24 +42,27 @@ class Ware_SpecialRoundData
 	allow_damage     		 = null
 	// Always enable collisions between players, default is false
 	force_collisions 		 = null
+	// Inverted win condition, e.g. not passing means you win, default is false
+	opposite_win			 = null
 	// Amount of bosses to play, default is 1
 	boss_count       		 = null
 	
 	// == Callbacks == 
 	// TODO: document these
-	cb_get_boss_threshold    = null
-	cb_get_minigame          = null
-	cb_get_overlay2          = null
-	cb_get_player_roll       = null
-	cb_on_calculate_scores   = null
-	cb_on_player_spawn       = null
-	cb_on_player_inventory   = null
-	cb_on_begin_intermission = null
-	cb_on_minigame_start     = null
-	cb_on_minigame_end       = null
-	cb_on_speedup            = null
-	cb_on_take_damage        = null
-	cb_on_update             = null
+	cb_get_boss_threshold      = null
+	cb_get_minigame            = null
+	cb_get_overlay2            = null
+	cb_get_player_roll         = null
+	cb_on_calculate_score      = null
+	cb_on_calculate_topscorers = null
+	cb_on_player_spawn         = null
+	cb_on_player_inventory     = null
+	cb_on_begin_intermission   = null
+	cb_on_minigame_start       = null
+	cb_on_minigame_end         = null
+	cb_on_speedup              = null
+	cb_on_take_damage          = null
+	cb_on_update               = null
 }
 
 // Rolls and starts a special round
