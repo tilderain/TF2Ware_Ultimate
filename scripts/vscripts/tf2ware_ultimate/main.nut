@@ -1048,10 +1048,12 @@ function Ware_StartMinigameInternal(is_boss)
 		
 		if (!is_forced)
 		{
-			if (Ware_SpecialRound && Ware_SpecialRound.cb_get_minigame.IsValid())
-				minigame = Ware_SpecialRound.cb_get_minigame(is_boss)
 			
-			if (!minigame)
+			if (Ware_SpecialRound && Ware_SpecialRound.cb_get_minigame.IsValid())
+			{
+				minigame = Ware_SpecialRound.cb_get_minigame(is_boss)
+			}
+			else
 			{
 				if (is_boss)
 				{
@@ -1091,8 +1093,7 @@ function Ware_StartMinigameInternal(is_boss)
 		{
 			Ware_MinigameScope.clear()
 			IncludeScript(path, Ware_MinigameScope)
-			
-			
+
 			local min_players = Ware_MinigameScope.minigame.min_players
 			if (player_count >= min_players)
 			{
