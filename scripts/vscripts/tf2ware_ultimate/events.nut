@@ -29,14 +29,26 @@ function OnScriptHook_OnTakeDamage(params)
 	local victim = params.const_entity
 	local attacker = params.attacker
 	
-	// handle the case where truce is disabled but don't want damage between players
-	if (victim != attacker && victim.IsPlayer() && attacker.IsPlayer())
+	if (victim == attacker)
 	{
-		if (!Ware_Finished && Ware_Started && (Ware_Minigame == null || !Ware_Minigame.allow_damage))
+		if (params.damage_custom == TF_DMG_CUSTOM_TAUNTATK_GRENADE)
 		{
 			params.damage = 0
-			params.early_out = true	
+			params.early_out = true
 			return
+		}
+	}
+	else
+	{
+		// handle the case where truce is disabled but don't want damage between players
+		if (victim.IsPlayer() && attacker.IsPlayer())
+		{
+			if (!Ware_Finished && Ware_Started && (Ware_Minigame == null || !Ware_Minigame.allow_damage))
+			{
+				params.damage = 0
+				params.early_out = true	
+				return
+			}
 		}
 	}
 
