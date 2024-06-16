@@ -9,7 +9,7 @@ minigame <- Ware_MinigameData
 		"Don't Laugh!"
 		"Make the Scouts Laugh!"
 	]
-	duration      = 6.0
+	duration      = 5.0
 	music         = "brassy"
 	custom_overlay = 
 	[
