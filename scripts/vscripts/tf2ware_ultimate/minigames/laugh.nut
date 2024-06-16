@@ -39,6 +39,7 @@ function OnStart()
 			Ware_GivePlayerWeapon(player, "Holiday Punch")
 			// give crits so holiday punch always makes laugh
 			player.AddCond(TF_COND_CRITBOOSTED)
+			player.AddCond(TF_COND_SPEED_BOOST)
 			// default to fail unless they make a scout laugh
 			Ware_PassPlayer(player, false)
 		}
@@ -96,6 +97,7 @@ function OnEnd()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
+		player.RemoveCond(TF_COND_SPEED_BOOST)
 		player.RemoveCond(TF_COND_CRITBOOSTED)
 		player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)
 	}
