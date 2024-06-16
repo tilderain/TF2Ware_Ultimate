@@ -497,7 +497,7 @@ function Ware_ParseLoadout(player)
 	local data = player.GetScriptScope().ware_data
 	
 	local special_melee = data.special_melee
-	if (special_melee)
+	if (special_melee && special_melee.IsValid())
 	{
 		// shouldn't happen, if it does, this logic needs rewriting
 		if (data.melee_index == null)

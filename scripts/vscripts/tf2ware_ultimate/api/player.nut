@@ -139,7 +139,7 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 		else
 			melee = data.melee
 
-		if (melee)
+		if (melee && melee.IsValid())
 		{
 			if (item_attributes.len() > 0)
 			{
