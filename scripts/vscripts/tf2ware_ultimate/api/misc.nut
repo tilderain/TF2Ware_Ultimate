@@ -87,6 +87,39 @@ function Ware_ChatPrint(target, fmt, ...)
 	ClientPrint(target, HUD_PRINTTALK, result)
 }
 
+// Shows text on the screen, with the same properties as the game_text entity
+// Text can be reversed by a special round
+// "players" can either be an array of players or a player handle
+function Ware_ShowText(players, channel, text, holdtime, color = "255 255 255", x = -1.0, y = 0.3)
+{
+	if (Ware_SpecialRound && Ware_SpecialRound.reverse_text)
+		text = ReverseString(text)
+	
+	local text_mgr = Ware_TextManager
+	Ware_TextManagerQueue.push(
+	{ 
+		message  = text
+		color    = color
+		holdtime = holdtime
+		x		 = x
+		y        = y
+		channel  = channel
+	})
+	
+	EntityEntFire(text_mgr, "FireUser1")
+	if (typeof(players) == "array")
+	{
+		foreach (player in players)
+			EntFireByHandle(text_mgr, "Display", "", -1, player, null)
+	}
+	else
+	{
+		EntFireByHandle(text_mgr, "Display", "", -1, players, null)
+	}
+	EntityEntFire(text_mgr, "FireUser2")
+}
+
+
 // Show an error message to the server console and in chat
 // Uses printf style formatting
 function Ware_Error(...)

@@ -595,19 +595,16 @@ function Ware_PushPlayerFromOther(player, other_player, scale)
 	player.SetAbsVelocity(player.GetAbsVelocity() + dir)
 }
 
-// Runs a client command on the given player
-// If player is null, the command is ran on all playeers
-function Ware_RunClientCommand(player, command)
+// Shows text on the screen, with the same properties as the game_text entity
+// The text will only display as long as the minigame itself
+// Text can be reversed by a special round
+// If "player" is null, the text is displayed to all players participating in the minigame
+function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y = 0.3)
 {
-	if (player)
-	{
-		EntFireByHandle(ClientCmd, "Command", command, 0, player, null)		
-	}
+	if (player == null)
+		Ware_ShowText(Ware_MinigamePlayers, CHANNEL_MINIGAME, text, Ware_GetMinigameRemainingTime(), color, x, y)
 	else
-	{
-		foreach (player in Ware_Players)
-			EntFireByHandle(ClientCmd, "Command", command, 0, player, null)		
-	}
+		Ware_ShowText(player, CHANNEL_MINIGAME, text, Ware_GetMinigameRemainingTime(), color, x, y)
 }
 
 // Shows the primary overlay texture on a player
@@ -656,30 +653,17 @@ function Ware_ShowGlobalScreenOverlay2(name)
 		Ware_ShowScreenOverlay2(player, name)
 }
 
-// TODO document
-function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y = 0.3)
+// Runs a client command on the given player
+// If player is null, the command is ran on all playeers
+function Ware_RunClientCommand(player, command)
 {
-	if (Ware_SpecialRound && Ware_SpecialRound.reverse_text)
-		text = ReverseString(text)
-	
-	Ware_TextManagerQueue.push(
-	{ 
-		message  = text
-		color    = color
-		holdtime = Ware_GetMinigameRemainingTime()
-		x		 = x
-		y        = y
-	})
-	
-	EntityEntFire(Ware_TextManager, "FireUser1")
 	if (player)
 	{
-		EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null)
+		EntFireByHandle(ClientCmd, "Command", command, 0, player, null)		
 	}
 	else
 	{
-		foreach (player in Ware_MinigamePlayers)
-			EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null)
+		foreach (player in Ware_Players)
+			EntFireByHandle(ClientCmd, "Command", command, 0, player, null)		
 	}
-	EntityEntFire(Ware_TextManager, "FireUser2")
 }

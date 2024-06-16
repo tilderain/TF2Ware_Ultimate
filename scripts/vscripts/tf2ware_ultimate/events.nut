@@ -119,6 +119,8 @@ function OnGameEvent_teamplay_round_start(params)
 	
 	Ware_SetTimeScale(1.0)
 	
+	Ware_ShowSpecialRoundText(Ware_Players) // clear it out
+	
 	foreach (player in Ware_Players)
 	{
 		player.GetScriptScope().ware_data.score = 0

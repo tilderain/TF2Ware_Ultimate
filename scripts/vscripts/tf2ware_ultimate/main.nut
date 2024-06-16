@@ -250,7 +250,6 @@ function Ware_FindStandardEntities()
 		fadein  = 0.0
 		fadeout = 0.0
 		fxtime  = 0.0
-		channel = 3
 	})
 	SetInputHook(Ware_TextManager, "FireUser1", Ware_TextHookBegin, null)
 	SetInputHook(Ware_TextManager, "FireUser2", Ware_TextHookEnd, null)
@@ -452,6 +451,7 @@ function Ware_TextHookBegin()
 	self.KeyValueFromFloat("holdtime", params.holdtime)
 	self.KeyValueFromFloat("x", params.x)
 	self.KeyValueFromFloat("y", params.y)
+	self.KeyValueFromInt("channel", params.channel)
 	return true
 }
 
@@ -657,6 +657,14 @@ function Ware_IsSpecialRoundValid(str)
 	return false
 }
 
+function Ware_ShowSpecialRoundText(players)
+{
+	local holdtime = 10.0
+	local text = Ware_SpecialRound ? ("\n\n\n Special Round!\n " + Ware_SpecialRound.name) : ""
+	Ware_ShowText(players, CHANNEL_SPECIALROUND, text, holdtime + 0.2, "255 175 0", 0.0, 0.0)
+	return holdtime // refresh every 10 seconds
+}
+
 function Ware_SetupSpecialRoundCallbacks()
 {
 	local special_round = Ware_SpecialRound
@@ -765,7 +773,9 @@ function Ware_BeginSpecialRoundInternal()
 	
 	// ingame sequence
 	Ware_PlayGameSound(null, "special_round")
-	Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/special_round")
+	
+	foreach (player in Ware_Players)
+		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/special_round")
 	
 	local start_time = Time()
 	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
@@ -773,34 +783,16 @@ function Ware_BeginSpecialRoundInternal()
 	local end_time = duration - reveal_time
 	local text_interval = 0.15
 	// TODO: show special rounds a better way
-	// this is just copied/adapted from Ware_ShowMinigameText
 	// maybe just put something behind it?
-	local ShowText = function(str, holdtime)
-	{
-		Ware_TextManagerQueue.push(
-			{ 
-				message  = str
-				color    = "255 255 255"
-				holdtime = holdtime
-				x		 = -1.0
-				y        = 0.3
-			})
-			
-		EntityEntFire(Ware_TextManager, "FireUser1")
-		foreach (player in Ware_MinigamePlayers)
-			EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null)
-		EntityEntFire(Ware_TextManager, "FireUser2")
-	}
-	
 	local special_round = Ware_SpecialRoundScope.special_round
 		
 	CreateTimer(function() 
 	{	
-		ShowText(RandomElement(Ware_FakeSpecialRounds), text_interval * 2.0)
+		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds), text_interval * 2.0)
 		
 		if (Time() - start_time > reveal_time)
 		{
-			ShowText(special_round.name, end_time)
+			Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, special_round.name, end_time)
 			
 			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, special_round.name, TF_COLOR_DEFAULT, special_round.description)
 			
@@ -818,6 +810,8 @@ function Ware_BeginSpecialRoundInternal()
 					Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
 					SetConvarValue(name, value)
 				}
+				
+				CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)
 				
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
