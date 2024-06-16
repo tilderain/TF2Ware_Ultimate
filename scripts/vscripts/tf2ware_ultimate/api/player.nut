@@ -420,6 +420,16 @@ function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 		return Ware_MinigamePlayers.filter(@(i, player) IsEntityAlive(player))
 }
 
+// Gets a list of players that have passed
+// Optionally it will only fetch alive alive passed players
+function Ware_GetPassedPlayers(alive_only = false)
+{
+	if (alive_only)
+		return Ware_MinigamePlayersData.filter(@(i, data) data.passed && IsEntityAlive(data.player))
+	else
+		return Ware_MinigamePlayersData.filter(@(i, data) data.passed)
+}
+
 // Gets a list of alive players that are on red or blue team
 // Internally this decides what players will be placed into a minigame
 function Ware_GetValidPlayers()
