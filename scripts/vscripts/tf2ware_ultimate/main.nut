@@ -452,6 +452,7 @@ function Ware_TextHookBegin()
 	self.KeyValueFromFloat("x", params.x)
 	self.KeyValueFromFloat("y", params.y)
 	self.KeyValueFromInt("channel", params.channel)
+	self.KeyValueFromInt("spawnflags", params.spawnflags)
 	return true
 }
 
@@ -659,10 +660,10 @@ function Ware_IsSpecialRoundValid(str)
 
 function Ware_ShowSpecialRoundText(players)
 {
-	local holdtime = 10.0
+	local holdtime = 3.0 
 	local text = Ware_SpecialRound ? ("\n\n\n Special Round!\n " + Ware_SpecialRound.name) : ""
 	Ware_ShowText(players, CHANNEL_SPECIALROUND, text, holdtime + 0.2, "255 175 0", 0.0, 0.0)
-	return holdtime // refresh every 10 seconds
+	return holdtime // refresh every few seconds
 }
 
 function Ware_SetupSpecialRoundCallbacks()

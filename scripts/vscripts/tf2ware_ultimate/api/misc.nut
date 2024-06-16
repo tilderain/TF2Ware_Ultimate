@@ -94,20 +94,28 @@ function Ware_ShowText(players, channel, text, holdtime, color = "255 255 255", 
 {
 	if (Ware_SpecialRound && Ware_SpecialRound.reverse_text)
 		text = ReverseString(text)
-	
+		
+	local is_array = typeof(players) == "array"
+	local spawnflags = 0
+	// optimization: if showing text to everyone on the server
+	// then this can be done in one I/O input
+	if (is_array && players.len() == Ware_Players.len())
+		spawnflags = 1
+		
 	local text_mgr = Ware_TextManager
 	Ware_TextManagerQueue.push(
 	{ 
-		message  = text
-		color    = color
-		holdtime = holdtime
-		x		 = x
-		y        = y
-		channel  = channel
+		message    = text
+		color      = color
+		holdtime   = holdtime
+		x		   = x
+		y          = y
+		channel    = channel
+		spawnflags = spawnflags
 	})
 	
 	EntityEntFire(text_mgr, "FireUser1")
-	if (typeof(players) == "array")
+	if (is_array && spawnflags == 0)
 	{
 		foreach (player in players)
 			EntFireByHandle(text_mgr, "Display", "", -1, player, null)
@@ -116,6 +124,7 @@ function Ware_ShowText(players, channel, text, holdtime, color = "255 255 255", 
 	{
 		EntFireByHandle(text_mgr, "Display", "", -1, players, null)
 	}
+	
 	EntityEntFire(text_mgr, "FireUser2")
 }
 
