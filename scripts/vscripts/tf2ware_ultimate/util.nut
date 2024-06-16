@@ -298,7 +298,7 @@ function PlayerParentFix()
 {
 	self.RemoveEFlags(EFL_KILLME)
 	for (local wearable = self.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-		wearable.AddEFlags(EFL_KILLME)
+		wearable.RemoveEFlags(EFL_KILLME)
 	
 	SetPropInt(self, "m_fEffects", 0)
 	SetPropInt(self, "m_iParentAttachment", 0)
