@@ -290,15 +290,15 @@ function OnEnd()
 				Ware_PassPlayer(player, false)
 		}
 		
-		Ware_ChatPrint(null, "{color}All pages collected... The Survivors win!", TF_COLOR_DEFAULT)
+		Ware_ChatPrint(null, "All pages collected... The Survivors win!")
 	}
 	else if (survivors.len() == 0)
 	{
-		Ware_ChatPrint(null, "{color}All survivors are dead... Slender wins!", TF_COLOR_DEFAULT)
+		Ware_ChatPrint(null, "All survivors are dead... Slender wins!")
 	}
 	else
 	{
-		Ware_ChatPrint(null, "{color}Time's up... Slender wins!", TF_COLOR_DEFAULT)
+		Ware_ChatPrint(null, "Time's up... Slender wins!")
 	}
 }
 

@@ -57,11 +57,11 @@ function OnEnd()
 				if (GetPropInt(player, "m_Shared.m_nDisguiseTeam") == team_idx)
 					Ware_PassPlayer(player, true)
 				else
-					Ware_ChatPrint(player, "{color}You didn't match the disguise team!", TF_COLOR_DEFAULT)
+					Ware_ChatPrint(player, "You didn't match the disguise team!")
 			}
 			else
 			{
-				Ware_ChatPrint(player, "{color}You didn't match the disguise class!", TF_COLOR_DEFAULT)
+				Ware_ChatPrint(player, "You didn't match the disguise class!")
 			}
 		}
 	}

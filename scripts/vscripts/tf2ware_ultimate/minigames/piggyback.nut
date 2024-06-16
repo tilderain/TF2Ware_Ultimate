@@ -108,7 +108,7 @@ function PiggybackUnparent(player, invis_hack)
 
 function PiggybackKilled(invis_hack)
 {
-	Ware_ChatPrint(null, "{color}Heavy {str}, so pyros win!", TF_COLOR_DEFAULT, invis_hack ? "disconnected" : "died")
+	Ware_ChatPrint(null, "Heavy {str}, so pyros win!", invis_hack ? "disconnected" : "died")
 	Ware_CreateTimer(function(){piggybacker_killed <- true}, 2.0)
 	
 	foreach (player in Ware_MinigamePlayers)

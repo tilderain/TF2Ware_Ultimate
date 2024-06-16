@@ -368,16 +368,16 @@ function OnEnd()
 		foreach (player in alive_medics)
 			Ware_PassPlayer(player, true)
 			
-		Ware_ChatPrint(null, "{color}All ghosts are dead... The Ghostbusters win!", TF_COLOR_DEFAULT)
+		Ware_ChatPrint(null, "All ghosts are dead... The Ghostbusters win!")
 	}
 	else if (alive_medics.len() == 0)
 	{
-		Ware_ChatPrint(null, "{color}All ghostbusters are dead... The Undead win!", TF_COLOR_DEFAULT)
+		Ware_ChatPrint(null, "All ghostbusters are dead... The Undead win!")
 	}
 	else
 	{
 		local word = alive_spies.len() > 1 ? "ghosts" : "ghost"
-		Ware_ChatPrint(null, "{color}There is {int} {str} left standing... The Undead win!", TF_COLOR_DEFAULT, alive_spies.len(), word)
+		Ware_ChatPrint(null, "There is {int} {str} left standing... The Undead win!", alive_spies.len(), word)
 	}
 }
 

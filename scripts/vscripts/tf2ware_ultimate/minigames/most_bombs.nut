@@ -114,5 +114,5 @@ function OnTakeDamage(params)
 
 function OnEnd()
 {
-	Ware_ChatPrint(null, "{color}The correct color was {color}{str}", TF_COLOR_DEFAULT, colors_text[color], colors[color].toupper())
+	Ware_ChatPrint(null, "The correct color was {color}{str}", colors_text[color], colors[color].toupper())
 }

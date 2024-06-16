@@ -56,7 +56,7 @@ function OnStart()
 
 function OnEnd()
 {
-	Ware_ChatPrint(null, "{color}The correct answer was {color}{str}", TF_COLOR_DEFAULT, CONST["COLOR_" + answer], answer)
+	Ware_ChatPrint(null, "The correct answer was {color}{str}", CONST["COLOR_" + answer], answer)
 }
 
 function OnPlayerSay(player, text)

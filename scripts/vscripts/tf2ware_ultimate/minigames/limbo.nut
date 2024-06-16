@@ -86,7 +86,7 @@ function OnEnd()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
-			Ware_ChatPrint(player, "{color}Spycrabs must look up and crouch!", TF_COLOR_DEFAULT)
+			Ware_ChatPrint(player, "Spycrabs must look up and crouch!")
 		
 		player.RemoveFlag(FL_ATCONTROLS)
 	}

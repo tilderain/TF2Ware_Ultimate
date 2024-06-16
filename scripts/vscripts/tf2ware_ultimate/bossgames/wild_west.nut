@@ -195,7 +195,7 @@ function StopShootout()
 		{
 			if (IsEntityAlive(player))
 			{
-				Ware_ChatPrint(player, "{color} You have all been disqualified for surviving. Cowards!", TF_COLOR_DEFAULT)
+				Ware_ChatPrint(player, "You have all been disqualified for surviving. Cowards!")
 				Ware_SuicidePlayer(player)
 			}
 		}
@@ -217,20 +217,20 @@ function StopShootout()
 							{
 								Ware_SuicidePlayer(player)
 								Ware_SuicidePlayer(opponent)
-								local msg = "{color}You and your opponent have been disqualified for missing!"
-								Ware_ChatPrint(player, msg, TF_COLOR_DEFAULT)
-								Ware_ChatPrint(opponent, msg, TF_COLOR_DEFAULT)
+								local msg = "You and your opponent have been disqualified for missing!"
+								Ware_ChatPrint(player, msg)
+								Ware_ChatPrint(opponent, msg)
 								continue
 							}
 						}
 						else
 						{
-							Ware_ChatPrint(player, "{color}Your opponent disconnected so you have been spared...", TF_COLOR_DEFAULT)
+							Ware_ChatPrint(player, "Your opponent disconnected so you have been spared...")
 						}
 					}
 					else if (!mexican_standoff)
 					{
-						Ware_ChatPrint(player, "{color}You had no opponent so you have been spared...", TF_COLOR_DEFAULT)
+						Ware_ChatPrint(player, "You had no opponent so you have been spared...")
 					}
 				}
 				
@@ -255,7 +255,7 @@ function StopShootout()
 		if (count == 1)
 			Ware_ChatPrint(null, "{player}{color} wins as the best gunslinger!", final_players[0], TF_COLOR_DEFAULT)
 		else
-			Ware_ChatPrint(null, "{color}Nobody won!", TF_COLOR_DEFAULT)
+			Ware_ChatPrint(null, "Nobody won!")
 		
 		game_over = true
 	}
@@ -333,7 +333,7 @@ function OnUpdate()
 			if (minidata.holding_attack && !minidata.hold_warning)
 			{
 				minidata.hold_warning = true
-				Ware_ChatPrint(player, "{color}Do not hold the attack button. {color}Your gun will not fire!", TF_COLOR_DEFAULT, COLOR_YELLOW)
+				Ware_ChatPrint(player, "Do not hold the attack button. {color}Your gun will not fire!", COLOR_YELLOW)
 			}
 		}
 	}

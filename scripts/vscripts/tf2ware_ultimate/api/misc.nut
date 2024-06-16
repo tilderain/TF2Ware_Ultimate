@@ -5,17 +5,33 @@
 // The text will be automatically reversed during the "Reversed Text" special round
 // Target can either be null (show it for everyone) or a specific player
 // Available formatters:
-// {player} - Outputs player name in their team color
-// {color} - Sets the upcoming text color in RGB hex format
-// {int} - Integer value
-// {float} - Float value
-// {str} - String value
-// If no formatter is matched, he output will be formatted with C-style rules using Squirrel's built-in format function
-// E.g. {%g} will print the value in scientific notation
+//   {player} - Outputs player name in their team color. 
+//              This adds a color marker, so if you are putting text after the player name
+//              make sure to add a {color} formatter, usually with TF_COLOR_DEFAULT!
+//   {color}  - Adds a color marker (sets the upcoming text color) in RGB hex format
+//   {int}    - Integer value
+//   {float}  - Float value
+//   {str}    - String value
+// If no formatter is matched,
+//   the output will be formatted with C-style rules using Squirrel's built-in format function
+//   E.g. {%g} will print the value in scientific notation
+// If no {color} or {player} exists at the beginning of the text
+//   a TF_COLOR_DEFAULT marker will be automatically prepended
 function Ware_ChatPrint(target, fmt, ...) 
 {
 	local reversed = Ware_SpecialRound && Ware_SpecialRound.reverse_text
-	local result = reversed ? "" : "\x07FFCC22[TF2Ware] "
+	local result
+	
+	if (reversed)
+	{
+		result = ""
+	}
+	else
+	{
+		 result = "\x07FFCC22[TF2Ware] "
+		 if (!startswith(fmt, "{color}") && !startswith(fmt, "{player}"))
+			result += "\x07" + TF_COLOR_DEFAULT
+	}
 	
 	local start = 0
 	local end = fmt.find("{")

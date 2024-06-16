@@ -57,7 +57,7 @@ function OnStart()
 
 function OnEnd()
 {
-	Ware_ChatPrint(null, "{color}The correct answer was {color}{int}", TF_COLOR_DEFAULT, COLOR_LIME, answer)
+	Ware_ChatPrint(null, "The correct answer was {color}{int}", COLOR_LIME, answer)
 }
 
 function OnPlayerSay(player, text)

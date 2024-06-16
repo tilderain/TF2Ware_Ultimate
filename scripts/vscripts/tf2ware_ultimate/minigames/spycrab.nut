@@ -46,6 +46,6 @@ function OnEnd()
 		if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))
 			Ware_PassPlayer(player, true)
 		else if (!Ware_IsPlayerPassed(player))
-			Ware_ChatPrint(player, "{color}Spycrabs must look up and crouch!", TF_COLOR_DEFAULT)
+			Ware_ChatPrint(player, "Spycrabs must look up and crouch!")
 	}
 }

@@ -345,16 +345,14 @@ function OnEnd()
 		foreach(player in winners)
 		{
 			Ware_PassPlayer(player, true)
-			Ware_ChatPrint(player, "{color}You won! Your score was {color}{int}", 
-				TF_COLOR_DEFAULT, 		
+			Ware_ChatPrint(player, "You won! Your score was {color}{int}",	
 				COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score)
 		}
 		foreach(player in Ware_MinigamePlayers)
 		{
 			if (!Ware_IsPlayerPassed(player))
 			{
-				Ware_ChatPrint(player, "{color}You lose! Your score was {color}{int}{color}, but the winning score was {color}{int}",
-					TF_COLOR_DEFAULT, 
+				Ware_ChatPrint(player, "You lose! Your score was {color}{int}{color}, but the winning score was {color}{int}",
 					COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score, TF_COLOR_DEFAULT
 					COLOR_LIME, high_score)
 			}
@@ -366,8 +364,7 @@ function OnEnd()
 		{
 			if (!Ware_IsPlayerPassed(player))
 			{
-				Ware_ChatPrint(player, "{color}You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
-					TF_COLOR_DEFAULT,
+				Ware_ChatPrint(player, "You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
 					COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score, TF_COLOR_DEFAULT
 					COLOR_LIME, min_score)
 			}
