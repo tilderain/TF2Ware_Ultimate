@@ -40,9 +40,8 @@ function OnTakeDamage(params)
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.RemoveCond(TF_COND_URINE)
 		player.RemoveCond(TF_COND_STUNNED)
 	}

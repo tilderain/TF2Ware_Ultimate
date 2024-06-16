@@ -23,10 +23,8 @@ minigame <- Ware_MinigameData
 function OnStart()
 {
 	local engi_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
-					
+	foreach (player in Ware_MinigamePlayers)
+	{				
 		if (player.GetTeam() == engi_team)
 		{
 			Ware_SetPlayerMission(player, 1)

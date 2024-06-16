@@ -26,16 +26,15 @@ function OnEnd()
 	local threshold = 96.0
 	
 	local targets = []
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (!IsEntityAlive(player))
 		{
 			Ware_PassPlayer(player, false)
 			continue
 		}
 		
-		targets.append({player = data.player, origin = data.player.GetOrigin(), kill = true})
+		targets.append({player = player, origin = player.GetOrigin(), kill = true})
 	}
 	
 	foreach (target1 in targets)

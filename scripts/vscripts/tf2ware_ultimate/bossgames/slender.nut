@@ -110,9 +110,8 @@ function OnStart()
 		fogmaxdensity = 1.0,
 	})
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (slenders.find(player) != null)
 		{
 			Ware_SetPlayerMission(player, MISSION_SLENDER)
@@ -201,17 +200,17 @@ function OnUpdate()
 			slenders_data[player] <- player.GetCenter()
 	}
 
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (!IsEntityAlive(player))
 			continue
 		
-		if (data.mission == MISSION_SLENDER)
+		local mission = Ware_GetPlayerMission(player)
+		if (mission == MISSION_SLENDER)
 		{
 			SetPropFloat(player, "m_flMaxspeed", 203.0 + pages_collected * 5.0)
 		}
-		else if (data.mission == MISSION_SURVIVOR)
+		else if (mission == MISSION_SURVIVOR)
 		{
 			SetPropFloat(player, "m_flMaxspeed", 230.0)
 			
@@ -282,8 +281,8 @@ function OnEnd()
 	
 	if (pages_collected >= pages_max)
 	{
-		foreach (data in survivors)
-			Ware_PassPlayer(data.player, true)
+		foreach (player in survivors)
+			Ware_PassPlayer(player, true)
 			
 		foreach (player in slenders)
 		{
@@ -307,14 +306,14 @@ function OnCleanup()
 {
 	Ware_ShowMinigameText(null, "")
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
-		if (data.mission == MISSION_SURVIVOR)
+		local mission = Ware_GetPlayerMission(player)
+		if (mission == MISSION_SURVIVOR)
 		{
 			SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", null)
 		}
-		else if (data.mission == MISSION_SLENDER)
+		else if (mission == MISSION_SLENDER)
 		{
 			player.SetModelScale(1.0, 0.0)
 			player.SetCustomModel("")

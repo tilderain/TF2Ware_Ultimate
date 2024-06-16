@@ -47,9 +47,8 @@ function OnStart()
 	local vo_scouts = []
 	local vo_heavies = []
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (heavies.find(player) != null)
 		{
 			Ware_SetPlayerMission(player, 1)
@@ -162,11 +161,8 @@ function OnCleanup()
 	EntFire("love_door*", "SetSpeed", "1000")
 	EntFire("love_door*", "Close")
 	
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
+	foreach (player in Ware_MinigamePlayers)
 		player.SetCustomModel("")
-	}
 }
 
 function CheckEnd()

@@ -54,9 +54,8 @@ function OnTeleport(players)
 
 function OnStart()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (player == piggybacker)
 		{
 			Ware_SetPlayerMission(player, 1)
@@ -112,9 +111,8 @@ function PiggybackKilled(invis_hack)
 	Ware_ChatPrint(null, "{color}Heavy {str}, so pyros win!", TF_COLOR_DEFAULT, invis_hack ? "disconnected" : "died")
 	Ware_CreateTimer(function(){piggybacker_killed <- true}, 2.0)
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (player == piggybacker)
 			continue
 			
@@ -162,9 +160,8 @@ function OnUpdate()
 	if (can_piggyback)
 		piggybacker_origin = piggybacker.GetOrigin()
 		
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (player == piggybacker)
 			continue
 			
@@ -195,9 +192,8 @@ function OnUpdate()
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		PiggybackUnparent(player, false)
 		player.RemoveCond(TF_COND_SPEED_BOOST)
 	}

@@ -22,9 +22,8 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS, null)
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.SetCustomModel(banana_model)
 		Ware_TogglePlayerWearables(player, false)
 		player.AddCondEx(TF_COND_SPEED_BOOST, 6.2, null)
@@ -36,9 +35,8 @@ function OnStart()
 function OnUpdate()
 {
 	local threshold = Ware_MinigameLocation.start.x - 13300.0
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (IsEntityAlive(player) && player.GetOrigin().x < threshold)
 			Ware_PassPlayer(player, true)
 	}
@@ -52,9 +50,8 @@ function OnEnd()
 
 function OnCleanup()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.SetCustomModel("")
 		Ware_TogglePlayerWearables(player, true)
 	}

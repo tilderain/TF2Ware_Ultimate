@@ -26,10 +26,10 @@ function OnPrecache()
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Necro Smasher")
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
-		Ware_CreateTimer(@() SpawnJack(player), RandomFloat(0.2, 0.3))
+		local target = player // need this to make squirrel happy
+		Ware_CreateTimer(@() SpawnJack(target), RandomFloat(0.2, 0.3))
 	}
 }
 

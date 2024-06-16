@@ -12,11 +12,8 @@ minigame <- Ware_MinigameData
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Sandman")
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
+	foreach (player in Ware_MinigamePlayers)
 		Ware_SetPlayerAmmo(player, TF_AMMO_GRENADES1, 5)
-	}
 }
 
 function OnUpdate()
@@ -55,9 +52,6 @@ function OnTakeDamage(params)
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
+	foreach (player in Ware_MinigamePlayers)
 		player.RemoveCond(TF_COND_STUNNED)
-	}
 }

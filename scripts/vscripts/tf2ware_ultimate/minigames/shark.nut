@@ -68,9 +68,8 @@ function OnStart()
 	
 	shark_icon = Ware_SpawnEntity("handle_dummy", { classname = "shark" } ) // kill icon
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (player == shark)
 		{
 			Ware_SetPlayerMission(player, 1)
@@ -105,9 +104,8 @@ function OnUpdate()
 {
 	local shark_pos = shark.IsValid() ? shark.GetOrigin() : null
 	local threshold = Ware_MinigameLocation.center.x + 512.0
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (player == shark)
 			continue
 		if (!IsEntityAlive(player))

@@ -88,9 +88,8 @@ function OnPrecache()
 
 function OnStart()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (heavies.find(player) != null)
 		{
 			Ware_SetPlayerMission(player, MISSION_HEAVY)
@@ -384,14 +383,13 @@ function OnEnd()
 
 function OnCleanup()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
-		
 		TogglePlayerPowerplay(player, false, false)
 		SetPropBool(player, "m_bGlowEnabled", false)
 		
-		if (data.mission == MISSION_GHOST)
+		local mission = Ware_GetPlayerMission(player)
+		if (mission == MISSION_GHOST)
 		{
 			player.SetCustomModel("")
 			player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
@@ -401,7 +399,7 @@ function OnCleanup()
 			Ware_TogglePlayerWearables(player, true)
 			player.SetForcedTauntCam(0)
 		}
-		else if (data.mission == MISSION_HEAVY)
+		else if (mission == MISSION_HEAVY)
 		{
 			SetEntityColor(player, 255, 255, 255, 255)
 		}

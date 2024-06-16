@@ -19,7 +19,7 @@ function OnPrecache()
 
 function GiveSpecialMelee(player)
 {
-	local data = player.GetScriptScope().ware_data
+	local data = Ware_GetPlayerData(player)
 	
 	local special_melee = data.special_melee
 	if (!special_melee || !special_melee.IsValid())

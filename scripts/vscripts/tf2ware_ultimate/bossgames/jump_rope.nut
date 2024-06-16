@@ -44,9 +44,8 @@ function IncreaseRopeSpeed()
 
 function CheckPlayerZones()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (!IsEntityAlive(player))
 			continue
 		

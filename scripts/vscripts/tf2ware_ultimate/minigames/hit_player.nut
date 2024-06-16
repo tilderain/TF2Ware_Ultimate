@@ -73,6 +73,6 @@ function OnPlayerDeath(params)
 
 function OnEnd()
 {
-	foreach(data in Ware_MinigamePlayers)
-		data.player.RemoveCond(TF_COND_BLEEDING)
+	foreach (player in Ware_MinigamePlayers)
+		player.RemoveCond(TF_COND_BLEEDING)
 }

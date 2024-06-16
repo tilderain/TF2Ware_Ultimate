@@ -39,9 +39,9 @@ function OnPrecache()
 
 function OnStart()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local origin = data.player.GetOrigin() + Vector(0, 0, 1000)
+		local origin = player.GetOrigin() + Vector(0, 0, 1000)
 		local prop = Ware_SpawnEntity("prop_physics_override", 
 		{
 			origin       = origin

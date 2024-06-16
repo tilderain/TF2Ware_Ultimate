@@ -31,9 +31,8 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Stickybomb Jumper")
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local team = player.GetTeam()
 		if (team == TF_TEAM_RED)
 			Ware_SetPlayerMission(player, 0)
@@ -61,9 +60,8 @@ function OnUpdate()
 	local red_point = red_ship.GetOrigin() + offset
 	local blue_point = blue_ship.GetOrigin() + offset
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (!IsEntityAlive(player))
 			continue
 		
@@ -73,6 +71,7 @@ function OnUpdate()
 			continue
 		}
 		
+		local target = player // squirrel needs this to be happy
 		local origin = player.GetOrigin()
 		local team = player.GetTeam()
 		if (team == TF_TEAM_RED)
@@ -80,7 +79,7 @@ function OnUpdate()
 			if (origin.z > red_point.z && (origin - red_point).Length2D() < 150.0)
 			{
 				Ware_ShowScreenOverlay(player, null)
-				Ware_CreateTimer(@() Ware_PassPlayer(player, true), 0.1)
+				Ware_CreateTimer(@() Ware_PassPlayer(target, true), 0.1)
 				Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
 			}
 		}
@@ -89,7 +88,7 @@ function OnUpdate()
 			if (origin.z > blue_point.z && (origin - blue_point).Length2D() < 150.0)
 			{
 				Ware_ShowScreenOverlay(player, null);	
-				Ware_CreateTimer(@() Ware_PassPlayer(player, true), 0.1)
+				Ware_CreateTimer(@() Ware_PassPlayer(target, true), 0.1)
 				Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
 			}			
 		}

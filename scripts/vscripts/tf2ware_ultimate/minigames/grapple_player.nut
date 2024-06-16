@@ -20,9 +20,8 @@ function OnUpdate()
 	for (local proj; proj = FindByClassname(proj, classname);)
 		proj.SetTeam(proj.GetTeam() == TEAM_SPECTATOR ? TF_TEAM_RED : TEAM_SPECTATOR)
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local target = player.GetGrapplingHookTarget()
 		if (target && target.IsPlayer())
 			Ware_PassPlayer(player, true)

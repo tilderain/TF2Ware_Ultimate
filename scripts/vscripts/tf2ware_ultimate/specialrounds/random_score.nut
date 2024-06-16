@@ -19,8 +19,8 @@ local ShowText = function(str, holdtime)
 		})
 		
 	EntityEntFire(Ware_TextManager, "FireUser1")
-	foreach (data in Ware_MinigamePlayers)
-		EntFireByHandle(Ware_TextManager, "Display", "", -1, data.player, null)
+	foreach (player in Ware_MinigamePlayers)
+		EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null)
 	EntityEntFire(Ware_TextManager, "FireUser2")
 }
 

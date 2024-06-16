@@ -60,10 +60,8 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
-		
+	foreach (player in Ware_MinigamePlayers)
+	{		
 		if (player.GetOrigin().y > goal_vectors.y + 50.0)
 			Ware_PassPlayer(player, true)
 		
@@ -85,11 +83,9 @@ function OnBeamTouch()
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
-		
-		if (IsEntityAlive(player) && !data.passed)
+		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
 			Ware_ChatPrint(player, "{color}Spycrabs must look up and crouch!", TF_COLOR_DEFAULT)
 		
 		player.RemoveFlag(FL_ATCONTROLS)

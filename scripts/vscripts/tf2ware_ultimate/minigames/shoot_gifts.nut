@@ -10,7 +10,7 @@ minigame <- Ware_MinigameData
 	convars        =
 	{
 		// make this easier on higher timescales or its near impossible
-		phys_timescale = RemapValClamped(Ware_TimeScale, 1.0, 2.0, 0.9, 0.6),	
+		phys_timescale = RemapValClamped(Ware_GetTimeScale(), 1.0, 2.0, 0.9, 0.6),	
 	}
 })
 
@@ -30,8 +30,8 @@ function OnStart()
 	else
 		Ware_SetGlobalLoadout(TF_CLASS_SPY, "Revolver")
 		
-	foreach (data in Ware_MinigamePlayers)
-		Ware_GetPlayerMiniData(data.player).points <- 0
+	foreach (player in Ware_MinigamePlayers)
+		Ware_GetPlayerMiniData(player).points <- 0
 			
 	Ware_CreateTimer(@() SpawnGift(), 1.0)
 }
@@ -49,7 +49,7 @@ function SpawnGift()
 	})
 	gift.AddEFlags(EFL_NO_DAMAGE_FORCES)
 	gift.SetPhysVelocity(Vector(RandomFloat(-500, 500), 0, RandomFloat(800, 1000)))
-	EntityEntFire(gift, "Kill", "", RemapValClamped(Ware_TimeScale, 1.0, 2.0, 1.5, 2.5))
+	EntityEntFire(gift, "Kill", "", RemapValClamped(Ware_GetTimeScale(), 1.0, 2.0, 1.5, 2.5))
 	
 	return RandomFloat(1.7, 2.1)
 }
@@ -76,9 +76,8 @@ function OnTakeDamage(params)
 
 function OnUpdate()
 {
-	foreach(data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (Ware_GetPlayerAmmo(player, TF_AMMO_PRIMARY) == 0)
 			SetPropInt(player, "m_nImpulse", 101)
 	}

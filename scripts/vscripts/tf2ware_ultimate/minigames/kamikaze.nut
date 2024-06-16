@@ -45,12 +45,10 @@ function OnPrecache()
 
 function OnStart()
 {
-	kamikaze = RandomElement(Ware_MinigamePlayers).player
+	kamikaze = RandomElement(Ware_MinigamePlayers)
 	
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
-		
+	foreach (player in Ware_MinigamePlayers)
+	{	
 		if (player == kamikaze)
 		{
 			Ware_PassPlayer(player, false)

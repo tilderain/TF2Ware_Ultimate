@@ -34,9 +34,8 @@ function OnPrecache()
 function OnStart()
 {
 	// set everyone to non-desired class
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (player.GetPlayerClass() != desired_class)
 			continue
 		
@@ -64,9 +63,8 @@ function OnGameEvent_player_changeclass(params)
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (GetPropInt(player, "m_Shared.m_iDesiredPlayerClass") == desired_class)
 			Ware_PassPlayer(player, true)
 	}

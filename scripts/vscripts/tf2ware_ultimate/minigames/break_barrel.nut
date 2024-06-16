@@ -18,11 +18,11 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT)
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
 		local barrel = Ware_SpawnEntity("prop_physics_override", 
 		{
-			origin = data.player.GetOrigin() + Vector(0, 0, 400)
+			origin = player.GetOrigin() + Vector(0, 0, 400)
 			model  = barrel_model
 			health = 25
 		})

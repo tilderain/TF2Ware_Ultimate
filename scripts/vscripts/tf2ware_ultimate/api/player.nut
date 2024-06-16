@@ -1,6 +1,6 @@
 // by ficool2 and pokemonpasta
 
-// Properties each player has
+// Gamemode-specific data each player has
 class Ware_PlayerData
 {
 	function constructor(entity)
@@ -36,6 +36,21 @@ class Ware_PlayerData
 	score			 	= null
 	horn_timer		 	= null
 	horn_buttons	 	= null
+}
+
+// Global variables
+if (!("Ware_Players" in this)) // These variables never reset
+{
+	// List of all players in the server
+	Ware_Players                  <- []
+	// List of all players participating in the current minigame/bossgame
+	Ware_MinigamePlayers          <- []
+}
+
+// Gets the gamemode data associated with a player
+function Ware_GetPlayerData(player)
+{
+	return player.GetScriptScope().ware_data
 }
 
 // Gets the minigame data ("minidata") associated with a player
@@ -80,6 +95,12 @@ function Ware_IsPlayerPassed(player)
 function Ware_SetPlayerMission(player, mission)
 {
 	return player.GetScriptScope().ware_data.mission = mission
+}
+
+// Returns the player's current "mission", see above
+function Ware_GetPlayerMission(player)
+{
+	return player.GetScriptScope().ware_data.mission
 }
 
 // Sets a player loadout, i.e. their class and their items
@@ -138,8 +159,8 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 // See Ware_SetPlayerLoadout
 function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {}, keep_melee = false)
 {
-	foreach (data in Ware_MinigamePlayers)
-		Ware_SetPlayerLoadout(data.player, player_class, items, item_attributes, keep_melee)		
+	foreach (player in Ware_MinigamePlayers)
+		Ware_SetPlayerLoadout(player, player_class, items, item_attributes, keep_melee)		
 }
 
 // Strips all items/weapons from a player
@@ -348,10 +369,10 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	{
 		Ware_CheckTeleportEffectTimer = CreateTimer(function()
 		{
-			foreach (data in Ware_MinigamePlayers)
+			foreach (player in Ware_MinigamePlayers)
 			{
-				if (Ware_MinigameHighScorers.find(data.player) != null)
-					data.player.AddCond(TF_COND_TELEPORTED)
+				if (Ware_MinigameHighScorers.find(player) != null)
+					player.AddCond(TF_COND_TELEPORTED)
 			}
 		}, 0.25)
 	}
@@ -394,9 +415,9 @@ function Ware_TogglePlayerWearables(player, toggle)
 function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 {
 	if (team & 2)
-		return Ware_MinigamePlayers.filter(@(i, data) data.player.GetTeam() == team && IsEntityAlive(data.player))
+		return Ware_MinigamePlayers.filter(@(i, player) player.GetTeam() == team && IsEntityAlive(player))
 	else
-		return Ware_MinigamePlayers.filter(@(i, data) IsEntityAlive(data.player))
+		return Ware_MinigamePlayers.filter(@(i, player) IsEntityAlive(player))
 }
 
 // Gets a list of alive players that are on red or blue team
@@ -415,7 +436,7 @@ function Ware_GetValidPlayers()
 // Gets a list of players in a minigame sorted by their score
 function Ware_GetSortedScorePlayers(reverse)
 {
-	local players = clone(Ware_MinigamePlayers)
+	local players = clone(Ware_MinigamePlayersData)
 	if (reverse)
 		players.sort(@(a, b) b.score <=> a.score)
 	else
@@ -436,16 +457,16 @@ function Ware_AddPlayerAttribute(player, name, value, duration)
 // See Ware_AddPlayerAttribute
 function Ware_SetGlobalAttribute(name, value, duration)
 {
-	foreach (data in Ware_MinigamePlayers)
-		Ware_AddPlayerAttribute(data.player, name, value, duration)
+	foreach (player in Ware_MinigamePlayers)
+		Ware_AddPlayerAttribute(player, name, value, duration)
 }
 
 // Sets a condition to all players
 // This is removed automatically when a minigame ends
 function Ware_SetGlobalCondition(condition)
 {
-	foreach (data in Ware_MinigamePlayers)
-		data.player.AddCond(condition)
+	foreach (player in Ware_MinigamePlayers)
+		player.AddCond(condition)
 	if (Ware_Minigame.conditions.find(condition) == null)
 		Ware_Minigame.conditions.append(condition)
 }
@@ -459,9 +480,8 @@ function Ware_SuicidePlayer(player)
 // Force all players that haven't passed the minigame to suicide
 function Ware_SuicideFailedPlayers()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
 			Ware_SuicidePlayer(player)
 	}
@@ -471,10 +491,8 @@ function Ware_SuicideFailedPlayers()
 // The damage will have linear falloff
 function Ware_RadiusDamagePlayers(origin, radius, damage, attacker)
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
-			
 		local dist = (player.GetOrigin() - origin).Length()
 		if (dist > radius)
 			continue
@@ -626,16 +644,16 @@ function Ware_ShowScreenOverlay2(player, name)
 // See Ware_ShowScreenOverlay
 function Ware_ShowGlobalScreenOverlay(name)
 {
-	foreach (data in Ware_MinigamePlayers)
-		Ware_ShowScreenOverlay(data.player, name)
+	foreach (player in Ware_MinigamePlayers)
+		Ware_ShowScreenOverlay(player, name)
 }
 
 // Shows a secondary overlay texture for everyone
 // See Ware_ShowScreenOverlay2
 function Ware_ShowGlobalScreenOverlay2(name)
 {
-	foreach (data in Ware_MinigamePlayers)
-		Ware_ShowScreenOverlay2(data.player, name)
+	foreach (player in Ware_MinigamePlayers)
+		Ware_ShowScreenOverlay2(player, name)
 }
 
 // TODO document
@@ -660,8 +678,8 @@ function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y 
 	}
 	else
 	{
-		foreach (data in Ware_MinigamePlayers)
-			EntFireByHandle(Ware_TextManager, "Display", "", -1, data.player, null)
+		foreach (player in Ware_MinigamePlayers)
+			EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null)
 	}
 	EntityEntFire(Ware_TextManager, "FireUser2")
 }

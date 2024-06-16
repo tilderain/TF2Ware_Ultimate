@@ -41,12 +41,11 @@ function OnPlayerVoiceline(player, voiceline)
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))
 			Ware_PassPlayer(player, true)
-		else if (!data.passed)
+		else if (!Ware_IsPlayerPassed(player))
 			Ware_ChatPrint(player, "{color}Spycrabs must look up and crouch!", TF_COLOR_DEFAULT)
 	}
 }

@@ -34,9 +34,8 @@ function OnPrecache()
 function OnStart()
 {
 	// put everyone in karts and freeze them
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.AddCond(TF_COND_HALLOWEEN_KART)
 		player.AddCond(TF_COND_HALLOWEEN_KART_CAGE)
 	}
@@ -56,8 +55,8 @@ function OnStart()
 		else
 		{
 			// when hits 0, unfreeze players
-			foreach(data in Ware_MinigamePlayers)
-				data.player.RemoveCond(TF_COND_HALLOWEEN_KART_CAGE)
+			foreach (player in Ware_MinigamePlayers)
+				player.RemoveCond(TF_COND_HALLOWEEN_KART_CAGE)
 			Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/minigames/kart")
 		}
 	}, 0.0)
@@ -65,9 +64,8 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (IsEntityAlive(player) &&
 			player.GetOrigin().x > endzone_vector.x &&
 			player.GetOrigin().y > endzone_vector.y &&
@@ -85,9 +83,6 @@ function CheckEnd()
 
 function OnCleanup()
 {
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
+	foreach (player in Ware_MinigamePlayers)
 		player.RemoveCond(TF_COND_HALLOWEEN_KART)
-	}
 }

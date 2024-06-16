@@ -204,7 +204,7 @@ function OnGameEvent_scorestats_accumulated_update(params)
 		if ("OnCleanup" in Ware_MinigameScope) 
 			Ware_MinigameScope.OnCleanup()
 		
-		foreach (data in Ware_MinigamePlayers)
+		foreach (data in Ware_MinigamePlayersData)
 		{
 			local player = data.player
 			if (!player.IsValid())
@@ -394,9 +394,13 @@ function OnGameEvent_player_disconnect(params)
 		return
 		
 	local data = player.GetScriptScope().ware_data
-	local idx = Ware_MinigamePlayers.find(data)
+	local idx = Ware_MinigamePlayers.find(player)
 	if (idx != null)
 		Ware_MinigamePlayers.remove(idx)
+		
+	idx = Ware_MinigamePlayersData.find(data)
+	if (idx != null)
+		Ware_MinigamePlayersData.remove(idx)
 		
 	idx = Ware_Players.find(player)
 	if (idx != null)

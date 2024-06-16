@@ -37,9 +37,8 @@ function OnPrecache()
 
 function OnStart()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (boss_idx == 0)
 		{
 			Ware_SetPlayerLoadout(player, TF_CLASS_SNIPER, "Bat Outta Hell")
@@ -85,8 +84,8 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
-		SetPropFloat(data.player, "m_flMaxspeed", 520.0)
+	foreach (player in Ware_MinigamePlayers)
+		SetPropFloat(player, "m_flMaxspeed", 520.0)
 }
 
 function OnTakeDamage(params)
@@ -123,9 +122,8 @@ function OnPlayerDeath(params)
 
 function OnCleanup()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.SetCustomModel("")
 		player.SetModelScale(1.0, 0.0)
 		Ware_TogglePlayerWearables(player, true)

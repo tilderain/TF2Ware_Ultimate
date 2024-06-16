@@ -40,7 +40,7 @@ function OnStart()
 	local candidates = clone(Ware_MinigamePlayers)
 	
 	for (local i = 0; i < count; i++)
-		SetHotPotato(i, RemoveRandomElement(candidates).player)
+		SetHotPotato(i, RemoveRandomElement(candidates))
 }
 
 function SetHotPotato(index, player)

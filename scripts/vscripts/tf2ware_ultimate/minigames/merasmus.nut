@@ -22,9 +22,8 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower")
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.AddCond(TF_COND_HALLOWEEN_SPEED_BOOST)
 		player.AddCond(TF_COND_HALLOWEEN_BOMB_HEAD)
 	}
@@ -49,8 +48,8 @@ function OnUpdate()
 	if (merasmus && merasmus.IsValid())
 		merasmus_origin = merasmus.GetOrigin()
 	
-	foreach (data in Ware_MinigamePlayers)
-		Ware_DisablePlayerPrimaryFire(data.player)
+	foreach (player in Ware_MinigamePlayers)
+		Ware_DisablePlayerPrimaryFire(player)
 }
 
 function OnTakeDamage(params)
@@ -79,9 +78,8 @@ function OnEnd()
 		merasmus.Kill()
 	}
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.RemoveCond(TF_COND_HALLOWEEN_SPEED_BOOST)
 		player.RemoveCond(TF_COND_HALLOWEEN_BOMB_HEAD)
 		player.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)

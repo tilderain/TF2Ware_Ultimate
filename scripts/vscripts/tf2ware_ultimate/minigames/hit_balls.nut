@@ -123,10 +123,10 @@ function OnEnd()
 	
 	if (winning_team)
 	{
-		foreach (data in Ware_MinigamePlayers)
+		foreach (player in Ware_MinigamePlayers)
 		{
-			if (data.player.GetTeam() == winning_team)
-				Ware_PassPlayer(data.player, true)
+			if (player.GetTeam() == winning_team)
+				Ware_PassPlayer(player, true)
 		}
 	}
 }

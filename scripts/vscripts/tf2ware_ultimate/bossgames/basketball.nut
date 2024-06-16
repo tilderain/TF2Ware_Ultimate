@@ -21,13 +21,12 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Grenade Launcher")
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
 		// make grenades pass through
-		local player = data.player
 		player.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
-		SetPropInt(data.player, "m_takedamage", DAMAGE_NO)
-		Ware_GetPlayerMiniData(data.player).points <- 0
+		SetPropInt(player, "m_takedamage", DAMAGE_NO)
+		Ware_GetPlayerMiniData(player).points <- 0
 	}
 	
 	EntFire("boss4_door", "Unlock")
@@ -66,9 +65,8 @@ function OnUpdate()
 		grenade.KeyValueFromString("classname", "ware_projectile_pipe")
 	}
 	
-	foreach(data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (Ware_GetPlayerAmmo(player, TF_AMMO_PRIMARY) == 0)
 			SetPropInt(player, "m_nImpulse", 101)
 	}
@@ -87,9 +85,8 @@ function OnEnd()
 
 function OnCleanup()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		SetPropInt(player, "m_takedamage", DAMAGE_YES)
 	}

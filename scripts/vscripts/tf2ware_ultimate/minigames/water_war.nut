@@ -25,8 +25,8 @@ function OnTeleport(players)
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Neon Annihilator")
-	foreach (data in Ware_MinigamePlayers)
-		data.player.AddCond(TF_COND_SWIMMING_CURSE)
+	foreach (player in Ware_MinigamePlayers)
+		player.AddCond(TF_COND_SWIMMING_CURSE)
 }
 
 function OnTakeDamage(params)
@@ -47,10 +47,10 @@ function OnPlayerDeath(params)
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		data.player.RemoveCond(TF_COND_SWIMMING_CURSE)
-		data.player.RemoveCond(TF_COND_URINE)
+		player.RemoveCond(TF_COND_SWIMMING_CURSE)
+		player.RemoveCond(TF_COND_URINE)
 	}
 }
 

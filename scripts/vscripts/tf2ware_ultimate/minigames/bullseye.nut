@@ -50,8 +50,8 @@ function OnStart()
 	// TODO: I'm not sure why this isn't following the entity
 	//Ware_ShowAnnotation(sprite, "Bullseye!")
 	
-	foreach (data in Ware_MinigamePlayers)
-		Ware_GetPlayerMiniData(data.player).points <- 0
+	foreach (player in Ware_MinigamePlayers)
+		Ware_GetPlayerMiniData(player).points <- 0
 }
 
 function OnTakeDamage(params)

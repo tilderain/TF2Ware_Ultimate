@@ -24,8 +24,8 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, RandomInt(0, 1) ? "Sun-on-a-Stick" : "Candy Cane")
 	Ware_SetGlobalCondition(TF_COND_SPEED_BOOST)
 	
-	foreach (data in Ware_MinigamePlayers)
-		Ware_GetPlayerMiniData(data.player).points <- 0
+	foreach (player in Ware_MinigamePlayers)
+		Ware_GetPlayerMiniData(player).points <- 0
 		
 	Ware_CreateTimer(@() CreateCube(), 0.5)
 }

@@ -7,5 +7,5 @@ special_round <- Ware_SpecialRoundData
 	
 function OnMinigameEnd()
 {
-	Ware_SetTimeScale(Ware_TimeScale + 0.05)
+	Ware_SetTimeScale(Ware_GetTimeScale() + 0.05)
 }

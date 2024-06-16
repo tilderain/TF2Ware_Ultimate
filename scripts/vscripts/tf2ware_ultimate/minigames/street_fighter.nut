@@ -69,13 +69,13 @@ function SpawnFireball(player)
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local attack_time = player.GetTauntAttackTime()
 		if (attack_time > 0.0)
 		{
-			Ware_CreateTimer(@() SpawnFireball(player), attack_time - Time())
+			local target = player // squirrel needs this to be happy
+			Ware_CreateTimer(@() SpawnFireball(target), attack_time - Time())
 			player.ClearTauntAttack()
 		}
 	}

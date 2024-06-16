@@ -15,9 +15,8 @@ minigame <- Ware_MinigameData
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Force-a-Nature")
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local weapon = player.GetActiveWeapon()
 		if (weapon == null)
 			continue

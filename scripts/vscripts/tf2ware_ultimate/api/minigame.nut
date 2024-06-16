@@ -111,6 +111,17 @@ class Ware_MinigameData
 	cb_check_end			= null
 }
 
+// Global variables
+
+// The current minigame data. Null if no minigame active
+Ware_Minigame             <- null
+// Current minigame's scope
+Ware_MinigameScope        <- {}
+// Current minigame's location
+Ware_MinigameLocation     <- null
+// Current home location, players get teleported back here after a minigame
+Ware_MinigameHomeLocation <- null
+
 // Gets the time elapsed in seconds since the minigame has started
 function Ware_GetMinigameTime()
 {

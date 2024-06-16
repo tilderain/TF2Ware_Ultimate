@@ -74,8 +74,8 @@ function OnTeleport(players)
 
 function OnStart()
 {
-	foreach (data in Ware_MinigamePlayers)
-		Ware_GivePlayerWeapon(data.player, "Grappling Hook")
+	foreach (player in Ware_MinigamePlayers)
+		Ware_GivePlayerWeapon(player, "Grappling Hook")
 	
 	local position_list = treasure[5]
 	if (!debug_spawns)

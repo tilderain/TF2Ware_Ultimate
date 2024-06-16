@@ -27,10 +27,8 @@ function OnStart()
 {
 	jump_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
-					
 		if (player.GetTeam() == jump_team)
 		{
 			Ware_SetPlayerMission(player, 1)
@@ -48,9 +46,8 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (player.GetTeam() == jump_team)
 		{
 			if (IsEntityAlive(player))

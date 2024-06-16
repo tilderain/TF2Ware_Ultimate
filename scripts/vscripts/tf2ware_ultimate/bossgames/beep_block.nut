@@ -279,9 +279,6 @@ function OnEnd()
 	
 	BeepBlock_FireInput(green_blocks, "Alpha", "255")
 	BeepBlock_FireInput(yellow_blocks, "Alpha", "255")
-	
-	foreach(data in Ware_MinigamePlayers)
-		data.player.SetGravity(1.0)
 }
 
 function CheckEnd()
@@ -291,9 +288,8 @@ function CheckEnd()
 
 function BeepBlock_CheckEnd()
 {
-	foreach(data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
 			return false
 	}

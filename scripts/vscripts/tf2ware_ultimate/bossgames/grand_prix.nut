@@ -49,9 +49,8 @@ function IsInCheckPoint(player)
 function OnStart()
 {
 	// put everyone in karts and freeze them
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local minidata = Ware_GetPlayerMiniData(player)
 		player.AddCond(TF_COND_HALLOWEEN_KART)
 		player.AddCond(TF_COND_HALLOWEEN_KART_CAGE)
@@ -77,8 +76,8 @@ function OnStart()
 		else
 		{
 			// when hits 0, unfreeze players
-			foreach (data in Ware_MinigamePlayers)
-				data.player.RemoveCond(TF_COND_HALLOWEEN_KART_CAGE)
+			foreach (player in Ware_MinigamePlayers)
+				player.RemoveCond(TF_COND_HALLOWEEN_KART_CAGE)
 			Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/minigames/grand_prix")
 		}
 	}, 0.0)
@@ -86,9 +85,8 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local minidata = Ware_GetPlayerMiniData(player)
 		
 		if (Ware_IsPlayerPassed(player))
@@ -155,9 +153,8 @@ function OnUpdate()
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.RemoveCond(TF_COND_HALLOWEEN_KART)
 		player.RemoveCond(TF_COND_HALLOWEEN_KART_CAGE)
 	}

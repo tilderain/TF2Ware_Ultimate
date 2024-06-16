@@ -70,9 +70,8 @@ function OnPrecache()
 
 function OnStart()
 {
-	foreach(data in Ware_MinigamePlayers)
+	foreach(player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.gj_score <- 0
 		minidata.gj_passed <- false
@@ -141,9 +140,8 @@ function OnMicroStart()
 	}
 	
 	// start passed? and also any microgames that need setup
-	foreach(data in Ware_MinigamePlayers)
+	foreach(player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (!IsEntityAlive(player))
 			continue
 		
@@ -190,9 +188,8 @@ function OnUpdate()
 	}
 	
 	// microgame rules
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (!IsEntityAlive(player))
 			continue
 		switch (micro)
@@ -273,9 +270,8 @@ function OnPlayerVoiceline(player, voiceline)
 
 function OnMicroEnd()
 {
-	foreach(data in Ware_MinigamePlayers)
+	foreach(player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (!IsEntityAlive(player))
 			continue
 		local minidata = Ware_GetPlayerMiniData(player)
@@ -325,9 +321,8 @@ function OnEnd()
 {
 	local high_score = 0
 	local winners = []
-	foreach(data in Ware_MinigamePlayers)
+	foreach(player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local minidata = Ware_GetPlayerMiniData(player)
 		local score = minidata.gj_score
 		
@@ -354,26 +349,26 @@ function OnEnd()
 				TF_COLOR_DEFAULT, 		
 				COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score)
 		}
-		foreach(data in Ware_MinigamePlayers)
+		foreach(player in Ware_MinigamePlayers)
 		{
-			if (!data.passed)
+			if (!Ware_IsPlayerPassed(player))
 			{
-				Ware_ChatPrint(data.player, "{color}You lose! Your score was {color}{int}{color}, but the winning score was {color}{int}",
+				Ware_ChatPrint(player, "{color}You lose! Your score was {color}{int}{color}, but the winning score was {color}{int}",
 					TF_COLOR_DEFAULT, 
-					COLOR_LIME, Ware_GetPlayerMiniData(data.player).gj_score, TF_COLOR_DEFAULT
+					COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score, TF_COLOR_DEFAULT
 					COLOR_LIME, high_score)
 			}
 		}
 	}
 	else
 	{
-		foreach(data in Ware_MinigamePlayers)
+		foreach(player in Ware_MinigamePlayers)
 		{
-			if (!data.passed)
+			if (!Ware_IsPlayerPassed(player))
 			{
-				Ware_ChatPrint(data.player, "{color}You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
+				Ware_ChatPrint(player, "{color}You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
 					TF_COLOR_DEFAULT,
-					COLOR_LIME, Ware_GetPlayerMiniData(data.player).gj_score, TF_COLOR_DEFAULT
+					COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score, TF_COLOR_DEFAULT
 					COLOR_LIME, min_score)
 			}
 		}

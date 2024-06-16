@@ -27,10 +27,8 @@ minigame <- Ware_MinigameData
 
 function OnStart()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
-		
 		// prevent taunting
 		player.AddCond(TF_COND_GRAPPLED_TO_PLAYER)
 		
@@ -54,9 +52,8 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (player.InCond(TF_COND_TAUNTING))
 		{
 			// allows midair taunting
@@ -97,9 +94,8 @@ function CheckTaunt(victim, attacker)
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.RemoveCond(TF_COND_CRITBOOSTED)
 		player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)
 	}

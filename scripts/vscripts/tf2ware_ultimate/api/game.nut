@@ -7,6 +7,11 @@ function Ware_SetTimeScale(timescale)
 	Ware_SetTimeScaleInternal(timescale)
 }
 
+function Ware_GetTimeScale()
+{
+	return Ware_TimeScale
+}
+
 // Sets the intermission state
 // This is the period between minigames
 // The minigame is started when this is finished

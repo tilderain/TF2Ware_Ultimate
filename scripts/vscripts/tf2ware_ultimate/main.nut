@@ -182,11 +182,7 @@ if (!("Ware_BossgameRotation" in this))
 if (!("Ware_SpecialRoundRotation" in this))
 	Ware_SpecialRoundRotation <- []
 
-Ware_Minigame             <- null
-Ware_MinigameScope        <- {}
 Ware_MinigameSavedConvars <- {}
-Ware_MinigameHomeLocation <- null
-Ware_MinigameLocation     <- null
 Ware_MinigameEvents       <- []
 Ware_MinigameOverlay2Set  <- false
 Ware_MinigameStartTime    <- 0.0
@@ -200,13 +196,14 @@ Ware_BossgamesPlayed      <- 0
 // dunno where to put this
 Ware_RoundEndMusicTimer   <- null
 
-if (!("Ware_Players" in this))
+if (!("Ware_Precached" in this))
 {
 	Ware_Precached                <- false
 	
-	Ware_Players                  <- []
+	// optimization to avoid having to fetch it back from player handles 
+	// which eats up +1 native call per player
 	Ware_PlayersData              <- []
-	Ware_MinigamePlayers          <- []
+	Ware_MinigamePlayersData      <- []
 	
 	Ware_RoundsPlayed             <- 0
 	
@@ -790,8 +787,8 @@ function Ware_BeginSpecialRoundInternal()
 			})
 			
 		EntityEntFire(Ware_TextManager, "FireUser1")
-		foreach (data in Ware_MinigamePlayers)
-			EntFireByHandle(Ware_TextManager, "Display", "", -1, data.player, null)
+		foreach (player in Ware_MinigamePlayers)
+			EntFireByHandle(Ware_TextManager, "Display", "", -1, player, null)
 		EntityEntFire(Ware_TextManager, "FireUser2")
 	}
 	
@@ -946,8 +943,8 @@ function Ware_SetTimeScaleInternal(timescale)
 	
 	Ware_TimeScale = timescale
 	
-	foreach (data in Ware_MinigamePlayers)
-		data.player.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
+	foreach (player in Ware_MinigamePlayers)
+		player.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
 }
 
 function Ware_BeginBossInternal()
@@ -1133,7 +1130,13 @@ function Ware_StartMinigameInternal(is_boss)
 	
 	local enable_collisions = Ware_Minigame.collisions || (Ware_SpecialRound && Ware_SpecialRound.force_collisions)
 	
-	Ware_MinigamePlayers.clear()
+	// small optimization
+	local minigame_players = Ware_MinigamePlayers
+	local minigame_playersdata = Ware_MinigamePlayersData
+	
+	minigame_players.clear()
+	minigame_playersdata.clear()
+	
 	foreach (player in valid_players)
 	{
 		if (enable_collisions)
@@ -1148,7 +1151,9 @@ function Ware_StartMinigameInternal(is_boss)
 		data.passed = Ware_Minigame.start_pass
 		data.passed_effects = false
 		data.mission = 0
-		Ware_MinigamePlayers.append(data)
+		
+		minigame_players.append(player)
+		minigame_playersdata.append(data)
 	}
 	
 	local location
@@ -1224,7 +1229,7 @@ function Ware_StartMinigameInternal(is_boss)
 
 	local overlay_len = overlays.len()
 	local overlay2_len = overlays2.len()
-	foreach (data in Ware_MinigamePlayers)
+	foreach (data in minigame_playersdata)
 	{	
 		local mission = data.mission
 		if (mission < overlay_len)
@@ -1246,7 +1251,7 @@ function Ware_StartMinigameInternal(is_boss)
 			
 		if (Ware_Minigame.start_pass)
 		{
-			foreach (data in Ware_MinigamePlayers)
+			foreach (data in minigame_playersdata)
 			{
 				if (data.passed && !data.passed_effects)
 				{
@@ -1380,9 +1385,8 @@ function Ware_FinishMinigameInternal()
 			EntityEntFire(camera, "Enable")
 			
 		local players = []
-		foreach (data in Ware_MinigamePlayers)
+		foreach (player in Ware_MinigamePlayers)
 		{
-			local player = data.player
 			// parented players aren't unparented at this point so need to defer it to end of frame
 			if (player.GetMoveParent())
 				Ware_DeferredPlayers.append(player)
@@ -1405,7 +1409,7 @@ function Ware_FinishMinigameInternal()
 	local all_passed = true
 	local all_failed = true
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (data in Ware_MinigamePlayersData)
 	{
 		if (data.passed)
 			all_failed = false
@@ -1413,7 +1417,7 @@ function Ware_FinishMinigameInternal()
 			all_passed = false
 	}
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (data in Ware_MinigamePlayersData)
 	{
 		local player = data.player
 		
@@ -1622,7 +1626,7 @@ function Ware_OnUpdate()
 	}
 	
 	local time = Time()
-	foreach (data in Ware_MinigamePlayers)
+	foreach (data in Ware_MinigamePlayersData)
 	{
 		local player = data.player
 		if (player.InCond(TF_COND_HALLOWEEN_KART) && data.horn_timer < time)
@@ -1643,9 +1647,8 @@ function Ware_OnUpdate()
 	
 	if (Ware_Minigame.cb_on_player_attack.IsValid())
 	{
-		foreach (data in Ware_MinigamePlayers)
+		foreach (player in Ware_MinigamePlayers)
 		{
-			local player = data.player
 			local weapon = player.GetActiveWeapon()
 			if (weapon && !weapon.IsMeleeWeapon())
 			{
@@ -1682,9 +1685,8 @@ function Ware_OnUpdate()
 		local bloat_maxs = Vector(0.05, 0.05, 0.05)
 		local bloat_mins = bloat_maxs * -1.0
 		
-		foreach (data in Ware_MinigamePlayers)
+		foreach (player in Ware_MinigamePlayers)
 		{
-			local player = data.player
 			if (IsEntityAlive(player))
 			{
 				local origin = player.GetOrigin()

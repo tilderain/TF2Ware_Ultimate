@@ -48,9 +48,8 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (GetPropEntity(player, "m_hGroundEntity") == null)
 			continue
 			

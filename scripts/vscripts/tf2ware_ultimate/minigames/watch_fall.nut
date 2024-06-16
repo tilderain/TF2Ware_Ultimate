@@ -18,8 +18,8 @@ function OnStart()
 	local player_class = RandomInt(0, 1) ? TF_CLASS_SOLDIER : TF_CLASS_DEMOMAN
 	Ware_SetGlobalLoadout(player_class, "B.A.S.E. Jumper", {}, true)
 	
-	foreach (data in Ware_MinigamePlayers)
-		data.player.SetHealth(1)
+	foreach (player in Ware_MinigamePlayers)
+		player.SetHealth(1)
 }
 
 function OnTeleport(players)
@@ -29,6 +29,6 @@ function OnTeleport(players)
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
-		data.player.RemoveCond(TF_COND_PARACHUTE_ACTIVE)
+	foreach (player in Ware_MinigamePlayers)
+		player.RemoveCond(TF_COND_PARACHUTE_ACTIVE)
 }

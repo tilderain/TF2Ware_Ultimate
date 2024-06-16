@@ -44,9 +44,8 @@ function OnStart()
 
 function AutodeployParachutes()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (!player.InCond(TF_COND_PARACHUTE_ACTIVE))
 		{
 			EmitSoundOnClient("Parachute_open", player)
@@ -57,9 +56,8 @@ function AutodeployParachutes()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (GetPropEntity(player, "m_hGroundEntity") == platform)
 			Ware_PassPlayer(player, true)
 	}
@@ -67,6 +65,6 @@ function OnUpdate()
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
-		data.player.RemoveCond(TF_COND_PARACHUTE_ACTIVE)
+	foreach (player in Ware_MinigamePlayers)
+		player.RemoveCond(TF_COND_PARACHUTE_ACTIVE)
 }

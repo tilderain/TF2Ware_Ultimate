@@ -33,9 +33,8 @@ function OnUpdate()
 	if (Ware_GetMinigameTime() < 2.0)
 		return
 
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (!IsEntityAlive(player))
 			continue
 		if (Ware_GetPlayerHeight(player) > 250.0)

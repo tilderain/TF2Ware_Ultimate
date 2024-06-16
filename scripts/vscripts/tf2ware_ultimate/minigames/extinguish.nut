@@ -29,10 +29,8 @@ minigame <- Ware_MinigameData
 function OnStart()
 {
 	local pyro_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
-	foreach (data in Ware_MinigamePlayers)
-	{
-		local player = data.player
-					
+	foreach (player in Ware_MinigamePlayers)
+	{			
 		if (player.GetTeam() == pyro_team)
 		{
 			Ware_SetPlayerMission(player, 1)
@@ -47,18 +45,19 @@ function OnStart()
 			Ware_SetPlayerMission(player, 0)
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT)
 			player.SetHealth(25)
-			Ware_CreateTimer(@() BurnPlayer(player, 10, Ware_GetMinigameRemainingTime()), RandomFloat(0.0, 0.2))
 			Ware_SetPlayerTeam(player, pyro_team)
+			local target = player // squirrel needs this to be happy
+			Ware_CreateTimer(@() BurnPlayer(target, 10, Ware_GetMinigameRemainingTime()), RandomFloat(0.0, 0.2))			
 		}
 	}
 }
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		if (data.player.GetPlayerClass() == TF_CLASS_PYRO)
-			Ware_DisablePlayerPrimaryFire(data.player)
+		if (player.GetPlayerClass() == TF_CLASS_PYRO)
+			Ware_DisablePlayerPrimaryFire(player)
 	}
 }
 

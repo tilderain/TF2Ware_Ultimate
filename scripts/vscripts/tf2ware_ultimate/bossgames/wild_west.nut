@@ -35,9 +35,8 @@ function OnStart()
 	Ware_SetGlobalAttribute("no_attack", 1, -1)
 	Ware_SetGlobalAttribute("no_jump", 1, -1)
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.holding_attack <- 0
 		minidata.hold_warning <- false
@@ -132,9 +131,8 @@ function PlacePlayers(players)
 function GiveGuns()
 {
 	local clip = mexican_standoff ? 6 : 2
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/wildwest_ready")	
 	
 		if (IsEntityAlive(player) 
@@ -166,10 +164,8 @@ function StartShootout()
 	else
 		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_CHANGE_VOL, 0.2)
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
-		
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/wildwest_shoot")
 			
 		if (IsEntityAlive(player))
@@ -177,8 +173,9 @@ function StartShootout()
 		
 		if (player.IsFakeClient())
 		{
-			Ware_CreateTimer(@() SetPropInt(player, "m_afButtonForced", IN_ATTACK), RandomFloat(0.4, 1.0))
-			Ware_CreateTimer(@() SetPropInt(player, "m_afButtonForced", 0), 1.0)
+			local target = player
+			Ware_CreateTimer(@() SetPropInt(target, "m_afButtonForced", IN_ATTACK), RandomFloat(0.4, 1.0))
+			Ware_CreateTimer(@() SetPropInt(target, "m_afButtonForced", 0), 1.0)
 		}
 	}	
 	
@@ -194,9 +191,8 @@ function StopShootout()
 	local alive_players = Ware_GetAlivePlayers()
 	if (mexican_standoff && alive_players.len() > 1)
 	{
-		foreach (data in alive_players)
+		foreach (player in alive_players)
 		{
-			local player = data.player
 			if (IsEntityAlive(player))
 			{
 				Ware_ChatPrint(player, "{color} You have all been disqualified for surviving. Cowards!", TF_COLOR_DEFAULT)
@@ -206,9 +202,8 @@ function StopShootout()
 	}
 	else
 	{
-		foreach (data in Ware_MinigamePlayers)
+		foreach (player in Ware_MinigamePlayers)
 		{
-			local player = data.player
 			if (IsEntityAlive(player))
 			{
 				if (dueling)
@@ -306,9 +301,8 @@ function OnTakeDamage(params)
 function OnUpdate()
 {
 	local time = Time()
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local weapon = player.GetActiveWeapon()
 		if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY)
 		{		
@@ -347,9 +341,8 @@ function OnUpdate()
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		player.RemoveFlag(FL_ATCONTROLS)
 		SetPropInt(player, "m_afButtonForced", 0)
 	}

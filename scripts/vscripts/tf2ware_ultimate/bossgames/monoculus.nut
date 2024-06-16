@@ -27,8 +27,8 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Flame Thrower")
 	
-	foreach (data in Ware_MinigamePlayers)
-		data.player.SetHealth(500)
+	foreach (player in Ware_MinigamePlayers)
+		player.SetHealth(500)
 	
 	Ware_CreateTimer(@() SpawnMonoculus(), 0.1)
 	Ware_CreateTimer(@() SpawnMonoculus(), 3.0)

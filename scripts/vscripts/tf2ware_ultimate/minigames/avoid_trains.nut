@@ -35,8 +35,8 @@ function OnStart()
 	
 	for (local i = 0; i < train_count; i++)
 	{
-		local data = RemoveRandomElement(minigame_players)
-		SpawnTrain(data.player.GetOrigin())
+		local player = RemoveRandomElement(minigame_players)
+		SpawnTrain(player.GetOrigin())
 	}
 }
 

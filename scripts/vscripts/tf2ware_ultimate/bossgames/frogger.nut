@@ -29,9 +29,8 @@ function OnPrecache()
 
 function OnStart()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		Ware_AddPlayerAttribute(player, "no_attack", 1, -1)
 		Ware_AddPlayerAttribute(player, "no double jump", 1, -1)
 		Ware_AddPlayerAttribute(player, "increased jump height", 0.6, -1)
@@ -187,9 +186,8 @@ function OnPlayerDeath(params)
 function OnUpdate()
 {
 	local threshold = Ware_MinigameLocation.center.y + 7150.0
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		local minidata = Ware_GetPlayerMiniData(player)
 		
 		local jumping = GetPropBool(player, "m_Shared.m_bJumping")
@@ -219,11 +217,10 @@ function OnEnd()
 
 function OnCleanup()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		Ware_TogglePlayerWearables(player, true)
-		data.player.SetCustomModel("")
+		player.SetCustomModel("")
 	}
 }
 
@@ -234,6 +231,6 @@ function CheckEnd()
 	if (alive_count == 0)
 		return true
 		
-	local passed_players = alive_players.filter(@(i, data) Ware_IsPlayerPassed(data.player))
+	local passed_players = alive_players.filter(@(i, player) Ware_IsPlayerPassed(player))
 	return passed_players.len() == alive_count
 }

@@ -24,6 +24,6 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
-		Ware_DisablePlayerPrimaryFire(data.player)
+	foreach (player in Ware_MinigamePlayers)
+		Ware_DisablePlayerPrimaryFire(player)
 }

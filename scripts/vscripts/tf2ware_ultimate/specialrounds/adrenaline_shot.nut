@@ -21,7 +21,7 @@ function OnStart()
 
 function OnSpeedup()
 {
-	Ware_SetTimeScale(Ware_TimeScale - interval)
+	Ware_SetTimeScale(Ware_GetTimeScale() - interval)
 		
 	foreach (player in Ware_Players)
 	{

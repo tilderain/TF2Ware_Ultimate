@@ -26,8 +26,8 @@ function OnStart()
 
 function OnUpdate()
 {
-	foreach (data in Ware_MinigamePlayers)
-		Ware_DisablePlayerPrimaryFire(data.player)
+	foreach (player in Ware_MinigamePlayers)
+		Ware_DisablePlayerPrimaryFire(player)
 }
 
 function SpawnBombs()
@@ -35,7 +35,7 @@ function SpawnBombs()
 	local mins = Ware_MinigameLocation.mins
 	local maxs = Ware_MinigameLocation.maxs
 	
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
 		local pipe = Ware_CreateEntity("tf_projectile_pipe")
 		
@@ -43,7 +43,7 @@ function SpawnBombs()
 		SetPropInt(pipe, "m_iTeamNum", TEAM_SPECTATOR)
 		SetPropFloat(pipe, "m_flModelScale", 2.0)
 		
-		local origin = data.player.GetOrigin()
+		local origin = player.GetOrigin()
 		origin += Vector(RandomFloat(-150, 150), RandomFloat(-150, 150), RandomFloat(350, 450))
 		origin.x = Clamp(origin.x, mins.x, maxs.x)
 		origin.y = Clamp(origin.y, mins.y, maxs.y)

@@ -18,15 +18,14 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
 	
 	// this gets very difficult with higher timescale so make the train start later
-	EntFire("rocketjump_train", "StartForward", "", RemapValClamped(Ware_TimeScale, 1.0, 2.0, 3.0, 10.0))
+	EntFire("rocketjump_train", "StartForward", "", RemapValClamped(Ware_GetTimeScale(), 1.0, 2.0, 3.0, 10.0))
 }
 
 function OnUpdate()
 {
 	local thresold = Ware_MinigameLocation.center.z + 2600.0
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (IsEntityAlive(player) && GetPropEntity(player, "m_hGroundEntity") != null)
 		{
 			local origin = player.GetOrigin()

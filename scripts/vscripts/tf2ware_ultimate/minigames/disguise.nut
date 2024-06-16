@@ -48,9 +48,8 @@ function OnStart()
 
 function OnEnd()
 {
-	foreach (data in Ware_MinigamePlayers)
+	foreach (player in Ware_MinigamePlayers)
 	{
-		local player = data.player
 		if (player.InCond(TF_COND_DISGUISED))
 		{
 			if (GetPropInt(player, "m_Shared.m_nDisguiseClass") == class_idx)
