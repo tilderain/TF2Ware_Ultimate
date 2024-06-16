@@ -41,7 +41,8 @@ function CreateBomb()
 		model          = prop_model
 		origin         = pos
 		massscale      = 0.01
-		rendermode     = kRenderNone
+		rendermode     = kRenderTransColor
+		renderamt      = 0
 		disableshadows = true
 	})
 	prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT)

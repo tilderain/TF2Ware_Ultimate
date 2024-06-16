@@ -67,10 +67,11 @@ function OnStart()
 			// not using Ware_SpawnEntity because the kill must be delayed
 			piggybacker_dummy = SpawnEntityFromTableSafe("prop_dynamic",
 			{
-				model = dummy_model,
-				origin = player.GetOrigin(),
-				disableshadows = true,
-				rendermode = kRenderNone
+				model           = dummy_model,
+				origin          = player.GetOrigin(),
+				disableshadows  = true,
+				rendermode      = kRenderTransColor
+				renderamt       = 0
 			})
 			SetEntityParent(piggybacker_dummy, player, "flag")	
 		}
