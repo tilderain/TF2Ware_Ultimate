@@ -49,6 +49,8 @@ function OnStart()
 		a = RandomInt(2, 12)
 		b = RandomInt(2, 12)
 		if (RandomInt(0, 9) == 0)
+			a = -a	
+		if (RandomInt(0, 9) == 0)
 			b = -b
 		answer = a * b
 		operator = "*"
