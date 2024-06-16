@@ -41,18 +41,24 @@ function SpawnJack(player)
 	local origin = player.EyePosition() + player.EyeAngles().Forward() * 350.0
 	origin.z = Ware_MinigameLocation.center.z + 64.0
 	
-	Ware_SpawnEntity("prop_physics_multiplayer",
+	local jack = Ware_SpawnEntity("prop_physics_multiplayer",
 	{
 		origin = origin,
 		model = jack_model,
 		skin = player.GetTeam() - 2,
 	})
+	jack.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 }
 
 function OnTakeDamage(params)
 {
 	local victim = params.const_entity
-	if (victim.GetClassname() == "prop_physics_multiplayer")
+	if (victim.IsPlayer()) 
+	{
+		if (params.damage_type & DMG_CRUSH)
+			return false
+	}
+	else if (victim.GetClassname() == "prop_physics_multiplayer")
 	{
 		local attacker = params.attacker
 		if (attacker && attacker.IsPlayer())
