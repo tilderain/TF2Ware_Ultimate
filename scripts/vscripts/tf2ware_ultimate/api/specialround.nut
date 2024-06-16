@@ -47,6 +47,7 @@ class Ware_SpecialRoundData
 	// == Callbacks == 
 	// TODO: document these
 	cb_get_boss_threshold    = null
+	cb_get_minigame          = null
 	cb_get_overlay2          = null
 	cb_get_player_roll       = null
 	cb_on_calculate_scores   = null

@@ -111,6 +111,7 @@ Ware_SpecialRounds <-
 	"inclinity_problem"
 	"inverted_control"
 	"low_gravity"
+	"math_only"
 	"no_movingback"
 	"non_stop"
 	"nostalgia"

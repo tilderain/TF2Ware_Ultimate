@@ -672,6 +672,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	local scope = Ware_SpecialRoundScope
 	
 	special_round.cb_get_boss_threshold      = Ware_Callback(scope, "GetBossThreshold")
+	special_round.cb_get_minigame            = Ware_Callback(scope, "GetMinigameName")
 	special_round.cb_get_overlay2            = Ware_Callback(scope, "GetOverlay2")
 	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")
 	special_round.cb_on_calculate_scores     = Ware_Callback(scope, "OnCalculateScores")
@@ -1047,35 +1048,41 @@ function Ware_StartMinigameInternal(is_boss)
 		
 		if (!is_forced)
 		{
-			if (is_boss)
+			if (Ware_SpecialRound && Ware_SpecialRound.cb_get_minigame.IsValid())
+				minigame = Ware_SpecialRound.cb_get_minigame(is_boss)
+			
+			if (!minigame)
 			{
-				if (Ware_BossgameRotation.len() == 0)
+				if (is_boss)
 				{
-					if (Ware_Bossgames.len() == 0)
+					if (Ware_BossgameRotation.len() == 0)
 					{
-						Ware_Error("Bossgame rotation is empty")
-						return
+						if (Ware_Bossgames.len() == 0)
+						{
+							Ware_Error("Bossgame rotation is empty")
+							return
+						}
+						
+						Ware_BossgameRotation = Ware_Bossgames.filter(@(i, bossgame) true)
 					}
 					
-					Ware_BossgameRotation = Ware_Bossgames.filter(@(i, bossgame) true)
+					minigame = RemoveRandomElement(Ware_BossgameRotation)
 				}
-				
-				minigame = RemoveRandomElement(Ware_BossgameRotation)
-			}
-			else
-			{
-				if (Ware_MinigameRotation.len() == 0)
+				else
 				{
-					if (Ware_Minigames.len() == 0)
+					if (Ware_MinigameRotation.len() == 0)
 					{
-						Ware_Error("Minigame rotation is empty")
-						return
+						if (Ware_Minigames.len() == 0)
+						{
+							Ware_Error("Minigame rotation is empty")
+							return
+						}
+						
+						Ware_MinigameRotation = Ware_Minigames.filter(@(i, bossgame) true)
 					}
 					
-					Ware_MinigameRotation = Ware_Minigames.filter(@(i, bossgame) true)
+					minigame = RemoveRandomElement(Ware_MinigameRotation)
 				}
-				
-				minigame = RemoveRandomElement(Ware_MinigameRotation)
 			}
 		}
 		
