@@ -5,6 +5,10 @@ minigame <- Ware_MinigameData
 	description = "Hit the Bullseye 5 times!"
 	duration    = 4.0
 	music       = "wildwest"
+	convars     =
+	{
+		phys_pushscale = 5
+	}
 })
 
 prop_model <- "models/tf2ware_ultimate/dummy_sphere.mdl"
@@ -21,14 +25,14 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Winger");	
 	
-	local pos = Ware_MinigameLocation.center + Vector(0.0, 0.0, RandomFloat(50.0, 250.0))
+	local pos = Ware_MinigameLocation.center + Vector(0.0, 0.0, RandomFloat(400.0, 500.0))
 	
 	local prop = Ware_SpawnEntity("prop_physics_override", 
 	{
-		model      = prop_model,
-		origin     = pos,
-		massscale  = 0.02,
-		rendermode = kRenderNone,
+		model      = prop_model
+		origin     = pos
+		massscale  = 0.1
+		rendermode = kRenderNone
 	})
 	prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT)
 	
@@ -43,7 +47,8 @@ function OnStart()
 	})	
 	SetEntityParent(sprite, prop)
 	
-	Ware_ShowAnnotation(sprite, "Bullseye!")
+	// TODO: I'm not sure why this isn't following the entity
+	//Ware_ShowAnnotation(sprite, "Bullseye!")
 	
 	foreach (data in Ware_MinigamePlayers)
 		Ware_GetPlayerMiniData(data.player).points <- 0
