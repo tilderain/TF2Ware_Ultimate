@@ -697,7 +697,12 @@ Ware_MeleeAttributeOverrides <-
 	{
 		"dmg taken increased" : 1,
 		"maxammo secondary reduced" : 1,
-	},		
+	},	
+	// killing gloves of boxing
+	[43] =
+	{ 
+		"critboost on kill" : 0,
+	},	
 	// eviction notice
 	[426] =
 	{ 
