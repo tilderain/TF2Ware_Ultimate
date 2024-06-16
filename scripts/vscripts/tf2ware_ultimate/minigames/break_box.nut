@@ -48,7 +48,7 @@ function OnStart()
 	local mins = Ware_MinigameLocation.mins
 	local maxs = Ware_MinigameLocation.maxs
 	
-	local gold_count = 1
+	local gold_count = Ware_MinigamePlayers.len() > 24 ? 1 : 2
 	local shrink = 0.0
 	if (Ware_MinigamePlayers.len() < 6)
 		shrink = box_size * 3.1
