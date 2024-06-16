@@ -256,7 +256,7 @@ function OnTele1Touch()
 	if (player.IsPlayer() && player.IsValid())
 	{
 		Ware_PlaySoundOnClient(player, tele_sound)
-		Ware_AddPlayerAttribute(player, "increased jump height", 1.28, Ware_GetMinigameRemainingTime())
+		Ware_AddPlayerAttribute(player, "increased jump height", 1.15, Ware_GetMinigameRemainingTime())
 	}
 }
 
