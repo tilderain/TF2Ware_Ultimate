@@ -663,6 +663,8 @@ function Ware_ShowSpecialRoundText(players)
 {
 	local holdtime = 3.0 
 	local text = Ware_SpecialRound ? ("\n\n\n Special Round!\n " + Ware_SpecialRound.name) : ""
+	if (Ware_SpecialRound && Ware_SpecialRound.reverse_text)
+		text = "Special Round!\n" + Ware_SpecialRound.name + "\n\n\n"
 	Ware_ShowText(players, CHANNEL_SPECIALROUND, text, holdtime + 0.2, "255 175 0", 0.0, 0.0)
 	return holdtime // refresh every few seconds
 }
