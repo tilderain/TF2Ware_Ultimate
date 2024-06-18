@@ -93,6 +93,7 @@ const TF_COLOR_SPEC    = "CCCCCC"
 
 const CHANNEL_MINIGAME     = 2
 const CHANNEL_SPECIALROUND = 3
+const CHANNEL_MISC         = 4
 
 const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
 const SFX_WARE_KART_HORN = "TF2Ware_Ultimate.KartHorn"

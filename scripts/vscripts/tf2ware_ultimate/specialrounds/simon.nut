@@ -1,5 +1,5 @@
 
-simon <- RandomInt(0, 1)
+simon <- RandomBool()
 
 special_round <- Ware_SpecialRoundData
 ({
@@ -13,7 +13,7 @@ special_round <- Ware_SpecialRoundData
 function OnBeginIntermission(is_boss)
 {
 	// do this early bcuz minigamestart happens after something that checks opposite_win
-	simon <- RandomInt(0, 1)
+	simon <- RandomBool()
 	special_round.opposite_win = !simon
 	
 	foreach (player in Ware_Players)
@@ -29,9 +29,7 @@ function OnBeginIntermission(is_boss)
 function OnMinigameStart()
 {
 	local text = (simon ? "Simon" : "Someone") + " Says:"
-	
-	// todo: make new channel?
-	Ware_ShowText(Ware_Players, CHANNEL_MINIGAME, text, Ware_GetMinigameRemainingTime(), "255 255 255", -1.0, 0.12)
+	Ware_ShowText(Ware_Players, CHANNEL_MISC, text, Ware_GetMinigameRemainingTime(), "255 255 255", -1.0, 0.1)
 }
 
 function OnCalculateScore(data)

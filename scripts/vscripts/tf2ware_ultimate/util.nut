@@ -113,6 +113,12 @@ function RemoveRandomElement(arr)
 	return arr.remove(RandomIndex(arr))
 }
 
+// Returns either true or false at random
+function RandomBool()
+{
+	return RandomElement([true, false])
+}
+
 // Reverse a string, with color markers fixed up
 function ReverseString(str)
 {
