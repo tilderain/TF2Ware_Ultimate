@@ -118,6 +118,7 @@ Ware_SpecialRounds <-
 	"opposite_day"
 	"random_score"
 	"reversed_text"
+	"simon"
 	"slow_mo"
 	"thirdperson"
 	"time_attack"
@@ -361,6 +362,7 @@ Ware_FakeSpecialRounds <-
 	"90s Drifting"
 	"CPU vs. CPU"
 	"Rat Cafe"
+	"Magic Missile!"
 	
 ]
 
