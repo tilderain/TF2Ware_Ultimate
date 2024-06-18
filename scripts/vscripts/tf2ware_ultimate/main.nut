@@ -792,11 +792,11 @@ function Ware_BeginSpecialRoundInternal()
 		
 	CreateTimer(function() 
 	{	
-		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds), text_interval * 2.0)
+		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds).toupper(), text_interval * 2.0)
 		
 		if (Time() - start_time > reveal_time)
 		{
-			Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, special_round.name, end_time)
+			Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, special_round.name.toupper(), end_time)
 			
 			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, special_round.name, TF_COLOR_DEFAULT, special_round.description)
 			

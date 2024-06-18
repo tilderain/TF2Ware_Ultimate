@@ -285,6 +285,8 @@ Ware_FakeSpecialRounds <-
 	"🇭 🇮  🇱 🇮 🇳 🇺 🇽  🇺 🇸 🇪 🇷 🇸"
 	"🥹🥹🥹"
 	"Giant Enemy Spider"
+	"The Giant Rat Who Makes All Of The Rules"
+	"Build Your Own Minigame"
 		
 	// from forum post
 	"Mandrill Maze Mayhem"
@@ -350,6 +352,15 @@ Ware_FakeSpecialRounds <-
 	"Turtle Only"
 	"Randomized Music"
 	"High Gravity"
+	"trade_plaza Sniper Battle"
+	"Ubisoft Tower Climbing"
+	"Hi Mom"
+	"Tartarus Floor 135"
+	"Shoutouts To Simpleflips"
+	"Battle Royale"
+	"90s Drifting"
+	"CPU vs. CPU"
+	"Rat Cafe"
 	
 ]
 
