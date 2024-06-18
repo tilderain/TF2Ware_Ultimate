@@ -17,11 +17,11 @@ function OnBeginIntermission(is_boss)
 	special_round.opposite_win = !simon
 	
 	foreach (player in Ware_Players)
-		{
-			Ware_PlayGameSound(player, "intro")
-			Ware_ShowScreenOverlay(player, null)
-			Ware_ShowScreenOverlay2(player, null)
-		}
+	{
+		Ware_PlayGameSound(player, "intro")
+		Ware_ShowScreenOverlay(player, null)
+		Ware_ShowScreenOverlay2(player, null)
+	}
 		
 	CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 }
