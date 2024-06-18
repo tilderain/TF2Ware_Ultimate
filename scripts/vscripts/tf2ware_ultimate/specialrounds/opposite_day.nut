@@ -3,24 +3,12 @@ special_round <- Ware_SpecialRoundData
 ({
 	name = "Opposite Day"
 	author = "pokemonPasta"
-	description = "Lowest score at the end wins."
+	description = "Do the opposite of what the minigame tells you."
 	opposite_win = true
 })
 
-function OnCalculateTopScorers(top_players)
+function OnCalculateScore(data)
 {
-	local top_score = INT_MAX
-	foreach (data in Ware_MinigamePlayersData)
-	{
-		if (data.score < top_score)
-		{
-			top_score = data.score
-			top_players.clear()
-			top_players.append(data.player)
-		}
-		else if (data.score == top_score)
-		{
-			top_players.append(data.player)
-		}	
-	}	
+	if (!data.passed)
+		data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
 }
