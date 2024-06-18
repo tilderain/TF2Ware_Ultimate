@@ -65,8 +65,8 @@ function Ware_GameOver()
 // Influenced by special rounds
 function Ware_GetBossThreshold()
 {
-	if (Ware_SpecialRound && Ware_SpecialRound.cb_get_boss_threshold.IsValid())
-		return Ware_SpecialRound.cb_get_boss_threshold()
+	if (Ware_SpecialRound)
+		return Ware_SpecialRound.boss_threshold
 	else
 		return Ware_BossThreshold
 }

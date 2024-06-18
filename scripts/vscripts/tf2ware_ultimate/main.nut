@@ -674,7 +674,6 @@ function Ware_SetupSpecialRoundCallbacks()
 	local special_round = Ware_SpecialRound
 	local scope = Ware_SpecialRoundScope
 	
-	special_round.cb_get_boss_threshold      = Ware_Callback(scope, "GetBossThreshold")
 	special_round.cb_get_minigame            = Ware_Callback(scope, "GetMinigameName")
 	special_round.cb_get_overlay2            = Ware_Callback(scope, "GetOverlay2")
 	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")

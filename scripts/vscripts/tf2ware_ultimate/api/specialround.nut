@@ -12,6 +12,7 @@ class Ware_SpecialRoundData
 		force_collisions = false
 		opposite_win     = false
 		boss_count       = 1
+		boss_threshold   = Ware_BossThreshold
 		
 		if (table)
 		{
@@ -46,10 +47,11 @@ class Ware_SpecialRoundData
 	opposite_win			 = null
 	// Amount of bosses to play, default is 1
 	boss_count       		 = null
+	// Amount of minigames played before a boss, default is Ware_BossThreshold in config.nut
+	boss_threshold           = null
 	
 	// == Callbacks == 
 	// TODO: document these
-	cb_get_boss_threshold      = null
 	cb_get_minigame            = null
 	cb_get_overlay2            = null
 	cb_get_player_roll         = null
