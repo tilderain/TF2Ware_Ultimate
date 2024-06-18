@@ -123,9 +123,8 @@ function OnGameEvent_teamplay_round_start(params)
 {
 	if (!endswith(GetMapName(), WARE_MAPVERSION))
 	{
-		local map_version = GetMapName().slice(17)
 		Ware_Error("Map version does not match script version. Some minigames may not function correctly due to missing geometry.\nMap Version: %s\nScript Version: %s",
-		map_version,
+		GetMapName().slice(17),
 		WARE_MAPVERSION)
 	}
 	
