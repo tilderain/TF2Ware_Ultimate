@@ -11,6 +11,7 @@ minigame <- Ware_MinigameData
 	start_pass     = true
 	fail_on_death  = true
 	thirdperson    = true
+	allow_scale    = false
 })
 
 function OnStart()

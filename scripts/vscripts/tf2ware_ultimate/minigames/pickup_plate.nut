@@ -20,6 +20,8 @@ minigame <- Ware_MinigameData
 	location       = "beach"
 	custom_overlay = chosen_item[1]
 	thirdperson    = true
+	
+	allow_scale = false
 })
 
 function OnPrecache()

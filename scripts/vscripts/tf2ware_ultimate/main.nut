@@ -1149,6 +1149,8 @@ function Ware_StartMinigameInternal(is_boss)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(1)
+		if (!Ware_Minigame.allow_scale)
+			Ware_SetPlayerMinigameScale(player, 1.0)
 		player.RemoveCond(TF_COND_TAUNTING)
 
 		local scope = player.GetScriptScope()
@@ -1345,6 +1347,12 @@ function Ware_FinishMinigameInternal()
 		{
 			Ware_SetPlayerTeamInternal(player, data.saved_team)
 			data.saved_team = null
+		}
+		
+		if (data.saved_scale != null)
+		{
+			player.SetModelScale(data.saved_scale, 0.0)
+			data.saved_scale = null
 		}
 			
 		if (IsEntityAlive(player))

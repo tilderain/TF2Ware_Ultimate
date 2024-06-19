@@ -32,6 +32,7 @@ class Ware_PlayerData
 	attributes	     	= null
 	melee_attributes 	= null
 	start_sound      	= null
+	saved_scale         = null
 	saved_team       	= null
 	score			 	= null
 	horn_timer		 	= null
@@ -404,6 +405,57 @@ function Ware_SetPlayerTeam(player, team)
 	if (data.saved_team == null)
 		data.saved_team = old_team
 	Ware_SetPlayerTeamInternal(player, team)
+}
+
+// Sets the player's scale
+// Does NOT save the previous scale
+// Intended for use in special rounds and the like
+function Ware_SetPlayerScale(target, scale, time = 0.0)
+{
+	if (target)
+		target.SetModelScale(scale, time)
+	else
+	{
+		foreach(player in Ware_Players)
+			player.SetModelScale(scale, time)
+	}
+}
+
+
+// Sets the player's scale
+// Their current scale is saved and reverted when a minigame ends
+// If no target is provided, iterates across all players
+function Ware_SetPlayerMinigameScale(target, scale, time = 0.0)
+{
+	local SaveScale = function(ent)
+	{
+		local old_scale = Ware_GetPlayerScale(ent)
+		local data = ent.GetScriptScope().ware_data
+		
+		if (data.saved_scale == null)
+			data.saved_scale = old_scale
+	}
+	
+	if (target)
+	{
+		SaveScale(target)
+		Ware_SetPlayerScale(target, scale, time)
+	}
+	else
+	{
+		foreach(player in Ware_Players)
+		{
+			SaveScale(player)
+			Ware_SetPlayerScale(player, scale, time)
+		}
+	}
+}
+
+// Returns the player's scale
+function Ware_GetPlayerScale(player)
+{
+	if (player)
+		return player.GetModelScale()
 }
 
 // Toggles the visibility of all wearables (including weapons!) on a player

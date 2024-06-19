@@ -129,6 +129,7 @@ function OnGameEvent_teamplay_round_start(params)
 	}
 	
 	Ware_SetTimeScale(1.0)
+	Ware_SetPlayerScale(null, 1.0)
 	
 	Ware_ShowSpecialRoundText(Ware_Players) // clear it out
 	

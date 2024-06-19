@@ -7,6 +7,8 @@ minigame <- Ware_MinigameData
 	location       = "warehouse"
 	music          = "digging"
 	custom_overlay = "find_australium"
+	
+	allow_scale = false
 })
 
 box_model <- "models/props_hydro/barrel_crate_half.mdl"

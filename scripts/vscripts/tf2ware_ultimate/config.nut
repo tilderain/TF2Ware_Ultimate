@@ -119,6 +119,7 @@ Ware_SpecialRounds <-
 	"random_score"
 	"reversed_text"
 	"simon"
+	"size_matters"
 	"slow_mo"
 	"thirdperson"
 	"time_attack"

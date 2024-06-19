@@ -6,6 +6,8 @@ minigame <- Ware_MinigameData
 	duration      = 11.0
 	location      = "boxarena"
 	music         = "limbo"
+	
+	allow_scale = false
 })
 
 goal_vectors <- null

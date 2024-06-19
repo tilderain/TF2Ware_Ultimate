@@ -17,6 +17,9 @@ minigame <- Ware_MinigameData
 	{
 		tf_avoidteammates = 0
 	}
+	
+	// small players fly into the air and i have no idea why - pokepasta
+	allow_scale = false
 })
 
 mode <- RandomInt(0, 5)
