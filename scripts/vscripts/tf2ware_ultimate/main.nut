@@ -210,7 +210,7 @@ if (!("Ware_Precached" in this))
 	
 	Ware_Theme              	  <- Ware_Themes[0]
 	Ware_CurrentThemeSounds 	  <- {}
-	Ware_NextTheme          	  <- ""
+	Ware_DebugNextTheme           <- ""
 	
 	Ware_SpecialRound             <- null
 	Ware_SpecialRoundScope        <- {}

@@ -150,10 +150,10 @@ function OnGameEvent_teamplay_round_start(params)
 	Ware_Started = true
 	
 	// check for next theme. otherwise first round always uses default theme
-	if (Ware_NextTheme != "")
+	if (Ware_DebugNextTheme != "")
 	{
-		Ware_SetTheme(Ware_NextTheme)
-		Ware_NextTheme = ""
+		Ware_SetTheme(Ware_DebugNextTheme)
+		Ware_DebugNextTheme = ""
 	}
 	else if (Ware_RoundsPlayed > 0)
 	{

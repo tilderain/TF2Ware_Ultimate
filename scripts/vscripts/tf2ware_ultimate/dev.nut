@@ -33,10 +33,10 @@ Ware_DevCommands <-
 	{
 		local args = split(text, " ")
 		if (args.len() >= 1)
-			Ware_NextTheme = args[0]
+			Ware_DebugNextTheme = args[0]
 		else
-			Ware_NextTheme = ""
-		Ware_ChatPrint(player, "Setting next theme to '{str}'", Ware_NextTheme)
+			Ware_DebugNextTheme = ""
+		Ware_ChatPrint(player, "Setting next theme to '{str}'", Ware_DebugNextTheme)
 	}
 	"forcetheme": function(player, text)
 	{
