@@ -57,6 +57,7 @@ class Ware_SpecialRoundData
 	cb_get_player_roll         = null
 	cb_on_calculate_score      = null
 	cb_on_calculate_topscorers = null
+	cb_on_declare_winners      = null
 	cb_on_player_spawn         = null
 	cb_on_player_inventory     = null
 	cb_on_begin_intermission   = null

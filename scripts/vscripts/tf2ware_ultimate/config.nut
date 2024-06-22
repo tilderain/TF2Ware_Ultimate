@@ -121,6 +121,7 @@ Ware_SpecialRounds <-
 	"simon"
 	"size_matters"
 	"slow_mo"
+	"team_battles"
 	"thirdperson"
 	"time_attack"
 	"two_bosses"

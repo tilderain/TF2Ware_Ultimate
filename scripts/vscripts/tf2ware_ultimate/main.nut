@@ -679,6 +679,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")
 	special_round.cb_on_calculate_score      = Ware_Callback(scope, "OnCalculateScore")
 	special_round.cb_on_calculate_topscorers = Ware_Callback(scope, "OnCalculateTopScorers")
+	special_round.cb_on_declare_winners      = Ware_Callback(scope, "OnDeclareWinners")
 	special_round.cb_on_player_spawn         = Ware_Callback(scope, "OnPlayerSpawn")
 	special_round.cb_on_player_inventory     = Ware_Callback(scope, "OnPlayerInventory")
 	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
@@ -1550,11 +1551,6 @@ function Ware_GameOverInternal()
 	Ware_Finished = true
 	Ware_RoundsPlayed++
 	
-	// TODO: move this to start of next round if it's safe to do so
-	// reason being it's more interesting to still have the special round's convars or what have you going on round end
-	if (Ware_SpecialRound != null)
-		Ware_EndSpecialRound()
-	
 	local top_players = Ware_MinigameTopScorers
 	top_players = top_players.filter(@(i, player) player.IsValid())
 	
@@ -1592,19 +1588,24 @@ function Ware_GameOverInternal()
 			Ware_PlayGameSound(player, "results")
 	}, 5.0)
 	
-	if (winner_count > 1)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
+		Ware_SpecialRound.cb_on_declare_winners(top_players)
+	else
 	{
-		Ware_ChatPrint(null, "{color}The winners each with {int} points:", TF_COLOR_DEFAULT, top_score)
-		foreach (player in top_players)
-			Ware_ChatPrint(null, "> {player} {color}!", player, TF_COLOR_DEFAULT)
-	}
-	else if (winner_count == 1)
-	{
-		Ware_ChatPrint(null, "{player} {color}won with {int} points!", top_players[0], TF_COLOR_DEFAULT, top_score)
-	}	
-	else if (winner_count == 0)
-	{
-		Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
+		if (winner_count > 1)
+		{
+			Ware_ChatPrint(null, "{color}The winners each with {int} points:", TF_COLOR_DEFAULT, top_score)
+			foreach (player in top_players)
+				Ware_ChatPrint(null, "> {player} {color}!", player, TF_COLOR_DEFAULT)
+		}
+		else if (winner_count == 1)
+		{
+			Ware_ChatPrint(null, "{player} {color}won with {int} points!", top_players[0], TF_COLOR_DEFAULT, top_score)
+		}	
+		else if (winner_count == 0)
+		{
+			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
+		}
 	}
 	
 	// TODO: add firework effects
@@ -1634,6 +1635,11 @@ function Ware_GameOverInternal()
 		}
 	})
 	EntityEntFire(win, "RoundWin")
+	
+	// TODO: move this to start of next round if it's safe to do so
+	// reason being it's more interesting to still have the special round's convars or what have you going on round end
+	if (Ware_SpecialRound != null)
+		Ware_EndSpecialRound()
 }
 
 function Ware_OnUpdate()
