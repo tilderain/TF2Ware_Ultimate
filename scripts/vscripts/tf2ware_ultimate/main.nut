@@ -894,6 +894,8 @@ function Ware_BeginIntermissionInternal(is_boss)
 {
 	if (Ware_DebugStop)
 	{
+		// message
+		Ware_ShowText(Ware_Players, CHANNEL_MISC, "TF2Ware Ultimate is paused...", 1.1)
 		// retry
 		return 1.0
 	}
