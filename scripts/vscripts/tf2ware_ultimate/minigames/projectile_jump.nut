@@ -1,13 +1,14 @@
 mode_infos <- 
 [
-	[ "Needle jump!", "needle_jump" ],
-	[ "Rocket jump!", "rocket_jump" ],
-	[ "Sticky jump!", "sticky_jump" ],
-	[ "Sentry jump!", "sentry_jump" ],
-	[ "Flare jump!",  "flare_jump"  ],
+	[ "Needle jump!",       "needle_jump"       ],
+	[ "Rocket jump!",       "rocket_jump"       ],
+	[ "Sticky jump!",       "sticky_jump"       ],
+	[ "Sentry jump!",       "sentry_jump"       ],
+	[ "Flare jump!",        "flare_jump"        ],
+	[ "Short Circuit jump!", "shortcircuit_jump" ],
 ]
 
-mode <- RandomInt(0, 4)
+mode <- RandomInt(0, 5)
 
 minigame <- Ware_MinigameData
 ({
@@ -62,6 +63,12 @@ function OnStart()
 		player_class = TF_CLASS_PYRO
 		weapon = "Detonator"
 	}
+	else if (mode == 5)
+	{
+		player_class = TF_CLASS_ENGINEER
+		weapon = "Short Circuit"
+		orbs <- {}
+	}
 	
 	Ware_SetGlobalLoadout(player_class, weapon)
 }
@@ -74,6 +81,53 @@ function OnUpdate()
 			continue
 		if (Ware_GetPlayerHeight(player) > 512.0)
 			Ware_PassPlayer(player, true)
+	}
+	
+	if (mode == 5)
+	{
+		local dead_orbs = {}
+		foreach (orb, data in orbs)
+		{
+			if (orb.IsValid())
+				data.origin = orb.GetOrigin()
+			else
+				dead_orbs[orb] <- data
+		}
+		
+		for (local orb; orb = Entities.FindByClassname(orb, "tf_projectile_mechanicalarmorb");)
+		{
+			if (!(orb in orbs) && !orb.IsEFlagSet(EFL_KILLME))
+			{
+				orbs[orb] <- { origin = orb.GetOrigin(), owner = orb.GetOwner() }
+			}
+		}
+		
+		foreach (orb, data in dead_orbs)
+		{
+			delete orbs[orb]
+			
+			local player = data.owner
+			local origin = data.origin
+			
+			local radius = 100.0
+			
+			// copied from Ware_RadiusDamagePlayers
+			local dist = (player.GetOrigin() - origin).Length()
+			if (dist > radius)
+				continue
+			
+			dist += DIST_EPSILON
+			local falloff = 1.0 - dist / radius
+			if (falloff <= 0.0)
+				continue
+			
+			local dir = player.EyeAngles().Forward()
+			dir.Norm()
+			
+			local dot = dir.Dot(Vector(0, 0, -1.0))
+			if (dot > 0.707) // cos(45)
+				player.SetAbsVelocity(player.GetAbsVelocity() - dir * 2000.0 * dot * falloff)
+		}
 	}
 }
 
@@ -99,4 +153,13 @@ else if (mode == 3)
 			
 		SetPropInt(building, "m_nDefaultUpgradeLevel", 2)
 	}	
+}
+else if (mode == 5)
+{
+	function OnTakeDamage(params)
+	{
+		local weapon = params.weapon
+		if (weapon && weapon.GetName() == "tf_weapon_mechanical_arm")
+			params.damage = 0.0
+	}
 }
