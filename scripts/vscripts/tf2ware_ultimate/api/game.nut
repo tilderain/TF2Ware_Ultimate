@@ -17,7 +17,7 @@ function Ware_GetTimeScale()
 // The minigame is started when this is finished
 function Ware_BeginIntermission(is_boss)
 {
-	Ware_BeginIntermissionInternal(is_boss)
+	return Ware_BeginIntermissionInternal(is_boss)
 }
 
 // Sets the boss state 
