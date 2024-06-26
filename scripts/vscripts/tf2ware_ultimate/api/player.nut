@@ -231,6 +231,12 @@ function Ware_StripPlayer(player, give_default_melee)
 							player.RemoveCond(TF_COND_ROCKETPACK)
 						}
 					}
+					else if (classname == "tf_weapon_mechanical_arm")
+					{
+						local viewmodel = GetPropEntity(player, "m_hViewModel")
+						if (viewmodel)
+							viewmodel.SetBodygroup(1, 0)
+					}
 				}
 				
 				player.Weapon_Switch(use_melee)
