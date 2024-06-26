@@ -1151,7 +1151,7 @@ function Ware_StartMinigameInternal(is_boss)
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(1)
 		if (!Ware_Minigame.allow_scale)
-			Ware_SetPlayerMinigameScale(player, 1.0)
+			Ware_SetPlayerScale(player, 1.0, 0.0, true)
 		player.RemoveCond(TF_COND_TAUNTING)
 
 		local scope = player.GetScriptScope()

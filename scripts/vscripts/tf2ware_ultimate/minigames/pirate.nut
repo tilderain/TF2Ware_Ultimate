@@ -15,6 +15,8 @@ minigame <- Ware_MinigameData
 		"pirate_red"
 		"pirate_blue"
 	]
+	
+	allow_scale = false
 })
  
 ship_model <- "models/marioragdoll/super mario galaxy/bj ship/bjship.mdl"

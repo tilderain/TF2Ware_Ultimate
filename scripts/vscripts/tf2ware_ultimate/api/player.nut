@@ -408,54 +408,27 @@ function Ware_SetPlayerTeam(player, team)
 }
 
 // Sets the player's scale
-// Does NOT save the previous scale
-// Intended for use in special rounds and the like
-function Ware_SetPlayerScale(target, scale, time = 0.0)
+// If save_scale is passed, also saves the previous scale and reverts it at the end of the next minigame
+// NOTE: Only reverts the first saved scale since the end of the previous minigame
+function Ware_SetPlayerScale(player, scale, time = 0.0, save_scale = false)
 {
-	if (target)
-		target.SetModelScale(scale, time)
-	else
+	if (save_scale)
 	{
-		foreach(player in Ware_Players)
-			player.SetModelScale(scale, time)
-	}
-}
-
-
-// Sets the player's scale
-// Their current scale is saved and reverted when a minigame ends
-// If no target is provided, iterates across all players
-function Ware_SetPlayerMinigameScale(target, scale, time = 0.0)
-{
-	local SaveScale = function(ent)
-	{
-		local old_scale = Ware_GetPlayerScale(ent)
-		local data = ent.GetScriptScope().ware_data
+		local old_scale = player.GetModelScale()
+		local data = player.GetScriptScope().ware_data
 		
 		if (data.saved_scale == null)
 			data.saved_scale = old_scale
 	}
 	
-	if (target)
-	{
-		SaveScale(target)
-		Ware_SetPlayerScale(target, scale, time)
-	}
-	else
-	{
-		foreach(player in Ware_Players)
-		{
-			SaveScale(player)
-			Ware_SetPlayerScale(player, scale, time)
-		}
-	}
+	player.SetModelScale(scale, time)
 }
 
-// Returns the player's scale
-function Ware_GetPlayerScale(player)
+// Iterates Ware_SetPlayerScale across all players
+function Ware_SetGlobalPlayerScale(scale, time = 0.0, save_scale = false)
 {
-	if (player)
-		return player.GetModelScale()
+	foreach(player in Ware_MinigamePlayers)
+		Ware_SetPlayerScale(player, scale, time, save_scale)
 }
 
 // Toggles the visibility of all wearables (including weapons!) on a player
