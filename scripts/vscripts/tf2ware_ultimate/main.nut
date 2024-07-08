@@ -677,9 +677,11 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_get_minigame            = Ware_Callback(scope, "GetMinigameName")
 	special_round.cb_get_overlay2            = Ware_Callback(scope, "GetOverlay2")
 	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")
+	special_round.cb_get_valid_players       = Ware_Callback(scope, "GetValidPlayers")
 	special_round.cb_on_calculate_score      = Ware_Callback(scope, "OnCalculateScore")
 	special_round.cb_on_calculate_topscorers = Ware_Callback(scope, "OnCalculateTopScorers")
 	special_round.cb_on_declare_winners      = Ware_Callback(scope, "OnDeclareWinners")
+	special_round.cb_on_player_disconnect    = Ware_Callback(scope, "OnPlayerDisconnect")
 	special_round.cb_on_player_spawn         = Ware_Callback(scope, "OnPlayerSpawn")
 	special_round.cb_on_player_inventory     = Ware_Callback(scope, "OnPlayerInventory")
 	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
@@ -869,6 +871,13 @@ function Ware_EndSpecialRoundInternal()
 	foreach (event_name in Ware_SpecialRoundEvents)
 		GameEventCallbacks[event_name].pop()
 	Ware_SpecialRoundEvents.clear()
+	
+	foreach(player in Ware_Players)
+	{
+		local scope = player.GetScriptScope()
+		local data = scope.ware_data
+		scope.ware_specialdata.clear()
+	}
 	
 	Ware_SpecialRound = null
 }
@@ -1591,7 +1600,7 @@ function Ware_GameOverInternal()
 	}, 5.0)
 	
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
-		Ware_SpecialRound.cb_on_declare_winners(top_players)
+		Ware_SpecialRound.cb_on_declare_winners(top_players, top_score, winner_count)
 	else
 	{
 		if (winner_count > 1)

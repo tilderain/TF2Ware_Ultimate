@@ -299,6 +299,7 @@ function OnGameEvent_player_spawn(params)
 		local scope = player.GetScriptScope()
 		scope.ware_data <- Ware_PlayerData(player)
 		scope.ware_minidata <- {}
+		scope.ware_specialdata <- {}
 		Ware_Players.append(player)
 		Ware_PlayersData.append(scope.ware_data)
 		if (params.team == TEAM_UNASSIGNED)
@@ -437,6 +438,8 @@ function OnGameEvent_player_disconnect(params)
 		return
 	
 	Ware_Minigame.cb_on_player_disconnect(player)
+	if (Ware_SpecialRound)
+		Ware_SpecialRound.cb_on_player_disconnect(player)
 }
 
 function OnGameEvent_teamplay_game_over(params)

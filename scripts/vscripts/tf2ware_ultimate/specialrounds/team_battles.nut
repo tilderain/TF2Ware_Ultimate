@@ -23,7 +23,7 @@ function OnCalculateScore(data)
 	}
 }
 
-function OnCalculateTopScorers(top_players)
+function OnCalculateTopScorers(top_players, top_score,  winner_count)
 {
 	top_team = Max(red_score, blu_score) == red_score ? TF_TEAM_RED : TF_TEAM_BLUE
 	

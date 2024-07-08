@@ -63,6 +63,11 @@ function Ware_GetPlayerMiniData(player)
 	return player.GetScriptScope().ware_minidata
 }
 
+function Ware_GetPlayerSpecialRoundData(player)
+{
+	return player.GetScriptScope().ware_specialdata
+}
+
 // Marks a player as "passed" during a minigame
 // This also plays the sound and particle effects
 // This does nothing if the player is already passed
@@ -470,13 +475,18 @@ function Ware_GetPassedPlayers(alive_only = false)
 // Internally this decides what players will be placed into a minigame
 function Ware_GetValidPlayers()
 {
-	local valid_players = []
-	foreach (player in Ware_Players)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_get_valid_players.IsValid())
+		return Ware_SpecialRound.cb_get_valid_players()
+	else
 	{
-		if ((player.GetTeam() & 2) && IsEntityAlive(player))
-			valid_players.append(player)
+		local valid_players = []
+		foreach (player in Ware_Players)
+		{
+			if ((player.GetTeam() & 2) && IsEntityAlive(player))
+				valid_players.append(player)
+		}
+		return valid_players
 	}
-	return valid_players
 }
 
 // Gets a list of players in a minigame sorted by their score

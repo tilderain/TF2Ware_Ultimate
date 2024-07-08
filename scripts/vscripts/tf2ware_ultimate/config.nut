@@ -126,6 +126,7 @@ Ware_SpecialRounds <-
 	"time_attack"
 	"two_bosses"
 	"up_down"
+	"wipeout"
 ]
 
 // only for precaching purposes
@@ -290,6 +291,7 @@ Ware_FakeSpecialRounds <-
 	"Giant Enemy Spider"
 	"The Giant Rat Who Makes All Of The Rules"
 	"Build Your Own Minigame"
+	"Rules of Nature"
 		
 	// from forum post
 	"Mandrill Maze Mayhem"
