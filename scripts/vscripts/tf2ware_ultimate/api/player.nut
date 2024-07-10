@@ -64,7 +64,7 @@ function Ware_GetPlayerMiniData(player)
 }
 
 // Gets the special round data associated with a player
-// This functions like minidata but is used in special rounds instead, and is cleared when it ends.
+// This functions like minidata but is used in special rounds instead, and is cleared when a special round ends.
 function Ware_GetPlayerSpecialRoundData(player)
 {
 	return player.GetScriptScope().ware_specialdata

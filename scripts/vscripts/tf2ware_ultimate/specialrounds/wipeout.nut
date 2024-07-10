@@ -51,14 +51,15 @@ function OnPlayerDisconnect(player)
 	foreach(arr in [Wipeout_Spectators, Wipeout_ValidPlayers, Wipeout_PlayerRotation])
 	{
 		local idx = arr.find(player)
-		if (idx)
+		if (idx != null)
 			arr.remove(idx)
 	}
 }
 
 function OnTakeDamage(params)
 {
-	if (Wipeout_Spectators.find(params.const_entity) != null || Wipeout_Spectators.find(params.inflictor) != null)
+	local arr = Wipeout_Spectators
+	if (arr.find(params.const_entity) != null || arr.find(params.inflictor) != null)
 		params.damage = 0.0
 }
 
@@ -169,7 +170,7 @@ function OnMinigameEnd()
 			special_round.boss_threshold = 0
 			special_round.boss_count = 0
 			break
-		case 0: 
+		case 0:
 			special_round.boss_count = INT_MAX
 			foreach(player in Ware_MinigamePlayers)
 			{
@@ -189,7 +190,7 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 {
 	if (winner_count > 1)
 	{
-		Ware_ChatPrint(null, "{color}The winners each with {int} lives remaining:", TF_COLOR_DEFAULT, top_score)
+		Ware_ChatPrint(null, "{color}The winners each with {int} lives remaining:", TF_COLOR_DEFAULT, top_score) // NOTE: this should never happen
 		foreach (player in top_players)
 			Ware_ChatPrint(null, "> {player} {color}!", player, TF_COLOR_DEFAULT)
 	}
