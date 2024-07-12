@@ -875,7 +875,6 @@ function Ware_EndSpecialRoundInternal()
 	foreach(player in Ware_Players)
 	{
 		local scope = player.GetScriptScope()
-		local data = scope.ware_data
 		scope.ware_specialdata.clear()
 	}
 	
