@@ -103,16 +103,28 @@ class Ware_MinigameData
 	conditions		= null
 	
 	// == Callbacks ==
-	// TODO: document these
+	// If these functions exist in a minigame's scope, they are passed to the appropriate points in the code.
+	// Game events in a minigame scope are also supported in the typical format (e.g. "OnGameEvent_player_builtobject(params)")
+	
+	// OnTakeDamage(params)                - Called by OnTakeDamage in main.nut and functions as normal.
 	cb_on_take_damage		= null
+	// OnPlayerAttack(player)              - Called by Ware_OnUpdate, when a player attacks and passes that player.
 	cb_on_player_attack		= null
+	// OnPlayerDeath(params)               - Called by OnGameEvent_player_death, and passes its parameters.
 	cb_on_player_death		= null
+	// OnPlayerDisconnect(params)          - Called by OnGameEvent_player_disconnect, and passes its parameters.
 	cb_on_player_disconnect	= null
+	// OnPlayerSay(player, text)           - Called by OnGameEvent_player_say, and passes the player and what they typed.
 	cb_on_player_say		= null
+	// OnPlayerVoiceline(player, name)     - Called by Ware_OnUpdate, and passes the player who used a voiceline and the name of the voiceline.
 	cb_on_player_voiceline	= null
+	// OnPlayerHorn(player)                - Called by Ware_OnUpdate when a player uses the horn in a kart (MOUSE1). Passes the player who used a horn.
 	cb_on_player_horn		= null
+	// OnPlayerTouch(player, other_player) - Called by Ware_OnUpdate when two players touch and passes the two players.
 	cb_on_player_touch		= null
+	// OnUpdate()                          - Called by Ware_OnUpdate every frame.
 	cb_on_update			= null
+	// CheckEnd()                          - Called by Ware_OnUpdate. Return a condition in this function and if the condition is met, the minigame will end early.
 	cb_check_end			= null
 }
 
