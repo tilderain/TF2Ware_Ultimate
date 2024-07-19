@@ -689,7 +689,7 @@ Ware_MeleeAttributeOverrides <-
 	{ 
 		"mod shovel speed boost" : 0,
 		"reduced_healing_from_medics" : 1,
-		"self mark for deat" : 0,
+		"self mark for death" : 0,
 	},
 	// pain train
 	[154] = { "dmg taken from bullets increased" : 1 },	

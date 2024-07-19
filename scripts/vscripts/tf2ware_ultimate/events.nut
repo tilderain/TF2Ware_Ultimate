@@ -330,7 +330,7 @@ function OnGameEvent_player_spawn(params)
 		if (melee)
 			Ware_RemoveMeleeAttributes(melee)
 			
-		EntityAcceptInput(player, "CallScriptFunction", "PlayerPostSpawn")
+		EntityEntFire(player, "CallScriptFunction", "PlayerPostSpawn")
 		
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
 		player.SetCustomModel("")		
@@ -397,7 +397,7 @@ function OnGameEvent_player_death(params)
 		
 	local player = GetPlayerFromUserID(params.userid)
 	if (player)
-		EntityAcceptInput(player, "CallScriptFunction", "PlayerPostDeath")
+		EntityEntFire(player, "CallScriptFunction", "PlayerPostDeath")
 	
 	if (Ware_Minigame == null)
 		return
