@@ -170,7 +170,7 @@ function OnTeleport(players)
 function LowerPlatform()
 {
 	local hex = RemoveRandomElement(hexes)
-	EntityEntFire(hex.entity, "Open")
+	EntityAcceptInput(hex.entity, "Open")
 	
 	if (hexes.len() > 1)
 		return lower_delay

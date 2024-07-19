@@ -20,7 +20,7 @@ function OnStart()
 	jumprope_door = FindByName(null, "jumprope_door")
 	MarkForPurge(jumprope_door)
 	SetPropFloat(jumprope_door, "m_flSpeed", 100.0)
-	EntityEntFire(jumprope_door, "Open")
+	EntityAcceptInput(jumprope_door, "Open")
 	
 	Ware_CreateTimer(@() IncreaseRopeSpeed(), 5.0)
 	Ware_CreateTimer(@() CheckPlayerZones(), 5.0)
@@ -37,7 +37,7 @@ function IncreaseRopeSpeed()
 	local input = RandomInt(1, 5) == 1 ? "Close" : "Open"
 	if (input == "Open")
 		SetPropInt(jumprope_door, "m_toggle_state", 1)
-	EntityEntFire(jumprope_door, input)
+	EntityAcceptInput(jumprope_door, input)
 	
 	return 5.0
 }
@@ -71,7 +71,7 @@ function CheckPlayerZones()
 
 function OnEnd()
 {
-	EntityEntFire(jumprope_door, "Close")
+	EntityAcceptInput(jumprope_door, "Close")
 }
 
 function CheckEnd()

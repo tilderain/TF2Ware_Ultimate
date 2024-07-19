@@ -615,13 +615,13 @@ function Ware_CheckHomeLocation(player_count)
 		if (old_location)
 		{
 			foreach (camera in old_location.cameras)
-				EntityEntFire(camera, "Disable")		
+				EntityAcceptInput(camera, "Disable")		
 			foreach (spawn in old_location.spawns)
 				SetPropBool(spawn, "m_bDisabled", true)
 		}
 
 		foreach (camera in new_location.cameras)
-			EntityEntFire(camera, "Enable")		
+			EntityAcceptInput(camera, "Enable")		
 		foreach (spawn in new_location.spawns)
 			SetPropBool(spawn, "m_bDisabled", false)
 	}
@@ -1185,9 +1185,9 @@ function Ware_StartMinigameInternal(is_boss)
 	if (location != Ware_MinigameLocation)
 	{
 		foreach (camera in Ware_MinigameLocation.cameras)
-			EntityEntFire(camera, "Disable")		
+			EntityAcceptInput(camera, "Disable")		
 		foreach (camera in location.cameras)
-			EntityEntFire(camera, "Enable")
+			EntityAcceptInput(camera, "Enable")
 		
 		Ware_MinigameLocation = location
 		if (!custom_teleport)
@@ -1406,9 +1406,9 @@ function Ware_FinishMinigameInternal()
 	if (Ware_MinigameLocation != Ware_MinigameHomeLocation)
 	{
 		foreach (camera in Ware_MinigameLocation.cameras)
-			EntityEntFire(camera, "Disable")	
+			EntityAcceptInput(camera, "Disable")	
 		foreach (camera in Ware_MinigameHomeLocation.cameras)
-			EntityEntFire(camera, "Enable")
+			EntityAcceptInput(camera, "Enable")
 			
 		local players = []
 		foreach (player in Ware_MinigamePlayers)
@@ -1421,7 +1421,7 @@ function Ware_FinishMinigameInternal()
 		}
 		
 		if (Ware_DeferredPlayers.len() > 0)
-			EntityEntFire(World, "CallScriptFunction", "Ware_DeferredPlayerTeleport")
+			EntityAcceptInput(World, "CallScriptFunction", "Ware_DeferredPlayerTeleport")
 		
 		Ware_MinigameHomeLocation.Teleport(players)
 		Ware_MinigameLocation = Ware_MinigameHomeLocation
@@ -1644,7 +1644,7 @@ function Ware_GameOverInternal()
 			})
 		}
 	})
-	EntityEntFire(win, "RoundWin")
+	EntityAcceptInput(win, "RoundWin")
 	
 	// TODO: move this to start of next round if it's safe to do so
 	// reason being it's more interesting to still have the special round's convars or what have you going on round end

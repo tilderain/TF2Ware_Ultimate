@@ -56,7 +56,7 @@ function OnStart()
 		show_time_remaining = true,
 		setup_length   = 6,
 	})
-	EntityEntFire(timer, "Resume")
+	EntityAcceptInput(timer, "Resume")
 
 	Ware_CreateTimer(@() OpenDoors(), 6.0)
 	SetupMap()
@@ -93,7 +93,7 @@ function SetupMap()
 			}
 				
 			plank.KeyValueFromFloat("startspeed", speed)
-			EntityEntFire(plank, "StartForward")
+			EntityAcceptInput(plank, "StartForward")
 			
 			planks.append(plank)
 		}	
@@ -102,7 +102,7 @@ function SetupMap()
 	for (local sawblade; sawblade = FindByName(sawblade, "frogger_saw_linear_*");)
 	{
 		sawblade.KeyValueFromFloat("speed", RandomFloat(150.0, 550.0))
-		EntityEntFire(sawblade, "Open")
+		EntityAcceptInput(sawblade, "Open")
 		MarkForPurge(sawblade)
 	}	
 	
@@ -119,7 +119,7 @@ function SetupMap()
 	
 	local spike_timer = FindByName(null, "frogger_spike_timer")
 	spike_timer.KeyValueFromFloat("RefireTime", RandomFloat(1.0, 5.0))
-	EntityEntFire(spike_timer, "Enable")
+	EntityAcceptInput(spike_timer, "Enable")
 	MarkForPurge(spike_timer)
 
 	local box1 = FindByName(null, "frogger_door2")

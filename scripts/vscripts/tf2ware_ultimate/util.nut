@@ -290,6 +290,12 @@ function EntityEntFire(entity, input, parameter = "", delay = 0.0, activator = n
 	EntFireByHandle(entity, input, parameter, delay, activator, caller);
 }
 
+// Convenience wrapper for AcceptInput
+function EntityAcceptInput(entity, input, parameter = "", activator = null, caller = null)
+{
+	return entity.AcceptInput(input, parameter, activator, caller)
+}
+
 // Returns true if the entity is a hat wearable
 function IsWearableHat(entity)
 {

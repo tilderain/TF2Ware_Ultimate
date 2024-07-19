@@ -203,7 +203,7 @@ function BeepBlock_Interrupt()
 			show_in_hud    = true,
 			show_time_remaining = true,
 		})
-		EntityEntFire(timer, "Resume")
+		EntityAcceptInput(timer, "Resume")
 	}, 3.0)
 	
 }
@@ -219,10 +219,10 @@ function BeepBlock_FireInput(target, action, params = "")
 	if (typeof(target) == "array")
 	{
 		foreach(ent in target)
-			EntityEntFire(ent, action, params)
+			EntityAcceptInput(ent, action, params)
 	}
 	else
-		EntityEntFire(target, action, params)
+		EntityAcceptInput(target, action, params)
 }
 
 function OnEndzoneTouch()

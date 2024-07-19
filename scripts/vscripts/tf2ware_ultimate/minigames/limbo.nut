@@ -43,7 +43,7 @@ function OnStart()
 	beam.DispatchSpawn()
 	SetPropFloat(beam, "m_fWidth", 7.0)
 	SetPropFloat(beam, "m_fEndWidth", 7.0)
-	EntityEntFire(beam, "TurnOn")
+	EntityAcceptInput(beam, "TurnOn")
 	
 	local trigger = Ware_SpawnEntity("trigger_multiple",
 	{

@@ -28,7 +28,7 @@ function OnPostSpawn()
 	}
 	
 	local param = GetPropInt(self, "m_toggle_state") == 0 ? "Close" : "Open"
-	EntityEntFire(self, param)
+	EntityAcceptInput(self, param)
 	MarkForPurge(self)
 }
 
