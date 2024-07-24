@@ -81,7 +81,7 @@ function OnPlayerSay(player, text)
 			throw "wrong"
 		if (Ware_IsPlayerPassed(player))
 			return false
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			return false
 			
 		local text = format("%d %s %d = %d", a, operator, b, num)
@@ -98,7 +98,7 @@ function OnPlayerSay(player, text)
 	}
 	catch (error)
 	{
-		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
+		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
 		{
 			local text = format("%d %s %d = %s", a, operator, b, text)
 			Ware_ShowMinigameText(player, text)

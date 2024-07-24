@@ -486,7 +486,7 @@ function NullActivatorFix()
 // Plays a sound on a player, if they are valid and alive
 function PlayVocalization(player, sound)
 {
-	if (player.IsValid() && IsEntityAlive(player))
+	if (player.IsValid() && player.IsAlive())
 		player.EmitSound(sound)
 }
 

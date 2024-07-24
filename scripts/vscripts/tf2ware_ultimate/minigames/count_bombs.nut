@@ -70,7 +70,7 @@ function OnPlayerSay(player, text)
 			throw "wrong"
 		if (Ware_IsPlayerPassed(player))
 			return false
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			return false
 			
 		Ware_PassPlayer(player, true)
@@ -78,7 +78,7 @@ function OnPlayerSay(player, text)
 	}
 	catch (error)
 	{
-		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
+		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
 			Ware_SuicidePlayer(player)
 		
 		return true

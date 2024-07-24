@@ -37,7 +37,7 @@ function OnUpdate()
 	local threshold = Ware_MinigameLocation.start.x - 13300.0
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (IsEntityAlive(player) && player.GetOrigin().x < threshold)
+		if (player.IsAlive() && player.GetOrigin().x < threshold)
 			Ware_PassPlayer(player, true)
 	}
 }

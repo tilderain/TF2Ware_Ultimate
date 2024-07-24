@@ -50,7 +50,7 @@ function OnUpdate()
 	{
 		if (player.GetTeam() == jump_team)
 		{
-			if (IsEntityAlive(player))
+			if (player.IsAlive())
 			{
 				local ground = GetPropEntity(player, "m_hGroundEntity")
 				if (ground != null && ground.IsPlayer() && ground.GetTeam() != jump_team)

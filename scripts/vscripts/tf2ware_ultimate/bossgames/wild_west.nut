@@ -135,7 +135,7 @@ function GiveGuns()
 	{
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/wildwest_ready")	
 	
-		if (IsEntityAlive(player) 
+		if (player.IsAlive() 
 			&& (mexican_standoff 
 				|| !dueling
 				|| Ware_GetPlayerMiniData(player).opponent != null))
@@ -168,7 +168,7 @@ function StartShootout()
 	{
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/wildwest_shoot")
 			
-		if (IsEntityAlive(player))
+		if (player.IsAlive())
 			player.RemoveCustomAttribute("no_attack")
 		
 		if (player.IsFakeClient())
@@ -193,7 +193,7 @@ function StopShootout()
 	{
 		foreach (player in alive_players)
 		{
-			if (IsEntityAlive(player))
+			if (player.IsAlive())
 			{
 				Ware_ChatPrint(player, "You have all been disqualified for surviving. Cowards!")
 				Ware_SuicidePlayer(player)
@@ -204,7 +204,7 @@ function StopShootout()
 	{
 		foreach (player in Ware_MinigamePlayers)
 		{
-			if (IsEntityAlive(player))
+			if (player.IsAlive())
 			{
 				if (dueling)
 				{
@@ -213,7 +213,7 @@ function StopShootout()
 					{
 						if (opponent.IsValid())
 						{
-							if (IsEntityAlive(opponent))
+							if (opponent.IsAlive())
 							{
 								Ware_SuicidePlayer(player)
 								Ware_SuicidePlayer(opponent)

@@ -458,9 +458,9 @@ function Ware_TogglePlayerWearables(player, toggle)
 function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 {
 	if (team & 2)
-		return Ware_MinigamePlayers.filter(@(i, player) player.GetTeam() == team && IsEntityAlive(player))
+		return Ware_MinigamePlayers.filter(@(i, player) player.GetTeam() == team && player.IsAlive())
 	else
-		return Ware_MinigamePlayers.filter(@(i, player) IsEntityAlive(player))
+		return Ware_MinigamePlayers.filter(@(i, player) player.IsAlive())
 }
 
 // Gets a list of players that have passed
@@ -468,7 +468,7 @@ function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 function Ware_GetPassedPlayers(alive_only = false)
 {
 	if (alive_only)
-		return Ware_MinigamePlayersData.filter(@(i, data) data.passed && IsEntityAlive(data.player))
+		return Ware_MinigamePlayersData.filter(@(i, data) data.passed && data.player.IsAlive())
 	else
 		return Ware_MinigamePlayersData.filter(@(i, data) data.passed)
 }
@@ -484,7 +484,7 @@ function Ware_GetValidPlayers()
 		local valid_players = []
 		foreach (player in Ware_Players)
 		{
-			if ((player.GetTeam() & 2) && IsEntityAlive(player))
+			if ((player.GetTeam() & 2) && player.IsAlive())
 				valid_players.append(player)
 		}
 		return valid_players
@@ -540,7 +540,7 @@ function Ware_SuicideFailedPlayers()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
+		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
 			Ware_SuicidePlayer(player)
 	}
 }

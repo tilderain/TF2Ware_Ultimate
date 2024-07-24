@@ -82,7 +82,7 @@ function OnBeginIntermission(is_boss)
 		if (Wipeout_PlayerRotation.len() > 0)
 		{
 			local player = RemoveRandomElement(Wipeout_PlayerRotation)
-			if ((player.GetTeam() & 2) && IsEntityAlive(player))
+			if ((player.GetTeam() & 2) && player.IsAlive())
 			{
 				Wipeout_ValidPlayers.append(player)
 			}

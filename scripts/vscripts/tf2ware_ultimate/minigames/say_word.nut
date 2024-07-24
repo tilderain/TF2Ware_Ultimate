@@ -114,7 +114,7 @@ function OnPlayerSay(player, text)
 {	
 	if (text.tolower() == word)
 	{
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			return false
 		
 		Ware_PassPlayer(player, true)
@@ -127,7 +127,7 @@ function OnPlayerSay(player, text)
 	}
 	else
 	{
-		if (Ware_IsPlayerPassed(player) || !IsEntityAlive(player))
+		if (Ware_IsPlayerPassed(player) || !player.IsAlive())
 			return true
 		
 		Ware_SuicidePlayer(player)

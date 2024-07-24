@@ -68,7 +68,7 @@ function OnStart()
 	local players = Ware_GetValidPlayers()
 	foreach (player in players)
 	{
-		if (IsEntityAlive(player))
+		if (player.IsAlive())
 		{
 			GiveSpecialMelee(player)
 		}

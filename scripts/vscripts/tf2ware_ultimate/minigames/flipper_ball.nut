@@ -51,7 +51,7 @@ function OnStart()
 
 function SpawnBall()
 {
-	local alive_players = Ware_MinigamePlayers.filter(@(i, player) IsEntityAlive(player))
+	local alive_players = Ware_MinigamePlayers.filter(@(i, player) player.IsAlive())
 	if (alive_players.len() > 0)
 	{
 		local player = RandomElement(alive_players)
@@ -106,7 +106,7 @@ function OnUpdate()
 		local win_y = Ware_MinigameLocation.center_top.y + 64.0
 		foreach (player in Ware_MinigamePlayers)
 		{
-			if (IsEntityAlive(player) && player.GetOrigin().y < win_y)
+			if (player.IsAlive() && player.GetOrigin().y < win_y)
 				Ware_PassPlayer(player, true)
 		}
 
@@ -133,7 +133,7 @@ function OnUpdate()
 		
 		foreach (player in Ware_MinigamePlayers)
 		{
-			if (IsEntityAlive(player) && player.GetOrigin().y > win_y)
+			if (player.IsAlive() && player.GetOrigin().y > win_y)
 				Ware_PassPlayer(player, true)
 		}		
 	}

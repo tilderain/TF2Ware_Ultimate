@@ -28,7 +28,7 @@ function OnUpdate()
 	local thresold = Ware_MinigameLocation.center.z + 2600.0
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (IsEntityAlive(player) && GetPropEntity(player, "m_hGroundEntity") != null)
+		if (player.IsAlive() && GetPropEntity(player, "m_hGroundEntity") != null)
 		{
 			local origin = player.GetOrigin()
 			if (origin.z > thresold)

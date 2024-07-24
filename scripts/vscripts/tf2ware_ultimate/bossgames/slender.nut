@@ -196,13 +196,13 @@ function OnUpdate()
 	local slenders_data = {}
 	foreach (player in slenders)
 	{
-		if (player.IsValid() && IsEntityAlive(player))
+		if (player.IsValid() && player.IsAlive())
 			slenders_data[player] <- player.GetCenter()
 	}
 
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			continue
 		
 		local mission = Ware_GetPlayerMission(player)

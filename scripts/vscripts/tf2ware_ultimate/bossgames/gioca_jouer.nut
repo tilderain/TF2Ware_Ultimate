@@ -142,7 +142,7 @@ function OnMicroStart()
 	// start passed? and also any microgames that need setup
 	foreach(player in Ware_MinigamePlayers)
 	{
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			continue
 		
 		// put default case outside of switch to avoid repeating on false cases that need other code
@@ -190,7 +190,7 @@ function OnUpdate()
 	// microgame rules
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			continue
 		switch (micro)
 		{
@@ -272,7 +272,7 @@ function OnMicroEnd()
 {
 	foreach(player in Ware_MinigamePlayers)
 	{
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			continue
 		local minidata = Ware_GetPlayerMiniData(player)
 		

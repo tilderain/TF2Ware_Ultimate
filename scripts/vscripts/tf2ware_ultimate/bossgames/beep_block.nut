@@ -290,7 +290,7 @@ function BeepBlock_CheckEnd()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (IsEntityAlive(player) && !Ware_IsPlayerPassed(player))
+		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
 			return false
 	}
 	

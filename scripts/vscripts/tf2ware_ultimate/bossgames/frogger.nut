@@ -199,7 +199,7 @@ function OnUpdate()
 		
 		SetPropFloat(player, "m_flMaxspeed", 300.0)
 		
-		if (IsEntityAlive(player) && player.GetOrigin().y > threshold)
+		if (player.IsAlive() && player.GetOrigin().y > threshold)
 		{
 			Ware_PassPlayer(player, true)
 			

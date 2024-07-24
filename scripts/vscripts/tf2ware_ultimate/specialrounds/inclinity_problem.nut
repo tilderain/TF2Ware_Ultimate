@@ -11,7 +11,7 @@ function OnStart()
 {
 	foreach (player in Ware_Players)
 	{
-		if (IsEntityAlive(player))
+		if (player.IsAlive())
 		{
 			local eye_angles = player.EyeAngles()
 			eye_angles.z = GetPlayerRollAngle(player)

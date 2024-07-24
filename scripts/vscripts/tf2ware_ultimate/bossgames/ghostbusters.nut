@@ -236,7 +236,7 @@ function OnUpdate()
 {
 	foreach (medic in medics)
 	{
-		if (medic.IsValid() && IsEntityAlive(medic))
+		if (medic.IsValid() && medic.IsAlive())
 		{
 			local weapon = medic.GetActiveWeapon()
 			if (weapon && weapon.GetClassname() == "tf_weapon_medigun")
@@ -305,7 +305,7 @@ function OnUpdate()
 	{
 		if (spy.IsValid())
 		{
-			if (IsEntityAlive(spy))
+			if (spy.IsAlive())
 			{
 				local default_fov = GetPropInt(spy, "m_iDefaultFOV")
 				local new_fov = RemapValClamped(spy.GetHealth().tofloat(), spy.GetMaxHealth().tofloat(), 0.0, default_fov, 140.0)
@@ -356,8 +356,8 @@ function OnPlayerDeath(params)
 
 function OnEnd()
 {
-	local alive_spies  = spies.filter(@(i, player) player.IsValid() && IsEntityAlive(player))
-	local alive_medics = medics.filter(@(i, player) player.IsValid() && IsEntityAlive(player))
+	local alive_spies  = spies.filter(@(i, player) player.IsValid() && player.IsAlive())
+	local alive_medics = medics.filter(@(i, player) player.IsValid() && player.IsAlive())
 	
 	if (alive_spies.len() == 0 && alive_medics.len() > 0)
 	{
@@ -410,7 +410,7 @@ function OnCleanup()
 
 function CheckEnd()
 {
-	local alive_spies  = spies.filter(@(i, player) player.IsValid() && IsEntityAlive(player))
-	local alive_medics = medics.filter(@(i, player) player.IsValid() && IsEntityAlive(player))
+	local alive_spies  = spies.filter(@(i, player) player.IsValid() && player.IsAlive())
+	local alive_medics = medics.filter(@(i, player) player.IsValid() && player.IsAlive())
 	return alive_spies.len() == 0 || alive_medics.len() == 0
 }

@@ -1366,7 +1366,7 @@ function Ware_FinishMinigameInternal()
 			data.saved_scale = null
 		}
 			
-		if (IsEntityAlive(player))
+		if (player.IsAlive())
 		{
 			local melee
 			if (data.special_melee)
@@ -1729,7 +1729,7 @@ function Ware_OnUpdate()
 		
 		foreach (player in Ware_MinigamePlayers)
 		{
-			if (IsEntityAlive(player))
+			if (player.IsAlive())
 			{
 				local origin = player.GetOrigin()
 				candidates.append(

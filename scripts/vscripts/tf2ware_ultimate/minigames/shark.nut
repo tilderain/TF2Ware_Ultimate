@@ -108,7 +108,7 @@ function OnUpdate()
 	{
 		if (player == shark)
 			continue
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			continue
 
 		local origin = player.GetOrigin()

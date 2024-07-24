@@ -35,7 +35,7 @@ function OnUpdate()
 
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			continue
 		if (Ware_GetPlayerHeight(player) > 250.0)
 			Ware_SuicidePlayer(player)

@@ -28,7 +28,7 @@ function OnEnd()
 	local targets = []
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 		{
 			Ware_PassPlayer(player, false)
 			continue

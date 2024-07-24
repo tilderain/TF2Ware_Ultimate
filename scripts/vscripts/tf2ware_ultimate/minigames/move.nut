@@ -25,7 +25,7 @@ function OnUpdate()
 	
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (!IsEntityAlive(player))
+		if (!player.IsAlive())
 			continue
 		
 		if (mode == 0)

@@ -374,7 +374,7 @@ function OnGameEvent_player_initial_spawn(params)
 function OnGameEvent_player_changeclass(params)
 {
 	local player = GetPlayerFromUserID(params.userid)
-	if (player && !IsEntityAlive(player) && !IsInWaitingForPlayers())
+	if (player && !player.IsAlive() && !IsInWaitingForPlayers())
 		SetPropFloat(player, "m_flDeathTime", Time()) // no late respawns
 }
 
