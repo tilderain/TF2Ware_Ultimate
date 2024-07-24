@@ -89,6 +89,8 @@ class Ware_SpecialRoundData
 	cb_on_minigame_start       = null
 	// OnMinigameEnd()            - Called by Ware_EndMinigame when a minigame ends. This is before the minigame is cleaned up, so you can still refer to Ware_Minigame and similar.
 	cb_on_minigame_end         = null
+	// OnPrecache()               - Ware_PrecacheNext checks all special round scopes for OnPrecache when the map is loaded and calls any found. Use this if you need to precache anything.
+	cb_on_precache             = null
 	// OnSpeedup()                - Called by Ware_Speedup and replaces the speedup logic in a similar way to cb_on_begin_intermission.
 	cb_on_speedup              = null
 	// OnTakeDamage(params)       - Called by OnTakeDamage in main.nut and functions as normal.

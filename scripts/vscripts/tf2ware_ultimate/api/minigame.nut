@@ -122,6 +122,8 @@ class Ware_MinigameData
 	cb_on_player_horn		= null
 	// OnPlayerTouch(player, other_player) - Called by Ware_OnUpdate when two players touch and passes the two players.
 	cb_on_player_touch		= null
+	// OnPrecache()                        - Ware_PrecacheNext checks all minigame scopes for OnPrecache when the map is loaded and calls any found. Use this if you need to precache anything.
+	cb_on_precache          = null
 	// OnUpdate()                          - Called by Ware_OnUpdate every frame.
 	cb_on_update			= null
 	// CheckEnd()                          - Called by Ware_OnUpdate. Return a condition in this function and if the condition is met, the minigame will end early.
