@@ -402,6 +402,19 @@ Ware_Location.warehouse <-
 	}	
 }
 
+Ware_Location.homerun_contest <-
+{
+	center = Vector(-12128, -5470, -14209)
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players,
+			center
+			QAngle(0, 90, 0),
+			900.0
+			64.0, 64.0)
+	}
+}
+
 // == Teleport helpers ==
 
 // Place the given array of players in a circle

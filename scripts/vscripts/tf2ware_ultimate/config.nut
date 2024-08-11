@@ -91,6 +91,7 @@ Ware_Bossgames <-
 	"ghostbusters"
 	"gioca_jouer"
 	"grand_prix"
+	"homerun_contest" // NOTE: Not ready for public test yet. Please comment out before any public tests.
 	"jump_rope"
 	"mandrill"
 	"monoculus"
