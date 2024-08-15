@@ -404,7 +404,7 @@ Ware_Location.warehouse <-
 
 Ware_Location.homerun_contest <-
 {
-	center = Vector(-12128, -5470, -14209)
+	center = Vector(-12128, -5470, -14207)
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(players,
