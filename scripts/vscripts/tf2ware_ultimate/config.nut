@@ -650,6 +650,7 @@ Ware_BossgameMusic <-
 	"ghostbusters"	
 	"giocajouer"
 	"grandprix"
+	"homerun_contest"
 	"jumprope"
 	"mandrill"
 	"monoculus"

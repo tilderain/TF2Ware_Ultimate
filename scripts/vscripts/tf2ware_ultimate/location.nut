@@ -410,8 +410,8 @@ Ware_Location.homerun_contest <-
 		Ware_TeleportPlayersRow(players,
 			center
 			QAngle(0, 90, 0),
-			900.0
-			64.0, 64.0)
+			0.0
+			0.0, 0.0)
 	}
 }
 
