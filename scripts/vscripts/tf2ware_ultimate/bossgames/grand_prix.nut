@@ -22,7 +22,7 @@ finish_sound <- "Hud.EndRoundScored"
 
 function OnPrecache()
 {
-	for (local i = 1; i <= 3; i++)
+	for (local i = 1; i <= 5; i++)
 		PrecacheSound(format("vo/announcer_begins_%dsec.mp3", i))
 	
 	PrecacheOverlay("hud/tf2ware_ultimate/minigames/grand_prix")

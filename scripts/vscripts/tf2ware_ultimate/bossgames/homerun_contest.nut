@@ -1,6 +1,53 @@
 
+// TODO:
+// - fix truncation in game_text
+// - make damage -> percent better (bit low atm?)
+// - make percent -> knockback a lot better
+// - add dispensers to podiums
+// - set up podiums/podium clips for >1 player
+
 sandbag_model <- "models/tf2ware_ultimate/sandbag.mdl"
-sandbags <- []
+HomeRun_Sandbags <- []
+
+// TODO: Give players their equipped loadouts instead.
+HomeRun_Loadouts <- [
+	{
+		player_class = TF_CLASS_SCOUT
+		loadout = ["Scattergun", "Pistol"],
+	},
+	{
+		player_class = TF_CLASS_SOLDIER
+		loadout = ["Rocket Launcher", "Shotgun"],
+	},
+	{
+		player_class = TF_CLASS_PYRO
+		loadout = ["Flamethrower", "Shotgun"],
+	},
+	{
+		player_class = TF_CLASS_DEMOMAN
+		loadout = ["Grenade Launcher", "Stickybomb Launcher"],
+	},
+	{
+		player_class = TF_CLASS_HEAVYWEAPONS
+		loadout = ["Minigun", "Shotgun"],
+	},
+	{
+		player_class = TF_CLASS_ENGINEER
+		loadout = ["Shotgun", "Pistol", "Construction PDA", "Toolbox"],
+	},
+	{
+		player_class = TF_CLASS_MEDIC
+		loadout = ["Syringe Gun", "Medi Gun"],
+	},
+	{
+		player_class = TF_CLASS_SNIPER
+		loadout = ["Sniper Rifle", "SMG"],
+	},
+	{
+		player_class = TF_CLASS_SPY
+		loadout = ["Revolver", "Invis Watch", "Sapper"]
+	},
+]
 
 minigame <- Ware_MinigameData
 ({
@@ -15,18 +62,35 @@ minigame <- Ware_MinigameData
 function OnPrecache()
 {
 	PrecacheModel(sandbag_model)
-}
-
-// TODO: Create a podium for each player.
-// function OnTeleport()
-// {
 	
-// }
+	for (local i = 1; i <= 5; i++)
+		PrecacheSound(format("vo/announcer_begins_%dsec.mp3", i))
+}
 
 function OnStart()
 {
+	for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
+		EntityAcceptInput(ent, "Enable")
+	
+	// spawn a podium for each player
+	// create a podium clip for each player using the point_template
+	
 	foreach(player in Ware_MinigamePlayers)
 	{
+		local player_class = player.GetPlayerClass()
+		local loadout
+		
+		foreach(table in HomeRun_Loadouts)
+		{
+			if (table.player_class == player_class)
+			{
+				loadout = table.loadout
+				break
+			}
+		}
+		
+		Ware_SetPlayerLoadout(player, player_class, loadout, {}, true)
+		
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.sandbag <- SpawnEntityFromTableSafe("prop_physics_override", {
 			model = sandbag_model,
@@ -40,10 +104,31 @@ function OnStart()
 		local scope = sandbag.GetScriptScope()
 		scope.percent <- 0.0
 		scope.player <- player // this might cause null reference issues if a player disconnects, maybe kill the sandbag if a player leaves?
-		sandbags.append(sandbag)
+		HomeRun_Sandbags.append(sandbag)
 		
-		Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: %d%%", scope.percent), Ware_GetMinigameRemainingTime())
+		Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: %f%%", scope.percent), Ware_GetMinigameRemainingTime())
 	}
+	
+	local timer = 5
+	Ware_CreateTimer(function()
+	{
+		Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%d", timer))
+		if (timer > 0)
+			Ware_PlaySoundOnAllClients(format("vo/announcer_begins_%dsec.mp3", timer), 1.0, 100 * Ware_GetPitchFactor())
+		
+		timer--
+		
+		if (timer >= 0)
+			return 1.0
+		else
+		{
+			Ware_ShowGlobalScreenOverlay(null)
+			
+			for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
+				EntityAcceptInput(ent, "Disable")
+		}
+	}, 5.0)
+	
 }
 
 function OnTakeDamage(params)
@@ -58,15 +143,22 @@ function OnTakeDamage(params)
 	
 	if (ent == sandbag)
 	{
-		sandbag.GetScriptScope().percent += params.damage
-		local percent = sandbag.GetScriptScope().percent
+		local scope = sandbag.GetScriptScope()
+		scope.percent += (params.damage * 0.05)
+		local percent = Truncate(scope.percent, 2)
 		
-		params.damage_force = percent / 100.0
+		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon() && percent >= 100.0) ? 10.0 : 1.0
 		
-		Ware_ShowText(inflictor, CHANNEL_MINIGAME, format("Sandbag: %d%%", percent), Ware_GetMinigameRemainingTime())
-		printl(percent)
+		printl("pre: " + params.damage_force)
+		params.damage_force *= (((percent / 100.0) * Min(params.damage, percent * 0.09) * melee_multiplier))
+		if (melee_multiplier == 10.0)
+			params.damage_force.z = abs(params.damage_force.z)
+		
+		printl("post: " + params.damage_force)
+		
+		Ware_ShowText(inflictor, CHANNEL_MINIGAME, format("Sandbag: %f%%", percent), Ware_GetMinigameRemainingTime())
 	}
-	else if (ent == inflictor)
+	else if (inflictor == ent || inflictor == sandbag)
 	{
 		params.damage == 0.0
 	}
