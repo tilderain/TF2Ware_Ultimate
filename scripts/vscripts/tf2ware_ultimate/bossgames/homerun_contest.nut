@@ -72,8 +72,9 @@ function OnStart()
 	for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
 		EntityAcceptInput(ent, "Enable")
 	
+	// TODO:
 	// spawn a podium for each player
-	// create a podium clip for each player using the point_template
+	// create a podium clip around each podium
 	
 	foreach(player in Ware_MinigamePlayers)
 	{
