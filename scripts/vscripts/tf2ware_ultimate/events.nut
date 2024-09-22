@@ -180,7 +180,6 @@ function OnGameEvent_teamplay_round_start(params)
 	
 	Ware_ChatPrint(null, "Theme: {color}{str}", COLOR_LIME, Ware_Theme.visual_name)
 	
-	// putting this here rather than in loop we already have since i want to go after waiting for players check. if that doesnt matter just move this in.
 	foreach(player in Ware_Players)
 		Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 	
@@ -195,8 +194,8 @@ function OnGameEvent_teamplay_round_start(params)
 	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
 		(Ware_RoundsPlayed > 0
-		&& !Ware_SpecialRoundPrevious 
-		&& Ware_SpecialRoundChance != 0 
+		&& !Ware_SpecialRoundPrevious
+		&& Ware_SpecialRoundChance != 0
 		&& RandomInt(1, Ware_SpecialRoundChance) == Ware_SpecialRoundChance))
 	{
 		delay = Ware_GetThemeSoundDuration("special_round")

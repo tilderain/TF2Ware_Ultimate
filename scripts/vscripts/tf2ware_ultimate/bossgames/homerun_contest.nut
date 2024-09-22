@@ -1,6 +1,5 @@
 
 // TODO:
-// - fix truncation in game_text
 // - make damage -> percent better (bit low atm?)
 // - make percent -> knockback a lot better
 // - add dispensers to podiums
@@ -107,7 +106,7 @@ function OnStart()
 		scope.player <- player // this might cause null reference issues if a player disconnects, maybe kill the sandbag if a player leaves?
 		HomeRun_Sandbags.append(sandbag)
 		
-		Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: %f%%", scope.percent), Ware_GetMinigameRemainingTime())
+		Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", scope.percent), Ware_GetMinigameRemainingTime())
 	}
 	
 	local timer = 5
@@ -145,8 +144,8 @@ function OnTakeDamage(params)
 	if (ent == sandbag)
 	{
 		local scope = sandbag.GetScriptScope()
-		scope.percent += (params.damage * 0.05)
-		local percent = Truncate(scope.percent, 2)
+		scope.percent += (params.damage * 0.1) + RandomFloat(-0.2, 0.2)
+		local percent = scope.percent
 		
 		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon() && percent >= 100.0) ? 10.0 : 1.0
 		
@@ -157,7 +156,7 @@ function OnTakeDamage(params)
 		
 		printl("post: " + params.damage_force)
 		
-		Ware_ShowText(inflictor, CHANNEL_MINIGAME, format("Sandbag: %f%%", percent), Ware_GetMinigameRemainingTime())
+		Ware_ShowText(inflictor, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", percent), Ware_GetMinigameRemainingTime())
 	}
 	else if (inflictor == ent || inflictor == sandbag)
 	{

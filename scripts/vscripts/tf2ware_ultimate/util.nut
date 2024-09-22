@@ -39,12 +39,6 @@ function Round(x)
         return (x + 0.5).tointeger()
 }
 
-// Truncate a float x to n decimal places
-function Truncate(x, n)
-{
-	return floor(x * pow(10, n)) * (1 / (pow(10, n)))
-}
-
 // Snap a number to the interval y
 function Snap(x, y)
 {
