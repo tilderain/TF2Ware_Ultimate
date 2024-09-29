@@ -94,8 +94,9 @@ function OnStart()
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.sandbag <- SpawnEntityFromTableSafe("prop_physics_override", {
 			model = sandbag_model,
-			origin = player.GetOrigin() + Vector(0, 150, 40)
-			angles = QAngle(0, -90, 0)
+			origin = player.GetOrigin() + Vector(0, 150, 40),
+			angles = QAngle(0, -90, 0),
+			massscale = 10
 		})
 		
 		local sandbag = minidata.sandbag
@@ -144,15 +145,14 @@ function OnTakeDamage(params)
 	if (ent == sandbag)
 	{
 		local scope = sandbag.GetScriptScope()
-		scope.percent += (params.damage * 0.1) + RandomFloat(-0.2, 0.2)
+		scope.percent += (params.damage * 0.3) + RandomFloat(-0.2, 0.2)
 		local percent = scope.percent
 		
-		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon() && percent >= 100.0) ? 10.0 : 1.0
+		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon() && percent >= 100.0) ? 1000.0 : 1.0
 		
 		printl("pre: " + params.damage_force)
-		params.damage_force *= (((percent / 100.0) * Min(params.damage, percent * 0.09) * melee_multiplier))
-		if (melee_multiplier == 10.0)
-			params.damage_force.z = abs(params.damage_force.z)
+		params.damage_force *= ((percent / 100.0) * melee_multiplier)
+		params.damage_force.z = fabs(params.damage_force.z)
 		
 		printl("post: " + params.damage_force)
 		
