@@ -1,6 +1,7 @@
 // by ficool2 and pokemonpasta
 
 // Gamemode-specific data each player has
+// Not to be confused with Ware_PlayersData, which is the array of every instance of this class
 class Ware_PlayerData
 {
 	function constructor(entity)
@@ -20,24 +21,43 @@ class Ware_PlayerData
 		horn_buttons	 = 0
 	}
 	
+	// The player's entity handle
 	player		     	= null
+	// The player's entindex
 	index			 	= null
+	// The player's script scope
 	scope		     	= null
+	// Whether or not the player has passed the current minigame. Note this can change back and forth and is only checked at the end of a minigame.
 	passed		     	= null
+	// Used to add effects to players who have passed the previous minigame.
 	passed_effects   	= null
+	// For minigames that use missions (e.g. dont_laugh, slender, ghostbusters), what mission this player is on.
 	mission		     	= null
+	// If true, when the player spawns their weapons will not be stripped away, though their melee may still be altered. NB: Please revert to false manually.
 	keep_weapons		= null
+	// Entity handle for the player's melee weapon.
 	melee		     	= null
+	// Entindex for the player's melee weapon.
 	melee_index      	= null
+	// Entity handle for special melees, which are created by certain minigames or special rounds.
 	special_melee       = null
+	// Entity handle for the special melee's viewmodel.
 	special_vm          = null
+	// Array of attributes the player currently has.
 	attributes	     	= null
+	// Array of attributes the player's melee weapon currently has.
 	melee_attributes 	= null
+	// Whether or not the player is currently listening to the starting music during Waiting for Players.
 	start_sound      	= null
+	// The player's stored scale if a particular minigame is altering it.
 	saved_scale         = null
+	// The player's stored team if a particular minigame is altering it.
 	saved_team       	= null
+	// The player's current score.
 	score			 	= null
+	// Used to track horn cooldown while the player is in a kart.
 	horn_timer		 	= null
+	// Used to track if the player is currently pressing the horn button while in a kart.
 	horn_buttons	 	= null
 }
 
