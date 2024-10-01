@@ -377,7 +377,6 @@ Ware_Themes <-
 		theme_name = "_default"
 		visual_name = "TF2Ware Ultimate"
 		sounds = {
-			// set to values that were present in main.nut at the relevant places before we changed to this system.
 			// if any are 0.0 they arent used for intermission timings yet
 			// some like "results" will never be greater than 0.0 as it stops playing automatically on restart
 			"boss":             4.0
@@ -402,7 +401,7 @@ Ware_Themes <-
 		visual_name = "TF2Ware Classic" // one of the OG slagware themes, this one seems to be original to tf2ware.
 		sounds = {
 			"failure": 2.377
-			"intro":   2.182
+			"intro":   2.5
 			"speedup": 3.250
 			"victory": 2.325
 		}

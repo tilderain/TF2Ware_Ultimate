@@ -6,10 +6,13 @@
 // wipeout description found at https://wiki.teamfortress.com/wiki/TF2Ware
 
 player_thresholds <- [
-	[5, 30],
-	[4, 20], // 4 players at 20 alive or higher
-	[3, 10], // 3 players at 10 or higher
-	[2,  0]  // etc
+	[8, 40],
+	[7, 35],
+	[6, 30],
+	[5, 20], // 5 players at 20 alive or higher
+	[4, 10], // 4 players at 10 or higher
+	[3,  3], // etc
+	[2,  0]
 ]
 
 Wipeout_PlayerRotation <- []
@@ -98,19 +101,15 @@ function OnBeginIntermission(is_boss)
 	}
 	
 	local holdtime = Ware_GetThemeSoundDuration("intro")
-	local text = format("This %s players are:", is_boss ? "bossgame's" : "minigame's")
+	local player_list = []
+	local spectator_text = format("This %s players are:\n", is_boss ? "bossgame's" : "minigame's")
 	
 	foreach(player in Wipeout_ValidPlayers)
 	{
-		text += "\n"
-		text += GetPlayerName(player)
-		
-		local lives = Ware_GetPlayerSpecialRoundData(player).lives
-		
-		Ware_ShowText(player, CHANNEL_MISC, format("Get ready...\nYou have %d %s remaining.", lives, lives == 1 ? "life" : "lives"), holdtime)
+		player_list.append(player)
+		spectator_text += GetPlayerName(player)
+		spectator_text += "\n"
 	}
-	
-	
 	
 	foreach (player in Ware_Players)
 	{
@@ -118,10 +117,26 @@ function OnBeginIntermission(is_boss)
 		Ware_ShowScreenOverlay(player, null)
 		Ware_ShowScreenOverlay2(player, null)
 		
+		local lives = Ware_GetPlayerSpecialRoundData(player).lives
+		if (Wipeout_ValidPlayers.find(player) != null)
+		{
+			local text = "Get ready! Your opponents are:\n"
+			
+			foreach(ent in player_list)
+			{
+				if (ent != player)
+				{
+					text += GetPlayerName(ent)
+					text += "\n"
+				}
+			}
+			
+			text += format("You have %d %s remaining.", lives, lives == 1 ? "life" : "lives")
+			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
+		}
 		if (Wipeout_Spectators.find(player) != null)
 		{
-			local lives = Ware_GetPlayerSpecialRoundData(player).lives
-			text += (lives > 0 ? "\nPlease wait for your turn." : "\nYou are out of lives and cannot continue.")
+			local text = spectator_text + (lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
 		}
 	}
