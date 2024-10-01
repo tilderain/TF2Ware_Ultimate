@@ -11,6 +11,7 @@ class Ware_PlayerData
 		passed           = false
 		passed_effects   = false
 		mission          = 0
+		keep_weapons     = false
 		attributes       = []
 		melee_attributes = []
 		start_sound      = false
@@ -25,6 +26,7 @@ class Ware_PlayerData
 	passed		     	= null
 	passed_effects   	= null
 	mission		     	= null
+	keep_weapons		= null
 	melee		     	= null
 	melee_index      	= null
 	special_melee       = null

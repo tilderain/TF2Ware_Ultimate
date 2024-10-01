@@ -8,46 +8,6 @@
 sandbag_model <- "models/tf2ware_ultimate/sandbag.mdl"
 HomeRun_Sandbags <- []
 
-// TODO: Give players their equipped loadouts instead.
-HomeRun_Loadouts <- [
-	{
-		player_class = TF_CLASS_SCOUT
-		loadout = ["Scattergun", "Pistol"],
-	},
-	{
-		player_class = TF_CLASS_SOLDIER
-		loadout = ["Rocket Launcher", "Shotgun"],
-	},
-	{
-		player_class = TF_CLASS_PYRO
-		loadout = ["Flamethrower", "Shotgun"],
-	},
-	{
-		player_class = TF_CLASS_DEMOMAN
-		loadout = ["Grenade Launcher", "Stickybomb Launcher"],
-	},
-	{
-		player_class = TF_CLASS_HEAVYWEAPONS
-		loadout = ["Minigun", "Shotgun"],
-	},
-	{
-		player_class = TF_CLASS_ENGINEER
-		loadout = ["Shotgun", "Pistol", "Construction PDA", "Toolbox"],
-	},
-	{
-		player_class = TF_CLASS_MEDIC
-		loadout = ["Syringe Gun", "Medi Gun"],
-	},
-	{
-		player_class = TF_CLASS_SNIPER
-		loadout = ["Sniper Rifle", "SMG"],
-	},
-	{
-		player_class = TF_CLASS_SPY
-		loadout = ["Revolver", "Invis Watch", "Sapper"]
-	},
-]
-
 minigame <- Ware_MinigameData
 ({
 	name           = "Home-Run Contest"
@@ -66,6 +26,23 @@ function OnPrecache()
 		PrecacheSound(format("vo/announcer_begins_%dsec.mp3", i))
 }
 
+function OnTeleport(players)
+{
+	foreach(player in players)
+	{
+		local data = Ware_GetPlayerData(player)
+		data.keep_weapons = true
+		player.ForceRegenerateAndRespawn()
+		data.keep_weapons = false
+	}
+	
+	Ware_TeleportPlayersRow(players,
+		Ware_MinigameLocation.center
+		QAngle(0, 90, 0),
+		0.0
+		0.0, 0.0)
+}
+
 function OnStart()
 {
 	for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
@@ -77,20 +54,6 @@ function OnStart()
 	
 	foreach(player in Ware_MinigamePlayers)
 	{
-		local player_class = player.GetPlayerClass()
-		local loadout
-		
-		foreach(table in HomeRun_Loadouts)
-		{
-			if (table.player_class == player_class)
-			{
-				loadout = table.loadout
-				break
-			}
-		}
-		
-		Ware_SetPlayerLoadout(player, player_class, loadout, {}, true)
-		
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.sandbag <- SpawnEntityFromTableSafe("prop_physics_override", {
 			model = sandbag_model,

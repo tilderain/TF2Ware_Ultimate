@@ -506,19 +506,21 @@ function Ware_ParseLoadout(player)
 			Ware_Error("Failed to find special melee slot for %s", GetPlayerName(player))
 			return null					
 		}
-			
-		for (local i = 0; i < MAX_WEAPONS; i++)
-		{
-			local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
-			if (!weapon)
-				continue
-			MarkForPurge(weapon)
-			
-			if (weapon != special_melee)
-				KillWeapon(weapon)
-			SetPropEntityArray(player, "m_hMyWeapons", null, i)
-		}
 		
+		if (!data.keep_weapons)
+		{
+			for (local i = 0; i < MAX_WEAPONS; i++)
+			{
+				local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
+				if (!weapon)
+					continue
+				MarkForPurge(weapon)
+				
+				if (weapon != special_melee)
+					KillWeapon(weapon)
+				SetPropEntityArray(player, "m_hMyWeapons", null, i)
+			}
+		}
 		SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)			
 		
 		return special_melee	
@@ -539,7 +541,7 @@ function Ware_ParseLoadout(player)
 			data.melee = weapon
 			data.melee_index = i
 		}
-		else
+		else if (!data.keep_weapons)
 		{
 			SetPropEntityArray(player, "m_hMyWeapons", null, i)
 			KillWeapon(weapon)
@@ -1580,10 +1582,16 @@ function Ware_GameOverInternal()
 		if (top_players.find(player) != null)
 		{
 			Ware_PlayGameSound(player, "gameclear")
+			data.keep_weapons = true
+			player.ForceRegenerateAndRespawn()
 			player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
 			player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_victory")
-			// TODO: give full loadout back and add other effects
 			// TODO: don't allow damage to other winners
+			// Note: This has been done in OnTakeDamage in events.nut, needs some testing
+			
+			// TODO: Allow class changing for winners
+			
+			// TODO: Fix some weapons being weird in gameover (flamethrower doesn't damage, frontier justice removes crits, etc. Needs more testing)
 		}
 		else
 		{

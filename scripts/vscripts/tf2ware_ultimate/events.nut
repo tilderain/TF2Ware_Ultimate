@@ -16,6 +16,17 @@ function OnScriptHook_OnTakeDamage(params)
 		}
 	}
 	
+	if (Ware_Finished)
+	{
+		if (Ware_MinigameTopScorers.find(params.const_entity) != null &&
+			Ware_MinigameTopScorers.find(params.inflictor) != null &&
+			params.inflictor != params.const_entity)
+		{
+			params.damage = 0.0
+			return
+		}
+	}
+	
 	if (Ware_Minigame == null)
 	{
 		if (params.damage_type & DMG_FALL)
@@ -242,6 +253,12 @@ function OnGameEvent_scorestats_accumulated_update(params)
 		Ware_EndSpecialRound()
 		Ware_PlayGameSound(null, "special_round", SND_STOP)
 	}
+	
+	if (Ware_Finished)
+	{
+		foreach(data in Ware_PlayersData)
+			data.keep_weapons = false
+	}
 }
 
 function OnGameEvent_recalculate_truce(params)
@@ -326,7 +343,7 @@ function OnGameEvent_player_spawn(params)
 			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 2.0)
 		
 		local melee = Ware_ParseLoadout(player)		
-		if (melee)
+		if (melee && !Ware_Finished)
 			Ware_RemoveMeleeAttributes(melee)
 			
 		EntityEntFire(player, "CallScriptFunction", "PlayerPostSpawn")
