@@ -99,21 +99,24 @@ function OnStart()
 	
 }
 
+function IsASentry(ent)
+{
+	return ent.GetClassname() == "obj_sentrygun"
+}
+
 function OnTakeDamage(params)
 {
 	// TODO: Account for projectiles
 	
 	local ent = params.const_entity
 	local inflictor = params.inflictor
-	local is_a_sentry = function(ent) {
-	        return ent.GetClassname() == "obj_sentrygun"}
 	
 	if (!(inflictor.IsPlayer() && inflictor.IsValid()) &&
-		!is_a_sentry(inflictor))
+		!IsASentry(inflictor))
 		return
 	
 	local player
-	if (is_a_sentry(inflictor))
+	if (IsASentry(inflictor))
 	{
 		player = GetPropEntity(inflictor, "m_hBuilder")
 	}
@@ -140,7 +143,7 @@ function OnTakeDamage(params)
 		
 		Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", percent), Ware_GetMinigameRemainingTime())
 	}
-	else if (inflictor == ent || inflictor == sandbag || is_a_sentry(inflictor))
+	else if (inflictor == ent || inflictor == sandbag || IsASentry(inflictor))
 	{
 		params.damage == 0.0
 	}
