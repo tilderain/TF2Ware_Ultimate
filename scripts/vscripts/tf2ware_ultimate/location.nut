@@ -292,6 +292,13 @@ Ware_Location.rocketjump <-
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 
+Ware_Location.rocketjump2 <-
+{
+	center = Vector(1940, 4780, -6490)
+	radius = 400
+	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
+}
+
 Ware_Location.hexplatforms <-
 {
 	center      = Vector(2304, -8448, -4880)
