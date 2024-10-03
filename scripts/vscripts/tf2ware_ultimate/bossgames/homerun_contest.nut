@@ -16,6 +16,10 @@ minigame <- Ware_MinigameData
 	duration       = INT_MAX.tofloat() // going to always end manually. may reduce this a bit in case something breaks.
 	location       = "homerun_contest"
 	music          = "homerun_contest"
+	convars        =
+	{
+		tf_fastbuild = 1
+	}
 })
 
 function OnPrecache()
@@ -59,7 +63,7 @@ function OnStart()
 			model = sandbag_model,
 			origin = player.GetOrigin() + Vector(0, 150, 40),
 			angles = QAngle(0, -90, 0),
-			massscale = 10
+			massscale = 5
 		})
 		
 		local sandbag = minidata.sandbag
@@ -70,7 +74,7 @@ function OnStart()
 		scope.player <- player // this might cause null reference issues if a player disconnects, maybe kill the sandbag if a player leaves?
 		HomeRun_Sandbags.append(sandbag)
 		
-		Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", scope.percent), Ware_GetMinigameRemainingTime())
+		Ware_ShowText(player, CHANNEL_MINIGAME, "Sandbag: 0.0%", Ware_GetMinigameRemainingTime())
 	}
 	
 	local timer = 5
@@ -97,13 +101,28 @@ function OnStart()
 
 function OnTakeDamage(params)
 {
+	// TODO: Account for projectiles
+	
 	local ent = params.const_entity
 	local inflictor = params.inflictor
+	local is_a_sentry = function(ent) {
+	        return ent.GetClassname() == "obj_sentrygun"}
 	
-	if (!inflictor.IsPlayer() || !inflictor.IsValid())
+	if (!(inflictor.IsPlayer() && inflictor.IsValid()) &&
+		!is_a_sentry(inflictor))
 		return
 	
-	local sandbag = Ware_GetPlayerMiniData(inflictor).sandbag
+	local player
+	if (is_a_sentry(inflictor))
+	{
+		player = GetPropEntity(inflictor, "m_hBuilder")
+	}
+	else
+	{
+		player = inflictor
+	}
+	
+	local sandbag = Ware_GetPlayerMiniData(player).sandbag
 	
 	if (ent == sandbag)
 	{
@@ -111,18 +130,27 @@ function OnTakeDamage(params)
 		scope.percent += (params.damage * 0.3) + RandomFloat(-0.2, 0.2)
 		local percent = scope.percent
 		
-		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon() && percent >= 100.0) ? 1000.0 : 1.0
+		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon() && percent >= 100.0) ? percent / 10 : 1.0
 		
 		printl("pre: " + params.damage_force)
-		params.damage_force *= ((percent / 100.0) * melee_multiplier)
+		params.damage_force *= ((percent / 10.0) * melee_multiplier)
 		params.damage_force.z = fabs(params.damage_force.z)
 		
 		printl("post: " + params.damage_force)
 		
-		Ware_ShowText(inflictor, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", percent), Ware_GetMinigameRemainingTime())
+		Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", percent), Ware_GetMinigameRemainingTime())
 	}
-	else if (inflictor == ent || inflictor == sandbag)
+	else if (inflictor == ent || inflictor == sandbag || is_a_sentry(inflictor))
 	{
 		params.damage == 0.0
 	}
+}
+
+function OnGameEvent_player_builtobject(params)
+{
+	local building = EntIndexToHScript(params.index)
+	if (!building)
+		return
+		
+	SetPropInt(building, "m_nDefaultUpgradeLevel", 2)
 }
