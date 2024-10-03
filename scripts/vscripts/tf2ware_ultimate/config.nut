@@ -87,6 +87,7 @@ Ware_Bossgames <-
 	"basketball"
 	"beep_block"
 	"cuddly_heavies"
+	"escape_factory"
 	"falling_platforms"
 	"ghostbusters"
 	"gioca_jouer"
@@ -644,8 +645,9 @@ Ware_BossgameMusic <-
 	"beepblockskyway-twelve"
 	"cuddly"
 	"effort"
+	"escape_factory"
 	"falling"
-	"frogger",
+	"frogger"
 	"ghostbusters"	
 	"giocajouer"
 	"grandprix"
@@ -804,7 +806,7 @@ Ware_MeleeAttributeOverrides <-
 
 // keep updated with latest map version suffix
 // also remember to update the suffixes of the two files in /maps
-const WARE_MAPVERSION = "b7b"
+const WARE_MAPVERSION = "b7c"
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
 const WARE_MUSICVERSION = 1

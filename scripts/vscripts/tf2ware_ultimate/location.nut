@@ -410,8 +410,21 @@ Ware_Location.homerun_contest <-
 		Ware_TeleportPlayersRow(players,
 			center
 			QAngle(0, 90, 0),
-			0.0
+			0.0,
 			0.0, 0.0)
+	}
+}
+
+Ware_Location.factory <-
+{
+	center = Vector(4300, 2450, -6205)
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players,
+			center
+			QAngle(0.0, 180.0, 0.0),
+			400.0,
+			40.0, 80.0)
 	}
 }
 
