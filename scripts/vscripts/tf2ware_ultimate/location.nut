@@ -388,9 +388,9 @@ Ware_Location.beepblockskyway_ultimate <-
 
 Ware_Location.warehouse <-
 {
-	center = Vector(1000, 6160, -4159)
-	mins   = Vector(480, 6544, -4160)
-	maxs   = Vector(1560, 7472, -3648)
+	center = Vector(1000, 11280, -4159)
+	mins   = Vector(480, 11664, -4160)
+	maxs   = Vector(1560, 12592, -3648)
 	cameras = ["warehouse_camera"]
 	Teleport = function(players)
 	{
