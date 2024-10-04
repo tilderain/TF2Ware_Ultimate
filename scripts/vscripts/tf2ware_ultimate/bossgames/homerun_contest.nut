@@ -63,7 +63,7 @@ function OnStart()
 			model = sandbag_model,
 			origin = player.GetOrigin() + Vector(0, 150, 40),
 			angles = QAngle(0, -90, 0),
-			massscale = 5
+			massscale = 3
 		})
 		
 		local sandbag = minidata.sandbag
@@ -74,7 +74,8 @@ function OnStart()
 		scope.player <- player // this might cause null reference issues if a player disconnects, maybe kill the sandbag if a player leaves?
 		HomeRun_Sandbags.append(sandbag)
 		
-		Ware_ShowText(player, CHANNEL_MINIGAME, "Sandbag: 0.0%", Ware_GetMinigameRemainingTime())
+		// i need to delay this for some reason
+		Ware_CreateTimer(function() {Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: 0.0%%"), Ware_GetMinigameRemainingTime())},0.1)
 	}
 	
 	local timer = 5
@@ -104,21 +105,35 @@ function IsASentry(ent)
 	return ent.GetClassname() == "obj_sentrygun"
 }
 
+function IsAProjectile(ent)
+{
+	return startswith(ent.GetClassname(), "tf_projectile")
+}
+
 function OnTakeDamage(params)
 {
-	// TODO: Account for projectiles
+	// TODO: Account for grenades/stickies
 	
 	local ent = params.const_entity
 	local inflictor = params.inflictor
 	
 	if (!(inflictor.IsPlayer() && inflictor.IsValid()) &&
-		!IsASentry(inflictor))
+		!IsASentry(inflictor) &&
+		!IsAProjectile(inflictor))
 		return
 	
 	local player
 	if (IsASentry(inflictor))
 	{
 		player = GetPropEntity(inflictor, "m_hBuilder")
+	}
+	else if (IsAProjectile(inflictor))
+	{
+		local owner = inflictor.GetOwner()
+		if (IsASentry(owner))
+			player = GetPropEntity(owner, "m_hBuilder")
+		else
+			player = owner
 	}
 	else
 	{
@@ -130,20 +145,21 @@ function OnTakeDamage(params)
 	if (ent == sandbag)
 	{
 		local scope = sandbag.GetScriptScope()
-		scope.percent += (params.damage * 0.3) + RandomFloat(-0.2, 0.2)
+		scope.percent += (params.damage * 0.12) + RandomFloat(-0.2, 0.2)
 		local percent = scope.percent
 		
-		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon() && percent >= 100.0) ? percent / 10 : 1.0
+		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon()) ? percent * 10.0 : 1.0
 		
-		printl("pre: " + params.damage_force)
+		//printl("pre: " + params.damage_force)
 		params.damage_force *= ((percent / 10.0) * melee_multiplier)
-		params.damage_force.z = fabs(params.damage_force.z)
+		if (melee_multiplier > 1.0)
+			params.damage_force.z = fabs(params.damage_force.z)
 		
-		printl("post: " + params.damage_force)
+		//printl("post: " + params.damage_force)
 		
 		Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", percent), Ware_GetMinigameRemainingTime())
 	}
-	else if (inflictor == ent || inflictor == sandbag || IsASentry(inflictor))
+	else if (inflictor == ent || inflictor == sandbag || IsASentry(inflictor) || IsAProjectile(inflictor))
 	{
 		params.damage == 0.0
 	}
@@ -156,4 +172,12 @@ function OnGameEvent_player_builtobject(params)
 		return
 		
 	SetPropInt(building, "m_nDefaultUpgradeLevel", 2)
+}
+
+function OnEnd()
+{
+	foreach(sandbag in HomeRun_Sandbags)
+	{
+		sandbag.Destroy()
+	}
 }
