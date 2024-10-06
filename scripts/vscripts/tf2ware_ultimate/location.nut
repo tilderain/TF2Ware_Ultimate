@@ -435,6 +435,11 @@ Ware_Location.factory <-
 	}
 }
 
+Ware_Location.typing <-
+{
+	cameras = ["DRBoss_CloseupCamera_Point", "DRBoss_DescentCamera_Point", "DRBoss_SpiralCamera_Point"]
+}
+
 // == Teleport helpers ==
 
 // Place the given array of players in a circle
