@@ -63,7 +63,7 @@ function OnStart()
 			model = sandbag_model,
 			origin = player.GetOrigin() + Vector(0, 150, 40),
 			angles = QAngle(0, -90, 0),
-			massscale = 3
+			massscale = 5
 		})
 		
 		local sandbag = minidata.sandbag
@@ -112,54 +112,32 @@ function IsAProjectile(ent)
 
 function OnTakeDamage(params)
 {
-	// TODO: Account for grenades/stickies
-	
 	local ent = params.const_entity
-	local inflictor = params.inflictor
+	local attacker = params.attacker
 	
-	if (!(inflictor.IsPlayer() && inflictor.IsValid()) &&
-		!IsASentry(inflictor) &&
-		!IsAProjectile(inflictor))
+	if (!(attacker.IsPlayer() && attacker.IsValid()))
 		return
 	
-	local player
-	if (IsASentry(inflictor))
-	{
-		player = GetPropEntity(inflictor, "m_hBuilder")
-	}
-	else if (IsAProjectile(inflictor))
-	{
-		local owner = inflictor.GetOwner()
-		if (IsASentry(owner))
-			player = GetPropEntity(owner, "m_hBuilder")
-		else
-			player = owner
-	}
-	else
-	{
-		player = inflictor
-	}
-	
-	local sandbag = Ware_GetPlayerMiniData(player).sandbag
+	local sandbag = Ware_GetPlayerMiniData(attacker).sandbag
 	
 	if (ent == sandbag)
 	{
 		local scope = sandbag.GetScriptScope()
-		scope.percent += (params.damage * 0.12) + RandomFloat(-0.2, 0.2)
+		scope.percent += (params.damage * 0.15) + RandomFloat(-0.2, 0.2)
 		local percent = scope.percent
 		
 		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon()) ? percent * 10.0 : 1.0
 		
 		//printl("pre: " + params.damage_force)
-		params.damage_force *= ((percent / 10.0) * melee_multiplier)
+		params.damage_force *= ((percent / 100.0) * melee_multiplier)
 		if (melee_multiplier > 1.0)
 			params.damage_force.z = fabs(params.damage_force.z)
 		
 		//printl("post: " + params.damage_force)
 		
-		Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", percent), Ware_GetMinigameRemainingTime())
+		Ware_ShowText(attacker, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", percent), Ware_GetMinigameRemainingTime())
 	}
-	else if (inflictor == ent || inflictor == sandbag || IsASentry(inflictor) || IsAProjectile(inflictor))
+	else if (attacker == ent || attacker == sandbag)
 	{
 		params.damage == 0.0
 	}
@@ -178,6 +156,9 @@ function OnEnd()
 {
 	foreach(sandbag in HomeRun_Sandbags)
 	{
-		sandbag.Destroy()
+		if (sandbag)
+			sandbag.Destroy()
+			
+		HomeRun_Sandbags.remove(HomeRun_Sandbags.find(sandbag))
 	}
 }
