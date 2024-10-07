@@ -1,9 +1,14 @@
 
 // TODO:
 // - make damage -> percent better (bit low atm?)
+//		- ~0.2 is alright but heavy does way too much
 // - make percent -> knockback a lot better
+//		- massscale is possibly not a good solution? too high is good distance but barely moves when low, too low has an upper limit to movement
 // - add dispensers to podiums
 // - set up podiums/podium clips for >1 player
+// - add wincon based on furthest distance
+// - add teleport trigger at end if its hit really far to go back to start of location or to an extension of the arena.
+// - allow class changes? maybe one class change? not sure the best way to do this
 
 sandbag_model <- "models/tf2ware_ultimate/sandbag.mdl"
 HomeRun_Sandbags <- []
@@ -98,16 +103,6 @@ function OnStart()
 		}
 	}, 5.0)
 	
-}
-
-function IsASentry(ent)
-{
-	return ent.GetClassname() == "obj_sentrygun"
-}
-
-function IsAProjectile(ent)
-{
-	return startswith(ent.GetClassname(), "tf_projectile")
 }
 
 function OnTakeDamage(params)
