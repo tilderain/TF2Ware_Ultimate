@@ -737,13 +737,14 @@ function Ware_ShowGlobalScreenOverlay2(name)
 // If player is null, the command is ran on all playeers
 function Ware_RunClientCommand(player, command)
 {
+	local cmd = ClientCmd
 	if (player)
 	{
-		EntFireByHandle(ClientCmd, "Command", command, 0, player, null)		
+		cmd.AcceptInput("Command", command, player, null)
 	}
 	else
 	{
 		foreach (player in Ware_Players)
-			EntFireByHandle(ClientCmd, "Command", command, 0, player, null)		
+			cmd.AcceptInput("Command", command, player, null)
 	}
 }
