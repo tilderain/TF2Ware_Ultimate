@@ -352,8 +352,8 @@ function SetPlayerParentPlayer(player, parent, attachment = null)
 }
 
 // Internal use only
-_PostInputScope <- null
-_PostInputFunc  <- null
+local _PostInputScope = null
+local _PostInputFunc  = null
 
 // Sets functions that execute before and/or after a given input is received on the entity
 // Both pre_func and post_func are optional
