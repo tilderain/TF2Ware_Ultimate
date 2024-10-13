@@ -144,11 +144,12 @@ function OnGameEvent_teamplay_round_start(params)
 	
 	Ware_ShowSpecialRoundText(Ware_Players) // clear it out
 	
+	local cmd = ClientCmd
 	foreach (player in Ware_Players)
 	{
 		player.GetScriptScope().ware_data.score = 0
 		player.SetScriptOverlayMaterial("")
-		EntFireByHandle(ClientCmd, "Command", "r_cleardecals", -1, player, null)
+		cmd.AcceptInput("Command", "r_cleardecals", player, null)
 		BrickPlayerScore(player)
 		Ware_PlayGameSound(player, "results", SND_STOP)
 	}
