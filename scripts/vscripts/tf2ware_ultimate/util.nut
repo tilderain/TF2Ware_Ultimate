@@ -491,16 +491,14 @@ function PlayVocalization(player, sound)
 }
 
 // Burns a player
-// "post_touch_callback" is an optional function to execute after they start burning
-function BurnPlayer(player, burn_damage, burn_duration, post_touch_callback = null)
+function BurnPlayer(player, burn_damage, burn_duration)
 {
 	local trigger = CreateEntitySafe("trigger_ignite")
 	trigger.KeyValueFromInt("spawnflags", 1)
 	trigger.KeyValueFromFloat("damage_percent_per_second", burn_damage)
 	trigger.KeyValueFromFloat("burn_duration", burn_duration)
-	SetInputHook(trigger, "StartTouch", NullActivatorFix, post_touch_callback)
-	EntFireByHandle(trigger, "StartTouch", "", -1, player, player)
-	EntFireByHandle(trigger, "Kill", "", -1, null, null)
+	trigger.AcceptInput("StartTouch", "", player, player)
+	trigger.Kill()
 }
 
 // Stuns a player

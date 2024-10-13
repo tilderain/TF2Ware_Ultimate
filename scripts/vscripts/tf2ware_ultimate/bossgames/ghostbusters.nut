@@ -203,11 +203,8 @@ function TogglePlayerPowerplay(player, play_vo, toggle)
 		
 		if (player_class == TF_CLASS_SPY)
 		{
-			BurnPlayer(player, 1.0, 5.0, function() 
-			{
-				if (activator)
-					activator.AddCond(TF_COND_INVULNERABLE)
-			})
+			BurnPlayer(player, 1.0, 5.0)
+			player.AddCond(TF_COND_INVULNERABLE)
 		}
 		else
 		{
