@@ -328,35 +328,27 @@ function SetEntityParent(entity, parent, attachment = null)
 	}
 	else
 	{
-		entity.AcceptInput("ClearParent", "", mull, null)
+		entity.AcceptInput("ClearParent", "", null, null)
 	}
 }
 
 // Sets a player's parent
-// This function has additional safety to prevent players from going invisible or being deleted
+// Unlike SetEntityParent, this is intended when parenting players to another player
+// Prevents the player from going invisible
 // If "parent" is null, the player is unparented
-function SetPlayerParent(player, parent, attachment = null)
+function SetPlayerParentPlayer(player, parent, attachment = null)
 {
 	if (parent)
 	{
 		SetPropInt(player, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL)
-		EntFireByHandle(player, "SetParent", "!activator", -1, parent, null)
-		if (attachment)
-			EntFireByHandle(player, "SetParentAttachment", attachment, -1, null, null)
 	}
 	else
 	{
-		// prevent players and their stuff from getting deleted
-		player.AddEFlags(EFL_KILLME)
-		for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-		{
-			MarkForPurge(wearable)
-			wearable.AddEFlags(EFL_KILLME)
-		}
-	
-		EntFireByHandle(player, "ClearParent", "", -1, null, null)
-		EntFireByHandle(player, "CallScriptFunction", "PlayerParentFix", -1, null, null)
+		SetPropInt(player, "m_fEffects", 0)
+		SetPropInt(player, "m_iParentAttachment", 0)
 	}
+	
+	SetEntityParent(player, parent, attachment)
 }
 
 // Internal use only

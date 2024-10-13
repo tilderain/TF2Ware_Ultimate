@@ -1,6 +1,3 @@
-// the code in this file related to player parenting is sensitive and dodgy to workaround for various issues
-// do NOT modify those components unless you know what you are doing
-
 minigame <- Ware_MinigameData
 ({
 	name           = "Piggyback Heavy"
@@ -64,12 +61,12 @@ function OnStart()
 			player.SetForcedTauntCam(1)
 			
 			// parented players will be invisible, workaround this by parenting to a dummy
-			// not using Ware_SpawnEntity because the kill must be delayed
+			// not using Ware_SpawnEntity because the kill must be delayed when minigame ends
 			piggybacker_dummy = SpawnEntityFromTableSafe("prop_dynamic",
 			{
-				model           = dummy_model,
-				origin          = player.GetOrigin(),
-				disableshadows  = true,
+				model           = dummy_model
+				origin          = player.GetOrigin()
+				disableshadows  = true
 				rendermode      = kRenderTransColor
 				renderamt       = 0
 			})
@@ -87,19 +84,10 @@ function OnStart()
 	Ware_ShowAnnotation(piggybacker, "Jump on my back!")
 }
 
-function PiggybackUnparent(player, invis_hack)
+function PiggybackUnparent(player)
 {
 	if (player.GetMoveParent())
-	{
-		SetPlayerParent(player, null)
-		
-		if (invis_hack)
-		{
-			// gross hack: need to fake reparent for a bit so they re-appear
-			Ware_CreateTimer(function() { SetPropInt(player, "m_iParentAttachment", 1); SetPropEntity(player, "moveparent", World); }, 0.0)
-			Ware_CreateTimer(function() { SetPropInt(player, "m_iParentAttachment", 0); SetPropEntity(player, "moveparent", null); }, 0.1)
-		}
-	}
+		SetPlayerParentPlayer(player, null)
 
 	player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
 	player.SetForcedTauntCam(0)
@@ -107,9 +95,9 @@ function PiggybackUnparent(player, invis_hack)
 	player.SetModelScale(1.0, 0.0)
 }
 
-function PiggybackKilled(invis_hack)
+function PiggybackKilled(disconnect)
 {
-	Ware_ChatPrint(null, "Heavy {str}, so pyros win!", invis_hack ? "disconnected" : "died")
+	Ware_ChatPrint(null, "Heavy {str}, so pyros win!", disconnect ? "disconnected" : "died")
 	Ware_CreateTimer(function(){piggybacker_killed <- true}, 2.0)
 	
 	foreach (player in Ware_MinigamePlayers)
@@ -119,7 +107,7 @@ function PiggybackKilled(invis_hack)
 			
 		Ware_PassPlayer(player, true)
 		
-		PiggybackUnparent(player, invis_hack)
+		PiggybackUnparent(player, disconnect)
 	}
 }
 
@@ -133,9 +121,7 @@ function OnPlayerDeath(params)
 function OnPlayerDisconnect(player)
 {
 	if (player == piggybacker)
-	{
 		PiggybackKilled(true)
-	}
 }
 
 function OnUpdate()
@@ -185,7 +171,7 @@ function OnUpdate()
 			player.RemoveCond(TF_COND_SPEED_BOOST)
 			player.SetModelScale(0.25, 0.0)
 			player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
-			SetPlayerParent(player, piggybacker_dummy, "static_prop")
+			SetPlayerParentPlayer(player, piggybacker_dummy, "static_prop")
 			piggybacked_count++
 		}
 	}
@@ -195,7 +181,7 @@ function OnEnd()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		PiggybackUnparent(player, false)
+		PiggybackUnparent(player)
 		player.RemoveCond(TF_COND_SPEED_BOOST)
 	}
 	

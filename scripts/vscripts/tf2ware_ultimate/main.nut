@@ -1272,13 +1272,6 @@ function Ware_EndMinigameInternal()
 	)
 }
 
-Ware_DeferredPlayers <- []
-function Ware_DeferredPlayerTeleport()
-{
-	Ware_MinigameHomeLocation.Teleport(Ware_DeferredPlayers)
-	Ware_DeferredPlayers.clear()
-}
-
 function Ware_FinishMinigameInternal()
 {
 	Ware_CriticalZone = true
@@ -1369,21 +1362,8 @@ function Ware_FinishMinigameInternal()
 			EntityAcceptInput(camera, "Disable")	
 		foreach (camera in Ware_MinigameHomeLocation.cameras)
 			EntityAcceptInput(camera, "Enable")
-			
-		local players = []
-		foreach (player in Ware_MinigamePlayers)
-		{
-			// parented players aren't unparented at this point so need to defer it to end of frame
-			if (player.GetMoveParent())
-				Ware_DeferredPlayers.append(player)
-			else
-				players.append(player)
-		}
 		
-		if (Ware_DeferredPlayers.len() > 0)
-			EntityAcceptInput(World, "CallScriptFunction", "Ware_DeferredPlayerTeleport")
-		
-		Ware_MinigameHomeLocation.Teleport(players)
+		Ware_MinigameHomeLocation.Teleport(Ware_MinigamePlayers)
 		Ware_MinigameLocation = Ware_MinigameHomeLocation
 	}
 	
