@@ -9,6 +9,7 @@ minigame <- Ware_MinigameData
 	location      = "jumprope"
 	start_pass    = true
 	fail_on_death = true
+	thirdperson   = true
 })
 
 jumprope_door <- null
