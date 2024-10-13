@@ -476,13 +476,6 @@ function BrickPlayerScore(player)
 		player.RemoveFlag(FL_FAKECLIENT)
 }
 
-// Internal use only
-// Blocks input to prevent crashes with null activator
-function NullActivatorFix()
-{
-	return activator != null
-}
-
 // Plays a sound on a player, if they are valid and alive
 function PlayVocalization(player, sound)
 {
@@ -499,21 +492,6 @@ function BurnPlayer(player, burn_damage, burn_duration)
 	trigger.KeyValueFromFloat("burn_duration", burn_duration)
 	trigger.AcceptInput("StartTouch", "", player, player)
 	trigger.Kill()
-}
-
-// Stuns a player
-// "post_touch_callback" is an optional function to execute after they get stunned
-function StunPlayer(player, stun_type, stun_effects, stun_duration, move_speed_reduction, post_touch_callback = null)
-{
-	local trigger = CreateEntitySafe("trigger_stun")
-	trigger.KeyValueFromInt("spawnflags", 1)
-	trigger.KeyValueFromInt("stun_type", stun_type)
-	trigger.KeyValueFromInt("stun_effects", stun_effects.tointeger())
-	trigger.KeyValueFromFloat("stun_duration", stun_duration)
-	trigger.KeyValueFromFloat("move_speed_reduction", move_speed_reduction)
-	SetInputHook(trigger, "EndTouch", NullActivatorFix, post_touch_callback)
-	EntFireByHandle(trigger, "EndTouch", "", -1, player, player)
-	EntFireByHandle(trigger, "Kill", "", -1, null, null)
 }
 
 // Heals (or damages) a player

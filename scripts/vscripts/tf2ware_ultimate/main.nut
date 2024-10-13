@@ -1555,7 +1555,7 @@ function Ware_GameOverInternal()
 		{
 			Ware_PlayGameSound(player, "gameover")
 			player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_failure")
-			StunPlayer(player, TF_TRIGGER_STUN_LOSER, false, delay, 0.5)
+			player.StunPlayer(delay, 0.5, TF_STUN_LOSER_STATE|TF_STUN_NO_EFFECTS, null)
 		}
 	}
 	

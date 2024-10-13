@@ -89,7 +89,7 @@ function OnTouchPlate()
 		else
 		{
 			Ware_ShowScreenOverlay(activator, "hud/tf2ware_ultimate/minigames/pickup_plate_fail")
-			StunPlayer(activator, TF_TRIGGER_STUN_LOSER, true, 10.0, 0.6)
+			activator.StunPlayer(10.0, 0.6, TF_STUN_LOSER_STATE, null)
 		}
 	}
 }

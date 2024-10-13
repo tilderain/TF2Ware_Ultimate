@@ -35,7 +35,7 @@ function OnTakeDamage(params)
 		local victim = params.const_entity
 		local attacker = params.attacker
 	
-		StunPlayer(victim, TF_TRIGGER_STUN_LOSER, false, Ware_GetMinigameRemainingTime(), 0.6)
+		victim.StunPlayer(Ware_GetMinigameRemainingTime(), 0.6, TF_STUN_LOSER_STATE|TF_STUN_NO_EFFECTS, null)
 		
 		local particle = Ware_SpawnEntity("info_particle_system",
 			{
