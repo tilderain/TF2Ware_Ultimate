@@ -708,12 +708,12 @@ function Ware_ShowScreenOverlay2(player, name)
 		if (Ware_SpecialRound && Ware_SpecialRound.cb_get_overlay2.IsValid())
 			overlay_name = Ware_SpecialRound.cb_get_overlay2()
 			
-		EntFireByHandle(ClientCmd, "Command", format("r_screenoverlay %s", overlay_name), -1, player, null)
+		ClientCmd.AcceptInput("Command", format("r_screenoverlay %s", overlay_name), player, null)
 	}
 	else
 	{
 		player.AddHudHideFlags(HIDEHUD_TARGET_ID)
-		EntFireByHandle(ClientCmd, "Command", format("r_screenoverlay %s", name), -1, player, null)
+		ClientCmd.AcceptInput("Command", format("r_screenoverlay %s", name), player, null)
 	}	
 }
 
