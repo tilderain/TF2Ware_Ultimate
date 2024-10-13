@@ -116,7 +116,7 @@ function RemoveRandomElement(arr)
 // Returns either true or false at random
 function RandomBool()
 {
-	return RandomElement([true, false])
+	return RandomInt(0, 1) == 1
 }
 
 // Reverse a string, with color markers fixed up
