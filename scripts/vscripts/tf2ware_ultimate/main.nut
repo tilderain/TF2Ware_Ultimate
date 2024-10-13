@@ -1592,25 +1592,22 @@ function Ware_GameOverInternal()
 		force_map_reset = true
 		switch_teams    = true
 	})
-	SetInputHook(win, "RoundWin", null, function()
-	{
-		// prevent loser state on winners
-		SetPropInt(GameRules, "m_iRoundState", GR_STATE_RND_RUNNING)
-		// hide win panel
-		SendGlobalGameEvent("tf_game_over", {})
-		// stop stalemate sound
-		for (local team = TF_TEAM_RED; team <= TF_TEAM_BLUE; team++)
-		{
-			SendGlobalGameEvent("teamplay_broadcast_audio",
-			{
-				team             = team
-				sound            = "Game.Stalemate"
-				additional_flags = SND_STOP
-				player           = -1
-			})
-		}
-	})
 	EntityAcceptInput(win, "RoundWin")
+	// prevent loser state on winners
+	SetPropInt(GameRules, "m_iRoundState", GR_STATE_RND_RUNNING)
+	// hide win panel
+	SendGlobalGameEvent("tf_game_over", {})
+	// stop stalemate sound
+	for (local team = TF_TEAM_RED; team <= TF_TEAM_BLUE; team++)
+	{
+		SendGlobalGameEvent("teamplay_broadcast_audio",
+		{
+			team             = team
+			sound            = "Game.Stalemate"
+			additional_flags = SND_STOP
+			player           = -1
+		})
+	}
 	
 	// TODO: move this to start of next round if it's safe to do so
 	// reason being it's more interesting to still have the special round's convars or what have you going on round end
