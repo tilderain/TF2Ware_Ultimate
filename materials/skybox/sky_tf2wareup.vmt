@@ -1,9 +1,11 @@
-"sky"
+unlitgeneric
 {
-    "$hdrcompressedTexture" "skybox/sky_tf2ware_hdrup"	
+	
+	"$hdrbasetexture" "skybox/sky_tf2wareup"	
 	"$nofog" "1"
 	"$ignorez" "1"
-	"$basetexture" "skybox/sky_tf2ware_up"
-    "$basetexturetransform" "center 0 0 scale 1 1 rotate 0 translate 0 0"
+	"$basetexture" "skybox/sky_tf2wareup"
+//	"$basetexturetransform" "center 0 0 scale 1 2 rotate 0 translate 0 0"
+	"%keywords" "tf, skyclouds"
 	"$color" "[0.9 0.9 0.9]"
 }
