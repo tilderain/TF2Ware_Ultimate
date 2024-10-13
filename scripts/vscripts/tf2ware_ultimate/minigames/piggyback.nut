@@ -106,8 +106,7 @@ function PiggybackKilled(disconnect)
 			continue
 			
 		Ware_PassPlayer(player, true)
-		
-		PiggybackUnparent(player, disconnect)
+		PiggybackUnparent(player)
 	}
 }
 
