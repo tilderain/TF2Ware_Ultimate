@@ -229,6 +229,13 @@ function OnGameEvent_scorestats_accumulated_update(params)
 		if ("OnCleanup" in Ware_MinigameScope) 
 			Ware_MinigameScope.OnCleanup()
 		
+		// ensure parented players aren't deleted
+		foreach (player in Ware_Players)
+		{
+			if (player.GetMoveParent())
+				SetEntityParent(player, null)
+		}
+		
 		foreach (data in Ware_MinigamePlayersData)
 		{
 			local player = data.player
