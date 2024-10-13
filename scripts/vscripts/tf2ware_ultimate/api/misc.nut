@@ -101,31 +101,30 @@ function Ware_ShowText(players, channel, text, holdtime, color = "255 255 255", 
 	// then this can be done in one I/O input
 	if (is_array && players.len() == Ware_Players.len())
 		spawnflags = 1
-		
+			
 	local text_mgr = Ware_TextManager
-	Ware_TextManagerQueue.push(
-	{ 
-		message    = text
-		color      = color
-		holdtime   = holdtime
-		x		   = x
-		y          = y
-		channel    = channel
-		spawnflags = spawnflags
-	})
-	
-	EntityEntFire(text_mgr, "FireUser1")
+	text_mgr.KeyValueFromString("message", text)
+	text_mgr.KeyValueFromString("color", color)
+	text_mgr.KeyValueFromFloat("holdtime", holdtime)
+	text_mgr.KeyValueFromFloat("x", x)
+	text_mgr.KeyValueFromFloat("y", y)
+	text_mgr.KeyValueFromInt("channel", channel)
+	text_mgr.KeyValueFromInt("spawnflags", spawnflags)
+
 	if (is_array && spawnflags == 0)
 	{
 		foreach (player in players)
-			EntFireByHandle(text_mgr, "Display", "", -1, player, null)
+			text_mgr.AcceptInput("Display", "", player, null)
 	}
 	else
 	{
-		EntFireByHandle(text_mgr, "Display", "", -1, players, null)
+		text_mgr.AcceptInput("Display", "", players, null)
 	}
-	
-	EntityEntFire(text_mgr, "FireUser2")
+
+	// hack to purge stringtable
+	local purger = CreateEntitySafe("logic_relay")
+	purger.KeyValueFromString("targetname", text)
+	purger.Kill()
 }
 
 

@@ -169,8 +169,6 @@ Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
 Ware_DebugGameOver		  <- false
 
-Ware_TextManagerQueue     <- null
-Ware_TextManagerLastMsg   <- null
 Ware_TextManager          <- null
 
 Ware_ParticleSpawnerQueue <- []
@@ -243,7 +241,6 @@ function Ware_FindStandardEntities()
 	
 	Ware_UpdateGlobalMaterialState()
 	
-	Ware_TextManagerQueue <- []
 	Ware_TextManager = SpawnEntityFromTableSafe("game_text",
 	{
 		message = ""
@@ -252,8 +249,6 @@ function Ware_FindStandardEntities()
 		fadeout = 0.0
 		fxtime  = 0.0
 	})
-	SetInputHook(Ware_TextManager, "FireUser1", Ware_TextHookBegin, null)
-	SetInputHook(Ware_TextManager, "FireUser2", Ware_TextHookEnd, null)
 	
 	Ware_ParticleSpawnerQueue <- []
 	Ware_ParticleSpawner <- CreateEntitySafe("trigger_particle")
@@ -441,28 +436,6 @@ function Ware_GetParentTheme(theme)
 	}
 	
 	return null
-}
-
-function Ware_TextHookBegin()
-{
-	local params = Ware_TextManagerQueue.remove(0)
-	Ware_TextManagerLastMsg = params.message
-	self.KeyValueFromString("message", params.message)
-	self.KeyValueFromString("color", params.color)
-	self.KeyValueFromFloat("holdtime", params.holdtime)
-	self.KeyValueFromFloat("x", params.x)
-	self.KeyValueFromFloat("y", params.y)
-	self.KeyValueFromInt("channel", params.channel)
-	self.KeyValueFromInt("spawnflags", params.spawnflags)
-	return true
-}
-
-function Ware_TextHookEnd()
-{
-	// hack to purge stringtable
-	local purger = CreateEntitySafe("logic_relay")
-	purger.KeyValueFromString("targetname", Ware_TextManagerLastMsg)
-	purger.Kill()
 }
 
 function Ware_ParticleHook()
