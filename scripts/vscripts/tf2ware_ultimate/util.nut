@@ -322,13 +322,13 @@ function SetEntityParent(entity, parent, attachment = null)
 {
 	if (parent)
 	{
-		EntFireByHandle(entity, "SetParent", "!activator", -1, parent, null)
+		entity.AcceptInput("SetParent", "!activator", parent, null)
 		if (attachment)
-			EntFireByHandle(entity, "SetParentAttachment", attachment, -1, null, null)
+			entity.AcceptInput("SetParentAttachment", attachment, parent, null)
 	}
 	else
 	{
-		EntFireByHandle(entity, "ClearParent", "", -1, null, null)
+		entity.AcceptInput("ClearParent", "", mull, null)
 	}
 }
 
