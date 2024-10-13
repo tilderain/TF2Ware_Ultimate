@@ -41,7 +41,7 @@ function OnStart()
 		origin      = pos
 		skin        = team_idx - 2
 		modelscale  = 1.25
-		defaultanim = RandomInt(0, 1) ? "taunt_aerobic_A" : "taunt_aerobic_B"
+		defaultanim = RandomBool() ? "taunt_aerobic_A" : "taunt_aerobic_B"
 	})
 	Ware_ShowAnnotation(pos + Vector(0, 0, 128), "MATCH ME!")
 }

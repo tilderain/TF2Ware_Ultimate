@@ -29,7 +29,7 @@ function OnTeleport(players)
 
 function OnStart()
 {
-	local player_class = RandomInt(0, 1) ? TF_CLASS_SOLDIER : TF_CLASS_DEMOMAN
+	local player_class = RandomBool() ? TF_CLASS_SOLDIER : TF_CLASS_DEMOMAN
 	Ware_SetGlobalLoadout(player_class, "B.A.S.E. Jumper", {}, true)
 	
 	platform = Ware_SpawnEntity("prop_dynamic",

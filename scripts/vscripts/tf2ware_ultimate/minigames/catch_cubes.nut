@@ -21,7 +21,7 @@ function OnPrecache()
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, RandomInt(0, 1) ? "Sun-on-a-Stick" : "Candy Cane")
+	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, RandomBool() ? "Sun-on-a-Stick" : "Candy Cane")
 	Ware_SetGlobalCondition(TF_COND_SPEED_BOOST)
 	
 	foreach (player in Ware_MinigamePlayers)

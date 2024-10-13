@@ -23,7 +23,7 @@ function OnPrecache()
 
 function OnStart()
 {
-	if (RandomInt(0, 1) == 1)
+	if (RandomBool())
 		Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Sniper Rifle")
 	else
 		Ware_SetGlobalLoadout(TF_CLASS_SPY, "Revolver")

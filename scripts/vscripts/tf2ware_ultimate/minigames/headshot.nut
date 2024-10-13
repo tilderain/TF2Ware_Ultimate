@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 	allow_damage   = true
 })
 
-player_class <- RandomInt(0, 1) ? TF_CLASS_SNIPER : TF_CLASS_SPY
+player_class <- RandomBool() ? TF_CLASS_SNIPER : TF_CLASS_SPY
 
 function OnStart()
 {

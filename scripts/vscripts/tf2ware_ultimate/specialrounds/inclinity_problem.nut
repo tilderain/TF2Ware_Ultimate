@@ -1,4 +1,4 @@
-roll <- RandomInt(0, 1) ? 40.0 : -40.0
+roll <- RandomBool() ? 40.0 : -40.0
 
 special_round <- Ware_SpecialRoundData
 ({
