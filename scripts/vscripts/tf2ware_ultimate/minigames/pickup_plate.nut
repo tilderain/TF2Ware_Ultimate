@@ -53,7 +53,8 @@ function OnStart()
 	pos.y -= offset * 3.0
 	pos.z -= 10.0
 	
-	foreach (item in items)
+	local plates = Shuffle(clone(items))
+	foreach (item in plates)
 	{
 		local prop = Ware_SpawnEntity("prop_dynamic",
 		{

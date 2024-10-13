@@ -93,6 +93,7 @@ function Shuffle(arr)
 		arr[j] = arr[i]
 		arr[i] = t
 	}
+	return arr
 }
 
 // Return a random index into the array
