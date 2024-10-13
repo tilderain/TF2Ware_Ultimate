@@ -119,6 +119,8 @@ SetConvarValue("tf_player_movement_restart_freeze", 0)
 if (!Ware_Plugin)
 {
 	SendToConsole("sv_cheats 1")
+	// this fixes ghosts being stuttery
+	SendToConsole("nb_update_frequency 0.05")
 }
 
 class Ware_Callback

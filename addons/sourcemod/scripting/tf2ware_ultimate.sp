@@ -29,6 +29,7 @@ int g_CheatImpulses[] = { 76, 81, 82, 83, 101, 102, 103, 106, 107, 108, 195, 196
 
 ConVar host_timescale;
 ConVar sv_cheats;
+ConVar nb_update_frequency;
 
 //ConVar ware_version;
 ConVar ware_cheats;
@@ -123,9 +124,12 @@ void Enable()
 
 	host_timescale = FindConVar("host_timescale");
 	sv_cheats = FindConVar("sv_cheats");
+	nb_update_frequency = FindConVar("nb_update_frequency");
 	
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(1, true, false);
+	// fix ghost jittering
+	nb_update_frequency.SetFloat(0.05, false, false);
 	
 	HookConVarChange(sv_cheats, OnCheatsChanged);
 	
@@ -182,6 +186,7 @@ void Disable(bool map_unload)
 	
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(0, true, false);
+	nb_update_frequency.SetFloat(0.1, false, false);
 	
 	UnhookConVarChange(sv_cheats, OnCheatsChanged);
 	
