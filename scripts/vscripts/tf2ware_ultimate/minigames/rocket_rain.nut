@@ -52,37 +52,6 @@ function OnGameEvent_object_deflected(params)
 	}
 }
 
-function OnFireRocketPre()
-{
-	if (activator == null)
-		return false
-
-	local down = QAngle(90, 0, 0)
-	local dir = down.Forward() + down.Left() * RandomFloat(-0.4, 0.4) + down.Up() * RandomFloat(-0.4, 0.4)
-	dir.Norm()
-	self.SetForwardVector(dir)
-	
-	local pos = activator.GetOrigin()
-	self.SetOrigin(activator.GetOrigin() + dir * RandomFloat(-900.0, -1300.0))
-	
-	return true
-}
-
-function OnFireRocketPost()
-{
-	if (activator != null)
-	{
-		local rocket = FindByClassname(null, "tf_projectile_rocket")
-		if (rocket != null)
-		{
-			rocket.SetOwner(activator)
-			rocket.SetTeam(TEAM_SPECTATOR)
-			SetPropFloat(rocket, "m_flModelScale", 1.5)
-			rocket.KeyValueFromString("classname", "ware_projectile")
-		}
-	}
-}
-
 function SpawnRockets()
 {
 	local spawner = Ware_SpawnEntity("tf_point_weapon_mimic", 
@@ -96,8 +65,27 @@ function SpawnRockets()
 		angles     = QAngle(90, 0, 0)
 	})
 	spawner.SetTeam(TEAM_SPECTATOR)
-	SetInputHook(spawner, "FireOnce", OnFireRocketPre, OnFireRocketPost)
-	
+
 	foreach (player in Ware_MinigamePlayers)
-		EntFireByHandle(spawner, "FireOnce", "", -1.0, player, player)
+	{
+		local down = QAngle(90, 0, 0)
+		local dir = down.Forward() + down.Left() * RandomFloat(-0.4, 0.4) + down.Up() * RandomFloat(-0.4, 0.4)
+		dir.Norm()
+		spawner.SetForwardVector(dir)
+		
+		local pos = player.GetOrigin()
+		spawner.SetOrigin(player.GetOrigin() + dir * RandomFloat(-900.0, -1300.0))
+	
+		spawner.AcceptInput("FireOnce", "", null, null)
+		
+		local rocket = FindByClassname(null, "tf_projectile_rocket")
+		if (rocket != null)
+		{
+			MarkForPurge(rocket)
+			rocket.SetOwner(player)
+			rocket.SetTeam(TEAM_SPECTATOR)
+			SetPropFloat(rocket, "m_flModelScale", 1.5)
+			rocket.KeyValueFromString("classname", "ware_projectile")
+		}
+	}
 }
