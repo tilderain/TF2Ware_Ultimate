@@ -216,6 +216,20 @@ function SpawnEntityFromTableSafe(classname, keyvalues)
 	return entity
 }
 
+// Removes all instances of the specified entity classname
+function RemoveAllOfEntity(classname)
+{
+	local entities = []
+	for (local entity; entity = FindByClassname(entity, classname);)
+	{
+		MarkForPurge(entity)
+		entities.append(entity)
+	}
+	
+	foreach (entity in entities)
+		entity.Kill()
+}
+
 // Creates a timer that executes the given function after a delay
 // The function may return a float value to repeat the function again after the new delay
 // If the function returns nothing or null, the timer is killed

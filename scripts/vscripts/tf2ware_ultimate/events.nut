@@ -409,6 +409,9 @@ function PlayerPostDeath()
 
 function OnGameEvent_player_death(params)
 {
+	RemoveAllOfEntity("tf_ammo_pack")
+	RemoveAllOfEntity("halloween_souls_pack")
+	
 	local ammos = []
 	for (local ammo; ammo = FindByClassname(ammo, "tf_ammo_pack");)
 	{
