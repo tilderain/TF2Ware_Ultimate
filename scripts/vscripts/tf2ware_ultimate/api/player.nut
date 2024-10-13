@@ -348,6 +348,9 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	
 	foreach (attribute, value in attributes)
 		weapon.AddAttribute(attribute, value, -1.0)
+		
+	// prevent thriller taunt
+	weapon.AddAttribute("special taunt", 1, -1)
 
 	player.Weapon_Equip(weapon)
 	if (switch_weapon)
@@ -400,7 +403,7 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	
 	local melee = Ware_ParseLoadout(player)
 	if (melee)
-		Ware_RemoveMeleeAttributes(melee)
+		Ware_ModifyMeleeAttributes(melee)
 	
 	// teleport effect gets cleared on class change, need to recreate it here
 	// creating timers is expensive so avoid doing that for every player

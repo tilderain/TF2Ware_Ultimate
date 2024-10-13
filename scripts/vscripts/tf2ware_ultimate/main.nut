@@ -504,6 +504,11 @@ function Ware_ParseLoadout(player)
 			SetPropEntityArray(player, "m_hMyWeapons", null, i)
 			KillWeapon(weapon)
 		}
+		else
+		{
+			// prevent thriller taunt
+			weapon.AddAttribute("special taunt", 1, -1)
+		}
 	}
 	
 	if (last_melee != null && last_melee != melee && last_melee.IsValid())
@@ -512,8 +517,11 @@ function Ware_ParseLoadout(player)
 	return melee
 }
 
-function Ware_RemoveMeleeAttributes(melee)
+function Ware_ModifyMeleeAttributes(melee)
 {
+	// prevent thriller taunt
+	melee.AddAttribute("special taunt", 1, -1)
+	
 	local id = GetPropInt(melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
 	if (id in Ware_MeleeAttributeOverrides)
 	{

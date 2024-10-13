@@ -352,7 +352,7 @@ function OnGameEvent_player_spawn(params)
 		
 		local melee = Ware_ParseLoadout(player)		
 		if (melee && !Ware_Finished)
-			Ware_RemoveMeleeAttributes(melee)
+			Ware_ModifyMeleeAttributes(melee)
 			
 		EntityEntFire(player, "CallScriptFunction", "PlayerPostSpawn")
 		
