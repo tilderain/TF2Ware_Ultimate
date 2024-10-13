@@ -171,7 +171,6 @@ Ware_DebugGameOver		  <- false
 
 Ware_TextManager          <- null
 
-Ware_ParticleSpawnerQueue <- []
 Ware_ParticleSpawner      <- null
 
 Ware_MinigameRotation     <- []
@@ -250,10 +249,8 @@ function Ware_FindStandardEntities()
 		fxtime  = 0.0
 	})
 	
-	Ware_ParticleSpawnerQueue <- []
 	Ware_ParticleSpawner <- CreateEntitySafe("trigger_particle")
 	Ware_ParticleSpawner.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)
-	SetInputHook(Ware_ParticleSpawner, "StartTouch", Ware_ParticleHook, null)
 }
 
 Ware_PrecacheGenerator <- null
@@ -436,18 +433,6 @@ function Ware_GetParentTheme(theme)
 	}
 	
 	return null
-}
-
-function Ware_ParticleHook()
-{
-	if (!activator) // prevent invalid entity or this will crash
-		return false
-		
-	local data = Ware_ParticleSpawnerQueue.remove(0)
-	SetPropString(self, "m_iszParticleName", data.name)
-	SetPropString(self, "m_iszAttachmentName", data.attach_name)
-	SetPropInt(self, "m_nAttachType", data.attach_type)
-	return true
 }
 
 function Ware_ToggleTruce(toggle)

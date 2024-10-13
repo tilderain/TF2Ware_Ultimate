@@ -153,13 +153,11 @@ function Ware_SlapEntity(entity, scale)
 // Optionally can follow an attachment in the model
 function Ware_SpawnParticle(entity, name, attach_name = "", attach_type = PATTACH_ABSORIGIN_FOLLOW)
 {
-	Ware_ParticleSpawnerQueue.push(
-	{
-		name = name
-		attach_name = attach_name
-		attach_type = attach_type
-	})
-	EntFireByHandle(Ware_ParticleSpawner, "StartTouch", "", -1, entity, entity)
+	local spawner = Ware_ParticleSpawner
+	SetPropString(spawner, "m_iszParticleName", name)
+	SetPropString(spawner, "m_iszAttachmentName", attach_name)
+	SetPropInt(spawner, "m_nAttachType", attach_type)
+	spawner.AcceptInput("StartTouch", "", entity, entity)
 }
 
 // Updates the global material rendering state
