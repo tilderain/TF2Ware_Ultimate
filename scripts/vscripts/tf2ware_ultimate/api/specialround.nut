@@ -76,7 +76,7 @@ class Ware_SpecialRoundData
 	// OnDeclareWinners(top_players, top_score, winner_count) - Replaces winner declaration in Ware_GameOver. Passes some relevant information that might be used
 	// for replacement info.
 	cb_on_declare_winners      = null
-	// OnPlayerDisconnect(params) - Called by OnGameEvent_player_disconnect, and passes its parameters.
+	// OnPlayerDisconnect(player) - Called by OnGameEvent_player_disconnect, and passes the player.
 	cb_on_player_disconnect	   = null
 	// OnPlayerSpawn(player)      - Called by OnGameEvent_player_spawn and passes the player that spawned.
 	cb_on_player_spawn         = null

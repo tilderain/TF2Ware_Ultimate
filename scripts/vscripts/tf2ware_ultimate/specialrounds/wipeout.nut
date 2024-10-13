@@ -42,6 +42,19 @@ function OnStart()
 	}
 }
 
+function OnGameEvent_player_connect(params)
+{
+	local player = GetPlayerFromUserID(params.userid)
+	if (!player)
+		return
+	local data = Ware_GetPlayerSpecialRoundData(player)
+	if (!data)
+		return
+	
+	if (!("lives" in data))
+		data.lives <- 0
+}
+
 function OnPlayerSpawn(player)
 {
 	local data = Ware_GetPlayerSpecialRoundData(player)

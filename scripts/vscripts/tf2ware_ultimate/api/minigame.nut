@@ -112,7 +112,7 @@ class Ware_MinigameData
 	cb_on_player_attack		= null
 	// OnPlayerDeath(params)               - Called by OnGameEvent_player_death, and passes its parameters.
 	cb_on_player_death		= null
-	// OnPlayerDisconnect(params)          - Called by OnGameEvent_player_disconnect, and passes its parameters.
+	// OnPlayerDisconnect(player)          - Called by OnGameEvent_player_disconnect, and passes the player.
 	cb_on_player_disconnect	= null
 	// OnPlayerSay(player, text)           - Called by OnGameEvent_player_say, and passes the player and what they typed.
 	cb_on_player_say		= null
