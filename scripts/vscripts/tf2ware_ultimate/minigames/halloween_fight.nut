@@ -39,6 +39,8 @@ function OnStart()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
+		player.SetCustomModelWithClassAnimations(boss_models[boss_idx])
+		
 		if (boss_idx == 0)
 		{
 			Ware_SetPlayerLoadout(player, TF_CLASS_SNIPER, "Bat Outta Hell")
@@ -78,7 +80,6 @@ function OnStart()
 		}
 
 		player.SetHealth(1000)
-		player.SetCustomModelWithClassAnimations(boss_models[boss_idx])
 	}
 }
 
