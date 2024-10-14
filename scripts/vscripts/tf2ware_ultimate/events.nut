@@ -228,11 +228,14 @@ function OnGameEvent_scorestats_accumulated_update(params)
 	// Ware_Events should be going away automatically 
 	// as the events collection stores weak references, but it doesn't...
 	local events = Ware_Events
-	foreach (event_name, scopes in GameEventCallbacks)
+	foreach (callbacks in [GameEventCallbacks, ScriptHookCallbacks])
 	{
-		local idx = scopes.find(events)
-		if (idx != null)
-			scopes.remove(idx)
+		foreach (event_name, scopes in callbacks)
+		{
+			local idx = scopes.find(events)
+			if (idx != null)
+				scopes.remove(idx)
+		}
 	}
 	delete ::Ware_Events
 
