@@ -37,13 +37,13 @@ function OnPrecache()
 
 function OnTeleport(players)
 {
-	foreach(player in players)
+	Ware_TogglePlayerLoadouts(true)
+	foreach (player in players)
 	{
 		local data = Ware_GetPlayerData(player)
-		data.keep_weapons = true
 		player.ForceRegenerateAndRespawn()
-		data.keep_weapons = false
 	}
+	Ware_TogglePlayerLoadouts(false)
 	
 	Ware_TeleportPlayersRow(players,
 		Ware_MinigameLocation.center

@@ -196,6 +196,8 @@ Ware_BossgamesPlayed      <- 0
 Ware_RoundEndMusicTimer   <- null
 Ware_BlockPassEffects     <- false
 
+Ware_AllowLoadouts		  <- false
+
 if (!("Ware_Precached" in this))
 {
 	Ware_Precached                <- false
@@ -467,7 +469,7 @@ function Ware_ParseLoadout(player)
 			return null					
 		}
 		
-		if (!data.keep_weapons)
+		if (!Ware_AllowLoadouts)
 		{
 			for (local i = 0; i < MAX_WEAPONS; i++)
 			{
@@ -501,7 +503,7 @@ function Ware_ParseLoadout(player)
 			data.melee = weapon
 			data.melee_index = i
 		}
-		else if (!data.keep_weapons)
+		else if (!Ware_AllowLoadouts)
 		{
 			SetPropEntityArray(player, "m_hMyWeapons", null, i)
 			KillWeapon(weapon)
@@ -1524,31 +1526,33 @@ function Ware_GameOverInternal()
 	local delay = GetConvarValue("mp_bonusroundtime").tofloat()
 	Ware_ToggleTruce(false)
 	
-	foreach (data in Ware_PlayersData)
+	local winners = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) != null)
+	local losers = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) == null)
+	
+	foreach (data in losers)
 	{
 		local player = data.player
-		
-		if (top_players.find(player) != null)
-		{
-			Ware_PlayGameSound(player, "gameclear")
-			data.keep_weapons = true
-			player.ForceRegenerateAndRespawn()
-			player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
-			player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_victory")
-			// TODO: don't allow damage to other winners
-			// Note: This has been done in OnTakeDamage in events.nut, needs some testing
-			
-			// TODO: Allow class changing for winners
-			
-			// TODO: Fix some weapons being weird in gameover (flamethrower doesn't damage, frontier justice removes crits, etc. Needs more testing)
-		}
-		else
-		{
-			Ware_PlayGameSound(player, "gameover")
-			player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_failure")
-			player.StunPlayer(delay, 0.5, TF_STUN_LOSER_STATE|TF_STUN_NO_EFFECTS, null)
-		}
+		Ware_PlayGameSound(player, "gameover")
+		player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_failure")
+		player.StunPlayer(delay, 0.5, TF_STUN_LOSER_STATE|TF_STUN_NO_EFFECTS, null)
 	}
+	
+	Ware_TogglePlayerLoadouts(true)
+	foreach (data in winners)
+	{
+		local player = data.player
+		player.Regenerate(true)
+		player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
+		Ware_PlayGameSound(player, "gameclear")
+		player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_victory")
+		// TODO: don't allow damage to other winners
+		// Note: This has been done in OnTakeDamage in events.nut, needs some testing
+		
+		// TODO: Allow class changing for winners
+		
+		// TODO: Fix some weapons being weird in gameover (flamethrower doesn't damage, frontier justice removes crits, etc. Needs more testing)	
+	}
+	Ware_TogglePlayerLoadouts(false)
 	
 	Ware_RoundEndMusicTimer <- CreateTimer(function() 
 	{

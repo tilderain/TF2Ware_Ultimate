@@ -13,7 +13,6 @@ class Ware_PlayerData
 		passed           = false
 		passed_effects   = false
 		mission          = 0
-		keep_weapons     = false
 		attributes       = []
 		melee_attributes = []
 		start_sound      = false
@@ -36,8 +35,6 @@ class Ware_PlayerData
 	passed_effects   	= null
 	// For minigames that use missions (e.g. dont_laugh, slender, ghostbusters), what mission this player is on.
 	mission		     	= null
-	// If true, when the player spawns their weapons will not be stripped away, though their melee may still be altered. NB: Please revert to false manually.
-	keep_weapons		= null
 	// Entity handle for the player's melee weapon.
 	melee		     	= null
 	// Entindex for the player's melee weapon.

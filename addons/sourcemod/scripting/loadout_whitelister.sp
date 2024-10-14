@@ -9,6 +9,8 @@ ConVar mp_tournament;
 ConVar mp_tournament_whitelist;
 ConVar loadoutwhitelister_enable;
 
+public bool script_allow_loadout = false;
+
 DynamicHook g_DHook_CTFPlayerInitClass;
 DynamicDetour g_DDetour_CTFPlayerGetLoadoutItem;
 
@@ -132,7 +134,7 @@ static MRESReturn DHookPre_CTFPlayerInitClass(int client)
 
 static MRESReturn DHookPre_CTFPlayerGetLoadoutItem(int client, DHookReturn ret, DHookParam param)
 {
-	if (g_InitClass && loadoutwhitelister_enable.BoolValue)
+	if (g_InitClass && loadoutwhitelister_enable.BoolValue && !script_allow_loadout)
 	{
 		int slot = param.Get(2);
 		// remove weapons (except melee) and taunts, keep wearables (whitelist will kill those)

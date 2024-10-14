@@ -276,12 +276,6 @@ function OnGameEvent_scorestats_accumulated_update(params)
 		Ware_EndSpecialRound()
 		Ware_PlayGameSound(null, "special_round", SND_STOP)
 	}
-	
-	if (Ware_Finished)
-	{
-		foreach(data in Ware_PlayersData)
-			data.keep_weapons = false
-	}
 }
 
 function OnGameEvent_recalculate_truce(params)

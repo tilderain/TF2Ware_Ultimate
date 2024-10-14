@@ -86,6 +86,14 @@ public Action ListenerVScript(Event event, const char[] name, bool dontBroadcast
 		{
 			host_timescale.SetFloat(event.GetFloat("value", 1.0), true, false);
 		}
+		else if (StrEqual(routine, "loadout_on"))
+		{
+			script_allow_loadout = true;
+		}
+		else if (StrEqual(routine, "loadout_off"))
+		{
+			script_allow_loadout = false;
+		}
 		else
 		{
 			LogMessage("Unknown VScript routine '%s'", routine);
