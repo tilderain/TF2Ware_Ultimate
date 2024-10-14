@@ -151,7 +151,14 @@ function OnTeleport(players)
 	lower_delay = (minigame.duration - 17.0) / hexes.len().tofloat()
 	Ware_CreateTimer(@() LowerPlatform(), 10.0)
 	
-	printf("*** Platform count: %d, player count %d\n", hexes.len(), players.len())
+	local developers = Ware_Players.filter(@(i, player) GetPlayerSteamID3(player) in DEVELOPER_STEAMID3)
+	local PrintDebug = function(msg)
+	{
+		// dev chat
+		foreach (developer in developers)
+			ClientPrint(developer, HUD_PRINTCONSOLE, msg)
+	}
+	PrintDebug(format("*** Platform count: %d, player count %d\n", hexes.len(), players.len()))
 
 	local hex_len = hexes.len()
 	local hex_idx = 0
@@ -163,7 +170,10 @@ function OnTeleport(players)
 
 		Ware_TeleportPlayer(player, origin, null, vec3_zero)
 
-		printf("\t* %s - teleported to %s (platform %d)\n", GetPlayerName(player), origin.ToKVString(), hex_idx)
+		PrintDebug(format("\t* %s - teleported to %s (platform %d)\n", GetPlayerName(player), origin.ToKVString(), hex_idx))
+		
+		if (TraceLinePlayersIncluded(player.GetCenter(), origin - Vector(0, 0, 512), player) == 1.0)
+			PrintDebug("\t *** no floor!")
 	}
 }
 
