@@ -412,7 +412,7 @@ function IsWearableHat(entity)
 	if (!startswith(entity.GetClassname(), "tf_wearable"))
 		return false
 	
-	return entity.LookupBone("bip_head") >= 0
+	return entity.LookupBone("bip_head") >= 0 || entity.LookupBone("prp_helmet") >= 0
 }
 
 // Internal use only
