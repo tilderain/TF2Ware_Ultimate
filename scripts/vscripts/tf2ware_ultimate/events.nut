@@ -338,6 +338,8 @@ function OnGameEvent_player_spawn(params)
 		scope.ware_specialdata <- {}
 		Ware_Players.append(player)
 		Ware_PlayersData.append(scope.ware_data)
+		if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_connect.IsValid())
+			Ware_SpecialRound.cb_on_player_connect(player)
 		if (params.team == TEAM_UNASSIGNED)
 			return
 	}

@@ -16,6 +16,11 @@ function OnStart()
 		Ware_GetPlayerSpecialRoundData(player).hint_shown <- false
 }
 
+function OnPlayerConnect(player)
+{
+	Ware_GetPlayerSpecialRoundData(player).hint_shown <- false
+}
+
 function OnBeginIntermission(is_boss)
 {
 	// do this early bcuz minigamestart happens after something that checks opposite_win
