@@ -6,7 +6,6 @@ minigame <- Ware_MinigameData
 	location       = "targetrange"
 	duration       = 5.0
 	music          = "wildwest"
-	custom_overlay = "shoot_barrel"
 })
 
 barrel_model <- "models/props_farm/wooden_barrel.mdl"
@@ -47,7 +46,7 @@ function OnTakeDamage(params)
 		local attacker = params.attacker
 		if (attacker && attacker.IsPlayer())	
 		{
-			local minidata = Ware_GetPlayerMiniData(player)
+			local minidata = Ware_GetPlayerMiniData(attacker)
 			if (!("hit_sound" in minidata))
 			{
 				minidata.hit_sound <- true
