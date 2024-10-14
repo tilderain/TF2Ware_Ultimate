@@ -9,7 +9,7 @@ minigame <- Ware_MinigameData
 	name          = "Sumo Kart"
 	author        = "pokemonPasta"
 	music         = "underwater"
-	duration      = 15.0
+	duration      = 14.0
 	end_delay     = 0.5
 	description   = "Push Away the Enemies!"
 	location      = RandomElement(arenas)
