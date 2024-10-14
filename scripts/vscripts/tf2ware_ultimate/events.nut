@@ -151,8 +151,10 @@ function OnGameEvent_teamplay_round_start(params)
 		player.SetScriptOverlayMaterial("")
 		cmd.AcceptInput("Command", "r_cleardecals", player, null)
 		BrickPlayerScore(player)
-		Ware_PlayGameSound(player, "results", SND_STOP)
 	}
+	
+	Ware_PlayGameSound(null, "results", SND_STOP)
+	CreateTimer(@() Ware_PlayGameSound(null, "results", SND_STOP), 1.0)
 	
 	if (IsInWaitingForPlayers())
 		return
