@@ -25,31 +25,36 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Winger");	
 	
-	local pos = Ware_MinigameLocation.center + Vector(0.0, 0.0, RandomFloat(400.0, 500.0))
-	
-	local prop = Ware_SpawnEntity("prop_physics_override", 
+	local pos = Ware_MinigameLocation.center + Vector(0.0, 0.0, RandomFloat(400.0, 500.0)) 
+	local count = Ware_MinigamePlayers.len() > 12 ? 2 : 1
+	for (local i = 0; i < count; i++)
 	{
-		model      = prop_model
-		origin     = pos
-		massscale  = 0.1
-		rendermode = kRenderTransColor
-		renderamt  = 0
-	})
-	prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT)
-	
-	local sprite = Ware_SpawnEntity("env_glow",
-	{
-		model       = sprite_model,
-		origin      = pos,
-		scale       = 0.25,
-		spawnflags  = 1,
-		rendermode  = kRenderTransColor,
-		rendercolor = "255 255 255",
-	})	
-	SetEntityParent(sprite, prop)
-	
-	// TODO: I'm not sure why this isn't following the entity
-	//Ware_ShowAnnotation(sprite, "Bullseye!")
+		local prop = Ware_SpawnEntity("prop_physics_override", 
+		{
+			model      = prop_model
+			origin     = pos
+			massscale  = 0.1
+			rendermode = kRenderTransColor
+			renderamt  = 0
+		})
+		prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT)
+		
+		local sprite = Ware_SpawnEntity("env_glow",
+		{
+			model       = sprite_model,
+			origin      = pos,
+			scale       = 0.25,
+			spawnflags  = 1,
+			rendermode  = kRenderTransColor,
+			rendercolor = "255 255 255",
+		})	
+		SetEntityParent(sprite, prop)
+		
+		// TODO: I'm not sure why this isn't following the entity
+		//Ware_ShowAnnotation(sprite, "Bullseye!")
+		
+		pos.z += 200.0
+	}
 	
 	foreach (player in Ware_MinigamePlayers)
 		Ware_GetPlayerMiniData(player).points <- 0
