@@ -42,7 +42,7 @@ function OnStart()
 				origin = Lerp(RandomFloat(0.0, 1.0), line[0], line[1])
 				angles = angles[side]
 				solid  = SOLID_VPHYSICS
-				skin   = RandomInt(0, 1)
+				skin   = side
 			})
 		}
 	}
