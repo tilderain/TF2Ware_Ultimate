@@ -57,6 +57,9 @@ function OnCalculateScore(data)
 			special_data.hint_shown = true
 		}
 		
-		Ware_ChatPrint(player, text, TF_COLOR_DEFAULT, TF_COLOR_RED, Ware_Minigame.description, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
+		local description = Ware_Minigame.description
+		if (typeof(description) == "array")
+			description = description[Min(data.mission, description.len() - 1)]
+		Ware_ChatPrint(player, text, TF_COLOR_DEFAULT, TF_COLOR_RED, description, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
 	}
 }
