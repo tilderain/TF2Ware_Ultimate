@@ -12,7 +12,7 @@ minigame <- Ware_MinigameData
 
 tracks <-
 [  // location          endzone vectors              duration
-	["kart_containers", Vector(-1250, 4450, -5960),  26.5],
+	["kart_containers", Vector(-1250, 4450, -5960),  20.0],
 	["kart_paths",      Vector(-7000, 9850, -6047),  26.5],
 	["kart_ramp",       Vector(-8000, -6475, -6527), 10.0],
 ]
