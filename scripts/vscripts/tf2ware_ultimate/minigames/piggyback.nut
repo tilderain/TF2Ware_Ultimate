@@ -95,7 +95,7 @@ function PiggybackUnparent(player, invis_hack)
 		{
 			// hack: need to fake reparent for a bit so the player re-appears if the parent disconnected
 			Ware_CreateTimer(function() { SetPropInt(player, "m_iParentAttachment", 1); SetPropEntity(player, "moveparent", World); }, 0.0)
-			Ware_CreateTimer(function() { SetPropInt(player, "m_iParentAttachment", 0); SetPropEntity(player, "moveparent", null); }, 0.1)
+			Ware_CreateTimer(function() { SetPropInt(player, "m_iParentAttachment", 0); SetPropEntity(player, "moveparent", null); }, 0.2)
 		}
 	}
 
