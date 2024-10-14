@@ -35,14 +35,14 @@ function OnTakeDamage(params)
 		local victim = params.const_entity
 		local attacker = params.attacker
 	
-		victim.StunPlayer(Ware_GetMinigameRemainingTime(), 0.6, TF_STUN_LOSER_STATE|TF_STUN_NO_EFFECTS, null)
+		victim.StunPlayer(Ware_GetMinigameRemainingTime(), 0.6, TF_STUN_SPECIAL_SOUND|TF_STUN_MOVEMENT, null)
 		
 		local particle = Ware_SpawnEntity("info_particle_system",
-			{
-				origin = victim.GetOrigin(),
-				effect_name = "conc_stars",
-				start_active = true
-			})
+		{
+			origin = victim.GetOrigin(),
+			effect_name = "conc_stars",
+			start_active = true
+		})
 		SetEntityParent(particle, victim, "head")
 		
 		if (attacker)
