@@ -63,6 +63,8 @@ function OnTakeDamage(params)
 			
 			EmitSoundOnClient(hit_sound, attacker)
 			
+			Ware_ShowText(attacker, CHANNEL_MINIGAME, "x", 0.25, "255 255 255", -1, -1)
+			
 			if (minidata.points >= 10)
 				Ware_PassPlayer(attacker, true)
 		}
