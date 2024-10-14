@@ -171,8 +171,8 @@ function OnTakeDamage(params)
 				victim.EmitSound(RandomElement(break_sounds))
 			}
 			
-			victim.Kill()		
+			victim.Kill()	
+			return false
 		}
-		
 	}
 }
