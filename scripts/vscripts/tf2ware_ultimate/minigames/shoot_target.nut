@@ -23,10 +23,7 @@ function OnPrecache()
 
 function OnStart()
 {
-	if (RandomBool())
-		Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Sniper Rifle")
-	else
-		Ware_SetGlobalLoadout(TF_CLASS_SPY, "Revolver")
+	Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Sydney Sleeper")
 		
 	local angles = [QAngle(0, -90, 0), QAngle(0, -270, 0)]
 	for (local side = 0; side < 2; side++)

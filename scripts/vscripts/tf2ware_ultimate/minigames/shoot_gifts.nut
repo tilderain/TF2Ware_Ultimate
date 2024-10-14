@@ -25,11 +25,8 @@ function OnPrecache()
 
 function OnStart()
 {
-	if (RandomBool())
-		Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Sniper Rifle")
-	else
-		Ware_SetGlobalLoadout(TF_CLASS_SPY, "Revolver")
-		
+	Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Sniper Rifle")
+
 	foreach (player in Ware_MinigamePlayers)
 		Ware_GetPlayerMiniData(player).points <- 0
 			
@@ -48,8 +45,8 @@ function SpawnGift()
 		angles = angles,
 	})
 	gift.AddEFlags(EFL_NO_DAMAGE_FORCES)
-	gift.SetPhysVelocity(Vector(RandomFloat(-500, 500), 0, RandomFloat(800, 1000)))
-	EntityEntFire(gift, "Kill", "", RemapValClamped(Ware_GetTimeScale(), 1.0, 2.0, 1.5, 2.5))
+	gift.SetPhysVelocity(Vector(RandomFloat(-500, 500), 0, RandomFloat(1000, 1200)))
+	EntityEntFire(gift, "Kill", "", RemapValClamped(Ware_GetTimeScale(), 1.0, 2.0, 1.7, 2.6))
 	
 	return RandomFloat(1.7, 2.1)
 }
