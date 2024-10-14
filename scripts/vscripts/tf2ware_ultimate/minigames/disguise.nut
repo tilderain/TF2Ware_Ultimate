@@ -6,7 +6,6 @@ minigame <- Ware_MinigameData
 	duration       = 6.0
 	end_delay      = 0.5
 	music          = "circus"
-	min_players    = 2
 	suicide_on_end = true
 })
 
@@ -50,14 +49,20 @@ function OnEnd()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (player.InCond(TF_COND_DISGUISED))
+		if (player.InCond(TF_COND_DISGUISED) || player.InCond(TF_COND_DISGUISING))
 		{
-			if (GetPropInt(player, "m_Shared.m_nDisguiseClass") == class_idx)
+			if (GetPropInt(player, "m_Shared.m_nDisguiseClass") == class_idx
+				|| GetPropInt(player, "m_Shared.m_nDesiredDisguiseClass") == class_idx)
 			{
-				if (GetPropInt(player, "m_Shared.m_nDisguiseTeam") == team_idx)
+				if (GetPropInt(player, "m_Shared.m_nDisguiseTeam") == team_idx
+					|| GetPropInt(player, "m_Shared.m_nDesiredDisguiseTeam") == team_idx)
+				{
 					Ware_PassPlayer(player, true)
+				}
 				else
+				{
 					Ware_ChatPrint(player, "You didn't match the disguise team!")
+				}
 			}
 			else
 			{
