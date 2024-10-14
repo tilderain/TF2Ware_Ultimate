@@ -345,6 +345,8 @@ function OnGameEvent_player_spawn(params)
 	
 	if (params.team & 2)
 	{
+		data.lerp_time = GetPropFloat(player, "m_fLerpTime")
+		
 		if (Ware_MinigameTopScorers.find(player) != null)
 			player.AddCond(TF_COND_TELEPORTED)
 		

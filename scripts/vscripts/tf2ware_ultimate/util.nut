@@ -77,6 +77,95 @@ function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs)
            (a_mins.z <= b_maxs.z && a_maxs.z >= b_mins.z)
 }
 
+// Performs ray vs AABB intersection test, within [near, far] range
+// If hit, returns distance of ray to the box
+// Otherwise returns -1
+function IntersectRayWithBox(start, dir, mins, maxs, near, far)
+{
+	if (fabs(dir.x) > 0.0001)
+	{
+		local recip_dir = 1.0 / dir.x
+		local t1 = (mins.x - start.x) * recip_dir
+		local t2 = (maxs.x - start.x) * recip_dir		
+		if (t1 < t2)
+        {
+			if (t1 >= near)
+				near = t1
+			if (t2 <= far)
+				far = t2
+        }
+		else
+        {
+			if (t2 >= near)
+				near = t2
+			if (t1 <= far)
+				far = t1
+        }		
+		if (near > far)
+			return -1.0
+	}
+	else if (start.x < mins.x || start.x > maxs.x)
+	{
+		return -1.0
+	}
+	
+	if (fabs(dir.y) > 0.0001)
+	{
+		local recip_dir = 1.0 / dir.y
+		local t1 = (mins.y - start.y) * recip_dir
+		local t2 = (maxs.y - start.y) * recip_dir	
+		if (t1 < t2)
+        {
+			if (t1 >= near)
+				near = t1
+			if (t2 <= far)
+				far = t2
+        }
+		else
+        {
+			if (t2 >= near)
+				near = t2
+			if (t1 <= far)
+				far = t1
+        }		
+		if (near > far)
+			return -1.0
+	}
+	else if (start.y < mins.y || start.y > maxs.y)
+	{
+		return -1.0
+	}
+
+	if (fabs(dir.z) > 0.0001)
+	{
+		local recip_dir = 1.0 / dir.z
+		local t1 = (mins.z - start.z) * recip_dir
+		local t2 = (maxs.z - start.z) * recip_dir	
+		if (t1 < t2)
+        {
+			if (t1 >= near)
+				near = t1
+			if (t2 <= far)
+				far = t2
+        }
+		else
+        {
+			if (t2 >= near)
+				near = t2
+			if (t1 <= far)
+				far = t1
+        }
+	}
+	else if (start.z < mins.z || start.z > maxs.z)
+	{
+		return -1.0
+	}
+	if (near > far)
+		return -1.0
+      
+	return near
+}
+
 // Format a vector in Squirrel form
 function VectorFormat(vec)
 {
@@ -147,6 +236,12 @@ function ReverseString(str)
 		result += stack.pop()
 	
 	return result
+}
+
+// Converts float timestamp to ticks
+function TimeToTicks(time)
+{
+	return (0.5 + time / TICKDT).tointeger()
 }
 
 // Splits the float time into HMS format

@@ -9,6 +9,7 @@ class Ware_PlayerData
 		player           = entity
 		index			 = player.entindex()
 		scope            = entity.GetScriptScope()
+		lerp_time        = 0.0
 		passed           = false
 		passed_effects   = false
 		mission          = 0
@@ -27,6 +28,8 @@ class Ware_PlayerData
 	index			 	= null
 	// The player's script scope
 	scope		     	= null
+	// The player's cl_interp (for lag compensation
+	lerp_time			= null
 	// Whether or not the player has passed the current minigame. Note this can change back and forth and is only checked at the end of a minigame.
 	passed		     	= null
 	// Used to add effects to players who have passed the previous minigame.

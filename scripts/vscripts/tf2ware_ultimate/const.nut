@@ -10,6 +10,8 @@ const DEG2RAD = 0.0174532924
 vec3_zero <- Vector()
 ang_zero <- QAngle()
 
+const TICKDT = 0.015 // assuming 66 tickrate
+
 const MASK_PLAYERSOLID_BRUSHONLY = 81931
 
 const MAX_WEAPONS = 7
