@@ -16,9 +16,9 @@ function OnBeginIntermission(is_boss)
 	simon <- RandomBool()
 	special_round.opposite_win = !simon
 	
+	Ware_PlayGameSound(null, "intro")
 	foreach (player in Ware_Players)
 	{
-		Ware_PlayGameSound(player, "intro")
 		Ware_ShowScreenOverlay(player, null)
 		Ware_ShowScreenOverlay2(player, null)
 	}

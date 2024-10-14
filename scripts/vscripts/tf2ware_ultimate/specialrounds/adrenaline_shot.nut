@@ -23,9 +23,9 @@ function OnSpeedup()
 {
 	Ware_SetTimeScale(Ware_GetTimeScale() - interval)
 		
+	Ware_PlayGameSound(null, "speedup")
 	foreach (player in Ware_Players)
 	{
-		Ware_PlayGameSound(player, "speedup")
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/slow_down")
 		Ware_ShowScreenOverlay2(player, null)
 	}

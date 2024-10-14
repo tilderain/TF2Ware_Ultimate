@@ -17,9 +17,9 @@ function OnBeginIntermission(is_boss)
 	Ware_ShowText(Ware_Players, CHANNEL_MINIGAME, format("The next %s will be worth %d point%s", 
 		is_boss ? "boss" : "minigame", random_score, random_score == 1 ? "" : "s"), Ware_GetThemeSoundDuration("intro"))
 	
+	Ware_PlayGameSound(null, "intro")
 	foreach (player in Ware_Players)
 	{
-		Ware_PlayGameSound(player, "intro")
 		Ware_ShowScreenOverlay(player, null)
 		Ware_ShowScreenOverlay2(player, null)
 	}

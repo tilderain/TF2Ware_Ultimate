@@ -364,7 +364,7 @@ function Ware_SetupLocations()
 
 function Ware_SetTheme(requested_theme)
 {
-	Ware_Theme <- {}
+	Ware_Theme = {}
 	
 	local theme_found = false
 	
@@ -372,7 +372,7 @@ function Ware_SetTheme(requested_theme)
 	{
 		if (theme.theme_name == requested_theme)
 		{
-			Ware_Theme <- theme
+			Ware_Theme = theme
 			theme_found = true
 			break
 		}
@@ -381,7 +381,7 @@ function Ware_SetTheme(requested_theme)
 	if (!theme_found)
 	{
 		Ware_Error("No theme named '%s' was found. Setting to default theme instead.", requested_theme)
-		Ware_Theme <- Ware_Themes[0]
+		Ware_Theme = Ware_Themes[0]
 	}
 	
 	Ware_SetupThemeSounds()
@@ -389,7 +389,8 @@ function Ware_SetTheme(requested_theme)
 
 function Ware_SetupThemeSounds()
 {
-	Ware_CurrentThemeSounds <- {}
+	printf("-- Ware_SetupThemeSounds\n")
+	Ware_CurrentThemeSounds = {}
 	
 	local parent_theme = Ware_GetParentTheme(Ware_Theme)
 	
@@ -903,9 +904,9 @@ function Ware_BeginIntermissionInternal(is_boss)
 	}
 	else
 	{
+		Ware_PlayGameSound(null, "intro")
 		foreach (player in Ware_Players)
 		{
-			Ware_PlayGameSound(player, "intro")
 			Ware_ShowScreenOverlay(player, null)
 			Ware_ShowScreenOverlay2(player, null)
 		}
@@ -931,9 +932,9 @@ function Ware_BeginBossInternal()
 {
 	Ware_SetTimeScale(1.0)
 	
+	Ware_PlayGameSound(null, "boss")
 	foreach (player in Ware_Players)
 	{
-		Ware_PlayGameSound(player, "boss")
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_boss")
 		Ware_ShowScreenOverlay2(player, null)
 	}
@@ -951,9 +952,9 @@ function Ware_SpeedupInternal()
 	{
 		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
 		
+		Ware_PlayGameSound(null, "speedup")
 		foreach (player in Ware_Players)
 		{
-			Ware_PlayGameSound(player, "speedup")
 			Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed")
 			Ware_ShowScreenOverlay2(player, null)
 		}
@@ -1549,13 +1550,15 @@ function Ware_GameOverInternal()
 		}
 	}
 	
-	Ware_RoundEndMusicTimer <- CreateTimer(function() {
-		foreach(player in Ware_Players)
-			Ware_PlayGameSound(player, "results")
+	Ware_RoundEndMusicTimer <- CreateTimer(function() 
+	{
+		Ware_PlayGameSound(null, "results")
 	}, 5.0)
 	
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
+	{
 		Ware_SpecialRound.cb_on_declare_winners(top_players, top_score, winner_count)
+	}
 	else
 	{
 		if (winner_count > 1)

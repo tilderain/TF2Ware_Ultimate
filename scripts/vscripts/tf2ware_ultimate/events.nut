@@ -154,10 +154,12 @@ function OnGameEvent_teamplay_round_start(params)
 	
 	if (IsInWaitingForPlayers())
 		return
-	
+	// TODO: why is this check here? this event shouldn't fire again midround
 	if (Ware_Started)
 		return
 	Ware_Started = true
+	
+	Ware_PlayGameSound(null, "lets_get_started", SND_STOP)
 	
 	// check for next theme. otherwise first round always uses default theme
 	if (Ware_DebugNextTheme != "")
@@ -167,15 +169,15 @@ function OnGameEvent_teamplay_round_start(params)
 	}
 	else if (Ware_RoundsPlayed > 0)
 	{
-		local new_theme
-		
 		// roll until we get a new one
-		do{
+		local new_theme
+		do 
+		{
 			new_theme = RandomElement(Ware_Themes)
 		}
 		while (new_theme == Ware_Theme)
 		
-		Ware_Theme <- new_theme
+		Ware_Theme = new_theme
 		
 		Ware_SetupThemeSounds()
 	}
@@ -186,14 +188,11 @@ function OnGameEvent_teamplay_round_start(params)
 	else
 	{
 		Ware_Error("Unexpected theme on round start, setting to default instead.")
-		Ware_Theme <- Ware_Themes[0]
+		Ware_Theme = Ware_Themes[0]
 		Ware_SetupThemeSounds()
 	}
 	
 	Ware_ChatPrint(null, "Theme: {color}{str}", COLOR_LIME, Ware_Theme.visual_name)
-	
-	foreach(player in Ware_Players)
-		Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 	
 	Ware_ToggleTruce(true)
 

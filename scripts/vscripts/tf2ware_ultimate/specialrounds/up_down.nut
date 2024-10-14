@@ -22,12 +22,12 @@ function OnBeginIntermission(is_boss)
 	else
 		Ware_SetTimeScale(RandomFloat(0.6, 2.0))
 	
+	Ware_PlayGameSound(null, "intro")
 	foreach (player in Ware_Players)
-		{
-			Ware_PlayGameSound(player, "intro")
-			Ware_ShowScreenOverlay(player, null)
-			Ware_ShowScreenOverlay2(player, null)
-		}
+	{
+		Ware_ShowScreenOverlay(player, null)
+		Ware_ShowScreenOverlay2(player, null)
+	}
 		
 	CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 }
