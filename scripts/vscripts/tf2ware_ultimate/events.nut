@@ -136,6 +136,12 @@ function OnGameEvent_teamplay_round_start(params)
 		WARE_MAPVERSION)
 	}
 	
+	if (Ware_NeedsPlugin)
+	{
+		Ware_Error(Ware_NeedsPluginMsg)
+		return
+	}
+	
 	Ware_SetTimeScale(1.0)
 	Ware_SetGlobalPlayerScale(1.0)
 	

@@ -2,15 +2,17 @@
 
 if (!("Ware_Plugin" in this))
 {
+	Ware_NeedsPlugin <- false
+	Ware_NeedsPluginMsg <- "** TF2Ware Ultimate requires the SourceMod plugin installed on dedicated servers"
+	
 	local plugin_found = Convars.GetStr("ware_version") != null
 	if (IsDedicatedServer() || plugin_found)
 	{
 		if (!plugin_found)
 		{
-			local msg = "** TF2Ware Ultimate requires the SourceMod plugin installed on dedicated servers"
-			ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + msg)
-			printl(msg)
-			return
+			ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + Ware_NeedsPluginMsg)
+			printl(Ware_NeedsPluginMsg)
+			Ware_NeedsPlugin = true
 		}
 		else
 		{
