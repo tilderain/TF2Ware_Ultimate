@@ -142,9 +142,12 @@ function OnGameEvent_teamplay_round_start(params)
 	Ware_ShowSpecialRoundText(Ware_Players) // clear it out
 	
 	local cmd = ClientCmd
-	foreach (player in Ware_Players)
+	foreach (data in Ware_PlayersData)
 	{
-		player.GetScriptScope().ware_data.score = 0
+		local player = data.player
+		data.score = 0
+		if (data.start_sound)
+			Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 		player.SetScriptOverlayMaterial("")
 		cmd.AcceptInput("Command", "r_cleardecals", player, null)
 		BrickPlayerScore(player)
@@ -158,8 +161,6 @@ function OnGameEvent_teamplay_round_start(params)
 	if (Ware_Started)
 		return
 	Ware_Started = true
-	
-	Ware_PlayGameSound(null, "lets_get_started", SND_STOP)
 	
 	// check for next theme. otherwise first round always uses default theme
 	if (Ware_DebugNextTheme != "")
