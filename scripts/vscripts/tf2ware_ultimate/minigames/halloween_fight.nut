@@ -39,18 +39,18 @@ function OnStart()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		player.SetCustomModelWithClassAnimations(boss_models[boss_idx])
-		
 		if (boss_idx == 0)
 		{
 			Ware_SetPlayerLoadout(player, TF_CLASS_SNIPER, "Bat Outta Hell")
 			Ware_AddPlayerAttribute(player, "max health additive bonus", 1000 - 125.0, -1)
+			player.SetCustomModelWithClassAnimations(boss_models[boss_idx])			
 		}
 		else if (boss_idx == 1)
 		{
 			Ware_SetPlayerLoadout(player, TF_CLASS_SNIPER, "Kukri")
 			Ware_TogglePlayerWearables(player, false)			
 			Ware_AddPlayerAttribute(player, "max health additive bonus", 1000 - 125.0, -1)
+			player.SetCustomModelWithClassAnimations(boss_models[boss_idx])		
 			player.SetModelScale(0.6, 0.0)
 		}
 		else if (boss_idx == 2)
@@ -63,6 +63,7 @@ function OnStart()
 				Ware_ToggleWearable(weapon, true)
 			
 			Ware_AddPlayerAttribute(player, "max health additive bonus", 1000 - 150.0, -1)
+			player.SetCustomModelWithClassAnimations(boss_models[boss_idx])				
 			player.SetModelScale(0.7, 0.0)
 			
 			local minidata = Ware_GetPlayerMiniData(player)
