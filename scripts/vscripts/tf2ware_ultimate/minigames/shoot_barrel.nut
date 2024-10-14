@@ -47,7 +47,12 @@ function OnTakeDamage(params)
 		local attacker = params.attacker
 		if (attacker && attacker.IsPlayer())	
 		{
-			EmitSoundOnClient(hit_sound, attacker)
+			local minidata = Ware_GetPlayerMiniData(player)
+			if (!("hit_sound" in minidata))
+			{
+				minidata.hit_sound <- true
+				EmitSoundOnClient(hit_sound, attacker)
+			}
 			Ware_PassPlayer(attacker, true)
 			return false
 		}	
