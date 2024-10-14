@@ -154,7 +154,6 @@ function OnGameEvent_teamplay_round_start(params)
 	}
 	
 	Ware_PlayGameSound(null, "results", SND_STOP)
-	CreateTimer(@() Ware_PlayGameSound(null, "results", SND_STOP), 1.0)
 	
 	if (IsInWaitingForPlayers())
 		return
