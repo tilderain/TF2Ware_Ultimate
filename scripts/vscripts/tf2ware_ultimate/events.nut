@@ -1,6 +1,3 @@
-
-ClearGameEventCallbacks()
-
 function OnScriptHook_OnTakeDamage(params)
 {
 	if (params.damage_custom == TF_DMG_CUSTOM_SUICIDE)
@@ -183,7 +180,9 @@ function OnGameEvent_teamplay_round_start(params)
 		Ware_SetupThemeSounds()
 	}
 	else if (Ware_IsThemeValid())
+	{
 		Ware_SetupThemeSounds()
+	}
 	else
 	{
 		Ware_Error("Unexpected theme on round start, setting to default instead.")
@@ -225,6 +224,18 @@ function OnGameEvent_teamplay_round_start(params)
 // called right before the map is reset for a new round
 function OnGameEvent_scorestats_accumulated_update(params)
 {
+	// reset event callbacks
+	// Ware_Events should be going away automatically 
+	// as the events collection stores weak references, but it doesn't...
+	local events = Ware_Events
+	foreach (event_name, scopes in GameEventCallbacks)
+	{
+		local idx = scopes.find(events)
+		if (idx != null)
+			scopes.remove(idx)
+	}
+	delete ::Ware_Events
+
 	if (Ware_Minigame) // when restarted mid-minigame
 	{
 		if ("OnCleanup" in Ware_MinigameScope) 
@@ -287,7 +298,7 @@ function OnGameEvent_recalculate_truce(params)
 	}
 }
 
-function PlayerPostSpawn()
+::Ware_PlayerPostSpawn <- function()
 {
 	if (Ware_TimeScale != 1.0)
 		self.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
@@ -357,7 +368,7 @@ function OnGameEvent_player_spawn(params)
 		if (melee && !Ware_Finished)
 			Ware_ModifyMeleeAttributes(melee)
 			
-		EntityEntFire(player, "CallScriptFunction", "PlayerPostSpawn")
+		EntityEntFire(player, "CallScriptFunction", "Ware_PlayerPostSpawn")
 		
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
 		player.SetCustomModel("")		
@@ -405,7 +416,7 @@ function OnGameEvent_player_changeclass(params)
 		SetPropFloat(player, "m_flDeathTime", Time()) // no late respawns
 }
 
-function PlayerPostDeath()
+::Ware_PlayerPostDeath <- function()
 {
 	self.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
 }
@@ -427,7 +438,7 @@ function OnGameEvent_player_death(params)
 		
 	local player = GetPlayerFromUserID(params.userid)
 	if (player)
-		EntityEntFire(player, "CallScriptFunction", "PlayerPostDeath")
+		EntityEntFire(player, "CallScriptFunction", "Ware_PlayerPostDeath")
 	
 	if (Ware_Minigame == null)
 		return
@@ -516,5 +527,3 @@ function OnGameEvent_player_say(params)
 	// TODO: return value should indicate whether to hide message
 	Ware_Minigame.cb_on_player_say(player, text)
 }
-
-__CollectGameEventCallbacks(this)

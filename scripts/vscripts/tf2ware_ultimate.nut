@@ -16,6 +16,9 @@ IncludeScript("tf2ware_ultimate/config",   ROOT)
 IncludeScript("tf2ware_ultimate/location", ROOT)
 IncludeScript("tf2ware_ultimate/dev",      ROOT)
 IncludeScript("tf2ware_ultimate/main",     ROOT)
-IncludeScript("tf2ware_ultimate/events",   ROOT)
+
+::Ware_Events <- {}
+IncludeScript("tf2ware_ultimate/events", Ware_Events)
+__CollectGameEventCallbacks(Ware_Events)
 
 MarkForPurge(self)
