@@ -46,7 +46,9 @@ function OnStart()
 	foreach (player in Ware_MinigamePlayers)
 		player.SetCurrency(0)
 		
+	// show money counter
 	ForceEnableUpgrades(2)
+	
 	Ware_CreateTimer(@() CreateMoney(), 0.5)
 }
 
@@ -68,7 +70,8 @@ function CreateMoney()
 			disableshadows = true
 			minhealthdmg   = INT_MAX // don't destroy on touch
 			spawnflags     = SF_PHYSPROP_TOUCH
-		})
+		})	
+		cash.SetCollisionGroup(COLLISION_GROUP_DEBRIS)
 		
 		if (RandomInt(0, 5) == 0)
 		{
@@ -97,6 +100,7 @@ function OnTakeDamage(params)
 			if (attacker && !attacker.IsEFlagSet(EFL_USER))
 			{
 				attacker.AddEFlags(EFL_USER)
+				SetPropInt(attacker, "m_spawnflags", 0)				
 				// the kill must be postponed or it may crash because this damage runs from a physics callback
 				EntityEntFire(attacker, "Kill");
 					
@@ -107,9 +111,7 @@ function OnTakeDamage(params)
 					victim.TakeDamage(1000, DMG_BLAST, attacker)
 				}
 				else
-				{	
-					local modelname = attacker.GetModelName()
-					
+				{			
 					cash_spawned--
 									
 					victim.EmitSound(touch_sound)
