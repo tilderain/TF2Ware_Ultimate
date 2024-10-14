@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 cube_model  <- "models/props/metal_box.mdl"
 touch_sound <- "Player.HitSoundSpace"
 
-spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 1.0, 0.05)
+spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 0.8, 0.05)
 
 function OnPrecache()
 {
