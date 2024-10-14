@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 cube_model  <- "models/props/metal_box.mdl"
 touch_sound <- "Player.HitSoundSpace"
 
-spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 0.8, 0.05)
+spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 0.5, 0.05)
 
 function OnPrecache()
 {
@@ -44,7 +44,6 @@ function CreateCube()
 		spawnflags   = SF_PHYSPROP_TOUCH
 		minhealthdmg = INT_MAX // don't destroy on touch				
 	})
-	
 	return spawn_rate
 }
 
