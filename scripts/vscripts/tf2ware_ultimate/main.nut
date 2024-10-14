@@ -389,7 +389,6 @@ function Ware_SetTheme(requested_theme)
 
 function Ware_SetupThemeSounds()
 {
-	printf("-- Ware_SetupThemeSounds\n")
 	Ware_CurrentThemeSounds = {}
 	
 	local parent_theme = Ware_GetParentTheme(Ware_Theme)
