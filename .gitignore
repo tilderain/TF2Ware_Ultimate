@@ -5,6 +5,9 @@
 *.log
 *.prt
 
+# Sourcemod
+*.smx
+
 # Junk model stuff
 *.sw.vtx
 
