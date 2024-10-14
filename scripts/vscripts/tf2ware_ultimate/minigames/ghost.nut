@@ -35,9 +35,12 @@ function OnGameEvent_player_stunned(params)
 		// fix a TF2 bug where the weapon doesn't re-appear
 		CreateTimer(function() 
 		{ 
-			local weapon = victim.GetActiveWeapon()
-			if (weapon)
-				weapon.EnableDraw()
+			if (victim.IsValid())
+			{
+				local weapon = victim.GetActiveWeapon()
+				if (weapon)
+					weapon.EnableDraw()
+			}
 		}, 2.5)
 	}
 }
