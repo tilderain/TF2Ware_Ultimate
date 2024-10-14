@@ -44,8 +44,7 @@ function OnStart()
 
 function OnPlayerConnect(player)
 {
-	local data = Ware_GetPlayerSpecialRoundData(player)
-	data.lives <- 0
+	Ware_GetPlayerSpecialRoundData(player).lives <- 0
 }
 
 function OnPlayerSpawn(player)
