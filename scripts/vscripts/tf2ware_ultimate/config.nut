@@ -81,6 +81,7 @@ Ware_Minigames <-
 	"type_color"      
 	"watch_fall"
 	"water_war"
+	"witch"
 ]
 
 Ware_Bossgames <-
@@ -638,7 +639,8 @@ Ware_MinigameMusic <-
 	"undergroundbros" 
 	"underwater"
 	"urgent"
-	"wildwest" 
+	"wildwest"
+	"witch"
 ]
 
 Ware_BossgameMusic <-
@@ -809,7 +811,7 @@ Ware_MeleeAttributeOverrides <-
 
 // keep updated with latest map version suffix
 // also remember to update the suffixes of the two files in /maps
-const WARE_MAPVERSION = "b7e"
+const WARE_MAPVERSION = "b7f"
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
 const WARE_MUSICVERSION = 1

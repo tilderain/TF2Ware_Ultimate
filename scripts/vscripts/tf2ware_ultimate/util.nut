@@ -63,6 +63,12 @@ function VectorDistance(a, b)
 	return (a - b).Length()
 }
 
+// Normalize an angle into [-180, 180] range
+function AngleNormalize(angle)
+{
+	return (angle + 180.0) % 360.0 - 180.0
+}
+
 // Lerp a value between A and B, t being percentage from 0 to 1
 function Lerp(t, A, B)
 {

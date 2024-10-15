@@ -1,0 +1,53 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/tf2ware_ultimate/alaxe/witch/witch_head_f"
+	//"$bumpmap"     "models/tf2ware_ultimate/alaxe/witch/witch_head_nm"
+	"$basemapalphaphongmask" "1"
+	
+	"$phong" "1"
+	"$phongboost" "1"	
+	"$phongexponent" "10"	
+	"$phongfresnelranges"	"[.3 1 8]"
+	"$halflambert" "0"
+	"$phongalbedotint" "1"
+	"$lightwarptexture" "models/player/pyro/pyro_lightwarp"
+
+	// Rim lighting parameters
+	"$rimlight" "1"					// To enable rim lighting (requires phong)
+	"$rimlightexponent" "4"			// Exponent for phong component of rim lighting	
+	"$rimlightboost" "2"			// Boost for ambient cube component of rim lighting
+	"$rimmask" "1"                  // Use the alpha channel of the $phongexponenttexture as a rim mask.
+
+	"$cloakColorTint" "[0.4 0.5 1]"
+	"$yellow" "0"
+
+	"$cloakPassEnabled" "1"
+	"Proxies"
+	{
+		"spy_invis" //wmodel and team color cloak support
+		{
+		}
+		"invis" //vmodel cloak support
+		{
+		}
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$detail"
+			"animatedtextureframenumvar" "$detailframe"
+			"animatedtextureframerate" 30
+		}
+		"BurnLevel"
+		{
+			"resultVar" "$detailblendfactor"
+		}
+		"YellowLevel"
+		{
+			"resultVar" "$yellow"
+		}
+		"Equals"
+		{
+			"srcVar1" "$yellow"
+			"resultVar" "$color2"
+		}
+	}
+}
