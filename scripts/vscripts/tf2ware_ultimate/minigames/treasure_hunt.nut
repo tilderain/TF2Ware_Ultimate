@@ -82,7 +82,7 @@ function OnStart()
 	local position_list = treasure[5]
 	if (!debug_spawns)
 	{
-		local origin = Ware_MinigameLocation.center + position_list[RandomIndex(position_list)]
+		local origin = Ware_MinigameLocation.center + RandomElement(position_list)
 		local prop = Ware_SpawnEntity("prop_dynamic",
 		{
 			origin     = origin

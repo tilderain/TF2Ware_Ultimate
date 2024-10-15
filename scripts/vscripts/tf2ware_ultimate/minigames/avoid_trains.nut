@@ -52,7 +52,7 @@ function SpawnTrain(pos)
 	else if (mode == 1)
 	{
 		local axes = [[1, 0], [-1, 0], [0, -1], [0, 1]]
-		local axis = axes[RandomIndex(axes)]
+		local axis = RandomElement(axes)
 		local offset_x = (Ware_MinigameLocation.maxs.x - Ware_MinigameLocation.mins.x) + 1132.0
 		local offset_y = (Ware_MinigameLocation.maxs.y - Ware_MinigameLocation.mins.y) + 1132.0
 		local x = RandomFloat(offset_x, offset_x + 150.0)
