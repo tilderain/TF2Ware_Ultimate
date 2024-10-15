@@ -112,6 +112,7 @@ Ware_SpecialRounds <-
 	"fov"
 	"inclinity_problem"
 	"inverted_control"
+	"invisible"
 	"low_gravity"
 	"math_only"
 	"no_movingback"
