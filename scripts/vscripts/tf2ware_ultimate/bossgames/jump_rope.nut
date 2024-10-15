@@ -18,6 +18,8 @@ jumprope_maxs <- null
 
 function OnStart()
 {
+	Ware_SetGlobalAttribute("no double jump", 1, -1)
+	
 	jumprope_door = FindByName(null, "jumprope_door")
 	MarkForPurge(jumprope_door)
 	SetPropFloat(jumprope_door, "m_flSpeed", 100.0)
