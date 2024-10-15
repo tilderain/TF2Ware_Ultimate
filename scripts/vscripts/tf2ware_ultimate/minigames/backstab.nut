@@ -27,14 +27,3 @@ function OnTakeDamage(params)
 			Ware_PassPlayer(attacker, true)
 	}
 }
-
-function OnPlayerDeath(params)
-{
-	local attacker = GetPlayerFromUserID(params.attacker)
-	if (attacker == null)
-		return
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim == attacker)
-		return
-	Ware_PassPlayer(attacker, true)
-}
