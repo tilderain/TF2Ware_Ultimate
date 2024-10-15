@@ -8,6 +8,7 @@ minigame <- Ware_MinigameData
 	music         = "witch"
 	start_pass    = true
 	fail_on_death = true
+	allow_damage  = true
 })
 
 witch_origin         <- Ware_MinigameLocation.center
@@ -45,7 +46,7 @@ function OnCleanup()
 {
 	foreach (witch in witches)
 	{
-		DispatchParticleEffect(witch_leave_particle, witch.GetOrigin(), Vector(0, 0, 1))
+		DispatchParticleEffect(witch_leave_particle, witch.GetOrigin() + Vector(0, 0, 12), Vector(0, 0, 1))
 		witch.StopSound(witch_cry_sound)
 	}
 	SetPropInt(World, "m_takedamage", DAMAGE_NO)
@@ -243,6 +244,8 @@ function OnTakeDamage(params)
 	else if (victim == World || victim.IsPlayer())
 	{
 		StartleWitch(attacker, 1000.0)
+		if (attacker && attacker.IsPlayer())
+			return false
 	}
 }
 
