@@ -33,7 +33,7 @@ Ware_Minigames <-
 	"flood"           
 	"ghost"           
 	"goomba"          
-	"grapple_cow"     
+	"grapple_cutout"     
 	"grapple_player"
 	"halloween_fight" 
 	"headshot"        
