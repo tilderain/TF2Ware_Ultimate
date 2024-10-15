@@ -52,7 +52,7 @@ function SpawnGhost()
 		origin = Vector(
 				RandomFloat(Ware_MinigameLocation.mins.x + 200.0, Ware_MinigameLocation.maxs.x - 200.0),
 				RandomFloat(Ware_MinigameLocation.mins.y + 200.0, Ware_MinigameLocation.maxs.y - 200.0),
-				Ware_MinigameLocation.center.z + RandomFloat(300.0, 500)),
+				Ware_MinigameLocation.center.z + RandomFloat(400.0, 600.0)),
 		angles = QAngle(0, RandomFloat(-180, 180), 0),	
 	})
 }
