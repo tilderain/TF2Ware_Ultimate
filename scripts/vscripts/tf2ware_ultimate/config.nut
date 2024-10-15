@@ -24,7 +24,8 @@ Ware_Minigames <-
 	"catch_money"     
 	"change_class"    
 	"count_bombs"     
-	"disguise"        
+	"disguise"
+	"dodge_laser"
 	"dont_touch"      
 	"double_jump"     
 	"extinguish"      
@@ -636,6 +637,7 @@ Ware_MinigameMusic <-
 	"train" 
 	"undergroundbros" 
 	"underwater"
+	"urgent"
 	"wildwest" 
 ]
 
