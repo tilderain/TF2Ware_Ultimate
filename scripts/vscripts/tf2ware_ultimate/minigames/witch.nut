@@ -251,12 +251,12 @@ function OnTakeDamage(params)
 
 function OnPlayerSay(player, voiceline)
 {
-	CreateTimer(@() player.IsValid() ? StartleWitch(player, 1500.0) : null, 0.25)
+	Ware_CreateTimer(@() player.IsValid() ? StartleWitch(player, 1500.0) : null, 0.25)
 }
 
 function OnPlayerVoiceline(player, voiceline)
 {
-	CreateTimer(@() player.IsValid() ? StartleWitch(player, 2048.0) : null, 0.4)
+	Ware_CreateTimer(@() player.IsValid() ? StartleWitch(player, 2048.0) : null, 0.4)
 }
 
 function CheckEnd()
