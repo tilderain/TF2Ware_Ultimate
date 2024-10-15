@@ -76,10 +76,11 @@ function OnBeginIntermission(is_boss)
 {
 	Wipeout_ValidPlayers <- []
 	Wipeout_Spectators <- []
+	local alive_player_count = Wipeout_GetAlivePlayers().len()
 	local player_count
 	foreach(threshold in player_thresholds)
 	{
-		if (Wipeout_GetAlivePlayers().len() >= threshold[1])
+		if (alive_player_count >= threshold[1])
 		{
 			player_count = threshold[0]
 			break
