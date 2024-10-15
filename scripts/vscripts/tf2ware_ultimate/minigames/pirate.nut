@@ -78,7 +78,7 @@ function OnUpdate()
 		local team = player.GetTeam()
 		if (team == TF_TEAM_RED)
 		{
-			if (origin.z > red_point.z && (origin - red_point).Length2D() < 150.0)
+			if (origin.z > red_point.z && VectorDistance2D(origin, red_point) < 150.0)
 			{
 				Ware_ShowScreenOverlay(player, null)
 				Ware_CreateTimer(@() Ware_PassPlayer(target, true), 0.1)
@@ -87,7 +87,7 @@ function OnUpdate()
 		}
 		else if (team == TF_TEAM_BLUE)
 		{
-			if (origin.z > blue_point.z && (origin - blue_point).Length2D() < 150.0)
+			if (origin.z > blue_point.z && VectorDistance2D(origin, blue_point) < 150.0)
 			{
 				Ware_ShowScreenOverlay(player, null);	
 				Ware_CreateTimer(@() Ware_PassPlayer(target, true), 0.1)

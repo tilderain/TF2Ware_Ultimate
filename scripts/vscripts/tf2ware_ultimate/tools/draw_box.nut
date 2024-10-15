@@ -23,7 +23,7 @@ function DrawTrace(player)
 	{
 		draw_cur_normal = trace.plane_normal
 		if (draw_snap_coord > 0.0)
-			return SnapVector(trace.pos, draw_snap_coord)
+			return VectorSnap(trace.pos, draw_snap_coord)
 		else
 			return trace.pos
 	}

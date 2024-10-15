@@ -114,7 +114,7 @@ function OnUpdate()
 		local origin = player.GetOrigin()
 		if (shark_pos)
 		{
-			if ((origin - shark_pos).Length() < 110.0)
+			if (VectorDistance(origin, shark_pos) < 110.0)
 			{
 				shark.EmitSound(shark_sound)
 				player.TakeDamage(20000, DMG_BLAST, shark)

@@ -171,7 +171,7 @@ function OnUpdate()
 		if (!can_piggyback)
 			continue
 		
-		if ((piggybacker_origin - player.GetOrigin()).Length() < 96.0)
+		if (VectorDistance(piggybacker_origin, player.GetOrigin()) < 96.0)
 		{
 			Ware_PassPlayer(player, true)
 			player.SetForcedTauntCam(1)

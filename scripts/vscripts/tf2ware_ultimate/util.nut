@@ -46,9 +46,21 @@ function Snap(x, y)
 }
 
 // Snap a vector to the interval y
-function SnapVector(vec, y)
+function VectorSnap(vec, y)
 {
 	return Vector(Snap(vec.x, y), Snap(vec.y, y), Snap(vec.z, y))
+}
+
+// Get 2D distance between two points
+function VectorDistance2D(a, b)
+{
+	return (a - b).Length2D()
+}
+
+// Get 3D distance between two points
+function VectorDistance(a, b)
+{
+	return (a - b).Length()
 }
 
 // Lerp a value between A and B, t being percentage from 0 to 1

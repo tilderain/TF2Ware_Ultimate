@@ -112,7 +112,7 @@ function OnUpdate()
 			local radius = 100.0
 			
 			// copied from Ware_RadiusDamagePlayers
-			local dist = (player.GetOrigin() - origin).Length()
+			local dist = VectorDistance(player.GetOrigin(), origin)
 			if (dist > radius)
 				continue
 			

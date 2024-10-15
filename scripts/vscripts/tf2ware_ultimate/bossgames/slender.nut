@@ -216,7 +216,7 @@ function OnUpdate()
 			
 			foreach (slender, origin in slenders_data)
 			{
-				if ((player.GetCenter() - origin).Length() <= 90.0)
+				if (VectorDistance(player.GetCenter(), origin) <= 90.0)
 					player.TakeDamage(300.0, DMG_CLUB, slender)
 			}
 		}

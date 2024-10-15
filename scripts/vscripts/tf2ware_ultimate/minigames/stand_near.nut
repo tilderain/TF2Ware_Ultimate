@@ -44,7 +44,7 @@ function OnEnd()
 			if (target1 == target2)
 				continue
 				
-			local dist = (target1.origin - target2.origin).Length()
+			local dist = VectorDistance(target1.origin, target2.origin)
 			if (dist < threshold)
 			{
 				if (mode == 1)

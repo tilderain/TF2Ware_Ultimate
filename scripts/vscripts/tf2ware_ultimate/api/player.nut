@@ -576,7 +576,7 @@ function Ware_RadiusDamagePlayers(origin, radius, damage, attacker)
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		local dist = (player.GetOrigin() - origin).Length()
+		local dist = VectorDistance(player.GetOrigin(), origin)
 		if (dist > radius)
 			continue
 			
