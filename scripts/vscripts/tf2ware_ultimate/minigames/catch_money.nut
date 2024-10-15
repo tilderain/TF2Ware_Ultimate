@@ -26,7 +26,7 @@ touch_sound <- "MVM.MoneyPickup"
 explode_sound <- "Weapon_LooseCannon.Explode"
 bomb_modelindex <- PrecacheModel(bomb_model)
 
-spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 16.0, 0.5, 0.02)
+spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 16.0, 0.4, 0.02)
 
 cash_spawned <- 0
 
