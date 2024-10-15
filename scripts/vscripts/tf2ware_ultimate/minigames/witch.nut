@@ -72,13 +72,6 @@ function WitchThink()
 			amb_timer = time + RandomFloat(2.5, 4.0)
 		}
 		
-		foreach (player in Ware_MinigamePlayers)
-		{
-			// startle if using voice chat
-			if (PlayerVoiceListener.IsPlayerSpeaking(player.entindex()))
-				WitchStartle(player)
-		}
-		
 		if (threat == null)
 		{
 			if (path_timer < time)
@@ -98,7 +91,7 @@ function WitchThink()
 		move_dir.Norm()
 		
 		// kill anyone in the way
-		foreach (player in Ware_MinigamePlayers)
+		foreach (player in Ware_Players)
 		{
 			if (player.IsAlive())
 			{
@@ -221,11 +214,23 @@ function SpawnWitch()
 
 function StartleWitch(player, radius)
 {
+	if (!player.IsAlive())
+		return
+	
 	local player_origin = player.GetOrigin()
 	foreach (witch in witches)
 	{
 		if (VectorDistance(witch.GetOrigin(), player_origin) < radius)
 			witch.GetScriptScope().WitchStartle(player)
+	}	
+}
+
+function OnUpdate()
+{
+	foreach (player in Ware_Players)
+	{
+		if (PlayerVoiceListener.IsPlayerSpeaking(player.entindex()))
+			StartleWitch(player)
 	}	
 }
 
