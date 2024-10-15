@@ -35,17 +35,19 @@ function GiveSpecialMelee(player)
 		SetPropInt(special_melee, "m_nRenderMode", kRenderTransColor)
 			
 		player.Weapon_Equip(special_melee)
+		local index = data.melee_index
 		for (local i = 0; i < MAX_WEAPONS; i++)
 		{
 			local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
 			if (weapon == special_melee)
 			{
 				SetPropEntityArray(player, "m_hMyWeapons", null, i)
+				index = i
 				break
 			}
 		}
 		
-		SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)
+		SetPropEntityArray(player, "m_hMyWeapons", special_melee, index)
 		player.Weapon_Switch(special_melee)
 		data.special_melee = special_melee
 	}
