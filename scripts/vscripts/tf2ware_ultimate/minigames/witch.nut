@@ -13,6 +13,7 @@ minigame <- Ware_MinigameData
 witch_origin         <- Ware_MinigameLocation.center
 witch_model          <- "models/tf2ware_ultimate/alaxe/witch.mdl"
 witch_spawn_particle <- "wrenchmotron_teleport_beam"
+witch_leave_particle <- "halloween_ghost_smoke"
 witch_spawn_sound    <- "Weapon_DRG_Wrench.Teleport"
 witch_cry_sound      <- "TF2Ware_Ultimate.WitchCry"
 witch_scream_sound   <- "TF2Ware_Ultimate.WitchScream"
@@ -23,6 +24,7 @@ function OnPrecache()
 {
 	PrecacheModel(witch_model)
 	PrecacheParticle(witch_spawn_particle)
+	PrecacheParticle(witch_leave_particle)
 	PrecacheScriptSound(witch_spawn_sound)
 	PrecacheScriptSound(witch_cry_sound)
 	PrecacheScriptSound(witch_scream_sound)
@@ -42,7 +44,10 @@ function OnStart()
 function OnCleanup()
 {
 	foreach (witch in witches)
+	{
+		DispatchParticleEffect(witch_leave_particle, witch.GetOrigin(), Vector(0, 0, 1))
 		witch.StopSound(witch_cry_sound)
+	}
 	SetPropInt(World, "m_takedamage", DAMAGE_NO)
 }
 
