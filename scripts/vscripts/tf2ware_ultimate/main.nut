@@ -1678,7 +1678,8 @@ function Ware_OnUpdate()
 			if (player)
 			{
 				local name = GetPropString(scene, "m_szInstanceFilename")
-				Ware_Minigame.cb_on_player_voiceline(player, name.tolower())
+				if (name.find("idleloop") == null)
+					Ware_Minigame.cb_on_player_voiceline(player, name.tolower())
 			}
 		}
 	}
