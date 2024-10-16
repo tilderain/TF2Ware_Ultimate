@@ -107,7 +107,7 @@ public Action ListenerVScript(Event event, const char[] name, bool dontBroadcast
 	return Plugin_Continue;
 }
 
-public Action ListenerSay(Event event, const char[] name, bool dontBroadcast)
+public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
 {	
 	int proxy = EntRefToEntIndex(g_TextProxy);
 	if (proxy == INVALID_ENT_REFERENCE)
@@ -119,13 +119,11 @@ public Action ListenerSay(Event event, const char[] name, bool dontBroadcast)
 	
 	if (IsValidEntity(proxy))
 	{
-		int client = GetClientOfUserId(GetEventInt(event, "userid"));		
-		char text[260];
-		event.GetString("text", text, sizeof(text), "");
 		// ask vscript whether to hide the message
-		SetEntPropString(proxy, Prop_Send, "m_szText", text);
+		SetEntPropEnt(proxy, Prop_Data, "m_hDamageFilter", client);
+		SetEntPropString(proxy, Prop_Send, "m_szText", sArgs);
 		SetVariantString("Ware_OnPlayerSayProxy");
-		AcceptEntityInput(proxy, "CallScriptFunction", client);
+		AcceptEntityInput(proxy, "CallScriptFunction", client, client);
 		int show = GetEntProp(proxy, Prop_Data, "m_iHammerID");
 		if (show == 1)
 			return Plugin_Handled;
@@ -176,7 +174,6 @@ void Enable()
 	
 	// unused event repurposed for vscript <-> sourcemod communication
 	HookEvent("player_rematch_change", ListenerVScript, EventHookMode_Pre);
-	HookEvent("player_say", ListenerSay, EventHookMode_Pre);	
 
 	char name[64];
 	char description[128];

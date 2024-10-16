@@ -1808,12 +1808,12 @@ if (Ware_Plugin)
 	// hacky communication via entity between vscript and sourcemod
 	function Ware_OnPlayerSayProxy()
 	{
-		local player = activator
+		local player = GetPropEntity(self, "m_hDamageFilter")
 		local text = GetPropString(self, "m_szText")
 		 // incase callback errors, allow message to pass
 		SetPropInt(self, "m_iHammerID", 0)
 		local ret = Ware_OnPlayerSay(player, text)
-		SetPropInt(self, "m_iHammerID", ret == null ? 1 : 0)
+		SetPropInt(self, "m_iHammerID", ret == false ? 1 : 0)
 	}
 }
 
