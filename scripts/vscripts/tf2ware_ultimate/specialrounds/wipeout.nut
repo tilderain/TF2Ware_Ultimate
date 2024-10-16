@@ -23,6 +23,8 @@ duel_sounds <- {
 	two_lives_last   = "duel_challenge_accepted_with_restriction.wav"
 }
 
+overlay <- "hud/tf2ware_ultimate/get_ready.vmt"
+
 Wipeout_PlayerRotation <- []
 Wipeout_ValidPlayers <- []
 Wipeout_Spectators <- []
@@ -121,8 +123,7 @@ function OnBeginIntermission(is_boss)
 	}
 	
 	local holdtime = Ware_GetThemeSoundDuration("intro")
-	local spectator_text = format("This %s players are:\n", is_boss ? "bossgame's" : "minigame's")
-	local player_text = "Get ready to fight!\n"
+	local text = format("This %s players are:\n", is_boss ? "bossgame's" : "minigame's")
 	local player_list = ""
 	
 	foreach(player in Wipeout_ValidPlayers)
@@ -133,13 +134,14 @@ function OnBeginIntermission(is_boss)
 	
 	foreach (player in Ware_Players)
 	{
-		Ware_ShowScreenOverlay(player, null)
 		Ware_ShowScreenOverlay2(player, null)
 		
 		local lives = Ware_GetPlayerSpecialRoundData(player).lives
 		if (Wipeout_ValidPlayers.find(player) != null)
 		{
-			local text = player_text + player_list + format("You have %d %s remaining.", lives, lives == 1 ? "life" : "lives")
+			Ware_ShowScreenOverlay(player, overlay)
+			
+			text += player_list + format("You have %d %s remaining.", lives, lives == 1 ? "life" : "lives")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
 			
 			local sound
@@ -165,7 +167,9 @@ function OnBeginIntermission(is_boss)
 		}
 		if (Wipeout_Spectators.find(player) != null)
 		{
-			local text = spectator_text + player_list + (lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
+			Ware_ShowScreenOverlay(player, null)
+			
+			text += player_list + (lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
 			
 			Ware_PlayGameSound(player, "intro")
