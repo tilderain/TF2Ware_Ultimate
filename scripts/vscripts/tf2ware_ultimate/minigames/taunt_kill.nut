@@ -20,7 +20,6 @@ loadouts <-
 	[ TF_CLASS_PYRO,         "Flare Gun"        ],
 	[ TF_CLASS_PYRO,         "Rainblower"       ],
 	[ TF_CLASS_PYRO,         "Scorch Shot"      ],
-	[ TF_CLASS_PYRO,         "Thermal Thruster" ],
 	[ TF_CLASS_DEMOMAN,      "Eyelander"        ],
 	[ TF_CLASS_HEAVYWEAPONS, "Fists"            ],
 	[ TF_CLASS_ENGINEER,     "Frontier Justice" ],
