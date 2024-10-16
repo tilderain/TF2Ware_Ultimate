@@ -330,7 +330,7 @@ Ware_Location.hexplatforms <-
 Ware_Location.dirtsquare <-
 {
 	center      = Vector(1648, -1776, -511)
-	camaeras    = ["dirtsquare_camera"]
+	cameras     = ["dirtsquare_camera"]
 	Teleport = function(players) 
 	{ 
 		// TODO
