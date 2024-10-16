@@ -1,11 +1,7 @@
 // by ficool2 and pokemonpasta
 
-if (!("Ware_Plugin" in this))
+function Ware_CheckPlugin()
 {
-	Ware_Plugin <- false
-	Ware_NeedsPlugin <- false
-	Ware_NeedsPluginMsg <- "** TF2Ware Ultimate requires the SourceMod plugin installed on dedicated servers"
-	
 	local plugin_found = Convars.GetStr("ware_version") != null
 	if (IsDedicatedServer() || plugin_found)
 	{
@@ -14,14 +10,27 @@ if (!("Ware_Plugin" in this))
 		{
 			ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + Ware_NeedsPluginMsg)
 			printl(Ware_NeedsPluginMsg)
+			Ware_NeedsPlugin = true
 		}
 		else
 		{
 			printl("\tVScript: TF2Ware Ultimate linked to SourceMod plugin")
+			Ware_NeedsPlugin = false
 		}
 	}
-	
+}
+
+if (!("Ware_Plugin" in this))
+{
+	Ware_Plugin <- false
+	Ware_NeedsPlugin <- false
+	Ware_NeedsPluginMsg <- "** TF2Ware Ultimate requires the SourceMod plugin installed on dedicated servers"
+	Ware_CheckPlugin()
 	printl("\tVScript: TF2Ware Ultimate Started")
+}
+else if (Ware_NeedsPlugin)
+{
+	Ware_CheckPlugin()
 }
 
 // force a game restart if an error occurs while inside code marked as "critical"
