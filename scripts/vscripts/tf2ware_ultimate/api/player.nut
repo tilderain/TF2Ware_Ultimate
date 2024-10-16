@@ -13,8 +13,8 @@ class Ware_PlayerData
 		passed           = false
 		passed_effects   = false
 		mission          = 0
-		attributes       = []
-		melee_attributes = []
+		attributes       = {}
+		melee_attributes = {}
 		start_sound      = false
 		score			 = 0
 		horn_timer		 = 0.0
@@ -43,9 +43,9 @@ class Ware_PlayerData
 	special_melee       = null
 	// Entity handle for the special melee's viewmodel.
 	special_vm          = null
-	// Array of attributes the player currently has.
+	// Table of attributes the player currently has.
 	attributes	     	= null
-	// Array of attributes the player's melee weapon currently has.
+	// Table of attributes the player's melee weapon currently has.
 	melee_attributes 	= null
 	// Whether or not the player is currently listening to the starting music during Waiting for Players.
 	start_sound      	= null
