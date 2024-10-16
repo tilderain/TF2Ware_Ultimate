@@ -24,6 +24,8 @@ minigame <- Ware_MinigameData
 	allow_scale = false
 })
 
+pickup_sound <- "AmmoPack.Touch"
+
 function OnPrecache()
 {
 	foreach (item in items) 
@@ -32,6 +34,7 @@ function OnPrecache()
 		PrecacheModel(item[3])
 	}
 	
+	PrecacheScriptSound(pickup_sound)
 	PrecacheOverlay("hud/tf2ware_ultimate/minigames/eat_plate_fail")
 }
 
@@ -80,16 +83,22 @@ function OnStart()
 
 function OnTouchPlate()
 {
-	if (activator && !activator.InCond(TF_COND_STUNNED) && !Ware_IsPlayerPassed(activator))
+	if (activator && !activator.InCond(TF_COND_STUNNED))
 	{
-		if (item == Ware_MinigameScope.chosen_item)
-		{		
-			Ware_GetPlayerMiniData(activator).item <- Ware_GivePlayerWeapon(activator, item[0])
-		}
-		else
+		local minidata = Ware_GetPlayerMiniData(activator)
+		if (!("item" in minidata))
 		{
-			Ware_ShowScreenOverlay(activator, "hud/tf2ware_ultimate/minigames/eat_plate_fail")
-			activator.StunPlayer(10.0, 0.6, TF_STUN_LOSER_STATE, null)
+			if (item == Ware_MinigameScope.chosen_item)
+			{		
+				EmitSoundOnClient(Ware_MinigameScope.pickup_sound, activator)
+				minidata.item <- Ware_GivePlayerWeapon(activator, item[0])
+			}
+			else
+			{
+				minidata.item <- null
+				Ware_ShowScreenOverlay(activator, "hud/tf2ware_ultimate/minigames/eat_plate_fail")
+				activator.StunPlayer(10.0, 0.6, TF_STUN_LOSER_STATE, null)
+			}
 		}
 	}
 }
