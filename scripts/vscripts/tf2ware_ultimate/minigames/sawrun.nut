@@ -4,6 +4,7 @@ minigame <- Ware_MinigameData
 	author         = "ficool2"
 	description    = "Get to the end!"
 	duration       = 4.0
+	end_delay      = 0.5
 	location       = "sawrun"
 	music          = "getmoving"
 	custom_overlay = "get_end"
