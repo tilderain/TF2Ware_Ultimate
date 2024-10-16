@@ -1363,7 +1363,7 @@ function Ware_FinishMinigameInternal()
 			}
 			data.melee_attributes.clear()
 			
-			foreach (attribute in data.attributes)
+			foreach (attribute, value in data.attributes)
 				player.RemoveCustomAttribute(attribute)
 			data.attributes.clear()
 			

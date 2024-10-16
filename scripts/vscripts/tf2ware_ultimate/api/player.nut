@@ -533,7 +533,7 @@ function Ware_GetSortedScorePlayers(reverse)
 function Ware_AddPlayerAttribute(player, name, value, duration)
 {
 	player.AddCustomAttribute(name, value, duration)
-	return player.GetScriptScope().ware_data.attributes.append(name)
+	return player.GetScriptScope().ware_data.attributes[name] <- value
 }
 
 // Adds an attribute to all players
