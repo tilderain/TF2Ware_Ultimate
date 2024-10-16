@@ -57,6 +57,7 @@ function OnStart()
 					origin         = block_pos
 					model          = block_model
 					disableshadows = true
+					disablereceiveshadows = true
 				})
 			}
 		}
