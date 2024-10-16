@@ -1,6 +1,6 @@
 simon    <- RandomInt(0, 1)
-mode     <- RandomInt(0, 6)
-suffixes <- ["Taunt", "Jump", "Crouch", "Medic", "Eat", "Drink", "Inspect"]
+mode     <- RandomInt(0, 7)
+suffixes <- ["Taunt", "Jump", "Crouch", "Medic", "Eat", "Drink", "Inspect", "Horn"]
 
 minigame <- Ware_MinigameData
 ({
@@ -36,6 +36,10 @@ function OnStart()
 	{
 		local items = ["Bonk! Atomic Punch", "Crit-a-Cola"]
 		Ware_SetGlobalLoadout(TF_CLASS_SCOUT, RandomElement(items))
+	}
+	else if (mode == 7)
+	{
+		Ware_SetGlobalCondition(TF_COND_HALLOWEEN_KART)
 	}
 }
 
@@ -75,6 +79,14 @@ if (mode == 3 || mode == 4 || mode == 5)
 				}
 			}
 		}
+	}
+}
+else if (mode == 7)
+{
+	function OnPlayerHorn(player)
+	{
+		local pass = simon == 0
+		PassOrFailPlayer(player, !pass)
 	}
 }
 else
