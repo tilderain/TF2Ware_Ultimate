@@ -119,5 +119,8 @@ function OnUpdate()
 function OnEnd()
 {
 	foreach (player in Ware_MinigamePlayers)
+	{
 		player.RemoveCond(TF_COND_STUNNED)
+		player.RemoveCond(TF_COND_ENERGY_BUFF)
+	}
 }
