@@ -107,14 +107,14 @@ function OnBeginIntermission(is_boss)
 	}
 	
 	local holdtime = Ware_GetThemeSoundDuration("intro")
-	local player_list = []
 	local spectator_text = format("This %s players are:\n", is_boss ? "bossgame's" : "minigame's")
+	local player_text = "Get ready to fight!\n"
+	local player_list = ""
 	
 	foreach(player in Wipeout_ValidPlayers)
 	{
-		player_list.append(player)
-		spectator_text += GetPlayerName(player)
-		spectator_text += "\n"
+		player_list += GetPlayerName(player)
+		player_list += "\n"
 	}
 	
 	Ware_PlayGameSound(null, "intro")
@@ -126,23 +126,12 @@ function OnBeginIntermission(is_boss)
 		local lives = Ware_GetPlayerSpecialRoundData(player).lives
 		if (Wipeout_ValidPlayers.find(player) != null)
 		{
-			local text = "Get ready! Your opponents are:\n"
-			
-			foreach(ent in player_list)
-			{
-				if (ent != player)
-				{
-					text += GetPlayerName(ent)
-					text += "\n"
-				}
-			}
-			
-			text += format("You have %d %s remaining.", lives, lives == 1 ? "life" : "lives")
+			local text = player_text + player_list + format("You have %d %s remaining.", lives, lives == 1 ? "life" : "lives")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
 		}
 		if (Wipeout_Spectators.find(player) != null)
 		{
-			local text = spectator_text + (lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
+			local text = spectator_text + player_list + (lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
 		}
 	}
