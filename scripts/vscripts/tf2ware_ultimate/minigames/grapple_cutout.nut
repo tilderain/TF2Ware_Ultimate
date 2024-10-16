@@ -22,7 +22,7 @@ cutout_model <- cutout_models[mode]
 function OnPrecache()
 {
 	foreach (model in cutout_models)
-		PrecacheModel(cutout_models)
+		PrecacheModel(model)
 }
 
 function OnTeleport(players)
