@@ -330,11 +330,9 @@ Ware_Location.hexplatforms <-
 Ware_Location.dirtsquare <-
 {
 	center      = Vector(1648, -1776, -511)
+	radius      = 768.0
 	cameras     = ["dirtsquare_camera"]
-	Teleport = function(players) 
-	{ 
-		// TODO
-	}	
+	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 
 Ware_Location.jumprope <-
