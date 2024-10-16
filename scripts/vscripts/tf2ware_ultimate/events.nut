@@ -234,9 +234,23 @@ function OnGameEvent_teamplay_round_start(params)
 	CreateTimer(@() Ware_BeginIntermission(false), delay)
 }
 
+// called only on mp_restartgame
+function OnGameEvent_scorestats_accumulated_reset(params)
+{
+	// save current timelimit
+	Ware_MapResetTimer = GetPropFloat(GameRules, "m_flMapResetTime")
+}
+
 // called right before the map is reset for a new round
 function OnGameEvent_scorestats_accumulated_update(params)
 {
+	if (Ware_MapResetTimer != null)
+	{
+		// restore timelimit
+		SetPropFloat(GameRules, "m_flMapResetTime", Ware_MapResetTimer)
+		Ware_MapResetTimer = null
+	}
+		
 	// reset event callbacks
 	// Ware_Events should be going away automatically 
 	// as the events collection stores weak references, but it doesn't...
