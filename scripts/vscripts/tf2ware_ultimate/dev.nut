@@ -135,6 +135,7 @@ Ware_DevCommands <-
 			
 		cmds.sort(@(a, b) a <=> b)
 		foreach (name in cmds)
-			ClientPrint(player, HUD_PRINTTALK, "\x07FFFFFF* " + name)
+			ClientPrint(player, HUD_PRINTCONSOLE, "* " + name)
+		Ware_ChatPrint(player, "See console for list of commands")
 	}
 }
