@@ -114,7 +114,7 @@ public Action ListenerSay(Event event, const char[] name, bool dontBroadcast)
 	{
 		proxy = FindEntityByClassname(-1, "ware_textproxy");
 		if (proxy != -1)
-			g_TextProxy = EntIndexToEntRef(g_TextProxy);
+			g_TextProxy = EntIndexToEntRef(proxy);
 	}
 	
 	if (IsValidEntity(proxy))
