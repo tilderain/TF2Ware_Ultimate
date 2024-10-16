@@ -99,7 +99,11 @@ function OnUpdate()
 			local new_angles = QuaternionBlend(skull_angles.ToQuat(), VectorAngles(dir).ToQuat(), 0.1).ToQAngle()
 			local new_dir = new_angles.Forward()
 			
-			local speed = 50.0
+			local speed = 70.0
+			// speed up the shorter the minigame is, unless in the home area
+			if (Ware_Minigame && Ware_MinigameLocation != Ware_MinigameHomeLocation)
+				speed *= RemapValClamped(Ware_Minigame.duration, 3.0, 30.0, 3.0, 1.0)
+			
 			// move faster inside solid geometry
 			if (TraceLine(skull_origin, skull_origin, skull) != 1.0)
 				speed *= 3.0
