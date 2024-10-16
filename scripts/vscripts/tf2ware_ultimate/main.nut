@@ -98,6 +98,7 @@ function Ware_ErrorHandler(e)
 	{
 		Ware_CriticalZone = false	
 		SetConvarValue("mp_restartgame", 5)
+		PlaySoundOnAllClients(SFX_WARE_ERROR)		
 		Ware_Error("Critical error detected. Restarting in 5 seconds...")
 	}
 }

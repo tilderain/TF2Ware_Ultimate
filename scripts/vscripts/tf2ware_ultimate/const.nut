@@ -106,6 +106,7 @@ const CHANNEL_MISC         = 4
 
 const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
 const SFX_WARE_KART_HORN = "TF2Ware_Ultimate.KartHorn"
+const SFX_WARE_ERROR     = "TF2Ware_Ultimate.Error"
 
 const PFX_WARE_PASS_RED  = "teleportedin_red"
 const PFX_WARE_PASS_BLUE = "teleportedin_blue"
