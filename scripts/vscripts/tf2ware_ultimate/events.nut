@@ -448,6 +448,13 @@ function OnGameEvent_player_death(params)
 	if (Ware_Minigame == null)
 		return
 		
+	if (params.customkill == TF_DMG_CUSTOM_SUICIDE)
+	{
+		// kill-binds have these bits
+		if (params.damagebits & (DMG_ALWAYSGIB|DMG_NEVERGIB))
+			player.GetScriptScope().ware_data.suicided = true
+	}
+		
 	if (Ware_Minigame.fail_on_death == true)
 	{
 		if (player)

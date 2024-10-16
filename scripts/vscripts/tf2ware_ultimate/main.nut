@@ -1146,7 +1146,8 @@ function Ware_StartMinigameInternal(is_boss)
 		data.passed = Ware_Minigame.start_pass
 		data.passed_effects = false
 		data.mission = 0
-		
+		data.suicided = false
+				
 		minigame_players.append(player)
 		minigame_playersdata.append(data)
 	}
@@ -1408,6 +1409,12 @@ function Ware_FinishMinigameInternal()
 	
 	foreach (data in Ware_MinigamePlayersData)
 	{
+		if (data.passed == pass_flag && data.suicided)
+		{
+			data.passed = !pass_flag
+			Ware_ChatPrint(data.player, "{color}You were not given points for suiciding.", TF_COLOR_DEFAULT)
+		}
+		
 		if (data.passed == pass_flag)
 			all_failed = false
 		else

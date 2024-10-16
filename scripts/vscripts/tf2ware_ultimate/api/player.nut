@@ -13,6 +13,7 @@ class Ware_PlayerData
 		passed           = false
 		passed_effects   = false
 		mission          = 0
+		suicided         = false
 		attributes       = {}
 		melee_attributes = {}
 		start_sound      = false
@@ -35,6 +36,8 @@ class Ware_PlayerData
 	passed_effects   	= null
 	// For minigames that use missions (e.g. dont_laugh, slender, ghostbusters), what mission this player is on.
 	mission		     	= null
+	// Whether the player kill-binded during the minigame
+	suicided            = null
 	// Entity handle for the player's melee weapon.
 	melee		     	= null
 	// Entindex for the player's melee weapon.
@@ -99,6 +102,8 @@ function Ware_PassPlayer(player, pass)
 {
 	local data = player.GetScriptScope().ware_data
 	if (data.passed == pass)
+		return
+	if (data.suicided)
 		return
 	
 	if (!Ware_BlockPassEffects)
