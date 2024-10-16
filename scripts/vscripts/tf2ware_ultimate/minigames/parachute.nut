@@ -3,7 +3,7 @@
 	name        = "Parachute"
 	author      = "ficool2"
 	description = "Land on the Platform!"
-	duration    = 6.0
+	duration    = 7.0
 	location    = "boxarena"
 	music       = "dizzy"
 	thirdperson = true
