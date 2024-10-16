@@ -2,27 +2,23 @@
 
 if (!("Ware_Plugin" in this))
 {
+	Ware_Plugin <- false
 	Ware_NeedsPlugin <- false
 	Ware_NeedsPluginMsg <- "** TF2Ware Ultimate requires the SourceMod plugin installed on dedicated servers"
 	
 	local plugin_found = Convars.GetStr("ware_version") != null
 	if (IsDedicatedServer() || plugin_found)
 	{
+		Ware_Plugin = true
 		if (!plugin_found)
 		{
 			ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + Ware_NeedsPluginMsg)
 			printl(Ware_NeedsPluginMsg)
-			Ware_NeedsPlugin = true
 		}
 		else
 		{
 			printl("\tVScript: TF2Ware Ultimate linked to SourceMod plugin")
-			Ware_Plugin <- true	
 		}
-	}
-	else
-	{
-		Ware_Plugin <- false
 	}
 	
 	printl("\tVScript: TF2Ware Ultimate Started")
@@ -41,10 +37,14 @@ function Ware_ErrorHandler(e)
 	if (info && "post_func" in info.locals)
 		return
 		
-	local developers = Ware_Players.filter(@(i, player) GetPlayerSteamID3(player) in DEVELOPER_STEAMID3)
-	// show for non-developers in local host as well
-	if (Ware_ListenHost && Ware_ListenHost.IsValid() && developers.find(Ware_ListenHost) == null)
-		developers.append(Ware_ListenHost)
+	local developers = []
+	if ("Ware_Players" in ROOT)
+	{
+		developers = Ware_Players.filter(@(i, player) GetPlayerSteamID3(player) in DEVELOPER_STEAMID3)
+		// show for non-developers in local host as well
+		if (Ware_ListenHost && Ware_ListenHost.IsValid() && developers.find(Ware_ListenHost) == null)
+			developers.append(Ware_ListenHost)
+	}
 		
 	local Print = function(msg)
 	{
