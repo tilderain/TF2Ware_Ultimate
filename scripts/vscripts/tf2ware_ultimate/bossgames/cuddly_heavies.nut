@@ -22,7 +22,7 @@ minigame <- Ware_MinigameData
 	collisions      = true
 	convars         =
 	{
-		mp_teams_unbalance_limit = 0,
+		mp_teams_unbalance_limit = 0
 	}
 })
 
@@ -81,11 +81,20 @@ function OnStart()
 	vo_count = Min(vo_scouts.len(), 4)
 	for (local i = 0; i < vo_count; i++)
 		Ware_CreateTimer(@() PlayVocalization(RemoveRandomElement(vo_scouts), vo_disgust_sound), RandomFloat(1.5, 5.0))
+		
+	Ware_CreateTimer(function()
+	{	
+		foreach (heavy in heavies)
+		{
+			if (heavy.IsValid())
+				heavy.AddCond(TF_COND_SPEED_BOOST)
+		}
+	}, minigame.duration - 10.0)
 }
 
 function OnTeleport(players)
 {
-	local heavy_count = Clamp(players.len() / 4, 2, 3)
+	local heavy_count = Clamp(players.len() / 4, 2, 4)
 	for (local i = 0; i < heavy_count; i++)
 		heavies.append(RemoveRandomElement(players))
 		
