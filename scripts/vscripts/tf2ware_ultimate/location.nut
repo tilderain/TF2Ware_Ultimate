@@ -2,6 +2,8 @@
 
 // Stores list of locations
 // Each location shares these in common:
+// - "center" vector
+// -- Center point of the location
 // - "Init()" function
 // -- Called when the map starts, allows locations to setup their own data
 // - "Teleport(players)" function
@@ -95,6 +97,7 @@ Ware_Location.sawrun <-
 
 Ware_Location.targetrange <-
 {
+	center   = Vector(2264, -3896, -3968)
 	left     = Vector(2303, -5340, -3999)
 	right    = Vector(2303, -2450, -3999)
 	cameras  = ["targetrange_camera1", "targetrange_camera2"]
@@ -177,6 +180,7 @@ Ware_Location.manor <-
 
 Ware_Location.pinball <-
 {
+	center        = Vector(-3840, -1280, -6792)
 	center_top    = Vector(-3840, -5344, -5679)
 	center_bottom = Vector(-3840, 1984, -7599)
 	cameras       = ["pinball_camera"]
@@ -191,6 +195,7 @@ Ware_Location.factoryplatform <-
 
 Ware_Location.love <-
 {
+	center         = Vector(5376, -1480, -5920)
 	center_left    = Vector(6160, -984, -5919)
 	center_right   = Vector(6160, -2200, -5919)
 	cameras        = ["love_camera"]
@@ -212,6 +217,7 @@ Ware_Location.kart_containers <-
 
 Ware_Location.kart_paths <-
 {
+	center         = Vector(-6688, 928, -5984)
 	center_left    = Vector(-7095, -5300, -6046)
 	center_right   = Vector(-6520, -5300, -6046)
 	angles         = QAngle(0, 90, 0)
@@ -275,6 +281,7 @@ Ware_Location.sumobox <-
 
 Ware_Location.mandrill <-
 {
+	center   = Vector(-1536, -13024, -5344)
 	start    = Vector(2274, -13562, -5343)
 	maze     = Vector(-3584, -14720, -5344)
 	cameras  = ["mandrill_camera"]
@@ -359,6 +366,7 @@ Ware_Location.obstaclecourse <-
 
 Ware_Location.ballcourt <-
 {
+	center      = Vector(5800, -2176, -7200)
 	left        = Vector(5792, -3064, -7199)
 	right       = Vector(5792, -1278, -7199)
 	cameras     = ["basketball_camera", "basketball_camera2"]
@@ -438,6 +446,7 @@ Ware_Location.factory <-
 
 Ware_Location.typing <-
 {
+	center = Vector(7176, 2468, -6392)
 	cameras = ["DRBoss_CloseupCamera_Point", "DRBoss_DescentCamera_Point", "DRBoss_SpiralCamera_Point"]
 }
 

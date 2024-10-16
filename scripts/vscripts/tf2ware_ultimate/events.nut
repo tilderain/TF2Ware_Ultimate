@@ -2,6 +2,13 @@ function OnScriptHook_OnTakeDamage(params)
 {
 	if (params.damage_custom == TF_DMG_CUSTOM_SUICIDE)
 		return
+	
+	if (params.damage_type == DMG_PREVENT_PHYSICS_FORCE
+		&& params.const_entity != params.attacker)
+	{
+		// always allow skull damage
+		return
+	}
 		
 	if (Ware_SpecialRound)
 	{

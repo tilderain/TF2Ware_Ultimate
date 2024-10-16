@@ -45,6 +45,30 @@ function Snap(x, y)
 	return Round(x / y) * y
 }
 
+// Lerp a value between A and B, t being percentage from 0 to 1
+function Lerp(t, A, B)
+{
+    return A + (B - A) * t
+}
+
+// Remap a value from the range A - B into C - D
+// If the value is outside of the boundary, it is clamped
+function RemapValClamped(v, A, B, C, D)
+{
+	local cv = (v - A) / (B - A)
+	if (cv <= 0.0)
+		return C
+	if (cv >= 1.0)
+		return D
+	return C + (D - C) * cv
+}
+
+// Normalize an angle into [-180, 180] range
+function AngleNormalize(angle)
+{
+	return (angle + 180.0) % 360.0 - 180.0
+}
+
 // Snap a vector to the interval y
 function VectorSnap(vec, y)
 {
@@ -63,28 +87,59 @@ function VectorDistance(a, b)
 	return (a - b).Length()
 }
 
-// Normalize an angle into [-180, 180] range
-function AngleNormalize(angle)
+// Converts forward vector to euler angles
+function VectorAngles(forward)
 {
-	return (angle + 180.0) % 360.0 - 180.0
+	local yaw, pitch;
+	if (forward.y == 0.0 && forward.x == 0.0)
+	{
+		yaw = 0.0
+		pitch = forward.z > 0.0 ? 270.0 : 90.0
+	}
+	else
+	{
+		yaw = atan2(forward.y, forward.x) * RAD2DEG
+		if (yaw < 0.0)
+			yaw += 360.0
+		pitch = atan2(-forward.z, forward.Length2D()) * RAD2DEG
+		if (pitch < 0.0)
+			pitch += 360.0
+	}
+	return QAngle(pitch, yaw, 0.0)
 }
 
-// Lerp a value between A and B, t being percentage from 0 to 1
-function Lerp(t, A, B)
+// Ensures quaternion q is within 180 degrees of quaternion p
+function QuaternionAlign(p, q)
 {
-    return A + (B - A) * t
+	local qt = Quaternion()
+	local px = p.x, py = p.y, pz = p.z, pw = p.w, qx = q.x, qy = q.y, qz = q.z, qw = q.w
+	local a = (px - qx) * (px - qx) + (py - qy) * (py - qy) + (pz - qz) * (pz - qz) + (pw - qw) * (pw - qw)
+	local b = (px + qx) * (px + qx) + (py + qy) * (py + qy) + (pz + qz) * (pz + qz) + (pw + qw) * (pw + qw)
+	if (a > b)
+	{
+		qt.x = -qx; qt.y = -qy; qt.z = -qz; qt.w = -qw
+	}
+	else
+	{
+		qt.x = qx; qt.y = qy; qt.z = qz; qt.w = qw
+	}
+	return qt
 }
 
-// Remap a value from the range A - B into C - D
-// If the value is outside of the boundary, it is clamped
-function RemapValClamped(v, A, B, C, D)
+// Fast but inaccurate quaternion interpolation
+function QuaternionBlend(p, q, t)
 {
-	local cv = (v - A) / (B - A)
-	if (cv <= 0.0)
-		return C
-	if (cv >= 1.0)
-		return D
-	return C + (D - C) * cv
+	q = QuaternionAlign(p, q)
+	local sclp = 1.0 - t
+	local qt = Quaternion
+	(
+		sclp * p.x + t * q.x,
+		sclp * p.y + t * q.y,
+		sclp * p.z + t * q.z,
+		sclp * p.w + t * q.w
+	)
+	qt.Norm()
+	return qt
 }
 
 // Returns true if the two AABBs are intersecting

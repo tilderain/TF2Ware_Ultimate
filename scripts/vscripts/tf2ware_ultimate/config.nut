@@ -125,6 +125,7 @@ Ware_SpecialRounds <-
 	"reversed_text"
 	"simon"
 	"size_matters"
+	"skull"
 	"slow_mo"
 	"team_battles"
 	"thirdperson"
