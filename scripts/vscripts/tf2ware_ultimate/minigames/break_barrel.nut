@@ -24,7 +24,7 @@ function OnStart()
 		{
 			origin = player.GetOrigin() + Vector(0, 0, 400)
 			model  = barrel_model
-			health = 25
+			health = 5
 		})
 		Ware_SlapEntity(barrel, 80.0)
 	}
@@ -40,6 +40,10 @@ function OnTakeDamage(params)
 			&& (params.damage_type & DMG_CLUB))
 		{
 			Ware_PassPlayer(attacker, true)
+		}
+		else
+		{
+			return false
 		}
 	}
 }
