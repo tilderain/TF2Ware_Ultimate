@@ -437,10 +437,10 @@ Ware_Themes <-
 		theme_name = "3ds_jimmyt"
 		visual_name = "Jimmy T. (3DS)"
 		sounds = {
-			"failure": 2.1
+			"failure": 2.08
 			"intro":   2.2
 			"results": 0.0
-			"victory": 2.1
+			"victory": 2.08
 		}
 	},
 	
