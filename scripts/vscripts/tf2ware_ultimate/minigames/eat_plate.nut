@@ -1,20 +1,20 @@
 items <-
 [
-	["Sandvich"              , "pickup_plate_sandvich",      "Sandvich",         "models/items/plate.mdl"],
-	["Festive Sandvich"      , "pickup_plate_sandvich_xmas", "Festive Sandvich", "models/items/plate_sandwich_xmas.mdl"],
-	["Robo-Sandvich"         , "pickup_plate_sandvich_robo", "Robo-Sandvich",    "models/items/plate_robo_sandwich.mdl"],
-	["Dalokohs Bar"          , "pickup_plate_chocolate",     "Chocolate Bar",    "models/workshop/weapons/c_models/c_chocolate/plate_chocolate.mdl"],
-	["Fishcake"              , "pickup_plate_fishcake",      "Fishcake",         "models/workshop/weapons/c_models/c_fishcake/plate_fishcake.mdl"],
-	["Buffalo Steak Sandvich", "pickup_plate_steak",         "Steak",            "models/workshop/weapons/c_models/c_buffalo_steak/plate_buffalo_steak.mdl"],
-	["Second Banana"         , "pickup_plate_banana",        "Banana",           "models/items/banana/plate_banana.mdl"],
+	["Sandvich"              , "eat_plate_sandvich",      "Sandvich",         "models/items/plate.mdl"],
+	["Festive Sandvich"      , "eat_plate_sandvich_xmas", "Festive Sandvich", "models/items/plate_sandwich_xmas.mdl"],
+	["Robo-Sandvich"         , "eat_plate_sandvich_robo", "Robo-Sandvich",    "models/items/plate_robo_sandwich.mdl"],
+	["Dalokohs Bar"          , "eat_plate_chocolate",     "Chocolate Bar",    "models/workshop/weapons/c_models/c_chocolate/plate_chocolate.mdl"],
+	["Fishcake"              , "eat_plate_fishcake",      "Fishcake",         "models/workshop/weapons/c_models/c_fishcake/plate_fishcake.mdl"],
+	["Buffalo Steak Sandvich", "eat_plate_steak",         "Steak",            "models/workshop/weapons/c_models/c_buffalo_steak/plate_buffalo_steak.mdl"],
+	["Second Banana"         , "eat_plate_banana",        "Banana",           "models/items/banana/plate_banana.mdl"],
 ]
 chosen_item <- RandomElement(items)
 
 minigame <- Ware_MinigameData
 ({
-	name           = "Pickup Plate"
+	name           = "Eat the Plate"
 	author         = "ficool2"
-	description    = format("Pickup the %s!", chosen_item[2])
+	description    = format("Eat the %s!", chosen_item[2])
 	duration       = 9.0
 	music          = "catchme"
 	location       = "beach"
@@ -32,7 +32,7 @@ function OnPrecache()
 		PrecacheModel(item[3])
 	}
 	
-	PrecacheOverlay("hud/tf2ware_ultimate/minigames/pickup_plate_fail")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/eat_plate_fail")
 }
 
 function OnTeleport(players)
@@ -84,13 +84,25 @@ function OnTouchPlate()
 	{
 		if (item == Ware_MinigameScope.chosen_item)
 		{		
-			Ware_PassPlayer(activator, true)
-			Ware_GivePlayerWeapon(activator, item[0])
+			Ware_GetPlayerMiniData(activator).item <- Ware_GivePlayerWeapon(activator, item[0])
 		}
 		else
 		{
-			Ware_ShowScreenOverlay(activator, "hud/tf2ware_ultimate/minigames/pickup_plate_fail")
+			Ware_ShowScreenOverlay(activator, "hud/tf2ware_ultimate/minigames/eat_plate_fail")
 			activator.StunPlayer(10.0, 0.6, TF_STUN_LOSER_STATE, null)
+		}
+	}
+}
+
+function OnUpdate()
+{
+	foreach (player in Ware_MinigamePlayers)
+	{
+		if (player.InCond(TF_COND_TAUNTING))
+		{
+			local minidata = Ware_GetPlayerMiniData(player)
+			if ("item" in minidata && player.GetActiveWeapon() == minidata.item)
+				Ware_PassPlayer(player, true)
 		}
 	}
 }

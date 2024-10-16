@@ -52,7 +52,7 @@ Ware_Minigames <-
 	"most_bombs"      
 	"move"            
 	"parachute"       
-	"pickup_plate"    
+	"eat_plate"    
 	"piggyback"       
 	"pirate"          
 	"pop_jack"        

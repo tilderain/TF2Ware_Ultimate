@@ -1,6 +1,6 @@
 UnlitGeneric
 {
-	$basetexture hud/tf2ware_ultimate/minigames/pickup_plate_steak
+	$basetexture hud/tf2ware_ultimate/minigames/eat_plate_banana
 	$basetexturetransform "center .5 .2 scale 1.5 14 rotate 0 translate 0 0"
 
     $translucent 1
@@ -12,12 +12,10 @@ UnlitGeneric
         WaterLOD
         {
         }
-        Clamp
+        Equals
         {
             srcVar1		$CHEAPWATERENDDISTANCE
-            min			0.0
-            max			1.0
-            resultVar   $frame
+            resultVar	$frame
         }
     }            
 }
