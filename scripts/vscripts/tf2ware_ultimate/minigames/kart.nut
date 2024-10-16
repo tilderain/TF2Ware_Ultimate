@@ -5,6 +5,7 @@ minigame <- Ware_MinigameData
 	music         = "moomoofarm"
 	description   = "Race to the End!"
 	end_delay     = 0.5
+	start_freeze  = true
 	allow_damage  = true
 	fail_on_death = true
 	collisions    = true

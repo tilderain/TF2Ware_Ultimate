@@ -978,6 +978,7 @@ function Ware_StartMinigameInternal(is_boss)
 	local attempts = 0
 	local minigame
 
+	// TODO move this whole rolling to its own function for cleanness
 	while (!success)
 	{
 		if (++attempts > 25)
@@ -1156,6 +1157,18 @@ function Ware_StartMinigameInternal(is_boss)
 	else
 		location = Ware_Location[Ware_Minigame.location]
 		
+	if (Ware_Minigame.start_freeze)
+	{
+		foreach (player in valid_players)
+			player.AddFlag(FL_FROZEN)
+		
+		Ware_CreateTimer(function() 
+		{
+			foreach (player in Ware_MinigamePlayers) 
+				player.RemoveFlag(FL_FROZEN)
+		}, 0.3)
+	}
+	
 	local custom_teleport = "OnTeleport" in Ware_MinigameScope
 	if (location != Ware_MinigameLocation)
 	{
@@ -1311,6 +1324,7 @@ function Ware_FinishMinigameInternal()
 		if (!(player.GetTeam() & 2))
 			continue
 			
+		player.RemoveFlag(FL_FROZEN)
 		player.RemoveAllObjects(false)
 		player.SetGrapplingHookTarget(null, false)
 

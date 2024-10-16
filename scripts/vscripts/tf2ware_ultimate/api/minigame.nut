@@ -5,25 +5,26 @@ class Ware_MinigameData
 {
 	function constructor(table = null)
 	{
-		location       = "home"
-		min_players    = 0
-		start_pass     = false
-		allow_damage   = false
-		allow_scale    = true
-		force_backstab = false
-		fail_on_death  = false
-		suicide_on_end = false
-		collisions 	   = false
-		friendly_fire  = true
-		thirdperson    = false
-		boss		   = false
-		end_delay      = 0.0
-		convars        = []
-		entities       = []
-		cleanup_names  = {}
-		timers		   = []
-		annotations    = []
-		conditions     = []
+		location        = "home"
+		min_players     = 0
+		start_pass      = false
+		allow_damage    = false
+		allow_scale     = true
+		force_backstab  = false
+		start_freeze    = false
+		fail_on_death   = false
+		suicide_on_end  = false
+		collisions 	    = false
+		friendly_fire   = true
+		thirdperson     = false
+		boss		    = false
+		end_delay       = 0.0
+		convars         = []
+		entities        = []
+		cleanup_names   = {}
+		timers		    = []
+		annotations     = []
+		conditions      = []
 		
 		if (table)
 		{
@@ -63,6 +64,9 @@ class Ware_MinigameData
 	allow_scale     = null
 	// Allow backstabs with any weapon
 	force_backstab  = null
+	// Freeze players when minigame starts for 0.5 seconds, default is false
+	// Useful to allow some reaction time to not fall off a ledge etc
+	start_freeze    = null
 	// Whether players should be automatically failed when they die, default is false
 	fail_on_death	= null
 	// Whether players should suicide if they haven't passed when minigame ends, default is false

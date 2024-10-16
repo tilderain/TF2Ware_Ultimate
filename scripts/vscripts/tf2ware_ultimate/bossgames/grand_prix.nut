@@ -9,6 +9,7 @@ minigame <- Ware_MinigameData
 	location     = "kart_containers"
 	allow_damage = true
 	collisions   = true
+	start_freeze = true
 })
 
 endzone_vector <- Vector(-1250, 4450, -5960)

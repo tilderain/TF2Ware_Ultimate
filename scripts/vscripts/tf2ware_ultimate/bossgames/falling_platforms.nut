@@ -10,6 +10,7 @@ minigame <- Ware_MinigameData
 	custom_overlay = "push_enemy"
 	min_players    = 2	
 	start_pass     = true
+	start_freeze   = true
 	fail_on_death  = true
 	allow_damage   = true
 	collisions     = true
@@ -151,6 +152,7 @@ function OnTeleport(players)
 	lower_delay = (minigame.duration - 17.0) / hexes.len().tofloat()
 	Ware_CreateTimer(@() LowerPlatform(), 10.0)
 	
+	// TODO temporary for debugging
 	local developers = Ware_Players.filter(@(i, player) GetPlayerSteamID3(player) in DEVELOPER_STEAMID3)
 	local PrintDebug = function(msg)
 	{
@@ -172,6 +174,7 @@ function OnTeleport(players)
 
 		PrintDebug(format("\t* %s - teleported to %s (platform %d)\n", GetPlayerName(player), origin.ToKVString(), hex_idx))
 		
+		// TODO temporary for debugging
 		if (TraceLinePlayersIncluded(player.GetCenter(), origin - Vector(0, 0, 512), player) == 1.0)
 			PrintDebug("\t *** no floor!")
 	}

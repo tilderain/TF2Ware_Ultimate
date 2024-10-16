@@ -10,6 +10,7 @@ minigame <- Ware_MinigameData
 	custom_overlay = "survive"
 	min_players    = 2
 	start_pass     = true
+	start_freeze   = true
 	allow_damage   = true
 	fail_on_death  = true
 	collisions     = true

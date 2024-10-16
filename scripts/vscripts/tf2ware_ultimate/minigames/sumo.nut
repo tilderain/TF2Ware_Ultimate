@@ -17,6 +17,7 @@ minigame <- Ware_MinigameData
 	allow_damage  = true
 	fail_on_death = true
 	start_pass    = true
+	start_freeze  = true
 	collisions    = true
 	convars       =
 	{
