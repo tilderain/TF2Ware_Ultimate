@@ -5,7 +5,7 @@ minigame <- Ware_MinigameData
 	description    =
 	[
 		"Give Medic your Sandvich!"
-		"Eat a Sandvich!"
+		"Eat a Heavy's Sandvich!"
 	]
 	duration       = 4.0
 	music          = "actioninsilence"
