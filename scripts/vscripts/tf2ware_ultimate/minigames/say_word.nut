@@ -92,6 +92,13 @@ words <-
 	"Skull"
 	"Cookie"
 	"Turtle"
+	"VScript"
+	"Squirrel"
+	"Pawn"
+	"Inspect"
+	"Crash"
+	"Raiden"
+	"Freaky"
 	
 	// these two are evil but rare
 	"Bombinomicon"
