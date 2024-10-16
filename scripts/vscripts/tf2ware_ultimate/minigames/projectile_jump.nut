@@ -1,11 +1,11 @@
 mode_infos <- 
 [
-	[ "Needle jump!",       "needle_jump"       ],
-	[ "Rocket jump!",       "rocket_jump"       ],
-	[ "Sticky jump!",       "sticky_jump"       ],
-	[ "Sentry jump!",       "sentry_jump"       ],
-	[ "Flare jump!",        "flare_jump"        ],
-	[ "Short Circuit jump!", "shortcircuit_jump" ],
+	[ "Needle jump!",       "needle_jump",        480.0],
+	[ "Rocket jump!",       "rocket_jump",        512.0],
+	[ "Sticky jump!",       "sticky_jump",        512.0],
+	[ "Sentry jump!",       "sentry_jump",        512.0],
+	[ "Flare jump!",        "flare_jump",         400.0],
+	[ "Short Circuit jump!", "shortcircuit_jump", 384.0],
 ]
 mode <- RandomInt(0, 5)
 
@@ -75,11 +75,12 @@ function OnStart()
 
 function OnUpdate()
 {
+	local height = mode_infos[mode][2]
 	foreach (player in Ware_MinigamePlayers)
 	{
 		if (!player.IsAlive())
 			continue
-		if (Ware_GetPlayerHeight(player) > 512.0)
+		if (Ware_GetPlayerHeight(player) > height)
 			Ware_PassPlayer(player, true)
 	}
 	
