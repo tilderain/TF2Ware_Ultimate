@@ -524,39 +524,12 @@ function OnGameEvent_teamplay_game_over(params)
 	Ware_PlayGameSound(null, "mapend")
 }
 
-function OnGameEvent_player_say(params)
-{	
-	local player = GetPlayerFromUserID(params.userid)
-	if (player == null)
-		return
-		
-	local text = params.text
-	if (text.len() > 0)
-	{
-		if (startswith(text, "!ware_"))
-		{
-			local steamid3 = GetPlayerSteamID3(player)
-			if (steamid3 in DEVELOPER_STEAMID3)
-			{
-				local len = text.find(" ")
-				local cmd = len != null ? text.slice(6, len) : text.slice(6)
-				if (cmd in Ware_DevCommands)
-					Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "")
-				else
-					Ware_ChatPrint(player, "Unknown command '{str}'", cmd)
-			}
-			else
-			{
-				Ware_ChatPrint(player, "You do not have access to this command")
-			}
-			
-			return
-		}
+if (!Ware_Plugin) // plugin calls Ware_PlayerSay directly
+{
+	function OnGameEvent_player_say(params)
+	{	
+		local player = GetPlayerFromUserID(params.userid)
+		local text = params.text
+		Ware_OnPlayerSay(player, text)
 	}
-	
-	if (Ware_Minigame == null)
-		return
-	
-	// TODO: return value should indicate whether to hide message
-	Ware_Minigame.cb_on_player_say(player, text)
 }

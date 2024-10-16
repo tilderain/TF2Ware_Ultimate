@@ -68,19 +68,13 @@ function OnPlayerSay(player, text)
 		local num = text.tointeger()
 		if (num != count)
 			throw "wrong"
-		if (Ware_IsPlayerPassed(player))
-			return false
-		if (!player.IsAlive())
-			return false
-			
-		Ware_PassPlayer(player, true)
-		return false
+		if (player.IsAlive())
+			Ware_PassPlayer(player, true)
+		// intentionally allow the message to be shown as it can be easily inferred otherwise
 	}
 	catch (error)
 	{
 		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
 			Ware_SuicidePlayer(player)
-		
-		return true
 	}
 }

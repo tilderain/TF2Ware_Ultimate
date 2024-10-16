@@ -121,21 +121,21 @@ function OnPlayerSay(player, text)
 {	
 	if (text.tolower() == word)
 	{
-		if (!player.IsAlive())
-			return false
-		
-		Ware_PassPlayer(player, true)
-		if (first)
+		if (player.IsAlive())
 		{
-			Ware_ChatPrint(null, "{player} {color}said the word first!", player, TF_COLOR_DEFAULT)
-			first = false
+			Ware_PassPlayer(player, true)
+			if (first)
+			{
+				Ware_ChatPrint(null, "{player} {color}said the word first!", player, TF_COLOR_DEFAULT)
+				first = false
+			}
 		}
 		return false
 	}
 	else
 	{
 		if (Ware_IsPlayerPassed(player) || !player.IsAlive())
-			return true
+			return
 		
 		Ware_SuicidePlayer(player)
 	}

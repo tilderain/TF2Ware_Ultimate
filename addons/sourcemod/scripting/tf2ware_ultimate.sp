@@ -27,6 +27,8 @@ ArrayList g_CheatCommands;
 ArrayList g_CheatCommandsArgs;
 int g_CheatImpulses[] = { 76, 81, 82, 83, 101, 102, 103, 106, 107, 108, 195, 196, 197, 200, 202, 203 };
 
+int g_TextProxy = INVALID_ENT_REFERENCE;
+
 ConVar host_timescale;
 ConVar sv_cheats;
 ConVar nb_update_frequency;
@@ -105,6 +107,33 @@ public Action ListenerVScript(Event event, const char[] name, bool dontBroadcast
 	return Plugin_Continue;
 }
 
+public Action ListenerSay(Event event, const char[] name, bool dontBroadcast)
+{	
+	int proxy = EntRefToEntIndex(g_TextProxy);
+	if (proxy == INVALID_ENT_REFERENCE)
+	{
+		proxy = FindEntityByClassname(-1, "ware_textproxy");
+		if (proxy != -1)
+			g_TextProxy = EntIndexToEntRef(g_TextProxy);
+	}
+	
+	if (IsValidEntity(proxy))
+	{
+		int client = GetClientOfUserId(GetEventInt(event, "userid"));		
+		char text[260];
+		event.GetString("text", text, sizeof(text), "");
+		// ask vscript whether to hide the message
+		SetEntPropString(proxy, Prop_Send, "m_szText", text);
+		SetVariantString("Ware_OnPlayerSayProxy");
+		AcceptEntityInput(proxy, "CallScriptFunction", client);
+		int show = GetEntProp(proxy, Prop_Data, "m_iHammerID");
+		if (show == 1)
+			return Plugin_Handled;
+	}
+	
+	return Plugin_Continue;
+}
+
 public void OnCheatsChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	// cheats must be enabled for host_timescale to function
@@ -147,7 +176,8 @@ void Enable()
 	
 	// unused event repurposed for vscript <-> sourcemod communication
 	HookEvent("player_rematch_change", ListenerVScript, EventHookMode_Pre);
-	
+	HookEvent("player_say", ListenerSay, EventHookMode_Pre);	
+
 	char name[64];
 	char description[128];
 	bool is_command;

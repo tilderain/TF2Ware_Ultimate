@@ -79,21 +79,18 @@ function OnPlayerSay(player, text)
 		local num = text.tointeger()
 		if (num != answer)
 			throw "wrong"
-		if (Ware_IsPlayerPassed(player))
-			return false
-		if (!player.IsAlive())
-			return false
-			
-		local text = format("%d %s %d = %d", a, operator, b, num)
-		Ware_ShowMinigameText(player, text)
-		Ware_PassPlayer(player, true)
-		
-		if (first)
+		if (!Ware_IsPlayerPassed(player) && player.IsAlive())
 		{
-			Ware_ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT)
-			first = false
+			local text = format("%d %s %d = %d", a, operator, b, num)
+			Ware_ShowMinigameText(player, text)
+			Ware_PassPlayer(player, true)
+			
+			if (first)
+			{
+				Ware_ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT)
+				first = false
+			}
 		}
-		
 		return false
 	}
 	catch (error)

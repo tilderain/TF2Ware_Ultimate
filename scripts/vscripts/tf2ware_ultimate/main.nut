@@ -119,7 +119,12 @@ SetConvarValue("tf_weapon_criticals", 0)
 SetConvarValue("tf_spawn_glows_duration", 0)
 SetConvarValue("tf_player_movement_restart_freeze", 0)
 
-if (!Ware_Plugin)
+if (Ware_Plugin)
+{
+	Ware_TextProxy <- CreateEntitySafe("point_worldtext")
+	Ware_TextProxy.KeyValueFromString("classname", "ware_textproxy")
+}
+else
 {
 	SendToConsole("sv_cheats 1")
 	// this fixes ghosts being stuttery
@@ -1757,6 +1762,50 @@ function Ware_OnUpdate()
 	}
 	
 	return -1
+}
+
+function Ware_OnPlayerSay(player, text)
+{
+	if (player == null || text.len() == 0)
+		return false
+
+	if (startswith(text, "!ware_"))
+	{
+		local steamid3 = GetPlayerSteamID3(player)
+		if (steamid3 in DEVELOPER_STEAMID3)
+		{
+			local len = text.find(" ")
+			local cmd = len != null ? text.slice(6, len) : text.slice(6)
+			if (cmd in Ware_DevCommands)
+				Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "")
+			else
+				Ware_ChatPrint(player, "Unknown command '{str}'", cmd)
+		}
+		else
+		{
+			Ware_ChatPrint(player, "You do not have access to this command")
+		}
+		return false
+	}
+	
+	if (Ware_Minigame != null)
+		return Ware_Minigame.cb_on_player_say(player, text)
+	else
+		return true
+}
+
+if (Ware_Plugin)
+{
+	// hacky communication via entity between vscript and sourcemod
+	function Ware_OnPlayerSayProxy()
+	{
+		local player = activator
+		local text = GetPropString(self, "m_szText")
+		 // incase callback errors, allow message to pass
+		SetPropInt(self, "m_iHammerID", 0)
+		local ret = Ware_OnPlayerSay(player, text)
+		SetPropInt(self, "m_iHammerID", ret == null ? 1 : 0)
+	}
 }
 
 function Ware_LeaderboardUpdate()
