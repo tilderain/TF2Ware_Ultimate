@@ -15,6 +15,14 @@ player_thresholds <- [
 	[2,  0]
 ]
 
+duel_sounds <- {
+	three_lives      = "ui/duel_challenge.wav"
+	two_lives        = "ui/duel_challenge_accepted.wav"
+	one_life         = "ui/duel_event.wav"
+	three_lives_last = "ui/duel_challenge_with_restriction.wav"
+	two_lives_last   = "duel_challenge_accepted_with_restriction.wav"
+}
+
 Wipeout_PlayerRotation <- []
 Wipeout_ValidPlayers <- []
 Wipeout_Spectators <- []
@@ -30,6 +38,12 @@ special_round <- Ware_SpecialRoundData
 	boss_count     = INT_MAX
 	boss_threshold = INT_MAX
 })
+
+function OnPrecache()
+{
+	foreach(k, v in duel_sounds)
+		PrecacheSound(v)
+}
 
 function OnStart()
 {
@@ -117,7 +131,6 @@ function OnBeginIntermission(is_boss)
 		player_list += "\n"
 	}
 	
-	Ware_PlayGameSound(null, "intro")
 	foreach (player in Ware_Players)
 	{
 		Ware_ShowScreenOverlay(player, null)
@@ -128,11 +141,34 @@ function OnBeginIntermission(is_boss)
 		{
 			local text = player_text + player_list + format("You have %d %s remaining.", lives, lives == 1 ? "life" : "lives")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
+			
+			local sound
+			switch (lives) {
+				case 3:
+					if (player_count > 3)
+						sound = duel_sounds.three_lives
+					else
+						sound = duel_sounds.three_lives_last
+					break
+				case 2:
+					if (player_count > 3)
+						sound = duel_sounds.two_lives
+					else
+						sound = duel_sounds.two_lives_last
+					break
+				case 1:
+					sound = duel_sounds.one_life
+					break
+			}
+			Ware_PlayGameSound(player, "intro", 0, 0.15) // still play this but very quiet, feels weird without it
+			Ware_PlaySoundOnClient(player, sound)
 		}
 		if (Wipeout_Spectators.find(player) != null)
 		{
 			local text = spectator_text + player_list + (lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
+			
+			Ware_PlayGameSound(player, "intro")
 		}
 	}
 		

@@ -23,7 +23,7 @@ function Ware_PlaySoundOnAllClients(name, volume = 1.0, pitch = 100, flags = 0)
 // The sound that gets played will use the current theme's sound
 // See _default under Ware_Themes in the config for a list of gameplay sounds
 // Gameplay sounds are the sounds played for various events such as "You Win" or "Speed Up"
-function Ware_PlayGameSound(player, name, flags = 0)
+function Ware_PlayGameSound(player, name, flags = 0, volume = 1.0)
 {
 	local path
 	
@@ -33,9 +33,9 @@ function Ware_PlayGameSound(player, name, flags = 0)
 		path = format("%s/%s", Ware_Themes[0].theme_name, name)
 	
 	if (player)
-		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), 1.0, 100, flags)
+		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), volume, 100, flags)
 	else
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), 1.0, 100, flags)
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), volume, 100, flags)
 }
 
 // Plays minigame music to the target player
