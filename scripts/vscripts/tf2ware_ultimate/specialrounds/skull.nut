@@ -27,6 +27,7 @@ function OnStart()
 	{
 		origin    = skull_origin
 		model     = skull_model
+		health    = INT_MAX
 	})
 	skull.SetSolid(SOLID_NONE)
 	EntityAcceptInput(skull, "Disable")
