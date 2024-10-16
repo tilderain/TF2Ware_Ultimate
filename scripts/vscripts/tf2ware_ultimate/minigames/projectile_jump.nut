@@ -7,7 +7,6 @@ mode_infos <-
 	[ "Flare jump!",        "flare_jump"        ],
 	[ "Short Circuit jump!", "shortcircuit_jump" ],
 ]
-
 mode <- RandomInt(0, 5)
 
 minigame <- Ware_MinigameData
@@ -19,6 +18,7 @@ minigame <- Ware_MinigameData
 	end_delay      = mode == 3 ? 0.0 : 1.0
 	music          = "goodtimes"
 	custom_overlay = mode_infos[mode][1]
+	allow_damage   = mode == 0 // original ware allowed it, for fun
 	convars        = 
 	{
 		tf_damageforcescale_self_soldier_badrj = 10
