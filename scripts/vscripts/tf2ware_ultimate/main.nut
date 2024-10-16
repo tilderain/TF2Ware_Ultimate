@@ -1408,9 +1408,10 @@ function Ware_FinishMinigameInternal()
 	
 	local pass_flag = !(Ware_SpecialRound && Ware_SpecialRound.opposite_win)
 	
+	local can_suicide = Ware_Minigame.allow_suicide
 	foreach (data in Ware_MinigamePlayersData)
 	{
-		if (data.passed == pass_flag && data.suicided)
+		if (!data.passed == pass_flag && data.suicided && !can_suicide)
 		{
 			data.passed = !pass_flag
 			Ware_ChatPrint(data.player, "{color}You were not given points for suiciding.", TF_COLOR_DEFAULT)

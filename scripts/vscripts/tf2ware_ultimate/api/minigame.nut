@@ -10,6 +10,7 @@ class Ware_MinigameData
 		start_pass      = false
 		allow_damage    = false
 		allow_scale     = true
+		allow_suicide   = false
 		force_backstab  = false
 		start_freeze    = false
 		fail_on_death   = false
@@ -62,6 +63,8 @@ class Ware_MinigameData
 	// If not, this will set it to 1.0 and revert it after the minigame has ended. Default is true
 	// TODO: This probably makes more sense as max_scale and min_scale, but that'll require more specific minigame tuning. This is fine for now
 	allow_scale     = null
+	// Do suicides count for points? Default is false
+	allow_suicide   = null	
 	// Allow backstabs with any weapon
 	force_backstab  = null
 	// Freeze players when minigame starts for 0.5 seconds, default is false

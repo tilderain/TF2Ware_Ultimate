@@ -6,6 +6,7 @@ minigame <- Ware_MinigameData
 	end_delay      = 0.5
 	music          = "settingthescene"
 	suicide_on_end = true
+	allow_suicide  = true
 })
 
 desired_class <- RandomInt(TF_CLASS_FIRST, TF_CLASS_LAST)
