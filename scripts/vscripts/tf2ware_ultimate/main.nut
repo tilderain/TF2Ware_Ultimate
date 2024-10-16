@@ -1641,7 +1641,7 @@ function Ware_OnUpdate()
 		Ware_SpecialRound.cb_on_update()
 		
 	if (Ware_Minigame == null)
-		return
+		return -1
 		
 	if (!Ware_MinigameEnded)
 	{
