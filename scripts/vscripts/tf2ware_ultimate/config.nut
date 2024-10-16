@@ -375,7 +375,15 @@ Ware_FakeSpecialRounds <-
 	"CPU vs. CPU"
 	"Rat Cafe"
 	"Magic Missile!"
-	
+	"Is he stupid?"
+	"FALL OFF YOUR VERY ARMS"
+	"That's obese! :D"
+	"Mann in the Machine"
+	"I heard you're pretty strong"
+	"$400,000"
+	"23 CLEAR MOVIES"
+
+
 ]
 
 Ware_Themes <-
