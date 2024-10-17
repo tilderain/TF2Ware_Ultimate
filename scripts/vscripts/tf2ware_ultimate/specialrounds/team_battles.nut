@@ -5,6 +5,7 @@ special_round <- Ware_SpecialRoundData
 	author = "pokemonPasta"
 	description = "Your score goes towards your team's score. The team with the highest score at the end wins!"
 	min_players = 4 // 2 on each team minimum seems fair, could do min_players = 3 either maybe. minimum players of 2 is pointless.
+	friendly_fire = false
 })
 
 red_score <- 0

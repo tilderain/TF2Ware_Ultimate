@@ -11,6 +11,7 @@ class Ware_SpecialRoundData
 		allow_damage     = false
 		force_collisions = false
 		opposite_win     = false
+		friendly_fire    = true
 		boss_count       = 1
 		boss_threshold   = Ware_BossThreshold
 		
@@ -45,6 +46,8 @@ class Ware_SpecialRoundData
 	force_collisions 		 = null
 	// Inverted win condition, e.g. not passing means you win, default is false
 	opposite_win			 = null
+	// Friendly fire allowed on minigames? Default is true
+	friendly_fire            = null
 	// Amount of bosses to play, default is 1
 	boss_count       		 = null
 	// Amount of minigames played before a boss, default is Ware_BossThreshold in config.nut
