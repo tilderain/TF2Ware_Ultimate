@@ -515,6 +515,12 @@ function SetEntityParent(entity, parent, attachment = null)
 	}
 }
 
+// Gets an entity's parent, if one exists.
+function GetEntityParent(entity)
+{
+	return GetPropEntity(entity, "m_pParent")
+}
+
 // Sets a player's parent
 // Unlike SetEntityParent, this is intended when parenting players to another player
 // Prevents the player from going invisible

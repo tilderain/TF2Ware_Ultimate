@@ -14,10 +14,22 @@ mode <- RandomInt(0, 1)
 start_sound <- "tf2ware_ultimate/train_rain.wav"
 train_model <- "models/props_vehicles/train_enginecar.mdl"
 
+horn_sounds <- [
+	"tf2ware_ultimate/kart_horns/beepbeep.mp3"
+	"tf2ware_ultimate/kart_horns/hazzard.mp3"
+	"tf2ware_ultimate/kart_horns/horn1.mp3"
+	"tf2ware_ultimate/kart_horns/horn2.mp3"
+	"tf2ware_ultimate/kart_horns/horn3.mp3"
+	"tf2ware_ultimate/kart_horns/horn4.mp3"
+	"tf2ware_ultimate/kart_horns/horn5.mp3"
+]
+
 function OnPrecache()
 {
 	PrecacheSound(start_sound)
 	PrecacheModel(train_model)
+	foreach(sound in horn_sounds)
+		PrecacheSound(sound)
 }
 
 function OnStart()
@@ -71,6 +83,9 @@ function SpawnTrain(pos)
 	train.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
 	train.SetAbsVelocity(train_vel)
 	
+	train.ValidateScriptScope()
+	train.GetScriptScope().played_sound <- false
+	
 	local hurt = Ware_SpawnEntity("trigger_hurt",
 	{
 		origin     = train_pos
@@ -81,4 +96,19 @@ function SpawnTrain(pos)
 	SetEntityParent(hurt, train)
 	hurt.SetSolid(SOLID_BBOX)
 	hurt.SetSize(train.GetBoundingMinsOriented(), train.GetBoundingMaxsOriented())
+}
+
+function OnTakeDamage(params)
+{
+	if (params.damage_type & DMG_VEHICLE)
+	{
+		local train = GetEntityParent(params.inflictor)
+		local scope = train.GetScriptScope()
+		if (!scope.played_sound)
+		{
+			local sound = RemoveRandomElement(horn_sounds)
+			train.EmitSound(sound)
+			scope.played_sound = true
+		}
+	}
 }
