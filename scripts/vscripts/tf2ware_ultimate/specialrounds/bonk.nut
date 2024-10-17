@@ -43,6 +43,7 @@ function GiveSpecialMelee(player)
 			{
 				SetPropEntityArray(player, "m_hMyWeapons", null, i)
 				index = i
+				data.melee_index = i
 				break
 			}
 		}
