@@ -84,6 +84,12 @@ function OnUpdate()
 				Ware_CreateTimer(@() Ware_PassPlayer(target, true), 0.1)
 				Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
 			}
+			else if (origin.z > blue_point.z && VectorDistance2D(origin, blue_point) < 150.0)
+			{
+				Ware_ShowScreenOverlay(player, null)
+				Ware_SuicidePlayer(player)
+				Ware_ChatPrint(player, "You pirated the wrong ship!")
+			}
 		}
 		else if (team == TF_TEAM_BLUE)
 		{
@@ -92,6 +98,12 @@ function OnUpdate()
 				Ware_ShowScreenOverlay(player, null);	
 				Ware_CreateTimer(@() Ware_PassPlayer(target, true), 0.1)
 				Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
+			}	
+			else if (origin.z > red_point.z && VectorDistance2D(origin, red_point) < 150.0)
+			{
+				Ware_ShowScreenOverlay(player, null)
+				Ware_SuicidePlayer(player)
+				Ware_ChatPrint(player, "You pirated the wrong ship!")
 			}			
 		}
 	}
