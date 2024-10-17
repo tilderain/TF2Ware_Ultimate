@@ -27,7 +27,7 @@ mode <- RandomInt(0, 5)
 
 function OnStart()
 {
-	local attributes = { "active health degen" : -20.0, "mod see enemy health" : 1.0 }
+	local attributes = { "active health degen" : -15.0, "mod see enemy health" : 1.0 }
 	if (mode == 0)
 		Ware_SetGlobalLoadout(TF_CLASS_MEDIC, null, attributes)
 	else if (mode == 1)
