@@ -81,7 +81,7 @@ function OnUpdate()
 			if (origin.z > red_point.z && VectorDistance2D(origin, red_point) < 150.0)
 			{
 				Ware_ShowScreenOverlay(player, null)
-				Ware_CreateTimer(@() Ware_PassPlayer(target, true), 0.1)
+				Ware_CreateTimer(@() target.IsValid() ? Ware_PassPlayer(target, true) : null, 0.1)
 				Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
 			}
 			else if (origin.z > blue_point.z && VectorDistance2D(origin, blue_point) < 150.0)
@@ -96,7 +96,7 @@ function OnUpdate()
 			if (origin.z > blue_point.z && VectorDistance2D(origin, blue_point) < 150.0)
 			{
 				Ware_ShowScreenOverlay(player, null);	
-				Ware_CreateTimer(@() Ware_PassPlayer(target, true), 0.1)
+				Ware_CreateTimer(@() target.IsValid() ? Ware_PassPlayer(target, true) : null, 0.1)
 				Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
 			}	
 			else if (origin.z > red_point.z && VectorDistance2D(origin, red_point) < 150.0)
