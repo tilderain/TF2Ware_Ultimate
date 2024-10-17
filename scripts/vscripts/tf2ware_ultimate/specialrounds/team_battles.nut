@@ -1,3 +1,4 @@
+// TODO minigames such melee arena need to end when one team remains alive
 
 special_round <- Ware_SpecialRoundData
 ({
@@ -17,10 +18,13 @@ function OnCalculateScore(data)
 {
 	if (data.passed)
 	{
-		if (data.player.GetTeam() == TF_TEAM_RED)
-			red_score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
-		else
-			blu_score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
+		local team = data.player.GetTeam()
+		local score = Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
+		data.score += score
+		if (team == TF_TEAM_RED)
+			red_score += score
+		else if (team == TF_TEAM_BLUE)
+			blu_score += score
 	}
 }
 
@@ -31,15 +35,17 @@ function OnCalculateTopScorers(top_players)
 	foreach (data in Ware_MinigamePlayersData)
 	{
 		local player = data.player
-		local team = player.GetTeam()
-		
-		if (team == TF_TEAM_RED)
-			data.score = red_score
-		else
-			data.score = blu_score
-			
-		if (team == top_team || red_score == blu_score)
+		if (red_score == blu_score || player.GetTeam() == top_team)
 			top_players.append(player)
+	}
+	
+	foreach (mgr in TeamMgrs)
+	{
+		local team = GetPropInt(mgr, "m_iTeamNum")
+		if (team == TF_TEAM_RED)
+			SetPropInt(mgr, "m_iScore", red_score)
+		else if (team == TF_TEAM_BLUE)
+			SetPropInt(mgr, "m_iScore", blu_score)
 	}
 }
 
@@ -57,4 +63,10 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 		
 		Ware_ChatPrint(null, "{color}{str} {color}won with {int} points!", colour, team, TF_COLOR_DEFAULT, points)
 	}
+}
+
+function OnEnd()
+{
+	foreach (mgr in TeamMgrs)
+		SetPropInt(mgr, "m_iScore", 0)
 }

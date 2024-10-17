@@ -249,6 +249,9 @@ function Ware_FindStandardEntities()
 	WaterLOD  <- FindByClassname(null, "water_lod_control")
 	GameRules <- FindByClassname(null, "tf_gamerules")
 	PlayerMgr <- FindByClassname(null, "tf_player_manager")
+	TeamMgrs  <- []
+	for (local mgr; mgr = FindByClassname(mgr, "tf_team");)
+		TeamMgrs.append(mgr)
 	ClientCmd <- CreateEntitySafe("point_clientcommand")
 	
 	MarkForPurge(WaterLOD)
