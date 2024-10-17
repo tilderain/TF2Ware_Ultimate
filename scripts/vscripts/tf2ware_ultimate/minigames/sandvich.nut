@@ -25,9 +25,11 @@ function OnStart()
 {
 	local heavy_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 	foreach (player in Ware_MinigamePlayers)
-	{			
+	{
 		if (player.GetTeam() == heavy_team)
 		{
+			// prevent taunting (accidentally eating the sandvich)
+			player.AddCond(TF_COND_GRAPPLED_TO_PLAYER)			
 			Ware_SetPlayerMission(player, 0)
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS)
 			Ware_SetPlayerTeam(player, heavy_team)			
@@ -41,6 +43,12 @@ function OnStart()
 			Ware_SetPlayerTeam(player, heavy_team)		
 		}
 	}
+}
+
+function OnEnd()
+{
+	foreach (player in Ware_MinigamePlayers)
+		player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)
 }
 
 function OnGameEvent_player_healed(params)
