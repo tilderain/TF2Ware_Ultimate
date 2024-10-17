@@ -22,13 +22,13 @@ train_rain <- [
 ]
 
 horn_sounds <- [
-	"tf2ware_ultimate/kart_horns/beepbeep.mp3"
-	"tf2ware_ultimate/kart_horns/hazzard.mp3"
-	"tf2ware_ultimate/kart_horns/horn1.mp3"
-	"tf2ware_ultimate/kart_horns/horn2.mp3"
-	"tf2ware_ultimate/kart_horns/horn3.mp3"
-	"tf2ware_ultimate/kart_horns/horn4.mp3"
-	"tf2ware_ultimate/kart_horns/horn5.mp3"
+	"tf2ware_ultimate/v1/kart_horns/beepbeep.mp3"
+	"tf2ware_ultimate/v1/kart_horns/hazzard.mp3"
+	"tf2ware_ultimate/v1/kart_horns/horn1.mp3"
+	"tf2ware_ultimate/v1/kart_horns/horn2.mp3"
+	"tf2ware_ultimate/v1/kart_horns/horn3.mp3"
+	"tf2ware_ultimate/v1/kart_horns/horn4.mp3"
+	"tf2ware_ultimate/v1/kart_horns/horn5.mp3"
 ]
 
 function OnPrecache()
