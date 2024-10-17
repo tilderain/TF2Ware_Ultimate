@@ -11,8 +11,15 @@ minigame <- Ware_MinigameData
 
 mode <- RandomInt(0, 1)
 
-start_sound <- "tf2ware_ultimate/train_rain.wav"
 train_model <- "models/props_vehicles/train_enginecar.mdl"
+
+train_rain <- [
+	"tf2ware_ultimate/train_rain/train_rain_3.mp3"
+	"tf2ware_ultimate/train_rain/train_rain_5.mp3"
+	"tf2ware_ultimate/train_rain/train_rain_6.mp3"
+	"tf2ware_ultimate/train_rain/train_rain_10.mp3"
+	"tf2ware_ultimate/train_rain/train_rain_17.mp3"
+]
 
 horn_sounds <- [
 	"tf2ware_ultimate/kart_horns/beepbeep.mp3"
@@ -26,8 +33,11 @@ horn_sounds <- [
 
 function OnPrecache()
 {
-	PrecacheSound(start_sound)
 	PrecacheModel(train_model)
+	
+	foreach(sound in train_rain)
+		PrecacheSound(sound)
+	
 	foreach(sound in horn_sounds)
 		PrecacheSound(sound)
 }
@@ -35,7 +45,12 @@ function OnPrecache()
 function OnStart()
 {
 	if (mode == 0)
-		Ware_PlaySoundOnAllClients(start_sound)
+	{
+		local sound = RandomElement(train_rain)
+		Ware_PlaySoundOnAllClients(sound)
+		Ware_PlaySoundOnAllClients(sound)
+		Ware_PlaySoundOnAllClients(sound)
+	}
 	
 	local minigame_players = clone(Ware_MinigamePlayers)
 	
