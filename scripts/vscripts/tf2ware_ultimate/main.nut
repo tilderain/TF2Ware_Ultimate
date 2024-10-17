@@ -1551,6 +1551,7 @@ function Ware_FinishMinigameInternal()
 
 function Ware_GameOverInternal()
 {
+	Ware_CriticalZone = true
 	Ware_Finished = true
 	Ware_RoundsPlayed++
 	
@@ -1599,28 +1600,6 @@ function Ware_GameOverInternal()
 		Ware_PlayGameSound(null, "results")
 	}, 5.0)
 	
-	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
-	{
-		Ware_SpecialRound.cb_on_declare_winners(top_players, top_score, winner_count)
-	}
-	else
-	{
-		if (winner_count > 1)
-		{
-			Ware_ChatPrint(null, "{color}The winners each with {int} points:", TF_COLOR_DEFAULT, top_score)
-			foreach (player in top_players)
-				Ware_ChatPrint(null, "> {player} {color}!", player, TF_COLOR_DEFAULT)
-		}
-		else if (winner_count == 1)
-		{
-			Ware_ChatPrint(null, "{player} {color}won with {int} points!", top_players[0], TF_COLOR_DEFAULT, top_score)
-		}	
-		else if (winner_count == 0)
-		{
-			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
-		}
-	}
-	
 	// TODO: add firework effects
 
 	local win = SpawnEntityFromTableSafe("game_round_win", 
@@ -1646,6 +1625,31 @@ function Ware_GameOverInternal()
 		})
 	}
 	
+	Ware_CriticalZone = false
+	
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
+	{
+		Ware_SpecialRound.cb_on_declare_winners(top_players, top_score, winner_count)
+	}
+	else
+	{
+		if (winner_count > 1)
+		{
+			Ware_ChatPrint(null, "{color}The winners each with {int} points:", TF_COLOR_DEFAULT, top_score)
+			foreach (player in top_players)
+				Ware_ChatPrint(null, "> {player} {color}!", player, TF_COLOR_DEFAULT)
+		}
+		else if (winner_count == 1)
+		{
+			Ware_ChatPrint(null, "{player} {color}won with {int} points!", top_players[0], TF_COLOR_DEFAULT, top_score)
+		}	
+		else if (winner_count == 0)
+		{
+			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
+		}
+	}
+	
+
 	// TODO: move this to start of next round if it's safe to do so
 	// reason being it's more interesting to still have the special round's convars or what have you going on round end
 	if (Ware_SpecialRound != null)

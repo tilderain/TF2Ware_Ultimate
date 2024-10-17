@@ -43,7 +43,7 @@ function OnCalculateTopScorers(top_players)
 	}
 }
 
-function OnDeclareWinners(top_players)
+function OnDeclareWinners(top_players, top_score, winner_count)
 {
 	if (red_score == blu_score)
 		Ware_ChatPrint(null, "The teams are tied at {int} points.", red_score)
