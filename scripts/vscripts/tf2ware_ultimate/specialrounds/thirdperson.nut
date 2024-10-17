@@ -13,6 +13,12 @@ function OnStart()
 		player.SetForcedTauntCam(1)
 }
 
+function OnMinigameStart()
+{
+	foreach (player in Ware_Players)
+		player.SetForcedTauntCam(1)
+}
+
 function OnMinigameEnd()
 {
 	foreach (player in Ware_Players)
