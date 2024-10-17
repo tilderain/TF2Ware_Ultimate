@@ -106,7 +106,7 @@ function OnTakeDamage(params)
 		local scope = train.GetScriptScope()
 		if (!scope.played_sound)
 		{
-			local sound = RemoveRandomElement(horn_sounds)
+			local sound = RandomElement(horn_sounds)
 			train.EmitSound(sound)
 			scope.played_sound = true
 		}
