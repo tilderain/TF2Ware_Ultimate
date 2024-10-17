@@ -52,10 +52,16 @@ function OnUpdate()
 			skull.SetAbsOrigin(Ware_MinigameLocation.center + Vector(0, 0, skull_height))
 		}
 		
+		local time = Time()
 		local skull_origin = skull.GetOrigin()
 		local closest_dist = FLT_MAX, closest_player
-		foreach (player in Ware_Players)
+		foreach (data in Ware_PlayersData)
 		{
+			// ignore freshly spawned players for a bit in intermission
+			if (!Ware_Minigame && data.spawn_time + 2.0 >= time)
+				continue
+				
+			local player = data.player
 			if (player.IsAlive())
 			{
 				local dist = VectorDistance(player.EyePosition(), skull_origin)

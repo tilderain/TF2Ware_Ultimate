@@ -20,6 +20,7 @@ class Ware_PlayerData
 		score			 = 0
 		horn_timer		 = 0.0
 		horn_buttons	 = 0
+		spawn_time       = 0.0
 	}
 	
 	// The player's entity handle
@@ -62,6 +63,8 @@ class Ware_PlayerData
 	horn_timer		 	= null
 	// Used to track if the player is currently pressing the horn button while in a kart.
 	horn_buttons	 	= null
+	// Timestamp when player last respawned
+	spawn_time          = null
 }
 
 // Global variables
