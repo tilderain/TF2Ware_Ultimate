@@ -1,5 +1,4 @@
 local mode = RandomInt(0, 1)
-mode = 1
 
 minigame <- Ware_MinigameData
 ({
