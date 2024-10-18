@@ -17,14 +17,6 @@ minigame <- Ware_MinigameData
 
 endzone <- FindByName(null, "plugin_Bossgame2_WinArea")
 
-paths <-
-[
-	path1 <- ["erboss_p1a_block", "erboss_p1a_block_prop"],
-	path2 <- ["erboss_p1a_direct", "erboss_p1a_directprop"]
-]
-
-path <- RandomElement(paths)
-
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER)
@@ -34,11 +26,7 @@ function OnStart()
 	endzone.GetScriptScope().first <- true
 	endzone.ConnectOutput("OnStartTouch", "OnStartTouch")
 	
-	foreach(str in path)
-	{
-		for (local ent; ent = FindByName(ent, str);)
-			EntityAcceptInput(ent, "Disable")
-	}
+	EntityAcceptInput(FindByName(null, "ERBoss_InitRelay"), "Trigger")
 }
 
 function OnEndzoneTouch()
@@ -68,12 +56,6 @@ function OnEndzoneTouch()
 function OnEnd()
 {
 	endzone.DisconnectOutput("OnStartTouch", "OnStartTouch")
-	
-	foreach(str in path)
-	{
-		for (local ent; ent = FindByName(ent, str);)
-			EntityAcceptInput(ent, "Enable")
-	}
 }
 
 function CheckEnd()
