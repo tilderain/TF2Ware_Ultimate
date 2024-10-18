@@ -60,11 +60,17 @@ function OnStart()
 	else if (mode == 1)
 		train_count = Min(minigame_players.len(), 2)
 	
-	for (local i = 0; i < train_count; i++)
+	local i = 0
+	Ware_CreateTimer(function()
 	{
-		local player = RemoveRandomElement(minigame_players)
-		SpawnTrain(player.GetOrigin())
-	}
+		if (i++ < train_count)
+		{
+			local player = RemoveRandomElement(minigame_players)
+			SpawnTrain(player.GetOrigin())
+			return 0.08
+		}
+	}, 0.0)
+	
 }
 
 function SpawnTrain(pos)
@@ -121,8 +127,11 @@ function OnTakeDamage(params)
 		local scope = train.GetScriptScope()
 		if (!scope.played_sound)
 		{
-			local sound = RandomElement(horn_sounds)
-			train.EmitSound(sound)
+			if (horn_sounds.len() > 0)
+			{
+				local sound = RemoveRandomElement(horn_sounds)
+				train.EmitSound(sound)
+			}
 			scope.played_sound = true
 		}
 	}
