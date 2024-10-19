@@ -300,7 +300,7 @@ Ware_Location.rocketjump <-
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 
-Ware_Location.rocketjump2 <-
+Ware_Location.rocketjump_micro <-
 {
 	center = Vector(1940, 4780, -6490)
 	radius = 400
