@@ -240,13 +240,14 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 {
 	if (winner_count > 1)
 	{
-		Ware_ChatPrint(null, "{color}The winners each with {int} lives remaining:", TF_COLOR_DEFAULT, top_score) // NOTE: this should never happen
+		// NOTE: this should never happen
+		Ware_ChatPrint(null, "{color}The winners each with {int} {str} remaining:", TF_COLOR_DEFAULT, top_score == 1 ? "life" : "lives")
 		foreach (player in top_players)
 			Ware_ChatPrint(null, "> {player} {color}!", player, TF_COLOR_DEFAULT)
 	}
 	else if (winner_count == 1)
 	{
-		Ware_ChatPrint(null, "{player} {color}won with {int} lives remaining!", top_players[0], TF_COLOR_DEFAULT, top_score)
+		Ware_ChatPrint(null, "{player} {color}won with {int} {str} remaining!", top_players[0], TF_COLOR_DEFAULT, top_score, top_score == 1 ? "life" : "lives")
 	}	
 	else if (winner_count == 0)
 	{
