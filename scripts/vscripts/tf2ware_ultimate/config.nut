@@ -696,7 +696,11 @@ Ware_MeleeAttributeOverrides <-
 		"melee bounds multiplier" : 1,
 	},
 	// half-zatoichi
-	[357] = { "honorbound" : 0 },
+	[357] = 
+	{ 
+		"honorbound" : 0
+		"restore health on kill" : 0
+	},
 	// equalizer
 	[128] = 
 	{ 
