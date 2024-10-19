@@ -123,7 +123,7 @@ function OnBeginIntermission(is_boss)
 	}
 	
 	local holdtime = Ware_GetThemeSoundDuration("intro")
-	local text = format("This %s players are:\n", is_boss ? "bossgame's" : "minigame's")
+	local pre_text = format("This %s players are:\n", is_boss ? "bossgame's" : "minigame's")
 	local player_list = ""
 	
 	foreach(player in Wipeout_ValidPlayers)
@@ -141,7 +141,7 @@ function OnBeginIntermission(is_boss)
 		{
 			Ware_ShowScreenOverlay(player, overlay)
 			
-			text += player_list + format("You have %d %s remaining.", lives, lives == 1 ? "life" : "lives")
+			local text = pre_text + player_list + format("You have %d %s remaining.", lives, lives == 1 ? "life" : "lives")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
 			
 			local sound
@@ -169,7 +169,7 @@ function OnBeginIntermission(is_boss)
 		{
 			Ware_ShowScreenOverlay(player, null)
 			
-			text += player_list + (lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
+			local text = pre_text + player_list + (lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
 			
 			Ware_PlayGameSound(player, "intro")
