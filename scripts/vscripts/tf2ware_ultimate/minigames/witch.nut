@@ -230,7 +230,7 @@ function OnUpdate()
 	foreach (player in Ware_Players)
 	{
 		if (PlayerVoiceListener.IsPlayerSpeaking(player.entindex()))
-			StartleWitch(player)
+			StartleWitch(player, 2000.0)
 	}	
 }
 
