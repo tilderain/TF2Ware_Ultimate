@@ -33,6 +33,15 @@ function OnPrecache()
 
 function OnStart()
 {
+	for (local ent; ent = FindByClassname(ent, "trigger_push");)
+	{
+		ent.ValidateScriptScope()
+		ent.GetScriptScope().OnStartTouch <- OnTriggerStartTouch
+		ent.GetScriptScope().OnEndTouch <- OnTriggerEndTouch
+		ent.ConnectOutput("OnStartTouch", "OnStartTouch")
+		ent.ConnectOutput("OnEndTouch", "OnEndTouch")
+	}
+	
 	// put everyone in karts and freeze them
 	foreach (player in Ware_MinigamePlayers)
 	{
@@ -62,6 +71,24 @@ function OnStart()
 	}, 0.0)
 }
 
+function OnTriggerStartTouch()
+{
+	if (activator && activator.IsPlayer())
+	{
+		activator.AddCond(TF_COND_HALLOWEEN_KART_DASH)
+	}
+}
+
+function OnTriggerEndTouch()
+{
+	if (activator && activator.IsPlayer())
+	{
+		local vel = activator.GetAbsVelocity()
+		vel.z = Clamp(vel.z, 150, 1000)
+		activator.SetAbsVelocity(vel)
+	}
+}
+
 function OnUpdate()
 {
 	foreach (player in Ware_MinigamePlayers)
@@ -74,6 +101,18 @@ function OnUpdate()
 			Ware_PassPlayer(player, true)
 		}
 	}
+}
+
+function OnEnd()
+{
+	for (local ent; ent = FindByClassname(ent, "trigger_push");)
+	{
+		ent.DisconnectOutput("OnStartTouch", "OnStartTouch")
+		ent.DisconnectOutput("OnEndTouch", "OnEndTouch")
+	}
+	
+	foreach(player in Ware_MinigamePlayers)
+		player.RemoveCond(TF_COND_HALLOWEEN_KART_DASH)
 }
 
 function CheckEnd()
