@@ -21,10 +21,14 @@ mexican_standoff <- false
 game_over <- false
 shootout <- false
 sound_standoff <- "tf2ware_ultimate/mexican_standoff.mp3"
+sound_bell <- "player/taunt_sfx_bell_single.wav"
+sound_winner <- "player/taunt_bell.wav"
 
 function OnPrecache()
 {
 	PrecacheSound(sound_standoff)
+	PrecacheSound(sound_bell)
+	PrecacheSound(sound_winner)
 	PrecacheOverlay("hud/tf2ware_ultimate/minigames/wildwest_ready")
 	PrecacheOverlay("hud/tf2ware_ultimate/minigames/wildwest_shoot")
 }
@@ -148,7 +152,7 @@ function GiveGuns()
 	
 	local delay
 	if (mexican_standoff)
-		delay = RandomFloat(15.0, 45.0)
+		delay = RandomFloat(10.0, 30.0)
 	else
 		delay = RandomFloat(3.0, 10.0)
 	
@@ -160,9 +164,9 @@ function StartShootout()
 	shootout = true
 	
 	if (mexican_standoff)
-		Ware_PlaySoundOnAllClients(sound_standoff, 0.2, 100, SND_CHANGE_VOL)
+		Ware_PlaySoundOnAllClients(sound_standoff, 0.1, 100, SND_CHANGE_VOL)
 	else
-		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_CHANGE_VOL, 0.2)
+		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_CHANGE_VOL, 0.1)
 	
 	foreach (player in Ware_MinigamePlayers)
 	{
@@ -247,11 +251,14 @@ function StopShootout()
 	{
 		if (count > 3)
 			Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_CHANGE_VOL, 1.0)
-		
+			
+		Ware_PlaySoundOnAllClients(sound_bell)
 		PlacePlayers(final_players)
 	}
 	else
 	{
+		Ware_PlaySoundOnAllClients(sound_winner)
+		
 		if (count == 1)
 			Ware_ChatPrint(null, "{player}{color} wins as the best gunslinger!", final_players[0], TF_COLOR_DEFAULT)
 		else
