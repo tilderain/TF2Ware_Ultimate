@@ -248,22 +248,7 @@ function OnGameEvent_scorestats_accumulated_update(params)
 		SetPropFloat(GameRules, "m_flMapResetTime", Ware_MapResetTimer)
 		Ware_MapResetTimer = null
 	}
-		
-	// reset event callbacks
-	// Ware_Events should be going away automatically 
-	// as the events collection stores weak references, but it doesn't...
-	local events = Ware_Events
-	foreach (callbacks in [GameEventCallbacks, ScriptHookCallbacks])
-	{
-		foreach (event_name, scopes in callbacks)
-		{
-			local idx = scopes.find(events)
-			if (idx != null)
-				scopes.remove(idx)
-		}
-	}
-	delete ::Ware_Events
-
+	
 	if (Ware_Minigame) // when restarted mid-minigame
 	{
 		if ("OnCleanup" in Ware_MinigameScope) 

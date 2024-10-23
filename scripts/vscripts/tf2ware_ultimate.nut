@@ -17,7 +17,10 @@ IncludeScript("tf2ware_ultimate/location", ROOT)
 IncludeScript("tf2ware_ultimate/dev",      ROOT)
 IncludeScript("tf2ware_ultimate/main",     ROOT)
 
-::Ware_Events <- {}
+if ("Ware_Events" in ROOT)
+	Ware_Events.clear()
+else
+	::Ware_Events <- {}
 IncludeScript("tf2ware_ultimate/events", Ware_Events)
 __CollectGameEventCallbacks(Ware_Events)
 
