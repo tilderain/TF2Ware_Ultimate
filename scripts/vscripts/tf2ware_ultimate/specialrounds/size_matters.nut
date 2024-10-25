@@ -75,7 +75,7 @@ function Unstuck(player)
 		ignore = player
 	}
 	
-	DebugDrawBox(trace.start, trace.hullmin, trace.hullmax, 255, 255, 255, 15, 10)
+	// DebugDrawBox(trace.start, trace.hullmin, trace.hullmax, 255, 255, 255, 15, 10)
 	TraceHull(trace)
 	
 	if (!trace.hit)
@@ -91,7 +91,7 @@ function Unstuck(player)
 		trace.start = origin + vec
 		trace.end = origin + vec
 		
-		DebugDrawBox(trace.start, trace.hullmin, trace.hullmax, 255, 255, 255, 100, 30)
+		// DebugDrawBox(trace.start, trace.hullmin, trace.hullmax, 255, 255, 255, 100, 30)
 		TraceHull(trace)
 		if (!trace.hit)
 		{
@@ -102,7 +102,7 @@ function Unstuck(player)
 		trace.start = origin - vec
 		trace.end = origin - vec
 		
-		DebugDrawBox(trace.start, trace.hullmin, trace.hullmax, 255, 255, 255, 100, 30)
+		// DebugDrawBox(trace.start, trace.hullmin, trace.hullmax, 255, 255, 255, 100, 30)
 		TraceHull(trace)
 		if (!trace.hit)
 		{
