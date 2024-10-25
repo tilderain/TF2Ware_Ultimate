@@ -12,7 +12,10 @@ ang_zero <- QAngle()
 
 const TICKDT = 0.015 // assuming 66 tickrate
 
+const MASK_ALL                   = -1
+const MASK_SOLID_BRUSHONLY       = 16395
 const MASK_PLAYERSOLID_BRUSHONLY = 81931
+const MASK_SOLID 	             = 33570827
 
 const MAX_WEAPONS = 7
 
