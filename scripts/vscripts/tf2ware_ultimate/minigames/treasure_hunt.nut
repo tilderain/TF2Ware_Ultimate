@@ -36,7 +36,7 @@ minigame <- Ware_MinigameData
 	location       = treasure[0]
 	custom_overlay = "treasure_hunt_" + treasure[2]
 	
-	allow_scale = false
+	max_scale = 2.0
 })
 
 debug_spawns <- false

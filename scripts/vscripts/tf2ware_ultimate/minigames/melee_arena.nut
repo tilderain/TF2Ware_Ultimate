@@ -20,7 +20,7 @@ minigame <- Ware_MinigameData
 	}
 	
 	// small players fly into the air and i have no idea why - pokepasta
-	allow_scale = false
+	max_scale = 1.0
 })
 
 mode <- RandomInt(0, 5)

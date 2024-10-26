@@ -21,7 +21,7 @@ minigame <- Ware_MinigameData
 	custom_overlay = chosen_item[1]
 	thirdperson    = true
 	
-	allow_scale = false
+	max_scale = 1.5
 })
 
 pickup_sound <- "AmmoPack.Touch"

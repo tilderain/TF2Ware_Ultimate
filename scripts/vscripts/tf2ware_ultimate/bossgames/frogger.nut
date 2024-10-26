@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 	start_pass     = false
 	thirdperson    = true
 	
-	allow_scale = false
+	max_scale = 1.0
 })
 
 first <- true

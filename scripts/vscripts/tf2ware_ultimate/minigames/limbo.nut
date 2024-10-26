@@ -7,7 +7,7 @@ minigame <- Ware_MinigameData
 	location      = "boxarena"
 	music         = "limbo"
 	
-	allow_scale = false
+	max_scale = 2.0
 })
 
 goal_vectors <- null
@@ -33,7 +33,12 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SPY)
 	Ware_CreateTimer(@() Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit"), 0.1)
 	
-	local beam_height = 100.0
+	local highest_scale = 1.0
+	foreach(player in Ware_MinigamePlayers)
+		if (player.GetModelScale() > highest_scale)
+			highest_scale = player.GetModelScale()
+	
+	local beam_height = 100.0 * highest_scale
 	local beam = Ware_CreateEntity("env_beam")
 	beam.SetOrigin(Ware_MinigameLocation.center + Vector(-1000, 0, beam_height))
 	SetPropVector(beam, "m_vecEndPos", Ware_MinigameLocation.center + Vector(1000, 0, beam_height))

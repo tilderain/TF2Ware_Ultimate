@@ -16,7 +16,7 @@ minigame <- Ware_MinigameData
 	custom_overlay = "get_top"
 	start_pass     = false
 	
-	allow_scale = false
+	max_scale = 1.0
 })
 
 first <- true

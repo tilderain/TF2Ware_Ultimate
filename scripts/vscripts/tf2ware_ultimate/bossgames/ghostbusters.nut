@@ -27,7 +27,7 @@ minigame <- Ware_MinigameData
 		mp_teams_unbalance_limit = 0
 	}
 	
-	allow_scale = false
+	max_scale = 1.0
 })
 
 ghost_model <- "models/props_halloween/ghost.mdl"

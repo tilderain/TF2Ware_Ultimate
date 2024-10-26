@@ -1155,8 +1155,10 @@ function Ware_StartMinigameInternal(is_boss)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(1)
-		if (!Ware_Minigame.allow_scale)
-			Ware_SetPlayerScale(player, 1.0, 0.0, true)
+		
+		local max_scale = Ware_Minigame.max_scale
+		if (max_scale && player.GetModelScale() > max_scale)
+			Ware_SetPlayerScale(player, max_scale, 0.0, true)
 		player.RemoveCond(TF_COND_TAUNTING)
 
 		local scope = player.GetScriptScope()

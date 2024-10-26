@@ -9,7 +9,6 @@ class Ware_MinigameData
 		min_players     = 0
 		start_pass      = false
 		allow_damage    = false
-		allow_scale     = true
 		allow_suicide   = false
 		force_backstab  = false
 		start_freeze    = false
@@ -59,10 +58,8 @@ class Ware_MinigameData
 	start_pass		= null
 	// Is damage to other players allowed? Default is false
 	allow_damage	= null
-	// Are player scales from outside the minigame permitted?
-	// If not, this will set it to 1.0 and revert it after the minigame has ended. Default is true
-	// TODO: This probably makes more sense as max_scale and min_scale, but that'll require more specific minigame tuning. This is fine for now
-	allow_scale     = null
+	// Max player scale allowed in the minigame. If a player's scale is higher, it's clamped to max_scale and restored at the end. Default is null.
+	max_scale     = null
 	// Do suicides count for points? Default is false
 	allow_suicide   = null	
 	// Allow backstabs with any weapon
