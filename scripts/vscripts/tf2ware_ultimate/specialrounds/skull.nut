@@ -1,7 +1,7 @@
 special_round <- Ware_SpecialRoundData
 ({
 	name             = "Skull"
-	author           = "Mikusch, ficool2"
+	author           = ["Mikusch", "ficool2"]
 	description      = "Beware of the skull..."
 })
 

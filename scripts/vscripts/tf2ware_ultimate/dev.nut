@@ -126,6 +126,22 @@ Ware_DevCommands <-
 			Ware_ChatPrint(player, "Missing required scale parameter")
 		}
 	}
+	"credits": function(player, text)
+	{
+		local authors = []
+		foreach(k, v in Ware_Authors)
+		{
+			if (authors.find(k) == null)
+				authors.append(k)
+		}
+		authors.sort(@(a, b) Ware_Authors[b] <=> Ware_Authors[a])
+		
+		Ware_ChatPrint(player, Ware_Credits, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
+		
+		ClientPrint(player, HUD_PRINTCONSOLE, "TF2Ware Contributors:")
+		foreach(author in authors)
+			ClientPrint(player, HUD_PRINTCONSOLE, "* " + author)
+	}
 	"help" : function(player, text)
 	{
 		local cmds = []

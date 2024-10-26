@@ -239,6 +239,10 @@ if (!("Ware_Precached" in this))
 	
 	Ware_AnnotationIDs            <- 0
 	
+	// credits
+	Ware_Authors                  <- {}
+	Ware_Credits                  <- "{color}TF2Ware Ultimate {color}by ficool2 and pokemonPasta, based on \"{color}TF2Ware Universe{color}\" by SLAG.TF. See console for a full list of contributors."
+	
 	// this shuts up incursion distance warnings from the nav mesh
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
 }
@@ -313,8 +317,12 @@ function Ware_PrecacheNext()
 				{
 					if (overlay)
 						PrecacheOverlay(overlay)
-				}					
+				}
+				
+				Ware_AddAuthor(minigame.author)
 			}
+			else if ("special_round" in scope)
+				Ware_AddAuthor(scope.special_round.author)
 		}
 		catch (e)
 		{
@@ -335,6 +343,7 @@ function Ware_PrecacheNext()
 		
 	printf("[TF2Ware] Precached %d minigames, %d bossgames, %d special rounds\n", 
 		Ware_Minigames.len(), Ware_Bossgames.len(), Ware_SpecialRounds.len())
+	Ware_SetupCredits()
 	return null
 }
 
@@ -356,6 +365,27 @@ function Ware_PrecacheEverything()
 	// but it seems to crash the VM here if using nested IncludeScript
 	Ware_PrecacheGenerator = Ware_PrecacheNext()
 	EntityEntFire(World, "CallScriptFunction", "Ware_PrecacheStep")
+}
+
+function Ware_AddAuthor(author)
+{
+	local add_author = function(author){
+		foreach(k, v in Ware_Authors)
+		{
+			if (k == author)
+			{
+				Ware_Authors[author]++
+				return
+			}
+		}
+		Ware_Authors[author] <- 1
+	}
+	
+	if (typeof(author) == "array")
+		foreach(str in author)
+			add_author(str)
+	else
+		add_author(author)
 }
 
 function Ware_SetupLocations()

@@ -27,7 +27,7 @@ class Ware_SpecialRoundData
 	// Visual name
 	name             		 = null
 	// Who made this?
-	// Unused for now but might be used for credits in the future
+	// Used for credits, please format your username the same way for each special round you make. Use an array for multiple authors.
 	author           		 = null
 	// Description shown in chat
 	description      		 = null

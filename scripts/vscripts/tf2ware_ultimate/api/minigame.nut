@@ -38,7 +38,7 @@ class Ware_MinigameData
 	// Visual name
 	name			= null
 	// Who made the minigame?
-	// Unused for now but might be used for credits in the future
+	// Used for credits, please format your username the same way for each minigame you make. Use an array for multiple authors.
 	author			= null
 	// Description shown to people
 	// This can either be a string or an array of strings (when using missions)
