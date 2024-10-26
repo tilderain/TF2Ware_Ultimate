@@ -1352,7 +1352,7 @@ function Ware_FinishMinigameInternal()
 
 		if (restore_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
-		if (!Ware_Minigame.thirdperson)
+		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(0)
 		foreach (condition in Ware_Minigame.conditions)
 			player.RemoveCond(condition)
