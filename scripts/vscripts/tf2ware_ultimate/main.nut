@@ -343,7 +343,6 @@ function Ware_PrecacheNext()
 		
 	printf("[TF2Ware] Precached %d minigames, %d bossgames, %d special rounds\n", 
 		Ware_Minigames.len(), Ware_Bossgames.len(), Ware_SpecialRounds.len())
-	Ware_SetupCredits()
 	return null
 }
 
