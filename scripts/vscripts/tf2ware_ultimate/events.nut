@@ -337,6 +337,8 @@ function OnGameEvent_player_spawn(params)
 	
 	if (Ware_Players.find(player) == null)
 	{
+		Ware_ChatPrint(player, "Welcome to {color}TF2Ware Ultimate{color}! Type {color}!ware_credits{color} for more info.", COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_YELLOW, TF_COLOR_DEFAULT)
+		
 		MarkForPurge(player)
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
