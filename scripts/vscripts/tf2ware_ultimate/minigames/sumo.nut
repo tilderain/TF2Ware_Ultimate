@@ -24,6 +24,8 @@ minigame <- Ware_MinigameData
 		tf_halloween_kart_fast_turn_speed = 200
 		tf_halloween_kart_impact_force = "1.25f"
 	}
+	
+	max_scale = 1.0
 })
 
 function OnStart()

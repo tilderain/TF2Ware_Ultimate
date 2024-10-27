@@ -7,6 +7,8 @@ minigame <- Ware_MinigameData
 	music          = "urgent"
 	start_pass     = true
 	fail_on_death  = true
+	
+	max_scale = 1.0
 })
 
 beam_model <- "sprites/laserbeam.vmt"

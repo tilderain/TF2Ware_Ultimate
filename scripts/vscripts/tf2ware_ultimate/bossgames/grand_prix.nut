@@ -10,6 +10,8 @@ minigame <- Ware_MinigameData
 	allow_damage = true
 	collisions   = true
 	start_freeze = true
+	
+	max_scale = 1.5
 })
 
 endzone_vector <- Vector(-1250, 4450, -5960)

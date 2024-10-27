@@ -11,6 +11,8 @@ minigame <- Ware_MinigameData
 	allow_damage  = true
 	friendly_fire = false
 	collisions    = true
+	
+	max_scale = 1.5
 })
 
 loadouts <-

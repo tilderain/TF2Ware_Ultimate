@@ -14,6 +14,8 @@ minigame <- Ware_MinigameData
 	{
 		tf_avoidteammates = 0
 	}
+	
+	max_scale = 1.5
 })
 
 function OnTeleport(players)
