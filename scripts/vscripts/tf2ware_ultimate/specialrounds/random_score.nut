@@ -11,7 +11,7 @@ random_score <- 0
 function OnBeginIntermission(is_boss)
 {
 	random_score = RandomInt(1, 20)
-	if (RandomInt(0, 14) == 0)
+	if (RandomInt(0, 19) == 0)
 		random_score *= -1
 	
 	Ware_ShowText(Ware_Players, CHANNEL_MINIGAME, format("The next %s will be worth %d point%s", 
