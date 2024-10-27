@@ -1819,18 +1819,23 @@ function Ware_OnPlayerSay(player, text)
 	if (startswith(text, "!ware_"))
 	{
 		local steamid3 = GetPlayerSteamID3(player)
-		if (steamid3 in DEVELOPER_STEAMID3)
+		local len = text.find(" ")
+		local cmd = len != null ? text.slice(6, len) : text.slice(6)
+		if (steamid3 in DEVELOPER_STEAMID3 && cmd in Ware_DevCommands)
 		{
-			local len = text.find(" ")
-			local cmd = len != null ? text.slice(6, len) : text.slice(6)
-			if (cmd in Ware_DevCommands)
-				Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "")
-			else
-				Ware_ChatPrint(player, "Unknown command '{str}'", cmd)
+			Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "")
+		}
+		else if (cmd in Ware_PublicCommands)
+		{
+			Ware_PublicCommands[cmd](player, len != null ? text.slice(len+1) : "")
+		}
+		else if (cmd in Ware_DevCommands)
+		{
+			Ware_ChatPrint(player, "You do not have access to this command")
 		}
 		else
 		{
-			Ware_ChatPrint(player, "You do not have access to this command")
+			Ware_ChatPrint(player, "Unknown command '{str}'", cmd)
 		}
 		return false
 	}

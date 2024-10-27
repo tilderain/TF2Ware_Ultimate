@@ -126,6 +126,24 @@ Ware_DevCommands <-
 			Ware_ChatPrint(player, "Missing required scale parameter")
 		}
 	}
+	"help" : function(player, text)
+	{
+		local cmds = []
+		foreach (name, func in Ware_DevCommands)
+			if (name != "help")
+				cmds.append(name)
+		foreach(name, func in Ware_PublicCommands)
+			if (name != "help" && !(name in Ware_DevCommands))
+				cmds.append(name)
+		cmds.sort(@(a, b) a <=> b)
+		foreach (name in cmds)
+			ClientPrint(player, HUD_PRINTCONSOLE, "* " + name)
+		Ware_ChatPrint(player, "See console for list of commands")
+	}
+}
+
+Ware_PublicCommands <-
+{
 	"credits": function(player, text)
 	{
 		local authors = []
@@ -145,7 +163,7 @@ Ware_DevCommands <-
 	"help" : function(player, text)
 	{
 		local cmds = []
-		foreach (name, func in Ware_DevCommands)
+		foreach (name, func in Ware_PublicCommands)
 			if (name != "help")
 				cmds.append(name)
 			
