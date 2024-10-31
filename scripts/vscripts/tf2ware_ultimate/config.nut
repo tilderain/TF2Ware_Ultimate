@@ -300,6 +300,7 @@ Ware_FakeSpecialRounds <-
 	"The Giant Rat Who Makes All Of The Rules"
 	"Build Your Own Minigame"
 	"Rules of Nature"
+	"Hey Buddy I Think You Got The Wrong Door"
 		
 	// from forum post
 	"Mandrill Maze Mayhem"
@@ -395,8 +396,6 @@ Ware_Themes <-
 			// if any are 0.0 they arent used for intermission timings yet
 			// some like "results" will never be greater than 0.0 as it stops playing automatically on restart
 			"boss":             4.0
-			"break":            0.0
-			"break_end":        0.0
 			"failure":          2.0
 			"failure_all":      2.0
 			"gameclear":        5.0 // these two dont use the duration, it's always 5 seconds after this when results play
@@ -407,7 +406,7 @@ Ware_Themes <-
 			"results":          0.0
 			"special_round":    15.2 // "Feline Fever ~ Jimmy T - Intro Cutscene" from Warioware Smooth Moves
 			"speedup":          4.5
-			"victory":          2.000
+			"victory":          2.0
 		}
 	},
 	
