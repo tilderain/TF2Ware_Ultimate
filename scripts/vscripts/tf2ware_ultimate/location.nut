@@ -448,6 +448,22 @@ Ware_Location.typing <-
 	cameras = ["DRBoss_CloseupCamera_Point", "DRBoss_DescentCamera_Point", "DRBoss_SpiralCamera_Point"]
 }
 
+Ware_Location.boxingring <-
+{
+	center      = Vector(-800, -400, -5645)
+	Teleport = function(players) 
+	{ 
+		local red_players  = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED)
+		local blue_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_BLUE)
+		local center_left  = center + Vector(300, 0, 0)
+		local center_right = center + Vector(-400, 0, 0)
+		local width   = 800.0
+		local spacing = 60.0
+		Ware_TeleportPlayersRow(red_players, center_left, QAngle(0, 180, 0), width, spacing, spacing)
+		Ware_TeleportPlayersRow(blue_players, center_right, ang_zero, width, spacing, spacing)
+	}
+}
+
 // == Teleport helpers ==
 
 // Place the given array of players in a circle
