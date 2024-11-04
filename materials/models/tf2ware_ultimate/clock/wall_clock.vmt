@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/tf2ware_ultimate/clock/wall_clock"
+	$halflambert 1
+}
