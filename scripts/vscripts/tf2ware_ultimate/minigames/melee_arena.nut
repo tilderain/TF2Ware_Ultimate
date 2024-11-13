@@ -1,11 +1,11 @@
-mode <- RandomInt(0, 5)
+mode <- RandomInt(0, 4)
 
 minigame <- Ware_MinigameData
 ({
 	name           = "Melee Arena"
 	author         = "ficool2"
 	description    = "Survive!"
-	location       = mode == 1 ? "boxingring" : "circlepit"
+	location       = "circlepit"
 	duration       = 10.9
 	end_delay      = 1.0
 	music          = "keepitup"
@@ -32,14 +32,12 @@ function OnStart()
 	if (mode == 0)
 		Ware_SetGlobalLoadout(TF_CLASS_MEDIC, null, attributes)
 	else if (mode == 1)
-		Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS, "Killing Gloves of Boxing", attributes)
-	else if (mode == 2)
 		Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null, attributes)
-	else if (mode == 3)
+	else if (mode == 2)
 		Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Hot Hand", attributes)
-	else if (mode == 4)
+	else if (mode == 3)
 		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, null, attributes)
-	else if (mode == 5)
+	else if (mode == 4)
 		Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, "Gunslinger", attributes)
 }
 
