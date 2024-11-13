@@ -32,7 +32,10 @@ function OnTeleport(players)
 
 function OnStart()
 {
-	minute = (RandomInt(0, 12) * 5) % 60
+	if (RandomInt(1, 10) > 1)
+		minute = (RandomInt(0, 6) * 10) % 60
+	else
+		minute = (RandomInt(0, 12) * 5) % 60
 	hour = RandomInt(0, 12) % 12
 	
 	local h = hour.tostring()
