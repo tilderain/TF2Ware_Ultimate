@@ -23,11 +23,11 @@ function OnPrecache()
 
 function OnStart()
 {
-	local spacing = 750.0
+	local spacing = 1000.0
 	for (local i = 0; i < 2; i++)
 	{
 		SpawnLaser(RandomElement(axes), spacing)
-		spacing += RandomFloat(500.0, 800.0)
+		spacing += RandomFloat(800.0, 1200.0)
 	}
 }
 
