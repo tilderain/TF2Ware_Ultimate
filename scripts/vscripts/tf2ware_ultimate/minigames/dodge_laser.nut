@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Dodge the Lasers"
 	author         = "ficool2"
 	description    = "Get on a Platform!"
-	duration       = 5.0
+	duration       = 6.0
 	music          = "urgent"
 	start_pass     = true
 	fail_on_death  = true
