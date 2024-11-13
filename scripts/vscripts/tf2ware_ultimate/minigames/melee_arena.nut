@@ -6,7 +6,7 @@ minigame <- Ware_MinigameData
 	author         = "ficool2"
 	description    = "Survive!"
 	location       = mode == 1 ? "boxingring" : "circlepit"
-	duration       = 30.9
+	duration       = 10.9
 	end_delay      = 1.0
 	music          = "keepitup"
 	custom_overlay = "survive"
