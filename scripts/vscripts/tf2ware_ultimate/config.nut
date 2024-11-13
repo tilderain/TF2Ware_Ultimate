@@ -13,6 +13,7 @@ Ware_Minigames <-
 	"avoid_props"     
 	"avoid_trains"    
 	"backstab"        
+	"basketball"
 	"bombs"           
 	"break_barrel"
 	"break_box"
@@ -89,7 +90,6 @@ Ware_Minigames <-
 
 Ware_Bossgames <-
 [
-	"basketball"
 	"beep_block"
 	"cuddly_heavies"
 	"escape_factory"
@@ -626,6 +626,7 @@ Ware_MinigameMusic <-
 	"letsgetquirky" 
 	"limbo"
 	"makemegroove" 
+	"march"
 	"moomoofarm"
 	"morning" 
 	"nearend" 
@@ -657,7 +658,6 @@ Ware_MinigameMusic <-
 
 Ware_BossgameMusic <-
 [
-	"basketball"
 	"beepblockskyway"
 	"beepblockskyway-twelve"
 	"cuddly"

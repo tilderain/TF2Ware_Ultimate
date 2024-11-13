@@ -2,11 +2,11 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Basketball"
 	author         = "ficool2"
-	description    = "Score 7 Goals!"
-	custom_overlay = "score_goals_7"
-	duration       = 31.4
+	description    = "Score a Goal!"
+	custom_overlay = "score_goal"
+	duration       = 7.0
 	location       = "ballcourt"
-	music          = "basketball"
+	music          = "march"
 	start_pass     = false
 })
 
@@ -26,7 +26,6 @@ function OnStart()
 		// make grenades pass through
 		player.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 		SetPropInt(player, "m_takedamage", DAMAGE_NO)
-		Ware_GetPlayerMiniData(player).points <- 0
 	}
 	
 	EntFire("boss4_door", "Unlock")
@@ -49,8 +48,7 @@ function OnHoopTouch()
 	if (owner)
 	{	
 		EmitSoundOnClient(Ware_MinigameScope.hoop_sound, owner)
-		if (++Ware_GetPlayerMiniData(owner).points >= 7)
-			Ware_PassPlayer(owner, true)
+		Ware_PassPlayer(owner, true)
 	}
 	
 	activator.Kill()
@@ -63,12 +61,6 @@ function OnUpdate()
 		MarkForPurge(grenade)
 		grenade.RemoveSolidFlags(FSOLID_TRIGGER)
 		grenade.KeyValueFromString("classname", "ware_projectile_pipe")
-	}
-	
-	foreach (player in Ware_MinigamePlayers)
-	{
-		if (Ware_GetPlayerAmmo(player, TF_AMMO_PRIMARY) == 0)
-			SetPropInt(player, "m_nImpulse", 101)
 	}
 }
 
