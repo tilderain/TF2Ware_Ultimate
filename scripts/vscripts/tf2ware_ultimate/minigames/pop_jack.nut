@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name          = "Pop the JACK"
 	author        = "ficool2"
 	description   = "Hit the JACK until it pops!"
-	duration      = 7.3
+	duration      = 8.3
 	location      = "boxarena"
 	music         = "drumdance"
 	convars       =
