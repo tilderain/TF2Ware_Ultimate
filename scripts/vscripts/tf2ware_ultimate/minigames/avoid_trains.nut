@@ -69,7 +69,7 @@ function OnStart()
 			SpawnTrain(player.GetOrigin())
 			return 0.08
 		}
-	}, 0.0)
+	}, 1.0)
 	
 }
 
