@@ -58,22 +58,22 @@ Ware_DevCommands <-
 	}
 	"shownext": function(player, text)
 	{
-		local values = {
-			Ware_DebugForceMinigame     = Ware_DebugForceMinigame
-			Ware_DebugForceMinigameOnce = Ware_DebugForceMinigameOnce
-			Ware_DebugForceBossgame     = Ware_DebugForceBossgame
-			Ware_DebugForceBossgameOnce = Ware_DebugForceBossgameOnce
-			Ware_DebugNextTheme         = Ware_DebugNextTheme
-			Ware_DebugForceTheme        = Ware_DebugForceTheme
-			Ware_DebugNextSpecialRound  = Ware_DebugNextSpecialRound
-		}
-		// why do these print in a different order than the table???
-		foreach(k, v in values)
+		local vars = [
+			"Ware_DebugForceMinigame",
+			"Ware_DebugForceMinigameOnce",
+			"Ware_DebugForceBossgame",
+			"Ware_DebugForceBossgameOnce",
+			"Ware_DebugNextTheme",
+			"Ware_DebugForceTheme",
+			"Ware_DebugNextSpecialRound"
+		]
+		foreach(var in vars)
 		{
-			if (typeof(v) == "string")
-				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = \"%s\"", k, v))
-			else if (typeof(v) == "bool")
-				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = %s", k, v ? "true" : "false"))
+			local value = ROOT[var]
+			if (typeof(value) == "string")
+				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = \"%s\"", var, value))
+			else if (typeof(value) == "bool")
+				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = %s", var, value ? "true" : "false"))
 		}
 		Ware_ChatPrint(player, "Values printed to console.")
 	}
