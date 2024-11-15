@@ -56,6 +56,27 @@ Ware_DevCommands <-
 			Ware_DebugNextSpecialRound = ""
 		Ware_ChatPrint(player, "Forced next special round to '{str}'", Ware_DebugNextSpecialRound)
 	}
+	"shownext": function(player, text)
+	{
+		local values = {
+			Ware_DebugForceMinigame     = Ware_DebugForceMinigame
+			Ware_DebugForceMinigameOnce = Ware_DebugForceMinigameOnce
+			Ware_DebugForceBossgame     = Ware_DebugForceBossgame
+			Ware_DebugForceBossgameOnce = Ware_DebugForceBossgameOnce
+			Ware_DebugNextTheme         = Ware_DebugNextTheme
+			Ware_DebugForceTheme        = Ware_DebugForceTheme
+			Ware_DebugNextSpecialRound  = Ware_DebugNextSpecialRound
+		}
+		// why do these print in a different order than the table???
+		foreach(k, v in values)
+		{
+			if (typeof(v) == "string")
+				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = \"%s\"", k, v))
+			else if (typeof(v) == "bool")
+				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = %s", k, v ? "true" : "false"))
+		}
+		Ware_ChatPrint(player, "Values printed to console.")
+	}
 	"restart" : function(player, text)
 	{
 		SetConvarValue("mp_restartgame_immediate", 1)
