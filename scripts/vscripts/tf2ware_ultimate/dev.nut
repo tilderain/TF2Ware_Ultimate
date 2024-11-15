@@ -177,7 +177,7 @@ Ware_PublicCommands <-
 		
 		Ware_ChatPrint(player, Ware_Credits, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
 		
-		ClientPrint(player, HUD_PRINTCONSOLE, "TF2Ware Contributors:")
+		ClientPrint(player, HUD_PRINTCONSOLE, "TF2Ware Ultimate Contributors:")
 		foreach(author in authors)
 			ClientPrint(player, HUD_PRINTCONSOLE, "* " + author)
 	}
