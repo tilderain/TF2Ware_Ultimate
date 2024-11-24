@@ -935,11 +935,8 @@ function Ware_BeginIntermissionInternal(is_boss)
 	{
 		if (Ware_DebugOldTheme == "")
 			Ware_DebugOldTheme = Ware_Theme.theme_name
-		
-		if (Ware_DebugForceTheme == "default")
-			Ware_SetTheme("_default")
-		else
-			Ware_SetTheme(Ware_DebugForceTheme)
+
+		Ware_SetTheme(Ware_DebugForceTheme)
 	}
 	else if (Ware_DebugOldTheme != "")
 	{

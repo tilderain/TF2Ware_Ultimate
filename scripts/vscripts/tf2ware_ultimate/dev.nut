@@ -33,7 +33,13 @@ Ware_DevCommands <-
 	{
 		local args = split(text, " ")
 		if (args.len() >= 1)
-			Ware_DebugNextTheme = args[0]
+		{
+			local theme = args[0]
+			if (theme == "default" || theme == "tf2ware_classic")
+				Ware_DebugNextTheme = "_" + theme
+			else
+				Ware_DebugNextTheme = theme
+		}
 		else
 			Ware_DebugNextTheme = ""
 		Ware_ChatPrint(player, "Setting next theme to '{str}'", Ware_DebugNextTheme)
@@ -42,7 +48,13 @@ Ware_DevCommands <-
 	{
 		local args = split(text, " ")
 		if (args.len() >= 1)
-			Ware_DebugForceTheme = args[0]
+		{
+			local theme = args[0]
+			if (theme == "default" || theme == "tf2ware_classic")
+				Ware_DebugForceTheme = "_" + theme
+			else
+				Ware_DebugForceTheme = theme
+		}
 		else
 			Ware_DebugForceTheme = ""
 		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
