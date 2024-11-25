@@ -33,6 +33,12 @@ text_colors <-
 	"RED"
 	"YELLOW" // yellow is more distinguishable than green for colorblind players
 	"BLUE"
+	"LIME"
+	"GREEN"
+	"BLACK"
+	"MAGENTA"
+	"CYAN"
+	"ORANGE"
 ]
 
 function OnPrecache()
@@ -44,7 +50,7 @@ function OnPrecache()
 function OnStart()
 {
 	local text_idx   = RandomIndex(text_colors)
-	local visual_idx = RandomIndex(text_colors)
+	local visual_idx = RandomIndex(colors)
 	
 	text_color = text_colors[text_idx]
 	visual_color = text_colors[visual_idx]
