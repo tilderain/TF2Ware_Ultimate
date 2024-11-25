@@ -49,7 +49,6 @@ inactive_blocks <- active_blocks == green_blocks ? yellow_blocks : green_blocks
 endzone <- FindByName(null, "plugin_Bossgame5_WinArea")
 tele1   <- FindByName(null, "BeepBlock_Tele1")
 tele2   <- FindByName(null, "BeepBlock_Tele2")
-ramp    <- FindByName(null, "BeepBlock_RampTrigger")
 
 function OnPrecache()
 {
