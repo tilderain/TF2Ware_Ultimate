@@ -4,13 +4,14 @@ minigame <- Ware_MinigameData
 	author         = "ficool2"
 	description    = "Deploy your Parachute!"
 	music          = "falling"
-	duration       = 3.5
+	duration       = 4.0
 	end_delay      = 0.5
 	location       = "sumobox"
 	custom_overlay = "deploy_parachute"
 	start_pass     = true
 	fail_on_death  = true
 	thirdperson    = true
+	start_freeze   = true
 	max_scale = 2.0
 })
 
