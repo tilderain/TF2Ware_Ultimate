@@ -1,6 +1,6 @@
 UnlitGeneric
 {
-	$basetexture hud/tf2ware_ultimate/minigames/say_word
+	$basetexture hud/tf2ware_ultimate/minigames/type_word
 	$basetexturetransform "center .5 .2 scale 3 14 rotate 0 translate 0 0"
 
     $translucent 1
