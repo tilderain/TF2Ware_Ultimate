@@ -33,7 +33,6 @@ text_colors <-
 	"RED"
 	"YELLOW" // yellow is more distinguishable than green for colorblind players
 	"BLUE"
-	"LIME"
 	"GREEN"
 	"BLACK"
 	"MAGENTA"
