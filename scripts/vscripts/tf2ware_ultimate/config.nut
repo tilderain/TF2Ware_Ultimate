@@ -128,7 +128,7 @@ Ware_SpecialRounds <-
 	"random_score"
 	"reversed_text"
 	"simon"
-	"size_matters"
+	//"size_matters" // TODO fix stuck issues
 	"skull"
 	"slow_mo"
 	"team_battles"
