@@ -121,6 +121,45 @@ Ware_DevCommands <-
 			Ware_ChatPrint(player, "No minigame is currently running.")
 		}
 	}
+	"remove": function(player, text)
+	{
+		local remove_target = function(target, arrs)
+		{
+			local removals = 0
+			foreach(arr in arrs)
+			{
+				local idx = arr.find(target)
+				if (idx != null)
+				{
+					arr.remove(idx)
+					removals++
+				}
+			}
+			if (removals > 0)
+				Ware_ChatPrint(player, "Successfully removed {str} from {int} arrays", target, removals)
+			else
+				Ware_ChatPrint(player, "Failed to remove {str} from any arrays", target)
+		}
+		
+		local args = split(text, " ")
+		if (args.len() > 0)
+		{
+			local target = args[1]
+			switch (args[0]) {
+				case "mini":
+					remove_target(target, [Ware_Minigames, Ware_MinigameRotation])
+					break
+				case "boss":
+					remove_target(target, [Ware_Bossgames, Ware_BossgameRotation])
+					break
+				case "special":
+					remove_target(target, [Ware_SpecialRounds, Ware_SpecialRoundRotation])
+					break
+			}
+		}
+		else
+			Ware_ChatPrint(player, "Arguments: [mini/boss/special] [name]")
+	}
 	"givescore" : function(player, text)
 	{
 		local args = split(text, " ", false)
