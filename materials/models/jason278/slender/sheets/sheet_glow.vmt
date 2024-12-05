@@ -2,9 +2,8 @@ UnlitGeneric
 {
 	$basetexture vgui/white
 	$nofog 1
-	$nodecal 1
 	
-	$flags_default 67125252
+	$flags_default 16388
 	$flags_mask 4 // nodraw
 	$temp 0
 	$zero 0

@@ -139,12 +139,13 @@ function OnStart()
 		local info = RandomElement(group)
 		local page = Ware_SpawnEntity("prop_dynamic_override",
 		{
-			origin = Ware_MinigameLocation.center + info[0],
-			angles = QAngle(0, info[1], 0),
-			model = page_model,
-			solid = SOLID_BBOX,
-			skin = i,
-			disableshadows = true,
+			origin  = Ware_MinigameLocation.center + info[0]
+			angles  = QAngle(0, info[1], 0)
+			model   = page_model
+			solid   = SOLID_BBOX
+			skin    = i
+			teamnum = TF_TEAM_RED
+			disableshadows = true
 		})
 		page.SetTeam(TF_TEAM_RED) // glow only shows to survivors
 		page.SetModelScale(1.1, 0.0) // dont't scale collision

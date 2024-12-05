@@ -1,4 +1,30 @@
-"vertexlitGeneric"
+VertexlitGeneric
 {
-	"$basetexture" "models/jason278/slender/sheets/sheet_8"
+	$basetexture models/jason278/slender/sheets/sheet_8
+	$no_draw 1
+	
+	$flags_default 4
+	$flags_mask 4 // nodraw
+	$match 1
+	$temp 0
+	
+	Proxies
+	{
+		PlayerTeamMatch
+		{
+			resultVar $match
+		}
+		Multiply
+		{
+			srcVar1	  $flags_mask
+			srcVar2	  $match
+			resultVar $temp
+		}
+		Subtract
+		{
+			srcVar1   $flags_default
+			srcVar2	  $temp
+			resultVar $flags
+		}
+	}
 }
