@@ -58,7 +58,7 @@ function OnUpdate()
 			if (monoculus == other_monoculus)
 				continue
 				
-			if (VectorDistance(monoculus.GetOrigin(), other_monoculus.GetOrigin() < 80.0))
+			if (VectorDistance(monoculus.GetOrigin(), other_monoculus.GetOrigin()) < 80.0)
 			{
 				monoculus.Teleport(
 					true, Ware_MinigameLocation.center + Vector(0, 0, 256),
