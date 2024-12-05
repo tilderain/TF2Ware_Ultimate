@@ -7,9 +7,7 @@ minigame <- Ware_MinigameData
 	location      = "circlepit"
 	music         = "actfast"
 	min_players   = 2
-	start_pass    = true
 	start_freeze  = true
-	fail_on_death = true
 	collisions    = true
 	convars       = 
 	{
@@ -42,4 +40,5 @@ function OnPlayerTouch(player, other_player)
 	other_player.EmitSound(bump_sound)
 	other_player.SetAbsVelocity(other_player.GetAbsVelocity() + Vector(0, 0, 600))
 	Ware_PushPlayerFromOther(other_player, player, 600.0)
+	Ware_PassPlayer(player, true)
 }
