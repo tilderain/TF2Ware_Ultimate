@@ -136,7 +136,7 @@ Ware_DevCommands <-
 				}
 			}
 			if (removals > 0)
-				Ware_ChatPrint(player, "Successfully removed {str} from {int} arrays", target, removals)
+				Ware_ChatPrint(player, "Successfully removed {str} from {int} array{str}", target, removals, removals = 1 ? "" : "s")
 			else
 				Ware_ChatPrint(player, "Failed to remove {str} from any arrays", target)
 		}
