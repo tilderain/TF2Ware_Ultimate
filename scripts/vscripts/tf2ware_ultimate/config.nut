@@ -118,7 +118,7 @@ Ware_SpecialRounds <-
 	"fov"
 	"inclinity_problem"
 	"inverted_control"
-	"invisible"
+	//"invisible" // TODO need a better performance implementation
 	"low_gravity"
 	"math_only"
 	"no_movingback"
