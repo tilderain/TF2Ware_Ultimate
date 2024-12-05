@@ -5,7 +5,7 @@ minigame <- Ware_MinigameData
 	description   = "Don't startle the witch!"
 	duration      = 15.0
 	end_delay     = 1.0
-	music         = "witch"
+	music         = "witchhour"
 	start_pass    = true
 	fail_on_death = true
 	allow_damage  = true

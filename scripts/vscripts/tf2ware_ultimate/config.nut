@@ -655,7 +655,7 @@ Ware_MinigameMusic <-
 	"underwater"
 	"urgent"
 	"wildwest"
-	"witch"
+	"witchhour"
 ]
 
 Ware_BossgameMusic <-
