@@ -109,7 +109,7 @@ Ware_DevCommands <-
 		Ware_DebugStop = false
 		Ware_ChatPrint(player, "Resuming...")
 	}
-	"end": function(player, text)
+	"end" : function(player, text)
 	{
 		if (Ware_Minigame)
 		{
@@ -117,7 +117,29 @@ Ware_DevCommands <-
 			Ware_EndMinigame()
 		}
 		else
+		{
 			Ware_ChatPrint(player, "No minigame is currently running.")
+		}
+	}
+	"givescore" : function(player, text)
+	{
+		local args = split(text, " ", false)
+		if (args.len() > 0)
+		{
+			local arg = 0
+			local target = player
+			if (args.len() > 1)
+				target = Ware_FindPlayerByName(args[arg++])
+			printl(target)
+			if (target)
+				Ware_GetPlayerData(target).score += args[arg].tointeger()
+			else
+				Ware_ChatPrint(player, "Player not found")
+		}
+		else
+		{
+			Ware_ChatPrint(player, "Arguments: [player name] <score>")
+		}
 	}
 	"run" : function(player, text)
 	{

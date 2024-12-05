@@ -524,6 +524,18 @@ function Ware_GetValidPlayers()
 	}
 }
 
+// Finds a player whose name contains the given string
+function Ware_FindPlayerByName(name)
+{
+	local name_lower = name.tolower()
+	foreach (player in Ware_Players)
+	{
+		if (GetPlayerName(player).tolower().find(name_lower) != null)
+			return player
+	}
+	return null
+}
+
 // Gets a list of players in a minigame sorted by their score
 function Ware_GetSortedScorePlayers(reverse)
 {
