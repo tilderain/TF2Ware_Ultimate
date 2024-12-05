@@ -7,7 +7,7 @@ minigame <- Ware_MinigameData
 	music       = "wildwest"
 	convars     =
 	{
-		phys_pushscale = 2
+		phys_pushscale = 0.05
 	}
 })
 
