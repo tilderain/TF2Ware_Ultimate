@@ -245,6 +245,16 @@ function VectorFormat(vec)
 	return format("Vector(%g, %g, %g)", vec.x, vec.y, vec.z)
 }
 
+// Create an array with integers in a range (inclusive)
+function FillArray(a, b)
+{
+	local arr = []
+	for (local i = a; i <= b; i++)
+		arr.append(i)
+	
+	return arr
+}
+
 // Randomly shuffle up an array
 function Shuffle(arr)
 {

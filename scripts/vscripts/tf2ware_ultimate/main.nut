@@ -208,6 +208,7 @@ Ware_MinigameEnded        <- false
 Ware_MinigameTopScorers   <- []
 Ware_MinigamesPlayed	  <- 0
 Ware_BossgamesPlayed      <- 0
+Ware_PreviousMinigames    <- []
 
 // dunno where to put this
 Ware_RoundEndMusicTimer   <- null
@@ -1358,6 +1359,8 @@ function Ware_FinishMinigameInternal()
 	Ware_MinigamesPlayed++
 	if (Ware_Minigame.boss)
 		Ware_BossgamesPlayed++
+	
+	Ware_PreviousMinigames.append(clone(Ware_Minigame))
 	
 	foreach (name, value in Ware_MinigameSavedConvars)
 		SetConvarValue(name, value)

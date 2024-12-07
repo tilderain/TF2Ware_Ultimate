@@ -464,6 +464,26 @@ Ware_Location.boxingring <-
 	}
 }
 
+Ware_Location.inventoryday <-
+{
+	center = Vector(1340, 3960, -11630)
+	radius = 800.0
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersCircle(players, center, radius)
+	}
+}
+
+Ware_Location.abcdeathpit <-  // NOTE: Players can get stuck if collisions are on (they will still die though)
+{
+	center = Vector(128, 1160, -4000)
+	radius = 1.0
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersCircle(players, center, radius)
+	}
+}
+
 // == Teleport helpers ==
 
 // Place the given array of players in a circle

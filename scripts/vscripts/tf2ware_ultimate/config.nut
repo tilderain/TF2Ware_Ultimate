@@ -81,6 +81,7 @@ Ware_Minigames <-
 	"taunt_kill"      
 	"touch_sky"       
 	"treasure_hunt"   
+	"trivia"
 	"type_color"
 	"type_time"
 	"type_word"        
@@ -829,7 +830,7 @@ Ware_MeleeAttributeOverrides <-
 
 // keep updated with latest map version suffix
 // also remember to update the suffixes of the files in /maps
-const WARE_MAPVERSION = "b8a"
+const WARE_MAPVERSION = "b8b"
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
 const WARE_MUSICVERSION = 1
