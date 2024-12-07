@@ -361,7 +361,7 @@ function OnCleanup()
 		Ware_PlaySoundOnAllClients(sound_standoff, 1.0, 100, SND_STOP)
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	 return game_over
 }

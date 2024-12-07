@@ -61,23 +61,39 @@ class Ware_SpecialRoundData
 	// e.g. Normally Ware_Speedup calls Ware_BeginIntermission at the end.
 	//      If you include OnSpeedup in the scope but don't call Ware_BeginIntermission or something else in the gameplay loop, the game will get stuck after speedup.
 	
-	// GetMinigame(is_boss)       - Replaces the minigame selection process in Ware_StartMinigame. Return a minigame name for it to be attempted to be selected.
+	// OnPrecache()               - Ware_PrecacheNext checks all special round scopes for OnPrecache when the map is loaded and calls any found. 
+	//                            - Use this if you need to precache anything.
+	cb_on_precache             = null
+	// OnStart()                  - Called when this special round begins.
+	cb_on_start                = null
+	// OnUpdate()                 - Called by Ware_OnUpdate every frame.
+	cb_on_update               = null
+	// OnEnd()                    - Called when this special round ends.
+	cb_on_end                  = null
+	// GetMinigame(is_boss)       - Replaces the minigame selection process in Ware_StartMinigame. 
+	//                            - Return a minigame name for it to be attempted to be selected.
 	cb_get_minigame            = null
-	// GetOverlay2()              - Replaces the default secondary overlay texture in Ware_ShowScreenOverlay2 (see player.nut). Return an overlay texture for it to be set.
+	// OnMinigameStart()          - Called by Ware_StartMinigame when a minigame starts. 
+	//                            - This is after a minigame has been chosen, so you can refer to Ware_Minigame and similar.
+	cb_on_minigame_start       = null
+	// OnMinigameEnd()            - Called by Ware_EndMinigame when a minigame ends. 
+	//                            - This is before the minigame is cleaned up, so you can still refer to Ware_Minigame and similar.
+	cb_on_minigame_end         = null
+	// GetOverlay2()              - Replaces the default secondary overlay texture in Ware_ShowScreenOverlay2 (see player.nut). 
+	//                            - Return an overlay texture for it to be set.
 	cb_get_overlay2            = null
-	// GetPlayerRoll(player)      - Replaces the z value in player QAngles on spawn and teleport.
-	cb_get_player_roll         = null
 	// GetValidPlayers()          - Replaces Ware_GetValidPlayers, which is used when selecting players to play a minigame.
-	// Return an array of players in this function and those players will be assigned to play a minigame and added to Ware_MinigamePlayers.
+	//                            - Return an array of players in this function and those players will be assigned to play a minigame and added to Ware_MinigamePlayers.
 	cb_get_valid_players       = null
 	// OnCalculateScore(data)     - Replaces score calculation at the end of a minigame.
-	// This function is called for each player in Ware_MinigamePlayers, and passes that player's data each time.
+	//                            - This function is called for each player in Ware_MinigamePlayers, and passes that player's data each time.
 	cb_on_calculate_score      = null
 	// OnCalculateTopScorers(top_players) - Replaces assignment to Ware_MinigameTopScorers, which is used for assigning top scorer particle effects
-	// and determining the winner at the end of the game. top_players is a reference to Ware_MinigameTopScorers, so append players to the passed array.
+	//                              and determining the winner at the end of the game. 
+	//                            - top_players is a reference to Ware_MinigameTopScorers, so append players to the passed array.
 	cb_on_calculate_topscorers = null
-	// OnDeclareWinners(top_players, top_score, winner_count) - Replaces winner declaration in Ware_GameOver. Passes some relevant information that might be used
-	// for replacement info.
+	// OnDeclareWinners(top_players, top_score, winner_count) - Replaces winner declaration in Ware_GameOver. 
+	//                            - Passes some relevant information that might be used for replacement info.
 	cb_on_declare_winners      = null
 	// OnPlayerConnect(player)    - Called by OnGameEvent_player_spawn during late spawn setup, and passes the player
 	cb_on_player_connect       = null
@@ -85,23 +101,20 @@ class Ware_SpecialRoundData
 	cb_on_player_disconnect	   = null
 	// OnPlayerSpawn(player)      - Called by OnGameEvent_player_spawn and passes the player that spawned.
 	cb_on_player_spawn         = null
-	// OnPlayerInventory(player)  - Called by OnGameEvent_post_inventory_application. This happens when a player spawns, but is intended for manipulating loadouts.
+	// OnPlayerInventory(player)  - Called by OnGameEvent_post_inventory_application. 
+	//                            - This happens when a player spawns, but is intended for manipulating loadouts.
 	cb_on_player_inventory     = null
-	// OnBeginIntermission(is_boss) - Replaces the logic in Ware_BeginIntermission. Note there are some debug functions that are always called.
-	// This replaces a core part of the gameplay loop and if Ware_StartMinigame or another appropriate function isn't called, the game will stop.
+	// GetPlayerRoll(player)      - Replaces the z value in player QAngles on spawn and teleport.
+	cb_get_player_roll         = null
+	// OnBeginIntermission(is_boss) - Replaces the logic in Ware_BeginIntermission.
+	//                              - Note there are some debug functions that are always called.
+	//                              - This replaces a core part of the gameplay loop, 
+	//                                and if Ware_StartMinigame or another appropriate function isn't called, the game will stop.
 	cb_on_begin_intermission   = null
-	// OnMinigameStart()          - Called by Ware_StartMinigame when a minigame starts. This is after a minigame has been chosen, so you can refer to Ware_Minigame and similar.
-	cb_on_minigame_start       = null
-	// OnMinigameEnd()            - Called by Ware_EndMinigame when a minigame ends. This is before the minigame is cleaned up, so you can still refer to Ware_Minigame and similar.
-	cb_on_minigame_end         = null
-	// OnPrecache()               - Ware_PrecacheNext checks all special round scopes for OnPrecache when the map is loaded and calls any found. Use this if you need to precache anything.
-	cb_on_precache             = null
 	// OnSpeedup()                - Called by Ware_Speedup and replaces the speedup logic in a similar way to cb_on_begin_intermission.
 	cb_on_speedup              = null
 	// OnTakeDamage(params)       - Called by OnTakeDamage in main.nut and functions as normal.
 	cb_on_take_damage          = null
-	// OnUpdate()                 - Called by Ware_OnUpdate every frame.
-	cb_on_update               = null
 }
 
 // Rolls and starts a special round

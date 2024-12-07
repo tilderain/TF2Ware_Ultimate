@@ -56,7 +56,7 @@ function OnEnd()
 	}
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return Ware_GetAlivePlayers().len() <= 1
 }

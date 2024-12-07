@@ -405,7 +405,7 @@ function OnCleanup()
 	}
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	local alive_spies  = spies.filter(@(i, player) player.IsValid() && player.IsAlive())
 	local alive_medics = medics.filter(@(i, player) player.IsValid() && player.IsAlive())

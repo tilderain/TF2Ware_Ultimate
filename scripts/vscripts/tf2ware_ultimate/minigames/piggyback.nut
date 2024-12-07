@@ -199,7 +199,7 @@ function OnEnd()
 		EntityEntFire(piggybacker_dummy, "Kill", "", 0.5)
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return piggybacker_killed
 }

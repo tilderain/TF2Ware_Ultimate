@@ -264,7 +264,7 @@ function OnPlayerVoiceline(player, voiceline)
 	Ware_CreateTimer(@() player.IsValid() ? StartleWitch(player, 2048.0) : null, 0.4)
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return Ware_GetAlivePlayers().len() == 0
 }

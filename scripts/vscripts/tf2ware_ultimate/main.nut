@@ -910,6 +910,10 @@ function Ware_SetupMinigameCallbacks()
 	local minigame = Ware_Minigame
 	local scope = Ware_MinigameScope
 	
+	// TODO: The other callbacks like OnStart are done legacy style (I don't remember why)
+	minigame.cb_on_update				= Ware_Callback(scope, "OnUpdate")
+	minigame.cb_on_check_end			= Ware_Callback(scope, "OnCheckEnd")
+	
 	minigame.cb_on_take_damage			= Ware_Callback(scope, "OnTakeDamage")
 	minigame.cb_on_player_attack		= Ware_Callback(scope, "OnPlayerAttack")
 	minigame.cb_on_player_death			= Ware_Callback(scope, "OnPlayerDeath")
@@ -918,8 +922,6 @@ function Ware_SetupMinigameCallbacks()
 	minigame.cb_on_player_voiceline		= Ware_Callback(scope, "OnPlayerVoiceline")
 	minigame.cb_on_player_horn			= Ware_Callback(scope, "OnPlayerHorn")
 	minigame.cb_on_player_touch			= Ware_Callback(scope, "OnPlayerTouch")
-	minigame.cb_on_update				= Ware_Callback(scope, "OnUpdate")
-	minigame.cb_check_end				= Ware_Callback(scope, "CheckEnd")	
 }
 
 function Ware_BeginIntermissionInternal(is_boss)
@@ -1700,7 +1702,7 @@ function Ware_OnUpdate()
 		
 	if (!Ware_MinigameEnded)
 	{
-		local ret = Ware_Minigame.cb_check_end()
+		local ret = Ware_Minigame.cb_on_check_end()
 		if (ret != null && ret == true)
 			Ware_EndMinigame()
 	}

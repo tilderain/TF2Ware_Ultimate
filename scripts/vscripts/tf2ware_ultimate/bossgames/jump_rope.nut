@@ -77,7 +77,7 @@ function OnEnd()
 	EntityAcceptInput(jumprope_door, "Close")
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return Ware_GetAlivePlayers().len() == 0
 }

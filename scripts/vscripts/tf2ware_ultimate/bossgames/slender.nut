@@ -323,7 +323,7 @@ function OnCleanup()
 	}
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return end_time < Time() || Ware_GetAlivePlayers(TF_TEAM_RED).len() == 0 || pages_collected >= pages_max
 }

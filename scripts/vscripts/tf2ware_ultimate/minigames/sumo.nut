@@ -33,7 +33,7 @@ function OnStart()
 	Ware_SetGlobalCondition(TF_COND_HALLOWEEN_KART)
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return Ware_GetAlivePlayers().len() == 1
 }

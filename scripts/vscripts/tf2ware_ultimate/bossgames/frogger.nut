@@ -226,7 +226,7 @@ function OnCleanup()
 	}
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	local alive_players = Ware_GetAlivePlayers()
 	local alive_count = alive_players.len()

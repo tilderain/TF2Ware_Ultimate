@@ -281,7 +281,7 @@ function OnEnd()
 	BeepBlock_FireInput(yellow_blocks, "Alpha", "255")
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return BeepBlock_CheckEnd() || Time() >= interrupt_timer
 }

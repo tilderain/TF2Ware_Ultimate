@@ -55,7 +55,7 @@ function OnTakeDamage(params)
 	}
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return Ware_GetAlivePlayers().len() <= 1
 }

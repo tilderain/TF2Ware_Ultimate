@@ -46,7 +46,7 @@ function OnEnd()
 	EntFire("obstaclecourse_rotate", "Lock")
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return Ware_GetAlivePlayers().len() == 0
 }

@@ -90,7 +90,7 @@ function OnCleanup()
 	EntFire("rocketjump_train", "Stop")
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	local alive_count = Ware_GetAlivePlayers().len()
 	return alive_count == 0 || Ware_GetPassedPlayers(true).len() == alive_count

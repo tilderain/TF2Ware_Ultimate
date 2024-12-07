@@ -175,7 +175,7 @@ function OnCleanup()
 	}
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
 	return Ware_GetAlivePlayers(TF_TEAM_RED).len() == 0
 }

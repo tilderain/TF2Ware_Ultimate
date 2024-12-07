@@ -117,7 +117,7 @@ function OnEnd()
 		player.RemoveCond(TF_COND_HALLOWEEN_KART_DASH)
 }
 
-function CheckEnd()
+function OnCheckEnd()
 {
     return Ware_GetAlivePlayers().len() == 0
 }

@@ -110,6 +110,29 @@ class Ware_MinigameData
 	// If these functions exist in a minigame's scope, they are passed to the appropriate points in the code.
 	// Game events in a minigame scope are also supported in the typical format (e.g. "OnGameEvent_player_builtobject(params)")
 	
+	// OnPrecache()                        - Ware_PrecacheNext checks all minigame scopes for OnPrecache when the map is loaded and calls any found. 
+	//                                     - Use this if you need to precache anything.
+	cb_on_precache          = null
+	// OnPick()                            - Called when the minigame is selected for play. 
+	//                                     - Returning false prevents the minigame from being selected.
+	cb_on_pick              = null
+	// OnTeleport(players)                 - Called when the minigame is teleporting players to the minigame's location.
+	//                                     - If this function is not defined, uses the default Teleport function of the location instead.
+	cb_on_teleport          = null
+	// OnStart()                           - Called when the minigame is starting, after all players have teleported in.
+	cb_on_start             = null
+	// OnUpdate()                          - Called by Ware_OnUpdate every frame.
+	cb_on_update			= null
+	// OnCheckEnd()                        - Called by Ware_OnUpdate. 
+	//                                       Return a condition in this function and if the condition is met, the minigame will end early.
+	cb_on_check_end			= null
+	// OnEnd()                             - Called when the minigame is ending, before results are calculated and players are teleported back.
+	//                                     - Note that this can fire slightly before the minigame duration ends depending on the value of minigame's "end_delay".
+	cb_on_end               = null
+	// OnCleanup()	                       - Called after the minigame has ended and is cleaning up all of its information and state.
+	//                                     - Use this to revert any changes done to the map, players, etc
+	cb_on_cleanup           = null
+	
 	// OnTakeDamage(params)                - Called by OnTakeDamage in main.nut and functions as normal.
 	cb_on_take_damage		= null
 	// OnPlayerAttack(player)              - Called by Ware_OnUpdate, when a player attacks and passes that player.
@@ -122,16 +145,11 @@ class Ware_MinigameData
 	cb_on_player_say		= null
 	// OnPlayerVoiceline(player, name)     - Called by Ware_OnUpdate, and passes the player who used a voiceline and the name of the voiceline.
 	cb_on_player_voiceline	= null
-	// OnPlayerHorn(player)                - Called by Ware_OnUpdate when a player uses the horn in a kart (MOUSE1). Passes the player who used a horn.
+	// OnPlayerHorn(player)                - Called by Ware_OnUpdate when a player uses the horn in a kart (MOUSE1).
+	//                                     - Passes the player who used a horn.
 	cb_on_player_horn		= null
 	// OnPlayerTouch(player, other_player) - Called by Ware_OnUpdate when two players touch and passes the two players.
 	cb_on_player_touch		= null
-	// OnPrecache()                        - Ware_PrecacheNext checks all minigame scopes for OnPrecache when the map is loaded and calls any found. Use this if you need to precache anything.
-	cb_on_precache          = null
-	// OnUpdate()                          - Called by Ware_OnUpdate every frame.
-	cb_on_update			= null
-	// CheckEnd()                          - Called by Ware_OnUpdate. Return a condition in this function and if the condition is met, the minigame will end early.
-	cb_check_end			= null
 }
 
 // Global variables
