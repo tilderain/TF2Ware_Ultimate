@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Break the Boxes"
 	author         = "ficool2"	
 	description    = "Find the Australium!"
-	duration       = 20.0
+	duration       = 18.0
 	location       = "warehouse"
 	music          = "digging"
 	custom_overlay = "find_australium"
