@@ -139,7 +139,4 @@ function OnEnd()
 	
 	foreach(choice in choices)
 		choice.brush.DisconnectOutput("OnStartTouch", "OnStartTouch")
-		
-	foreach(id in minigame.annotations) // TODO: this shouldn't be necessary, why isn't this working in main.nut?
-		Ware_HideAnnotation(id)
 }

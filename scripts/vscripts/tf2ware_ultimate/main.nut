@@ -1573,8 +1573,9 @@ function Ware_FinishMinigameInternal()
 	foreach (timer in Ware_Minigame.timers)
 		KillTimer(timer)
 		
-	foreach (annotation in Ware_Minigame.annotations)
-		Ware_HideAnnotation(annotation)
+	local annotations = Ware_Minigame.annotations
+	for (local i = annotations.len() - 1; i >= 0; i--)
+		Ware_HideAnnotation(annotations[i])
 		
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_minigame_end()		
