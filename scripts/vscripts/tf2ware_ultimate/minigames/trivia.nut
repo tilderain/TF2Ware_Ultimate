@@ -10,36 +10,7 @@ minigame <- Ware_MinigameData
 	location      = "inventoryday"
 	fail_on_death = true
 	collisions    = false
-	
-	min_players = Ware_MinigamesPlayed < 3 ? INT_MAX : 1 // disallow if near start of the round
 })
-
-minigame_names <- Ware_PreviousMinigames.map(function(value){
-	return value.name
-})
-
-questions <- [
-	{
-		name = "first"
-		string = "What was the first minigame this round?"
-		correct_answer = minigame_names[0]
-		answers = minigame_names
-	},
-	{
-		name = "previous"
-		string = "What minigame did we just play?"
-		correct_answer = minigame_names[Ware_MinigamesPlayed - 1]
-		answers = minigame_names
-	},
-	{
-		name = "howmany"
-		string = "How many minigames have there been this round?"
-		correct_answer = Ware_MinigamesPlayed.tostring()
-		answers = FillArray(1, Ware_BossThreshold).map(function(value){
-			return value.tostring()
-		})
-	}
-]
 
 choices <- [
 	{
@@ -62,6 +33,12 @@ choices <- [
 	}
 ]
 
+function OnPick()
+{
+	// don't allow this minigame near start of the round
+	return Ware_MinigamesPlayed >= 3
+}
+
 function OnTeleport(players)
 {
 	Ware_MinigameLocation.Teleport(players)
@@ -72,6 +49,29 @@ function OnTeleport(players)
 function OnStart()
 {
 	Ware_SetGlobalCondition(TF_COND_SPEED_BOOST)
+	
+	local minigame_names = Ware_PreviousMinigames.map(@(value) value.name)
+	local questions = [
+		{
+			name = "first"
+			string = "What was the first minigame this round?"
+			correct_answer = minigame_names[0]
+			answers = minigame_names
+		},
+		{
+			name = "previous"
+			string = "What minigame did we just play?"
+			correct_answer = minigame_names[Ware_MinigamesPlayed - 1]
+			answers = minigame_names
+		},
+		{
+			name = "howmany"
+			string = "How many minigames have there been this round?"
+			correct_answer = Ware_MinigamesPlayed.tostring()
+			answers = FillArray(1, Ware_BossThreshold).map(@(value) value.tostring())
+		}
+	]
+
 	
 	question <- RandomElement(questions)
 	correct_choice <- RandomElement(choices)

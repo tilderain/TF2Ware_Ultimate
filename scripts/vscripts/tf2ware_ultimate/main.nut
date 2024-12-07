@@ -1025,7 +1025,7 @@ function Ware_StartMinigameInternal(is_boss)
 	local prev_is_boss = is_boss
 	local attempts = 0
 	local minigame
-
+	
 	// TODO move this whole rolling to its own function for cleanness
 	while (!success)
 	{
@@ -1084,9 +1084,9 @@ function Ware_StartMinigameInternal(is_boss)
 			is_boss = prev_is_boss
 		}
 		
+		local minigame_arr, minigame_idx
 		if (!is_forced)
 		{
-			
 			if (Ware_SpecialRound && Ware_SpecialRound.cb_get_minigame.IsValid())
 			{
 				minigame = Ware_SpecialRound.cb_get_minigame(is_boss)
@@ -1103,10 +1103,10 @@ function Ware_StartMinigameInternal(is_boss)
 							return
 						}
 						
-						Ware_BossgameRotation = Ware_Bossgames.filter(@(i, bossgame) true)
+						Ware_BossgameRotation = clone(Ware_Bossgames)
 					}
 					
-					minigame = RemoveRandomElement(Ware_BossgameRotation)
+					minigame_arr = Ware_BossgameRotation
 				}
 				else
 				{
@@ -1118,11 +1118,14 @@ function Ware_StartMinigameInternal(is_boss)
 							return
 						}
 						
-						Ware_MinigameRotation = Ware_Minigames.filter(@(i, bossgame) true)
+						Ware_MinigameRotation = clone(Ware_Minigames)
 					}
 					
-					minigame = RemoveRandomElement(Ware_MinigameRotation)
+					minigame_arr = Ware_MinigameRotation
 				}
+				
+				minigame_idx = RandomIndex(minigame_arr)
+				minigame = minigame_arr[minigame_idx]
 			}
 		}
 		
@@ -1135,7 +1138,10 @@ function Ware_StartMinigameInternal(is_boss)
 			local min_players = Ware_MinigameScope.minigame.min_players
 			if (player_count >= min_players)
 			{
-				success = true
+				if (!("OnPick" in Ware_MinigameScope) || Ware_MinigameScope.OnPick())	
+					success = true
+				else if (is_forced)
+					Ware_Error("Not loading '%s' as it rejected the pick", minigame)	
 			}
 			else if (is_forced)
 			{
@@ -1147,9 +1153,17 @@ function Ware_StartMinigameInternal(is_boss)
 			Ware_ErrorHandler(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
 		}
 		
-		if (is_forced && !success)
+		// TODO if all minigames left in rotation failed to be pick (i.e. they all failed the pick condition)
+		// need to reset the rotation, I think right now this is extremely rare to happen though
+		if (success)
 		{
-			Ware_Error("Failed to force load '%s', fallbacking to rotation", minigame)
+			if (minigame_idx != null)
+				minigame_arr.remove(minigame_idx)
+		}
+		else
+		{
+			if (is_forced)
+				Ware_Error("Failed to force load '%s', falling back to rotation", minigame)
 		}
 	}
 	
