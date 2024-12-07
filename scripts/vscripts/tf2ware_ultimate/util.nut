@@ -395,8 +395,8 @@ function SpawnEntityFromTableSafe(classname, keyvalues)
 	return entity
 }
 
-// Removes all instances of the specified entity classname
-function RemoveAllOfEntity(classname)
+// Gathers all instances of the specified entity classname
+function FindAllOfEntity(classname)
 {
 	local entities = []
 	for (local entity; entity = FindByClassname(entity, classname);)
@@ -404,7 +404,13 @@ function RemoveAllOfEntity(classname)
 		MarkForPurge(entity)
 		entities.append(entity)
 	}
-	
+	return entities
+}
+
+// Removes all instances of the specified entity classname
+function RemoveAllOfEntity(classname)
+{
+	local entities = FindAllOfEntity(classname)
 	foreach (entity in entities)
 		entity.Kill()
 }

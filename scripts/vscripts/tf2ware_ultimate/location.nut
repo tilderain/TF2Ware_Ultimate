@@ -466,6 +466,7 @@ Ware_Location.boxingring <-
 
 Ware_Location.inventoryday <-
 {
+	side   = Vector(1800, 4500, -11630)
 	center = Vector(1340, 3960, -11630)
 	radius = 800.0
 	Teleport = function(players)

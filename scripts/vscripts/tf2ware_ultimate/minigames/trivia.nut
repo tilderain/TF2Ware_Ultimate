@@ -8,8 +8,12 @@ minigame <- Ware_MinigameData
 	end_delay     = 0.2
 	description   = "Answer the Question!"
 	location      = "inventoryday"
-	fail_on_death = true
 	collisions    = false
+	thirdperson   = true
+	convars       = 
+	{
+		tf_avoidteammates = 0
+	}
 })
 
 choices <- [
@@ -41,14 +45,23 @@ function OnPick()
 
 function OnTeleport(players)
 {
-	Ware_MinigameLocation.Teleport(players)
-	foreach(player in players)
-		Ware_TeleportPlayer(player, null, ang_zero, null)
+	local pos = Ware_MinigameLocation.side
+	local ang = QAngle(0, -25, 0)
+	foreach (player in players)
+		Ware_TeleportPlayer(player, pos, ang, vec3_zero)
 }
 
 function OnStart()
 {
-	Ware_SetGlobalCondition(TF_COND_SPEED_BOOST)
+	Ware_SetGlobalAttribute("no_attack", 1, -1)
+	Ware_SetGlobalAttribute("voice pitch scale", 0, -1)
+	foreach (player in Ware_MinigamePlayers)
+	{
+		player.RemoveCond(TF_COND_TELEPORTED)
+		player.AddHudHideFlags(HIDEHUD_TARGET_ID)
+		SetPropInt(player, "m_nRenderMode", kRenderNone)
+		Ware_TogglePlayerWearables(player, false)
+	}
 	
 	local minigame_names = Ware_PreviousMinigames.map(@(value) value.name)
 	local questions = [
@@ -106,10 +119,19 @@ function OnStart()
 			choice.value = RemoveRandomElement(question.answers)
 			scope.OnStartTouch <- OnIncorrectTouch
 		}
-		
+		scope.ResetPlayer <- ResetPlayer
 		Ware_ShowAnnotation(brush.GetOrigin(), format("%s: %s", choice.name, choice.value))
 		brush.ConnectOutput("OnStartTouch", "OnStartTouch")
 	}
+}
+
+function ResetPlayer(player)
+{
+	Ware_RemovePlayerAttribute(player, "voice pitch scale")
+	Ware_RemovePlayerAttribute(player, "no_attack")
+	Ware_TogglePlayerWearables(player, true)
+	SetPropInt(player, "m_nRenderMode", kRenderNormal)
+	player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
 }
 
 function OnCorrectTouch()
@@ -118,6 +140,7 @@ function OnCorrectTouch()
 	
 	if (player.IsPlayer() && player.IsValid())
 	{
+		ResetPlayer(player)
 		Ware_Location.beach.Teleport([player])
 		Ware_PassPlayer(player, true)
 	}
@@ -129,14 +152,34 @@ function OnIncorrectTouch()
 	
 	if (player.IsPlayer() && player.IsValid())
 	{
+		ResetPlayer(player)
+		Ware_PlaySoundOnClient(player, "vo/engineer_No01.mp3")
 		Ware_Location.abcdeathpit.Teleport([player])
+	}
+}
+
+function OnUpdate()
+{
+	// prevent spraying
+	local sprays = FindAllOfEntity("spraycan")
+	foreach (spray in sprays)
+	{
+		spray.StopSound("SprayCan.Paint")
+		spray.Kill()
 	}
 }
 
 function OnEnd()
 {
-	Ware_ChatPrint(null, "The correct answer was \"{color}{str}{color}\"!", COLOR_GREEN, question.correct_answer, TF_COLOR_DEFAULT)
+	Ware_ChatPrint(null, "The correct answer was {color}{str}{color}!",
+		COLOR_GREEN, question.correct_answer, TF_COLOR_DEFAULT)
 	
 	foreach(choice in choices)
 		choice.brush.DisconnectOutput("OnStartTouch", "OnStartTouch")
+}
+
+function OnCleanup()
+{
+	foreach (player in Ware_MinigamePlayers)
+		ResetPlayer(player)
 }

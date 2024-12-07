@@ -586,6 +586,14 @@ function Ware_ModifyMeleeAttributes(melee)
 	}
 }
 
+function Ware_RemovePlayerAttributeInternal(player, name)
+{
+	if (name == "voice pitch scale")
+		player.AddCustomAttribute(name, Ware_GetPitchFactor(), -1)
+	else
+		player.RemoveCustomAttribute(name)
+}
+
 function Ware_FixupPlayerWeaponSwitch()
 {
 	if (activator)
@@ -1431,7 +1439,7 @@ function Ware_FinishMinigameInternal()
 			data.melee_attributes.clear()
 			
 			foreach (attribute, value in data.attributes)
-				player.RemoveCustomAttribute(attribute)
+				Ware_RemovePlayerAttributeInternal(player, attribute)
 			data.attributes.clear()
 			
 			player.RemoveCond(TF_COND_TELEPORTED)

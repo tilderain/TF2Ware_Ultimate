@@ -553,7 +553,16 @@ function Ware_GetSortedScorePlayers(reverse)
 function Ware_AddPlayerAttribute(player, name, value, duration)
 {
 	player.AddCustomAttribute(name, value, duration)
-	return player.GetScriptScope().ware_data.attributes[name] <- value
+	player.GetScriptScope().ware_data.attributes[name] <- value
+}
+
+// Removes an attribute from the player
+function Ware_RemovePlayerAttribute(player, name)
+{
+	Ware_RemovePlayerAttributeInternal(player, name)
+	local ware_data = player.GetScriptScope().ware_data
+	if (name in ware_data.attributes)
+		delete ware_data.attributes[name]
 }
 
 // Adds an attribute to all players
