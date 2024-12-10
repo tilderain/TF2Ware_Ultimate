@@ -5,7 +5,7 @@ special_round <- Ware_SpecialRoundData
 	description = "The world tilts as much as your score!"
 })
 
-function SetGlobalPlayerRoll(first)
+function SetGlobalPlayerRoll()
 {
 	foreach (player in Ware_Players)
 	{
