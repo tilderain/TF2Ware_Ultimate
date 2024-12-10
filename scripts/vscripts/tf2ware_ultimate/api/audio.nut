@@ -3,7 +3,7 @@
 // Returns the pitch factor (multiplier) for sounds given the current timescale
 function Ware_GetPitchFactor()
 {
-	return 1.0 + (Ware_TimeScale - 1.0) * 0.4
+	return 1.0 + (Ware_TimeScale - 1.0) * 0.5
 }
 
 // Plays a sound on a specific client, with pitch scaling from timescale included
