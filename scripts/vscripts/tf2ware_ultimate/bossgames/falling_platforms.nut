@@ -76,7 +76,7 @@ lower_delay <- 5.0
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SPY)
-	Ware_ChatPrint(null, "Wall climb by hitting the wall!")	
+	Ware_ChatPrint(null, "{color}TIP{color}: Wall climb by hitting the wall!", COLOR_LIME, TF_COLOR_DEFAULT)	
 }
 
 function OnTeleport(players)

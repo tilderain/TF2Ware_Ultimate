@@ -40,7 +40,7 @@ function OnBeginIntermission(is_boss)
 function OnMinigameStart()
 {
 	local text = (simon ? "Simon" : "Someone") + " Says:"
-	Ware_ShowText(Ware_Players, CHANNEL_MISC, text, Ware_GetMinigameRemainingTime(), "255 255 255", -1.0, 0.1)
+	Ware_ShowText(Ware_Players, CHANNEL_MISC, text, Ware_GetMinigameRemainingTime(), "255 255 255", -1.0, 0.13)
 }
 
 function OnCalculateScore(data)
