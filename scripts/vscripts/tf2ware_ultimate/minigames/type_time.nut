@@ -48,6 +48,9 @@ function OnStart()
 	local hh = h.len() == 1 ? "0" + h : h
 	local mm = m.len() == 1 ? "0" + m : m
 	
+	if (minute == 0)
+		accepted_text.append(h)			 // "h"
+	
 	accepted_text.append(h + ":" + m)    // "h:m"
 	accepted_text.append(hh + ":" + mm)  // "hh:mm"
 	accepted_text.append(h + m)          // "hm"
