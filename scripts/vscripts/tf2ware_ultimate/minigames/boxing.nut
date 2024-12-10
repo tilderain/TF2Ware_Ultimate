@@ -6,7 +6,7 @@ minigame <- Ware_MinigameData
 	location       = "boxingring"
 	duration       = 20.0
 	end_delay      = 1.0
-	music          = "boxing"
+	music          = "boxfight"
 	custom_overlay = "knockout"
 	min_players    = 2
 	start_pass     = true

@@ -27,6 +27,12 @@ function OnStart()
 	endzone.ConnectOutput("OnStartTouch", "OnStartTouch")
 	
 	EntityAcceptInput(FindByName(null, "ERBoss_InitRelay"), "Trigger")
+	
+	Ware_CreateTimer(function() 
+	{
+		Ware_PlayMinigameMusic(null, Ware_Minigame.music)
+		return 74.5
+	}, 74.5)
 }
 
 function OnEndzoneTouch()
