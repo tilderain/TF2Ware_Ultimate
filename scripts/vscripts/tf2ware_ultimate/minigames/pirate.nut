@@ -42,15 +42,16 @@ function OnStart()
 			Ware_SetPlayerMission(player, 1);	
 	}
 	
+	local swap = RandomBool()
 	red_ship = Ware_SpawnEntity("prop_dynamic_override",
 	{
-		origin      = Ware_MinigameLocation.center + Vector(2200, 300, -136),
+		origin      = Ware_MinigameLocation.center + Vector(2200, swap ? -500 : 300, -136),
 		model       = ship_model
 		rendercolor = "255 0 0",
 	})
 	blue_ship = Ware_SpawnEntity("prop_dynamic_override",
 	{
-		origin      = Ware_MinigameLocation.center + Vector(2200, -500, -136),
+		origin      = Ware_MinigameLocation.center + Vector(2200, swap ? 300 : -500, -136),
 		model       = ship_model
 		rendercolor = "0 255 255",
 	})
