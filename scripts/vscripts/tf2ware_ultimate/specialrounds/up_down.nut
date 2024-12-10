@@ -14,12 +14,5 @@ function OnSpeedup()
 
 function OnBeginIntermission(is_boss)
 {
-	// TODO: allow random speed for bosses when gioca jouer is fixed
-	// prefer bosses to have random timescale like in micro as it's fun to occasionally have to do them at a different speed like that,
-	// but gioca jouer just doesn't work at different scales.
-	// ideally also fix beep block at different scales, but that's less of a problem.
-	if (is_boss)
-		Ware_SetTimeScale(1.0)
-	else
-		Ware_SetTimeScale(RandomFloat(0.6, 2.0))
+	Ware_SetTimeScale(RandomFloat(0.6, 2.0))
 }

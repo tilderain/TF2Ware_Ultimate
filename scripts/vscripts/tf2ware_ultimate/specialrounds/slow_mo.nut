@@ -19,3 +19,8 @@ function OnMinigameEnd()
 	Ware_SetTimeScale(Ware_GetTimeScale() - 0.05)
 }
 
+function OnBeginIntermission(is_boss)
+{
+	if (is_boss)
+		Ware_SetTimeScale(0.75)
+}

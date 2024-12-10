@@ -1,3 +1,5 @@
+last_timescale <- 1.0
+
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Time Attack"
@@ -7,5 +9,12 @@ special_round <- Ware_SpecialRoundData
 	
 function OnMinigameEnd()
 {
-	Ware_SetTimeScale(Ware_GetTimeScale() + 0.05)
+	last_timescale = Ware_GetTimeScale() + 0.05
+	Ware_SetTimeScale(last_timescale)
+}
+
+function OnBeginIntermission(is_boss)
+{
+	if (is_boss)
+		Ware_SetTimeScale(last_timescale + 0.05)
 }
