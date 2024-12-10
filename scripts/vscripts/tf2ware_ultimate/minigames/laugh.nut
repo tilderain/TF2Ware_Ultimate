@@ -48,6 +48,8 @@ function OnStart()
 			Ware_SetPlayerMission(player, 0)
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT)
 		}
+		
+		Ware_GetPlayerMiniData(player).laugh_time <- 0.0
 	}
 }
 
@@ -84,12 +86,28 @@ function OnTakeDamage(params)
 function CheckTaunt(victim, attacker)
 {
 	victim.AddCond(TF_COND_GRAPPLED_TO_PLAYER)
-	if (victim.GetTeam() != heavy_team &&
-		attacker.GetTeam() == heavy_team &&
-		victim.IsTaunting())
+	
+	local minidata = Ware_GetPlayerMiniData(victim)
+	if (victim.IsTaunting())
 	{
-		Ware_PassPlayer(victim, false)
-		Ware_PassPlayer(attacker, true)
+		// only pass if the hit made the scout laugh within past 0.5 seconds
+		local time = Time()
+		if (minidata.laugh_time == 0.0)
+			minidata.laugh_time = time
+		
+		if (minidata.laugh_time + 0.5 >= time)
+		{
+			if (victim.GetTeam() != heavy_team &&
+				attacker.GetTeam() == heavy_team)
+			{
+				Ware_PassPlayer(victim, false)
+				Ware_PassPlayer(attacker, true)
+			}
+		}
+	}
+	else
+	{
+		minidata.laugh_time = 0.0
 	}
 }
 
