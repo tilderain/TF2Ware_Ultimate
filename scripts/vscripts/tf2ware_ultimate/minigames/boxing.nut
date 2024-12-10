@@ -4,7 +4,7 @@ minigame <- Ware_MinigameData
 	author         = "ficool2"
 	description    = "Knockout your Opponents!"
 	location       = "boxingring"
-	duration       = 15.0
+	duration       = 20.0
 	end_delay      = 1.0
 	music          = "boxing"
 	custom_overlay = "knockout"
