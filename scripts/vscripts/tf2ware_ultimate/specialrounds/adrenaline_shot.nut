@@ -31,4 +31,5 @@ function OnSpeedup()
 	}
 	
 	CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
+	return true
 }

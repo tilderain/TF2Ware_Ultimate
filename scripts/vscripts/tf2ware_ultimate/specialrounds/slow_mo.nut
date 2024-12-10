@@ -11,6 +11,7 @@ special_round <- Ware_SpecialRoundData
 function OnSpeedup()
 {
 	CreateTimer(@() Ware_BeginIntermission(false), 0.0)
+	return true
 }
 
 function OnMinigameEnd()

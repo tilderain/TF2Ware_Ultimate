@@ -9,6 +9,7 @@ special_round <- Ware_SpecialRoundData
 function OnSpeedup()
 {
 	CreateTimer(@() Ware_BeginIntermission(false), 0.0)
+	return true
 }
 
 function OnBeginIntermission(is_boss)
@@ -21,13 +22,4 @@ function OnBeginIntermission(is_boss)
 		Ware_SetTimeScale(1.0)
 	else
 		Ware_SetTimeScale(RandomFloat(0.6, 2.0))
-	
-	Ware_PlayGameSound(null, "intro")
-	foreach (player in Ware_Players)
-	{
-		Ware_ShowScreenOverlay(player, null)
-		Ware_ShowScreenOverlay2(player, null)
-	}
-		
-	CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 }

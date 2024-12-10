@@ -79,6 +79,17 @@ class Ware_SpecialRoundData
 	// OnMinigameEnd()            - Called by Ware_EndMinigame when a minigame ends. 
 	//                            - This is before the minigame is cleaned up, so you can still refer to Ware_Minigame and similar.
 	cb_on_minigame_end         = null
+	// OnBeginIntermission(is_boss) - Called when intermission starts.
+	//                              - If this returns true, the default logic for Ware_BeginIntermission is replaced.
+	//                              - Note there are some debug functions that are always called.
+	//                              - This replaces a core part of the gameplay loop, 
+	//                                and if Ware_StartMinigame or another appropriate function isn't called, the game will stop.
+	cb_on_begin_intermission   = null
+	// OnBeginBoss()              - Called by Ware_BeginBoss when a boss notification appears.
+	//                            - If this returns true, the default logic for Ware_BeginBoss is replaced.
+	//                            - Since this replaces a core part of the gameplay loop, 
+	//                            - you need to call Ware_BeginIntermission yourself to continue it.
+	cb_on_begin_boss           = null
 	// GetOverlay2()              - Replaces the default secondary overlay texture in Ware_ShowScreenOverlay2 (see player.nut). 
 	//                            - Return an overlay texture for it to be set.
 	cb_get_overlay2            = null
@@ -106,12 +117,8 @@ class Ware_SpecialRoundData
 	cb_on_player_inventory     = null
 	// GetPlayerRoll(player)      - Replaces the z value in player QAngles on spawn and teleport.
 	cb_get_player_roll         = null
-	// OnBeginIntermission(is_boss) - Replaces the logic in Ware_BeginIntermission.
-	//                              - Note there are some debug functions that are always called.
-	//                              - This replaces a core part of the gameplay loop, 
-	//                                and if Ware_StartMinigame or another appropriate function isn't called, the game will stop.
-	cb_on_begin_intermission   = null
-	// OnSpeedup()                - Called by Ware_Speedup and replaces the speedup logic in a similar way to cb_on_begin_intermission.
+	// OnSpeedup()                - Called by Ware_Speedup.
+	//                            - If this returns true, replaces the speedup logic in a similar way to OnBeginIntermission.
 	cb_on_speedup              = null
 	// OnTakeDamage(params)       - Called by OnTakeDamage in main.nut and functions as normal.
 	cb_on_take_damage          = null

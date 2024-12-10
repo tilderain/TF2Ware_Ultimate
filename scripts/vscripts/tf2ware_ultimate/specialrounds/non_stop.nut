@@ -15,4 +15,5 @@ function OnBeginIntermission(is_boss)
 	}
 	
 	CreateTimer(@() Ware_StartMinigame(is_boss), 0.0)
+	return true
 }

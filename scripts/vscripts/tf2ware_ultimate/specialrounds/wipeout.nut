@@ -177,6 +177,7 @@ function OnBeginIntermission(is_boss)
 	}
 		
 	CreateTimer(@() Ware_StartMinigame(is_boss), holdtime)
+	return true
 }
 
 function GetValidPlayers()

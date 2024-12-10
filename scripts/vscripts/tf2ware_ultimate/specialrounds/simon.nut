@@ -24,17 +24,8 @@ function OnPlayerConnect(player)
 function OnBeginIntermission(is_boss)
 {
 	// do this early bcuz minigamestart happens after something that checks opposite_win
-	simon <- RandomBool()
+	simon = RandomBool()
 	special_round.opposite_win = !simon
-	
-	Ware_PlayGameSound(null, "intro")
-	foreach (player in Ware_Players)
-	{
-		Ware_ShowScreenOverlay(player, null)
-		Ware_ShowScreenOverlay2(player, null)
-	}
-		
-	CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 }
 
 function OnMinigameStart()

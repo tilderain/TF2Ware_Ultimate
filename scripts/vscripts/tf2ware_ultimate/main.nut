@@ -705,7 +705,6 @@ function Ware_SetupSpecialRoundCallbacks()
 	local special_round = Ware_SpecialRound
 	local scope = Ware_SpecialRoundScope
 	
-	special_round.cb_get_minigame            = Ware_Callback(scope, "GetMinigameName")
 	special_round.cb_get_overlay2            = Ware_Callback(scope, "GetOverlay2")
 	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")
 	special_round.cb_get_valid_players       = Ware_Callback(scope, "GetValidPlayers")
@@ -716,9 +715,11 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_on_player_disconnect    = Ware_Callback(scope, "OnPlayerDisconnect")
 	special_round.cb_on_player_spawn         = Ware_Callback(scope, "OnPlayerSpawn")
 	special_round.cb_on_player_inventory     = Ware_Callback(scope, "OnPlayerInventory")
-	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
+	special_round.cb_get_minigame            = Ware_Callback(scope, "GetMinigameName")
 	special_round.cb_on_minigame_start       = Ware_Callback(scope, "OnMinigameStart")
 	special_round.cb_on_minigame_end         = Ware_Callback(scope, "OnMinigameEnd")
+	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
+	special_round.cb_on_begin_boss           = Ware_Callback(scope, "OnBeginBoss")
 	special_round.cb_on_speedup              = Ware_Callback(scope, "OnSpeedup")
 	special_round.cb_on_take_damage          = Ware_Callback(scope, "OnTakeDamage")
 	special_round.cb_on_update               = Ware_Callback(scope, "OnUpdate")
@@ -958,11 +959,11 @@ function Ware_BeginIntermissionInternal(is_boss)
 	if (Ware_Theme == {})
 		Ware_SetTheme("_default")
 	
+	local replace = false
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_intermission.IsValid())
-	{
-		Ware_SpecialRound.cb_on_begin_intermission(is_boss)
-	}
-	else
+		replace = Ware_SpecialRound.cb_on_begin_intermission(is_boss)
+
+	if (!replace)
 	{
 		Ware_PlayGameSound(null, "intro")
 		foreach (player in Ware_Players)
@@ -990,25 +991,32 @@ function Ware_SetTimeScaleInternal(timescale)
 
 function Ware_BeginBossInternal()
 {
-	Ware_SetTimeScale(1.0)
-	
-	Ware_PlayGameSound(null, "boss")
-	foreach (player in Ware_Players)
+	local replace = false
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_boss.IsValid())
+		replace = Ware_SpecialRound.cb_on_begin_boss()
+
+	if (!replace)
 	{
-		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_boss")
-		Ware_ShowScreenOverlay2(player, null)
+		Ware_SetTimeScale(1.0)
+		
+		Ware_PlayGameSound(null, "boss")
+		foreach (player in Ware_Players)
+		{
+			Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_boss")
+			Ware_ShowScreenOverlay2(player, null)
+		}
+		
+		CreateTimer(@() Ware_BeginIntermission(true), Ware_GetThemeSoundDuration("boss"))
 	}
-	
-	CreateTimer(@() Ware_BeginIntermission(true), Ware_GetThemeSoundDuration("boss"))
 }
 
 function Ware_SpeedupInternal()
 {
+	local replace = false
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_speedup.IsValid())
-	{
-		Ware_SpecialRound.cb_on_speedup()
-	}
-	else
+		replace = Ware_SpecialRound.cb_on_speedup()
+	
+	if (!replace)
 	{
 		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
 		
