@@ -10,7 +10,7 @@ minigame <- Ware_MinigameData
 	author         = "pokemonPasta"
 	description    = "Get to the End!"
 	custom_overlay = "get_end"
-	duration       = 160.0
+	duration       = 130.0
 	end_delay      = 1.1
 	location       = RandomElement(arenas)
 	music          = "beepblockskyway"
