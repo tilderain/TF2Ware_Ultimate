@@ -1,9 +1,9 @@
 minigame <- Ware_MinigameData
 ({
-	name           = "Dodge the Lasers"
+	name           = "Dodge the Laser"
 	author         = "ficool2"
 	description    = "Get on a Platform!"
-	duration       = 6.0
+	duration       = 5.0
 	music          = "urgent"
 	start_pass     = true
 	fail_on_death  = true
@@ -23,8 +23,9 @@ function OnPrecache()
 
 function OnStart()
 {
-	local spacing = 1000.0
-	for (local i = 0; i < 2; i++)
+	local spacing = 800.0
+	local count = 1
+	for (local i = 0; i < count; i++)
 	{
 		SpawnLaser(RandomElement(axes), spacing)
 		spacing += RandomFloat(800.0, 1200.0)
