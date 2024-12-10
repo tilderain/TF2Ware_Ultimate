@@ -36,4 +36,5 @@ function OnMinigameEnd()
 function OnEnd()
 {
 	Ware_RunClientCommand(null, "dsp_player 0")
+	Ware_ShowGlobalScreenOverlay2(null)
 }
