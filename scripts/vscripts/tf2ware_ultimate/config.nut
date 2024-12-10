@@ -602,7 +602,7 @@ Ware_MinigameMusic <-
 	"adventuretime" 
 	"bigjazzfinish" 
 	"bliss" 
-	"boxing"
+	"boxfight"
 	"brassy" 
 	"casino"
 	"catchme" 
