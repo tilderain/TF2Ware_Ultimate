@@ -51,13 +51,15 @@ class Hex
 		
 		entity = Ware_SpawnEntity("func_door",
 		{
-			origin = position,
-			model = model,
-			movedir = "90 0 0",
-			speed = speed,
-			wait = -1.0,
-			forceclosed = true,
-			ignoredebris = true,
+			origin         = position
+			model          = model
+			movedir        = "90 0 0"
+			speed          = speed
+			wait           = -1.0
+			forceclosed    = true
+			ignoredebris   = true
+			disableshadows = true
+			disablereceiveshadows = true
 		})
 		SetPropInt(entity, "m_takedamage", DAMAGE_YES)
 	}
@@ -160,7 +162,10 @@ function OnTeleport(players)
 		origin.z += 900.0
 		hex_idx = (hex_idx + 1) % hex_len
 
-		Ware_TeleportPlayer(player, origin, null, vec3_zero)
+		local dir = center - origin
+		dir.z = 0.0
+		dir.Norm()
+		Ware_TeleportPlayer(player, origin, VectorAngles(dir), vec3_zero)
 	}
 }
 
@@ -194,7 +199,11 @@ function OnTakeDamage(params)
 	else if (victim.GetClassname() == "func_door")
 	{
 		if (attacker && attacker.IsPlayer())
-			attacker.SetAbsVelocity(attacker.GetAbsVelocity() + Vector(0, 0, 500))
+		{
+			local vel = attacker.GetAbsVelocity()
+			vel.z = Max(vel.z, 450.0)
+			attacker.SetAbsVelocity(vel)
+		}
 		
 		return false
 	}
