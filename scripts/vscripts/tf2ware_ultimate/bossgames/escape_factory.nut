@@ -4,7 +4,7 @@ minigame <- Ware_MinigameData
 	name           = "Escape the Factory"
 	author         = "pokemonPasta"
 	description    = "Escape the Factory!"
-	duration       = 80.0
+	duration       = 130.0
 	end_delay      = 1.1
 	location       = "factory"
 	music          = "escape_factory"
@@ -19,7 +19,7 @@ endzone <- FindByName(null, "plugin_Bossgame2_WinArea")
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER)
+	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, null, { "active health degen" : -1.0 })
 	
 	endzone.ValidateScriptScope()
 	endzone.GetScriptScope().OnStartTouch <- OnEndzoneTouch
