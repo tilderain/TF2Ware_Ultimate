@@ -92,6 +92,5 @@ function OnCleanup()
 
 function OnCheckEnd()
 {
-	local alive_count = Ware_GetAlivePlayers().len()
-	return alive_count == 0 || Ware_GetPassedPlayers(true).len() == alive_count
+	return Ware_GetUnpassedPlayers(true).len() == 0
 }

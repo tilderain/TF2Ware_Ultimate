@@ -288,11 +288,5 @@ function OnCheckEnd()
 
 function BeepBlock_CheckEnd()
 {
-	foreach (player in Ware_MinigamePlayers)
-	{
-		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
-			return false
-	}
-	
-	return true
+	return Ware_GetUnpassedPlayers(true).len() == 0
 }

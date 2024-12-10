@@ -66,11 +66,5 @@ function OnEnd()
 
 function OnCheckEnd()
 {
-	local alive_players = Ware_GetAlivePlayers()
-	local alive_count = alive_players.len()
-	if (alive_count == 0)
-		return true
-		
-	local passed_players = alive_players.filter(@(i, player) Ware_IsPlayerPassed(player))
-	return passed_players.len() == alive_count
+	return Ware_GetUnpassedPlayers(true).len() == 0
 }
