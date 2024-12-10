@@ -1096,10 +1096,9 @@ function Ware_StartMinigameInternal(is_boss)
 		if (!is_forced)
 		{
 			if (Ware_SpecialRound && Ware_SpecialRound.cb_get_minigame.IsValid())
-			{
 				minigame = Ware_SpecialRound.cb_get_minigame(is_boss)
-			}
-			else
+			
+			if (minigame == null)
 			{
 				if (is_boss)
 				{

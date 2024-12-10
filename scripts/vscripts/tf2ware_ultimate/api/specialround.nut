@@ -71,7 +71,7 @@ class Ware_SpecialRoundData
 	// OnEnd()                    - Called when this special round ends.
 	cb_on_end                  = null
 	// GetMinigame(is_boss)       - Replaces the minigame selection process in Ware_StartMinigame. 
-	//                            - Return a minigame name for it to be attempted to be selected.
+	//                            - Return a minigame name for it to be attempted to be selected, or null to use default pick.
 	cb_get_minigame            = null
 	// OnMinigameStart()          - Called by Ware_StartMinigame when a minigame starts. 
 	//                            - This is after a minigame has been chosen, so you can refer to Ware_Minigame and similar.
