@@ -10,7 +10,7 @@ minigame <- Ware_MinigameData
 	]
 	duration       = 79.5
 	end_delay      = 0.5
-	music          = "ghostbusters"
+	music          = RandomInt(0,9) == 0 ? "ghostbusters-bustin" : "ghostbusters"
 	location       = "manor"
 	custom_overlay = 
 	[
