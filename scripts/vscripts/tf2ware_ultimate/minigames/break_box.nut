@@ -7,7 +7,7 @@ minigame <- Ware_MinigameData
 	location       = "warehouse"
 	music          = "digging"
 	custom_overlay = "find_australium"
-	
+	min_players    = 3
 	max_scale = 1.0
 })
 
