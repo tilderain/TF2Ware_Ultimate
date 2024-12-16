@@ -9,8 +9,8 @@ special_round <- Ware_SpecialRoundData
 	boss_count = 5
 })
 
+// this just cancels the first minigame
 started <- false
-
 function OnBeginIntermission(is_boss)
 {
 	if (!started)
