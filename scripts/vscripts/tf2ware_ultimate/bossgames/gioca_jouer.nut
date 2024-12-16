@@ -68,6 +68,11 @@ function OnPrecache()
 	PrecacheScriptSound(pass_sound)
 }
 
+function OnPick()
+{
+	return Ware_Timescale == 1.0 // gioca doesnt really work at other timescales
+}
+
 function OnStart()
 {
 	foreach(player in Ware_MinigamePlayers)
