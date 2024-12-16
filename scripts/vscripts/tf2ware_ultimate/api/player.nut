@@ -129,7 +129,8 @@ function Ware_IsPlayerPassed(player)
 }
 
 // Awards bonus points for certain objectives in minigames (first, fastest, etc.)
-// If multiple players are to be awarded please pass an array as players, to avoid spamming the chat.
+// This only functions if Ware_BonusPoints is true, or in the bonus points special round, otherwise it does nothing.
+// If multiple players are to be awarded please pass an array of players, to avoid spamming the chat.
 function Ware_GiveBonusPoints(target, points = 1)
 {
 	if (!Ware_BonusPoints && !(Ware_SpecialRound && Ware_SpecialRound.bonus_points))
