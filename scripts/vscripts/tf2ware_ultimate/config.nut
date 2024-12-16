@@ -116,6 +116,7 @@ Ware_SpecialRounds <-
 	"all_in"
 	"bonk"
 	//"bonus_points" // TODO add bonus points to minigames
+	"boss_rush"
 	"collisions"
 	"extended_round"
 	"fov"
