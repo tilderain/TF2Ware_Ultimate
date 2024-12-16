@@ -128,6 +128,46 @@ function Ware_IsPlayerPassed(player)
 	return player.GetScriptScope().ware_data.passed
 }
 
+// Awards bonus points for certain objectives in minigames (first, fastest, etc.)
+// If multiple players are to be awarded please pass an array as players, to avoid spamming the chat.
+function Ware_GiveBonusPoints(target, points = 1)
+{
+	if (!Ware_BonusPoints && !(Ware_SpecialRound && Ware_SpecialRound.bonus_points))
+		return
+	
+	// account for multiple possible but we only got 1 player
+	if (typeof(target) == "array" && target.len() == 1)
+		target = target[0]
+	
+	if (typeof(target) == "instance")
+	{
+		local data = target.GetScriptScope().ware_data
+		data.score += points
+		Ware_ChatPrint(null, "{color}{str}{colour} was awarded an extra {str}!",
+			TF_COLOR_RED, GetPlayerName(target), TF_COLOR_DEFAULT, points == 1 ? "point" : format("%d points", points))
+	}
+	else
+	{
+		local text = ""
+		local params = [null, text, points == 1 ? "point" : format("%d points", points), TF_COLOR_RED]
+		foreach(player in target)
+		{
+			local data = p.GetScriptScope().ware_data
+			data.score += points
+			
+			text += text == "" ? "The following players were each awarded an extra {str}: {color}" : "{color}, {color}"
+			text += GetPlayerName(player)
+			params.append(TF_COLOR_DEFAULT)
+			params.append(TF_COLOR_RED)
+		}
+		text += "{color}!"
+		params += TF_COLOR_DEFAULT
+		params[1] = text
+		
+		Ware_ChatPrint.acall(params)
+	}
+}
+
 // Sets the player's "mission"
 // This should be an incremental number starting from 0
 // Minigames can have different objectives for different players

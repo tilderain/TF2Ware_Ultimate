@@ -12,6 +12,7 @@ class Ware_SpecialRoundData
 		force_collisions = false
 		opposite_win     = false
 		friendly_fire    = true
+		bonus_points     = false
 		boss_count       = 1
 		boss_threshold   = Ware_BossThreshold
 		
@@ -48,6 +49,8 @@ class Ware_SpecialRoundData
 	opposite_win			 = null
 	// Friendly fire allowed on minigames? Default is true
 	friendly_fire            = null
+	// Award bonus points? Default is false
+	bonus_points             = null
 	// Amount of bosses to play, default is 1
 	boss_count       		 = null
 	// Amount of minigames played before a boss, default is Ware_BossThreshold in config.nut
@@ -64,6 +67,9 @@ class Ware_SpecialRoundData
 	// OnPrecache()               - Ware_PrecacheNext checks all special round scopes for OnPrecache when the map is loaded and calls any found. 
 	//                            - Use this if you need to precache anything.
 	cb_on_precache             = null
+	// OnPick()                   - Called when the special round is selected for play. 
+	//                            - Returning false prevents the minigame from being selected.
+	cb_on_pick                 = null
 	// OnStart()                  - Called when this special round begins.
 	cb_on_start                = null
 	// OnUpdate()                 - Called by Ware_OnUpdate every frame.

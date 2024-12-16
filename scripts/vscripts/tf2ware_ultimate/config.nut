@@ -1,11 +1,12 @@
 // TODO: load these from a file
 
-Ware_BossThreshold      <- 20   // amount of minigames played before boss
-Ware_SpeedUpThreshold   <- 5    // number of minigames before applying speedup
-Ware_SpeedUpInterval    <- 0.15 // speedup factor
-Ware_SpecialRoundChance <- 10   // e.g. 20 means 1 in 20 chance of a special round happening. set to 0 to disable.
-Ware_PointsMinigame     <- 1    // points for winning a minigame
-Ware_PointsBossgame     <- 5    // points for winning a bossgame
+Ware_BossThreshold      <- 20    // amount of minigames played before boss
+Ware_SpeedUpThreshold   <- 5     // number of minigames before applying speedup
+Ware_SpeedUpInterval    <- 0.15  // speedup factor
+Ware_SpecialRoundChance <- 10    // e.g. 20 means 1 in 20 chance of a special round happening. set to 0 to disable.
+Ware_PointsMinigame     <- 1     // points for winning a minigame
+Ware_PointsBossgame     <- 5     // points for winning a bossgame
+Ware_BonusPoints        <- false // Whether or not bonus points will be awarded. If false this is still available as a special round.
 
 Ware_Minigames <-
 [
@@ -114,6 +115,7 @@ Ware_SpecialRounds <-
 	"adrenaline_shot"
 	"all_in"
 	"bonk"
+	//"bonus_points" // TODO add bonus points to minigames
 	"collisions"
 	"extended_round"
 	"fov"

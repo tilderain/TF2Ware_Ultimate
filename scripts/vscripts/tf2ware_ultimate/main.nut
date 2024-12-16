@@ -792,7 +792,10 @@ function Ware_BeginSpecialRoundInternal()
 			local min_players = Ware_SpecialRoundScope.special_round.min_players
 			if (player_count >= min_players)
 			{
-				success = true
+				if (!("OnPick" in Ware_SpecialRoundScope) || Ware_SpecialRoundScope.OnPick())	
+					success = true
+				else if (is_forced)
+					Ware_Error("Not loading '%s' as it rejected the pick", round)	
 			}
 			else if (is_forced)
 			{
