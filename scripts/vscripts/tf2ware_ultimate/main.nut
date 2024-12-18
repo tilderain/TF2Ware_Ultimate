@@ -1159,6 +1159,8 @@ function Ware_StartMinigameInternal(is_boss)
 			Ware_MinigameScope.clear()
 			IncludeScript(path, Ware_MinigameScope)
 
+			// TODO should cache this when precaching minigames and filter it from the array earlier
+			// instead of having to load the minigame from disk first (expensive)
 			local min_players = Ware_MinigameScope.minigame.min_players
 			if (player_count >= min_players)
 			{
