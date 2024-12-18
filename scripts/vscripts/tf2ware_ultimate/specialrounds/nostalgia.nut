@@ -1,4 +1,4 @@
-overlay <- "debug/yuv"
+overlay <- "shaders/tf2ware_ultimate/nostalgia"
 
 special_round <- Ware_SpecialRoundData
 ({
