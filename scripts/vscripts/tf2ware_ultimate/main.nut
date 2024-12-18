@@ -738,7 +738,9 @@ function Ware_BeginSpecialRoundInternal()
 	
 	while (!success)
 	{
-		if (++attempts > 25)
+		round = null
+		
+		if (++attempts > 16)
 		{
 			Ware_Error("No valid special round found to pick. There may not be enough minimum players")
 			return
@@ -1035,7 +1037,9 @@ function Ware_SpeedupInternal()
 }
 
 function Ware_StartMinigameInternal(is_boss)
-{	
+{
+	Ware_CriticalZone = true
+
 	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
 	
@@ -1048,7 +1052,9 @@ function Ware_StartMinigameInternal(is_boss)
 	// TODO move this whole rolling to its own function for cleanness
 	while (!success)
 	{
-		if (++attempts > 25)
+		minigame = null
+		
+		if (++attempts > 16)
 		{
 			Ware_Error("No valid %s found to pick. There may not be enough minimum players", is_boss ? "bossgame" : "minigame")
 			return
@@ -1141,7 +1147,7 @@ function Ware_StartMinigameInternal(is_boss)
 					
 					minigame_arr = Ware_MinigameRotation
 				}
-				
+
 				minigame_idx = RandomIndex(minigame_arr)
 				minigame = minigame_arr[minigame_idx]
 			}
@@ -1186,8 +1192,6 @@ function Ware_StartMinigameInternal(is_boss)
 	}
 	
 	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
-
-	Ware_CriticalZone = true
 
 	Ware_MinigameEnded = false
 	Ware_Minigame = Ware_MinigameScope.minigame
