@@ -121,10 +121,10 @@ Ware_SpecialRounds <-
 	"extended_round"
 	"fov"
 	"inclinity_problem"
-	"inverted_control"
 	//"invisible" // TODO need a better performance implementation
 	"low_gravity"
 	"math_only"
+	"mirrored_world"
 	"no_movingback"
 	"non_stop"
 	"nostalgia"
