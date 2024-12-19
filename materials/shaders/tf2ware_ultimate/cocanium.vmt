@@ -1,6 +1,6 @@
 screenspace_general
 {
-	$pixshader "ware_cocanium6_ps20"
+	$pixshader "ware_cocanium_ps20"
 
 	$basetexture "_rt_FullFrameFB"
 	$texture1    ""
