@@ -364,6 +364,7 @@ function PrecacheSprite(sprite)
 }
 
 // Precache an overlay texture
+// Do NOT precache shader overlays with this
 function PrecacheOverlay(overlay)
 {
 	PrecacheModel(overlay + ".vmt")

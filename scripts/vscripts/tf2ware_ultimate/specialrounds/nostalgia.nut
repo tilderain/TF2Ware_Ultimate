@@ -7,11 +7,6 @@ special_round <- Ware_SpecialRoundData
 	description = "Taking you back to the past!"
 })
 
-function OnPrecache()
-{
-	PrecacheOverlay(overlay)
-}
-
 function GetOverlay2()
 {
 	return overlay

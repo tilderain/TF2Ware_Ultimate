@@ -7,11 +7,6 @@ special_round <- Ware_SpecialRoundData
 	description = "The world is mirrored!"
 })
 
-function OnPrecache()
-{
-	PrecacheOverlay(overlay)
-}
-
 function GetOverlay2()
 {
 	return overlay
