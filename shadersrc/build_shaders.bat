@@ -1,6 +1,7 @@
 @echo off
 
 for %%f in (
+    ware_cocanium_ps2x.hlsl
     ware_mirror_ps2x.hlsl
     ware_nostalgia_ps2x.hlsl
 ) do (
