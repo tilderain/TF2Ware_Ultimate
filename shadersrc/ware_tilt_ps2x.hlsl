@@ -19,7 +19,7 @@ float4 main( PS_INPUT i ) : COLOR
     
     // shift and scale to normal cartesian plane
     uv -= 0.5;
-   uv *= 2.0;
+    uv *= 2.0;
     
     // multiply by rotation matrix
     uv = mul(uv, rotateZ(radians(45.0)));
