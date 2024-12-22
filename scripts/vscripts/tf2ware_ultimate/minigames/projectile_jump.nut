@@ -14,7 +14,7 @@ minigame <- Ware_MinigameData
 	name           = "Projectile Jump"
 	author         = "ficool2"
 	description    = mode_infos[mode][0]
-	duration       = mode == 3 ? 5.0 : 4.0
+	duration       = mode == 3 ? 6.0 : 4.0
 	end_delay      = mode == 3 ? 0.0 : 1.0
 	music          = "goodtimes"
 	custom_overlay = mode_infos[mode][1]
