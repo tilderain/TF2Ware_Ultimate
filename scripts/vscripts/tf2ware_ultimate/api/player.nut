@@ -144,7 +144,7 @@ function Ware_GiveBonusPoints(target, points = 1)
 	{
 		local data = target.GetScriptScope().ware_data
 		data.score += points
-		Ware_ChatPrint(null, "{color}{str}{colour} was awarded an extra {str}!",
+		Ware_ChatPrint(null, "{color}{str}{color} was awarded an extra {str}!",
 			TF_COLOR_RED, GetPlayerName(target), TF_COLOR_DEFAULT, points == 1 ? "point" : format("%d points", points))
 	}
 	else

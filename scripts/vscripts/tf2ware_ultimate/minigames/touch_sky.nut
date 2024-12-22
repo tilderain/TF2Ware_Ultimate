@@ -47,5 +47,6 @@ function OnEnd()
 	{
 		Ware_ChatPrint(null, "{player} {color}reached the highest point at {str} units!",
 							highest_player, TF_COLOR_DEFAULT, format("%.1f", highest_height))
+		Ware_GiveBonusPoints(highest_player)
 	}
 }

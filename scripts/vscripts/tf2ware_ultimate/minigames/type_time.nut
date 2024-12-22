@@ -101,6 +101,7 @@ function OnPlayerSay(player, text)
 			if (first)
 			{
 				Ware_ChatPrint(null, "{player} {color}said the time first!", player, TF_COLOR_DEFAULT)
+				Ware_GiveBonusPoints(player)
 				first = false
 			}
 		}

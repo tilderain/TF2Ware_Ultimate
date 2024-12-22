@@ -90,7 +90,7 @@ function OnStart()
 		// "correct_answer" is what will be put on the correct door (must be a string). It should visually match the strings in answers
 		// "answers" is an array of strings that the minigame chooses for the incorrect doors. It should visually match the string correct_answer.
 		// The array must have at least 2 incorrect answers. It does not need to contain the correct answer; if it does it will be removed.
-		// Ideally the array should be self-contained, though there is one exception minigame_names: an array of all minigames that have been played this round, converted to minigame.name
+		// Ideally the array should be self-contained, though there is one exception, minigame_names: an array of all minigames that have been played this round, converted to minigame.name
 	]
 
 	

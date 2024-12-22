@@ -145,6 +145,7 @@ function OnEnd()
 	{
 		Ware_ChatPrint(null, "{player} {color}is the richest with ${int} collected!", 
 			highest_player, TF_COLOR_DEFAULT, highest_amount)
+		Ware_GiveBonusPoints(highest_player)
 	}
 }
 

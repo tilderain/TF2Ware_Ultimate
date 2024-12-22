@@ -56,6 +56,7 @@ if (minigame.location == "rocketjump")
 					{
 						Ware_ChatPrint(null, "{player} {color}made it to the top first in {%.1f} seconds!",
 							player, TF_COLOR_DEFAULT, Ware_GetMinigameTime())
+						Ware_GiveBonusPoints(player)
 						first = false
 					}
 				}

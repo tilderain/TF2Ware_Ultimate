@@ -104,6 +104,7 @@ function OnUpdate()
 			{
 				Ware_ChatPrint(null, "{player} {color}completed the race first in {%d}:{%02d}!", 
 					player, TF_COLOR_DEFAULT, hms.minutes, hms.seconds)
+				Ware_GiveBonusPoints(player)
 				first = false
 			}
 			else

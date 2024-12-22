@@ -236,6 +236,7 @@ function OnEndzoneTouch()
 		{
 			Ware_ChatPrint(null, "{player} {color}reached the end first in {%d}:{%02d}!", 
 				player, TF_COLOR_DEFAULT, hms.minutes, hms.seconds)
+				Ware_GiveBonusPoints(player)
 			first = false
 		}
 		else
