@@ -354,6 +354,9 @@ function OnGameEvent_player_spawn(params)
 			return
 	}
 	
+	if (IsInWaitingForPlayers())
+		Ware_ShowScreenOverlay2(player, "shaders/tf2ware_ultimate/logozoom")
+	
 	local data = player.GetScriptScope().ware_data
 
 	// this is to fix persisting attributes if restarting mid-minigame
