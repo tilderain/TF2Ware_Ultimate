@@ -2,10 +2,12 @@
 
 #include "common.hlsl"
 
-#define Time       Constants0.x
-#define ZoomDepth  Constants0.y
-#define ZoomFreq   Constants0.z
-#define ZoomOffset Constants0.w
+#define Time        Constants0.x
+#define ZoomDepth   Constants0.y
+#define ZoomFreq    Constants0.z
+#define ZoomOffset  Constants0.w
+#define XPos        Constants1.x
+#define YPos        Constants1.y
 
 float4 main( PS_INPUT i ) : COLOR
 {
@@ -15,8 +17,8 @@ float4 main( PS_INPUT i ) : COLOR
     
     float2 logo = uv;
     
-    logo.x -= (0.5 - (TexBaseSize.x / (2.0*TexBaseSize.y)));
-    logo.y += (0.6 - (TexBaseSize.y / (2.0*TexBaseSize.y))); // slightly higher than centre
+    logo.x -= (XPos - (TexBaseSize.x / (2.0*TexBaseSize.y)));
+    logo.y += (YPos - (TexBaseSize.y / (2.0*TexBaseSize.y))); // slightly higher than centre
     logo *= zoom;
     logo.x *= 1.0 / (TexBaseSize.x / TexBaseSize.y);
     
