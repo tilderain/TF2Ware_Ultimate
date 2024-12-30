@@ -1,0 +1,1 @@
+original logo exports don't meet source engine texture requirements (equal dimensions that are a power of two)

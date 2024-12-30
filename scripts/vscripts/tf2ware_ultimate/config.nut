@@ -147,6 +147,8 @@ Ware_SpecialRounds <-
 // only for precaching purposes
 Ware_GameOverlays <-
 [
+	"__logo_text"
+	"__logo_textless"
 	"chalkboard"
 	"countdown_1"
 	"countdown_2"
