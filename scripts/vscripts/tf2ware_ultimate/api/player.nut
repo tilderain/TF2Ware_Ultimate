@@ -768,64 +768,56 @@ function Ware_ShowMinigameText(player, text, color = "255 255 255", x = -1.0, y 
 		Ware_ShowText(player, CHANNEL_MINIGAME, text, Ware_GetMinigameRemainingTime(), color, x, y)
 }
 
-// Shows the primary overlay texture on a player
+// Shows the primary overlay texture on the specified player(s)
 // If name is null, it removes the overlay
-function Ware_ShowScreenOverlay(player, name)
+function Ware_ShowScreenOverlay(players, name)
 {
-	player.SetScriptOverlayMaterial(name ? name : "")
+	if (typeof(players) != "array")
+		players = [players]
+	foreach (player in players)
+		player.SetScriptOverlayMaterial(name ? name : "")
 }
 
-// Shows the secondary overlay texture on a player
+// Shows the secondary overlay texture on the specified player(s)
 // This will also hide the name indicator for players when they are under the crosshair
 // (As it shows up in front of the overlay)
 // If name is null, it removes the overlay, unless a special round wants to use another it's own
-function Ware_ShowScreenOverlay2(player, name)
+function Ware_ShowScreenOverlay2(players, name)
 {
+	if (typeof(players) != "array")
+		players = [players]
+	
 	if (!name)
 	{
-		player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
-		
-		local overlay_name = "off";
-		if (Ware_SpecialRound && Ware_SpecialRound.cb_get_overlay2.IsValid())
-			overlay_name = Ware_SpecialRound.cb_get_overlay2()
+		foreach (player in players)
+		{
+			player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
 			
-		ClientCmd.AcceptInput("Command", format("r_screenoverlay %s", overlay_name), player, null)
+			local overlay_name = "off";
+			if (Ware_SpecialRound && Ware_SpecialRound.cb_get_overlay2.IsValid())
+				overlay_name = Ware_SpecialRound.cb_get_overlay2()
+				
+			ClientCmd.AcceptInput("Command", format("r_screenoverlay %s", overlay_name), player, null)
+		}
 	}
 	else
 	{
-		player.AddHudHideFlags(HIDEHUD_TARGET_ID)
-		ClientCmd.AcceptInput("Command", format("r_screenoverlay %s", name), player, null)
-	}	
-}
-
-// Shows a primary overlay texture for everyone
-// See Ware_ShowScreenOverlay
-function Ware_ShowGlobalScreenOverlay(name)
-{
-	foreach (player in Ware_MinigamePlayers)
-		Ware_ShowScreenOverlay(player, name)
-}
-
-// Shows a secondary overlay texture for everyone
-// See Ware_ShowScreenOverlay2
-function Ware_ShowGlobalScreenOverlay2(name)
-{
-	foreach (player in Ware_MinigamePlayers)
-		Ware_ShowScreenOverlay2(player, name)
+		foreach (player in players)
+		{
+			player.AddHudHideFlags(HIDEHUD_TARGET_ID)
+			ClientCmd.AcceptInput("Command", format("r_screenoverlay %s", name), player, null)
+		}
+	}
 }
 
 // Runs a client command on the given player
 // If player is null, the command is ran on all playeers
-function Ware_RunClientCommand(player, command)
+function Ware_RunClientCommand(players, command)
 {
+	if (typeof(players) != "array")
+		players = [players]
+		
 	local cmd = ClientCmd
-	if (player)
-	{
+	foreach (player in players)
 		cmd.AcceptInput("Command", command, player, null)
-	}
-	else
-	{
-		foreach (player in Ware_Players)
-			cmd.AcceptInput("Command", command, player, null)
-	}
 }

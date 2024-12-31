@@ -68,7 +68,7 @@ function OnStart()
 	local timer = 5
 	Ware_CreateTimer(function()
 	{
-		Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%d", timer))
+		Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%d", timer))
 		if (timer > 0)
 			Ware_PlaySoundOnAllClients(format("vo/announcer_begins_%dsec.mp3", timer), 1.0, 100 * Ware_GetPitchFactor())
 		
@@ -81,7 +81,7 @@ function OnStart()
 			// when hits 0, unfreeze players
 			foreach (player in Ware_MinigamePlayers)
 				player.RemoveCond(TF_COND_HALLOWEEN_KART_CAGE)
-			Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/minigames/grand_prix")
+			Ware_ShowScreenOverlay(Ware_MinigamePlayers, "hud/tf2ware_ultimate/minigames/grand_prix")
 		}
 	}, 0.0)
 }

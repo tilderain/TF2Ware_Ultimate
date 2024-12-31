@@ -14,15 +14,15 @@ function GetOverlay2()
 
 function OnStart()
 {
-	Ware_ShowGlobalScreenOverlay2(overlay)
+	Ware_ShowScreenOverlay2(Ware_Players, overlay)
 }
 
 function OnMinigameStart()
 {
-	Ware_ShowGlobalScreenOverlay2(overlay)
+	Ware_ShowScreenOverlay2(Ware_Players, overlay)
 }
 
 function OnEnd()
 {
-	Ware_ShowGlobalScreenOverlay2(null)
+	Ware_ShowScreenOverlay2(Ware_Players, null)
 }

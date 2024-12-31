@@ -103,14 +103,14 @@ function GiocaJouer_Countdown(delay)
 		if (timer <= 8)
 		{
 			// count up to 8
-			Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%s", timer.tostring()))
+			Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%s", timer.tostring()))
 			timer++
 			return 0.489 * Ware_GetPitchFactor()
 		}
 		else
 		{
 			// kill the overlay
-			Ware_ShowGlobalScreenOverlay(null)
+			Ware_ShowScreenOverlay(Ware_MinigamePlayers, null)
 		}
 	}, delay * Ware_GetPitchFactor())
 }
@@ -135,7 +135,7 @@ function GiocaJouer_PassPlayer(player, pass)
 function OnMicroStart()
 {
 	minigame.description = microgame_info[micro][0]
-	Ware_ShowGlobalScreenOverlay(microgame_info[micro][1])
+	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
 	
 	// if we consider reset a microgame, we dont have to make a separate function
 	if (micro == MICRO_RESET)

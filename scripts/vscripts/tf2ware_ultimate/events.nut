@@ -160,6 +160,7 @@ function OnGameEvent_teamplay_round_start(params)
 		if (data.start_sound)
 			Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 		player.SetScriptOverlayMaterial("")
+		cmd.AcceptInput("Command", "r_screenoverlay off", player, null)
 		cmd.AcceptInput("Command", "r_cleardecals", player, null)
 		BrickPlayerScore(player)
 	}

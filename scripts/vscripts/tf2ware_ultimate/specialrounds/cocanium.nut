@@ -15,21 +15,21 @@ function GetOverlay2()
 
 function OnStart()
 {
-	Ware_ShowGlobalScreenOverlay2(overlay)
-	Ware_RunClientCommand(null, "dsp_player 47")
+	Ware_ShowScreenOverlay2(Ware_Players, overlay)
+	Ware_RunClientCommand(Ware_Players, "dsp_player 47")
 	sky_name = Convars.GetStr("sv_skyname")
 	SetSkyboxTexture("sky_trainyard_01")
 }
 
 function OnMinigameStart()
 {
-	Ware_RunClientCommand(null, "dsp_player 47")
-	Ware_ShowGlobalScreenOverlay2(overlay)
+	Ware_RunClientCommand(Ware_Players, "dsp_player 47")
+	Ware_ShowScreenOverlay2(Ware_Players,overlay)
 }
 
 function OnEnd()
 {
-	Ware_RunClientCommand(null, "dsp_player 0")
-	Ware_ShowGlobalScreenOverlay2(null)
+	Ware_RunClientCommand(Ware_Players, "dsp_player 0")
+	Ware_ShowScreenOverlay2(Ware_Players, null)
 	SetSkyboxTexture(sky_name)
 }

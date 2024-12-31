@@ -86,7 +86,7 @@ function OnStart()
 	local timer = 5
 	Ware_CreateTimer(function()
 	{
-		Ware_ShowGlobalScreenOverlay(format("hud/tf2ware_ultimate/countdown_%d", timer))
+		Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%d", timer))
 		if (timer > 0)
 			Ware_PlaySoundOnAllClients(format("vo/announcer_begins_%dsec.mp3", timer), 1.0, 100 * Ware_GetPitchFactor())
 		
@@ -96,7 +96,7 @@ function OnStart()
 			return 1.0
 		else
 		{
-			Ware_ShowGlobalScreenOverlay(null)
+			Ware_ShowScreenOverlay(Ware_MinigamePlayers, null)
 			
 			for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
 				EntityAcceptInput(ent, "Disable")

@@ -176,7 +176,7 @@ function BeepBlock_Interrupt()
 	interrupted = true
 	
 	Ware_PlayMinigameMusic(null, minigame.music, SND_STOP)
-	Ware_ShowGlobalScreenOverlay("hud/tf2ware_ultimate/minigames/hurry_up")
+	Ware_ShowScreenOverlay(Ware_MinigamePlayers, "hud/tf2ware_ultimate/minigames/hurry_up")
 	Ware_PlaySoundOnAllClients(hurryup_sound)
 	
 	Ware_CreateTimer(function() {

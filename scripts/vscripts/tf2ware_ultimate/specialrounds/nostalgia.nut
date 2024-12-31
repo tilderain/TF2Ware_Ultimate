@@ -14,22 +14,22 @@ function GetOverlay2()
 
 function OnStart()
 {
-	Ware_ShowGlobalScreenOverlay2(overlay)
-	Ware_RunClientCommand(null, "dsp_player 59")
+	Ware_ShowScreenOverlay2(Ware_Players, overlay)
+	Ware_RunClientCommand(Ware_Players, "dsp_player 59")
 }
 
 function OnMinigameStart()
 {
-	Ware_ShowGlobalScreenOverlay2(overlay)
+	Ware_ShowScreenOverlay2(Ware_Players, overlay)
 }
 
 function OnMinigameEnd()
 {
-	Ware_RunClientCommand(null, "dsp_player 59")
+	Ware_RunClientCommand(Ware_Players, "dsp_player 59")
 }
 
 function OnEnd()
 {
-	Ware_RunClientCommand(null, "dsp_player 0")
-	Ware_ShowGlobalScreenOverlay2(null)
+	Ware_RunClientCommand(Ware_Players, "dsp_player 0")
+	Ware_ShowScreenOverlay2(Ware_Players, null)
 }
