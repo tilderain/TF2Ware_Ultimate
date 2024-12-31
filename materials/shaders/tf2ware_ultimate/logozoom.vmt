@@ -28,8 +28,8 @@ screenspace_general
 	$c0_y 0.3  // zoom depth
 	$c0_z 0.3  // zoom frequency
 	$c0_w 2.0  // zoom offset
-	$c1_x 0.5  // x position
-	$c1_y 0.6  // y position
+	$c1_x 0.18 // x position
+	$c1_y 0.75 // y position
 	
 	Proxies
 	{
