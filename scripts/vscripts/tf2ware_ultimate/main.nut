@@ -634,7 +634,10 @@ function Ware_PlayStartSound()
 	ware_data.start_sound = true
 	 
 	if (IsInWaitingForPlayers())
+	{
 		Ware_PlayGameSound(self, "lets_get_started")
+		Ware_ShowScreenOverlay2(self, "shaders/tf2ware_ultimate/logozoom")
+	}
 }
 
 function Ware_CheckHomeLocation(player_count)

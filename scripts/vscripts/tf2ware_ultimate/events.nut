@@ -355,9 +355,6 @@ function OnGameEvent_player_spawn(params)
 			return
 	}
 	
-	if (IsInWaitingForPlayers())
-		Ware_ShowScreenOverlay2(player, "shaders/tf2ware_ultimate/logozoom")
-	
 	local data = player.GetScriptScope().ware_data
 
 	// this is to fix persisting attributes if restarting mid-minigame
@@ -379,7 +376,7 @@ function OnGameEvent_player_spawn(params)
 			player.AddCond(TF_COND_TELEPORTED)
 		
 		if (!data.start_sound)
-			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 2.0)
+			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 1.0)
 		
 		local melee = Ware_ParseLoadout(player)		
 		if (melee && !Ware_Finished)
