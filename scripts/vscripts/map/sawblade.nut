@@ -50,7 +50,7 @@ function OnStartTouch()
 	
 	if (!touched)
 	{
-		if (sawblade != null)
+		if (sawblade != null && sawblade.IsValid())
 			sawblade.SetSkin(1)
 		touched = true
 	}
