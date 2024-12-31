@@ -18,7 +18,7 @@ float4 main( PS_INPUT i ) : COLOR
     float2 logo = uv;
     
     logo.x -= (XPos - (TexBaseSize.x / (2.0*TexBaseSize.y)));
-    logo.y += (YPos - (TexBaseSize.y / (2.0*TexBaseSize.y))); // slightly higher than centre
+    logo.y += (YPos - (TexBaseSize.y / (2.0*TexBaseSize.y)));
     logo *= zoom;
     logo.x *= 1.0 / (TexBaseSize.x / TexBaseSize.y);
     
