@@ -56,6 +56,9 @@ class Ware_SpecialRoundData
 	// Amount of minigames played before a boss, default is Ware_BossThreshold in config.nut
 	boss_threshold           = null
 	
+	// == Internal use only ==
+	file_name                = null
+	
 	// == Callbacks == 
 	// If these functions exist in a special round's scope, they are passed to the appropriate points in the code.
 	// Game events in a special round scope are also supported in the typical format (e.g. "OnGameEvent_player_builtobject(params)")

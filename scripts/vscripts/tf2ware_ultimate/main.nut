@@ -238,7 +238,6 @@ if (!("Ware_Precached" in this))
 	Ware_SpecialRoundSavedConvars <- {}
 	Ware_SpecialRoundEvents       <- []
 	Ware_SpecialRoundPrevious     <- false
-	Ware_SpecialRoundFilename     <- ""
 	
 	Ware_AnnotationIDs            <- 0
 	
@@ -840,7 +839,7 @@ function Ware_BeginSpecialRoundInternal()
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
 	local special_round = Ware_SpecialRoundScope.special_round
-	Ware_SpecialRoundFilename = round
+	special_round.file_name = round
 		
 	CreateTimer(function() 
 	{	
@@ -1213,18 +1212,15 @@ function Ware_StartMinigameInternal(is_boss)
 	
 	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
 	
-	local valid_player_indices = ""
+	local player_indices_valid = ""
 	foreach (player in valid_players)
-	{
-		valid_player_indices += player.entindex()
-		valid_player_indices += " "
-	}
+		player_indices_valid += player.entindex().tochar()
 	
 	Ware_EventCallback("minigame_start", 
 	{ 
 		name = Ware_Minigame.name
 		file_name = minigame
-		players_valid = valid_player_indices
+		players_valid = player_indices_valid
 		is_boss = is_boss
 	})
 	
@@ -1521,25 +1517,30 @@ function Ware_FinishMinigameInternal()
 
 	local all_passed = true
 	local all_failed = true
-	
 	local pass_flag = !(Ware_SpecialRound && Ware_SpecialRound.opposite_win)
-	
+
 	local can_suicide = Ware_Minigame.allow_suicide
+	local player_indices_passed = "", player_indices_valid = ""
 	foreach (data in Ware_MinigamePlayersData)
 	{
-		if (!data.passed == pass_flag && data.suicided && !can_suicide)
-		{
-			data.passed = !pass_flag
-			Ware_ChatPrint(data.player, "{color}You were not given points for suiciding.", TF_COLOR_DEFAULT)
-		}
-		
+		local index_char = data.index.tochar()
+		player_indices_valid += index_char
 		if (data.passed == pass_flag)
+		{
 			all_failed = false
+			player_indices_passed += index_char
+			if (data.suicided && !can_suicide)
+			{
+				data.passed = !pass_flag
+				Ware_ChatPrint(data.player, "{color}You were not given points for suiciding.", TF_COLOR_DEFAULT)
+			}
+		}	
 		else
+		{
 			all_passed = false
+		}
 	}
 	
-	local player_indices_passed = ""
 	foreach (data in Ware_MinigamePlayersData)
 	{
 		local player = data.player	
@@ -1548,8 +1549,6 @@ function Ware_FinishMinigameInternal()
 		{
 			overlay = "hud/tf2ware_ultimate/default_victory_all"
 			sound = "victory"
-			player_indices_passed += data.index
-			player_indices_passed += " "			
 		}
 		else if (all_failed)
 		{
@@ -1560,8 +1559,6 @@ function Ware_FinishMinigameInternal()
 		{
 			overlay = "hud/tf2ware_ultimate/default_victory"
 			sound = "victory"
-			player_indices_passed += data.index
-			player_indices_passed += " "
 		}
 		else
 		{
@@ -1583,6 +1580,10 @@ function Ware_FinishMinigameInternal()
 	
 	Ware_EventCallback("minigame_end", 
 	{
+		name = Ware_Minigame.name
+		file_name = Ware_Minigame.file_name
+		is_boss = Ware_Minigame.boss
+		players_valid = player_indices_valid		
 		players_passed = player_indices_passed
 	})
 	
@@ -1693,8 +1694,7 @@ function Ware_GameOverInternal()
 	foreach (data in winners)
 	{
 		local player = data.player
-		player_winner_indices += data.index
-		player_winner_indices += " "
+		player_winner_indices += data.index.tochar()
 
 		player.Regenerate(true)
 		player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
@@ -1746,8 +1746,7 @@ function Ware_GameOverInternal()
 	{
 		local player = PlayerInstanceFromIndex(i);
 		local score = player ? player.GetScriptScope().ware_data.score : 0
-		player_scores += score
-		player_scores += " "
+		player_scores += score.tochar()
 	}
 	
 	Ware_EventCallback("game_over", 
@@ -1755,7 +1754,7 @@ function Ware_GameOverInternal()
 		players_won        = player_winner_indices
 		players_score      = player_scores
 		special_round_name = Ware_SpecialRound ? Ware_SpecialRound.name : ""
-		special_round_file_name = Ware_SpecialRound ? Ware_SpecialRoundFilename : ""
+		special_round_file_name = Ware_SpecialRound ? Ware_SpecialRound.file_name : ""
 	})
 	
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
