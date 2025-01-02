@@ -1212,10 +1212,19 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_MinigameStartTime = Time()
 	
 	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
+	
+	local valid_player_indices = ""
+	foreach (player in valid_players)
+	{
+		valid_player_indices += player.entindex()
+		valid_player_indices += " "
+	}
+	
 	Ware_EventCallback("minigame_start", 
 	{ 
 		name = Ware_Minigame.name
 		file_name = minigame
+		players_valid = valid_player_indices
 		is_boss = is_boss
 	})
 	
