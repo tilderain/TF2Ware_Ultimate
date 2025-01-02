@@ -802,7 +802,7 @@ function Ware_BeginSpecialRoundInternal()
 			local min_players = Ware_SpecialRoundScope.special_round.min_players
 			if (player_count >= min_players)
 			{
-				if (!("OnPick" in Ware_SpecialRoundScope) || Ware_SpecialRoundScope.OnPick())	
+				if (!("OnPick" in Ware_SpecialRoundScope) || Ware_SpecialRoundScope.OnPick(is_forced))	
 					success = true
 				else if (is_forced)
 					Ware_Error("Not loading '%s' as it rejected the pick", round)	
@@ -1175,7 +1175,7 @@ function Ware_StartMinigameInternal(is_boss)
 			local min_players = Ware_MinigameScope.minigame.min_players
 			if (player_count >= min_players)
 			{
-				if (!("OnPick" in Ware_MinigameScope) || Ware_MinigameScope.OnPick())	
+				if (!("OnPick" in Ware_MinigameScope) || Ware_MinigameScope.OnPick(is_forced))	
 					success = true
 				else if (is_forced)
 					Ware_Error("Not loading '%s' as it rejected the pick", minigame)	

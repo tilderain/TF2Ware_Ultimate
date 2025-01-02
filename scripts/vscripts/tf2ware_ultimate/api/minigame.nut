@@ -113,7 +113,7 @@ class Ware_MinigameData
 	// OnPrecache()                        - Ware_PrecacheNext checks all minigame scopes for OnPrecache when the map is loaded and calls any found. 
 	//                                     - Use this if you need to precache anything.
 	cb_on_precache          = null
-	// OnPick()                            - Called when the minigame is selected for play. 
+	// OnPick(is_forced)                   - Called when the minigame is selected for play. 
 	//                                     - Returning false prevents the minigame from being selected.
 	cb_on_pick              = null
 	// OnTeleport(players)                 - Called when the minigame is teleporting players to the minigame's location.

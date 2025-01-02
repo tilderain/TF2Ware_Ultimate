@@ -70,7 +70,7 @@ class Ware_SpecialRoundData
 	// OnPrecache()               - Ware_PrecacheNext checks all special round scopes for OnPrecache when the map is loaded and calls any found. 
 	//                            - Use this if you need to precache anything.
 	cb_on_precache             = null
-	// OnPick()                   - Called when the special round is selected for play. 
+	// OnPick(is_forced)          - Called when the special round is selected for play. 
 	//                            - Returning false prevents the minigame from being selected.
 	cb_on_pick                 = null
 	// OnStart()                  - Called when this special round begins.

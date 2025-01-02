@@ -8,7 +8,7 @@ special_round <- Ware_SpecialRoundData
 	bonus_points = true
 })
 
-function OnPick()
+function OnPick(is_forced)
 {
 	return !Ware_BonusPoints
 }

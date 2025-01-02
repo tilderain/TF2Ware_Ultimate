@@ -37,7 +37,7 @@ choices <- [
 	}
 ]
 
-function OnPick()
+function OnPick(is_forced)
 {
 	// don't allow this minigame near start of the round
 	return Ware_MinigamesPlayed >= 3
