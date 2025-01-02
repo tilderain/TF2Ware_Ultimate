@@ -20,7 +20,7 @@ function Ware_TogglePlayerLoadouts(toggle)
 		return
 	Ware_AllowLoadouts = toggle
 	if (Ware_Plugin)
-		Ware_SourcemodRoutine(toggle ? "loadout_on" : "loadout_off", {})
+		Ware_EventCallback(toggle ? "loadout_on" : "loadout_off", {})
 }
 
 // Sets the intermission state

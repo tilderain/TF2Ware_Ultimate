@@ -177,8 +177,9 @@ function Ware_UpdateGlobalMaterialState()
 	})
 }
 
-// Proxy to communicate information from VScript to SourceMod plugins
-function Ware_SourcemodRoutine(name, keyvalues)
+// Proxy intended to communicate information from VScript to SourceMod plugins
+// External VScript plugins can also listen for this event to catch too
+function Ware_EventCallback(name, keyvalues)
 {
 	keyvalues.id <- "tf2ware_ultimate"
 	keyvalues.routine <- name

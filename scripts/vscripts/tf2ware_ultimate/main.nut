@@ -130,6 +130,7 @@ SetConvarValue("tf_player_movement_restart_freeze", 0)
 
 if (Ware_Plugin)
 {
+	// used on sourcemod side to allow chat messages to be filtered
 	Ware_TextProxy <- CreateEntitySafe("point_worldtext")
 	Ware_TextProxy.KeyValueFromString("classname", "ware_textproxy")
 }
@@ -989,7 +990,7 @@ function Ware_BeginIntermissionInternal(is_boss)
 function Ware_SetTimeScaleInternal(timescale)
 {
 	if (Ware_Plugin)
-		Ware_SourcemodRoutine("timescale", { value = timescale })
+		Ware_EventCallback("timescale", { value = timescale })
 	else
 		SendToConsole(format("host_timescale %g", timescale))
 	
@@ -1199,6 +1200,11 @@ function Ware_StartMinigameInternal(is_boss)
 	}
 	
 	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
+	Ware_EventCallback("minigame_start", 
+	{ 
+		name = minigame
+		is_boss = is_boss
+	})
 
 	Ware_MinigameEnded = false
 	Ware_Minigame = Ware_MinigameScope.minigame
@@ -1300,7 +1306,7 @@ function Ware_StartMinigameInternal(is_boss)
 	local event_prefix_len = event_prefix.len()
 	foreach (key, value in Ware_MinigameScope)
 	{
-		if (typeof(value) == "function" && typeof(key) == "string" && key.find(event_prefix, 0) == 0)
+		if (typeof(value) == "function" && typeof(key) == "string" && startswith(key, event_prefix))
 		{
 				local event_name = key.slice(event_prefix_len)
 				if (event_name.len() > 0)
@@ -1517,16 +1523,17 @@ function Ware_FinishMinigameInternal()
 			all_passed = false
 	}
 	
+	local player_indices_passed = ""
 	foreach (data in Ware_MinigamePlayersData)
 	{
-		local player = data.player
-		
-		local overlay
-		local sound
+		local player = data.player	
+		local overlay, sound
 		if (all_passed)
 		{
 			overlay = "hud/tf2ware_ultimate/default_victory_all"
 			sound = "victory"
+			player_indices_passed += data.index
+			player_indices_passed += " "			
 		}
 		else if (all_failed)
 		{
@@ -1537,6 +1544,8 @@ function Ware_FinishMinigameInternal()
 		{
 			overlay = "hud/tf2ware_ultimate/default_victory"
 			sound = "victory"
+			player_indices_passed += data.index
+			player_indices_passed += " "
 		}
 		else
 		{
@@ -1555,6 +1564,12 @@ function Ware_FinishMinigameInternal()
 		else if (data.passed)
 			data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
 	}
+	
+	Ware_EventCallback("minigame_end", 
+	{ 
+		name = Ware_Minigame.name 
+		players_passed = player_indices_passed
+	})
 	
 	local top_players = Ware_MinigameTopScorers
 	top_players.clear()	
@@ -1659,9 +1674,13 @@ function Ware_GameOverInternal()
 	}
 	
 	Ware_TogglePlayerLoadouts(true)
+	local player_winner_indices = ""
 	foreach (data in winners)
 	{
 		local player = data.player
+		player_winner_indices += data.index
+		player_winner_indices += " "
+
 		player.Regenerate(true)
 		player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
 		Ware_PlayGameSound(player, "gameclear")
@@ -1706,6 +1725,22 @@ function Ware_GameOverInternal()
 	}
 	
 	Ware_CriticalZone = false
+	
+	local player_scores = ""
+	for (local i = 1; i <= MAX_CLIENTS; i++)
+	{
+		local player = PlayerInstanceFromIndex(i);
+		local score = player ? player.GetScriptScope().ware_data.score : 0
+		player_scores += score
+		player_scores += " "
+	}
+	
+	Ware_EventCallback("game_over", 
+	{
+		players_won   = player_winner_indices
+		players_score = player_scores
+		special_round = Ware_SpecialRound ? Ware_SpecialRound.name : ""
+	})
 	
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
 	{
