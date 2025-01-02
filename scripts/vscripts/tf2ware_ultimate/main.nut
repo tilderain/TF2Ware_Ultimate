@@ -1198,19 +1198,20 @@ function Ware_StartMinigameInternal(is_boss)
 				Ware_Error("Failed to force load '%s', falling back to rotation", minigame)
 		}
 	}
-	
-	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
-	Ware_EventCallback("minigame_start", 
-	{ 
-		name = minigame
-		is_boss = is_boss
-	})
 
 	Ware_MinigameEnded = false
 	Ware_Minigame = Ware_MinigameScope.minigame
 	Ware_Minigame.boss = is_boss
 	Ware_Minigame.file_name = minigame
 	Ware_MinigameStartTime = Time()
+	
+	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
+	Ware_EventCallback("minigame_start", 
+	{ 
+		name = Ware_Minigame.name
+		file_name = minigame
+		is_boss = is_boss
+	})
 	
 	foreach (name, value in Ware_Minigame.convars)
 	{
@@ -1566,8 +1567,7 @@ function Ware_FinishMinigameInternal()
 	}
 	
 	Ware_EventCallback("minigame_end", 
-	{ 
-		name = Ware_Minigame.name 
+	{
 		players_passed = player_indices_passed
 	})
 	
