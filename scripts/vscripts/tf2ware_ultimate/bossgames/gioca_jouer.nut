@@ -70,7 +70,7 @@ function OnPrecache()
 
 function OnPick()
 {
-	return Ware_Timescale == 1.0 // gioca doesnt really work at other timescales
+	return Ware_TimeScale == 1.0 // gioca doesnt really work at other timescales
 }
 
 function OnStart()
