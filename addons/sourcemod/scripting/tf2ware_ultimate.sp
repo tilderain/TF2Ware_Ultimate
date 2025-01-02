@@ -4,6 +4,8 @@
 // - block cheat commands and impulses on the server-side, as sv_cheats is required for host_timescale modification
 // - use tournament whitelist system to block weapons/body cosmetics/taunts to prevent spawn lagspikes
 
+#define LOADOUT_WHITELISTER 1
+
 #include <sourcemod>
 #include <sdktools>
 
@@ -19,7 +21,9 @@ public Plugin myinfo =
 	url         = "https://github.com/ficool2/TF2Ware_Ultimate"
 };
 
+#if LOADOUT_WHITELISTER
 #include "loadout_whitelister.sp"
+#endif
 
 bool g_Enabled = false;
 
@@ -90,11 +94,15 @@ public Action ListenerVScript(Event event, const char[] name, bool dontBroadcast
 		}
 		else if (StrEqual(routine, "loadout_on"))
 		{
+#if LOADOUT_WHITELISTER
 			script_allow_loadout = true;
+#endif
 		}
 		else if (StrEqual(routine, "loadout_off"))
 		{
+#if LOADOUT_WHITELISTER
 			script_allow_loadout = false;
+#endif
 		}
 		else
 		{
@@ -146,6 +154,7 @@ void Enable()
 	
 	LogMessage("Enabling...");
 	
+#if LOADOUT_WHITELISTER
 	GameData gamedata = new GameData("tf2ware_ultimate");
 	if (gamedata)	
 	{
@@ -156,6 +165,7 @@ void Enable()
 		LogError("Failed to retrieve 'tf2ware_ultimate' gamedata, loadout caching will be unavailable");	
 	}
 	delete gamedata;
+#endif
 
 	host_timescale = FindConVar("host_timescale");
 	sv_cheats = FindConVar("sv_cheats");
@@ -217,8 +227,10 @@ void Disable(bool map_unload)
 	
 	LogMessage("Disabling...");
 	
+#if LOADOUT_WHITELISTER
 	LoadoutWhitelister_End(map_unload);
-	
+#endif
+
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(0, true, false);
 	nb_update_frequency.SetFloat(0.1, false, false);
@@ -251,7 +263,9 @@ void Disable(bool map_unload)
 
 public void OnClientPutInServer(int client)
 {
+#if LOADOUT_WHITELISTER
 	LoadoutWhitelister_InitClient(client);
+#endif
 }
 
 public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
@@ -296,7 +310,9 @@ public void OnMapStart()
 {
 	Enable();
 	
+#if LOADOUT_WHITELISTER
 	LoadoutWhitelister_ReloadWhitelist();
+#endif
 }
 
 public void OnMapEnd()
