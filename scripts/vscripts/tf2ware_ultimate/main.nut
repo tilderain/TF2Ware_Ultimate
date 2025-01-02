@@ -238,6 +238,7 @@ if (!("Ware_Precached" in this))
 	Ware_SpecialRoundSavedConvars <- {}
 	Ware_SpecialRoundEvents       <- []
 	Ware_SpecialRoundPrevious     <- false
+	Ware_SpecialRoundFilename     <- ""
 	
 	Ware_AnnotationIDs            <- 0
 	
@@ -733,6 +734,8 @@ function Ware_SetupSpecialRoundCallbacks()
 
 function Ware_BeginSpecialRoundInternal()
 {
+	Ware_CriticalZone = true
+	
 	// copied logic from minigame start
 	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
@@ -837,6 +840,7 @@ function Ware_BeginSpecialRoundInternal()
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
 	local special_round = Ware_SpecialRoundScope.special_round
+	Ware_SpecialRoundFilename = round
 		
 	CreateTimer(function() 
 	{	
@@ -898,6 +902,8 @@ function Ware_BeginSpecialRoundInternal()
 			return text_interval
 		}
 	}, 0.0)
+	
+	Ware_CriticalZone = false
 }
 
 function Ware_EndSpecialRoundInternal()
@@ -1737,9 +1743,10 @@ function Ware_GameOverInternal()
 	
 	Ware_EventCallback("game_over", 
 	{
-		players_won   = player_winner_indices
-		players_score = player_scores
-		special_round = Ware_SpecialRound ? Ware_SpecialRound.name : ""
+		players_won        = player_winner_indices
+		players_score      = player_scores
+		special_round_name = Ware_SpecialRound ? Ware_SpecialRound.name : ""
+		special_round_file_name = Ware_SpecialRound ? Ware_SpecialRoundFilename : ""
 	})
 	
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
