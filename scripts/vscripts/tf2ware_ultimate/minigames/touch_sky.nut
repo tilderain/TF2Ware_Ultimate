@@ -10,7 +10,7 @@ minigame <- Ware_MinigameData
 
 highest_player <- null
 highest_height <- 0.0
-target_height  <- 1500.0
+target_height  <- 1400.0
 
 function OnStart()
 {
