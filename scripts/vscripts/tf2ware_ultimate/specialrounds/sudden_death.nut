@@ -39,13 +39,13 @@ function OnMinigameCleanup()
 			knocked_out,
 			knocked_out > 1 ? "players have" : "player has",
 			ValidPlayers.len(),
-			ValidPlayers.len() > 1 ? "players" : "player")
+			ValidPlayers.len() == 1 ? "player" : "players")
 	}
 	else
 	{
 		Ware_ChatPrint(null, "No one has been knocked out! There is {int} {str} still standing.", 
 			ValidPlayers.len(),
-			ValidPlayers.len() > 1 ? "players" : "player")		
+			ValidPlayers.len() == 1 ? "player" : "players")		
 	}
 }
 
