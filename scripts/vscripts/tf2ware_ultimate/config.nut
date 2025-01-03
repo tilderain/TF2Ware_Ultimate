@@ -136,6 +136,7 @@ Ware_SpecialRounds <-
 	//"size_matters" // TODO fix stuck issues
 	"skull"
 	"slow_mo"
+	"sudden_death"
 	"team_battles"
 	"thirdperson"
 	"time_attack"

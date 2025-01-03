@@ -88,6 +88,8 @@ class Ware_SpecialRoundData
 	// OnMinigameEnd()            - Called by Ware_EndMinigame when a minigame ends. 
 	//                            - This is before the minigame is cleaned up, so you can still refer to Ware_Minigame and similar.
 	cb_on_minigame_end         = null
+	// OnMinigameCleanup()        - Called by Ware_EndMinigame when a minigame cleans up, before scores are calculated.
+	cb_on_minigame_cleanup     = null
 	// OnBeginIntermission(is_boss) - Called when intermission starts.
 	//                              - If this returns true, the default logic for Ware_BeginIntermission is replaced.
 	//                              - Note there are some debug functions that are always called.
@@ -102,6 +104,8 @@ class Ware_SpecialRoundData
 	// GetOverlay2()              - Replaces the default secondary overlay texture in Ware_ShowScreenOverlay2 (see player.nut). 
 	//                            - Return an overlay texture for it to be set.
 	cb_get_overlay2            = null
+	// OnCheckGameOver()          - Called by Ware_FinishMinigameInternal, return true to force an early game over
+	cb_on_check_gameover       = null
 	// GetValidPlayers()          - Replaces Ware_GetValidPlayers, which is used when selecting players to play a minigame.
 	//                            - Return an array of players in this function and those players will be assigned to play a minigame and added to Ware_MinigamePlayers.
 	cb_get_valid_players       = null
@@ -126,6 +130,8 @@ class Ware_SpecialRoundData
 	cb_on_player_inventory     = null
 	// GetPlayerRoll(player)      - Replaces the z value in player QAngles on spawn and teleport.
 	cb_get_player_roll         = null
+	// CanPlayerRespawn(player)   - If returns true, allows a dead player to respawn
+	cb_can_player_respawn      = null
 	// OnSpeedup()                - Called by Ware_Speedup.
 	//                            - If this returns true, replaces the speedup logic in a similar way to OnBeginIntermission.
 	cb_on_speedup              = null

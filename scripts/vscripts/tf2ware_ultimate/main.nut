@@ -713,7 +713,9 @@ function Ware_SetupSpecialRoundCallbacks()
 	
 	special_round.cb_get_overlay2            = Ware_Callback(scope, "GetOverlay2")
 	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")
+	special_round.cb_can_player_respawn      = Ware_Callback(scope, "CanPlayerRespawn")
 	special_round.cb_get_valid_players       = Ware_Callback(scope, "GetValidPlayers")
+	special_round.cb_on_check_gameover       = Ware_Callback(scope, "OnCheckGameOver")
 	special_round.cb_on_calculate_score      = Ware_Callback(scope, "OnCalculateScore")
 	special_round.cb_on_calculate_topscorers = Ware_Callback(scope, "OnCalculateTopScorers")
 	special_round.cb_on_declare_winners      = Ware_Callback(scope, "OnDeclareWinners")
@@ -724,6 +726,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_get_minigame            = Ware_Callback(scope, "GetMinigameName")
 	special_round.cb_on_minigame_start       = Ware_Callback(scope, "OnMinigameStart")
 	special_round.cb_on_minigame_end         = Ware_Callback(scope, "OnMinigameEnd")
+	special_round.cb_on_minigame_cleanup     = Ware_Callback(scope, "OnMinigameCleanup")
 	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
 	special_round.cb_on_begin_boss           = Ware_Callback(scope, "OnBeginBoss")
 	special_round.cb_on_speedup              = Ware_Callback(scope, "OnSpeedup")
@@ -1415,9 +1418,38 @@ function Ware_EndMinigameInternal()
 function Ware_FinishMinigameInternal()
 {
 	Ware_CriticalZone = true
+
+	local all_passed = true
+	local all_failed = true
+	local pass_flag = !(Ware_SpecialRound && Ware_SpecialRound.opposite_win)
+
+	local can_suicide = Ware_Minigame.allow_suicide
+	local player_indices_passed = "", player_indices_valid = ""
+	foreach (data in Ware_MinigamePlayersData)
+	{
+		local index_char = data.index.tochar()
+		player_indices_valid += index_char
+		if (data.passed == pass_flag)
+		{
+			all_failed = false
+			player_indices_passed += index_char
+			if (data.suicided && !can_suicide)
+			{
+				data.passed = !pass_flag
+				Ware_ChatPrint(data.player, "{color}You were not given points for suiciding.", TF_COLOR_DEFAULT)
+			}
+		}	
+		else
+		{
+			all_passed = false
+		}
+	}
 	
 	if ("OnCleanup" in Ware_MinigameScope) 
 		Ware_MinigameScope.OnCleanup()
+		
+	if (Ware_SpecialRound)
+		Ware_SpecialRound.cb_on_minigame_cleanup()
 				
 	Ware_MinigamesPlayed++
 	if (Ware_Minigame.boss)
@@ -1486,7 +1518,7 @@ function Ware_FinishMinigameInternal()
 			SetPropInt(player, "m_nImpulse", 101) // refill ammo						
 			Ware_StripPlayer(player, true)
 		}
-		else
+		else if (!Ware_SpecialRound || Ware_SpecialRound.cb_can_player_respawn(player))
 		{
 			respawn_players.append(player)
 		}
@@ -1514,32 +1546,6 @@ function Ware_FinishMinigameInternal()
 		Ware_ToggleTruce(true)
 		
 	Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
-
-	local all_passed = true
-	local all_failed = true
-	local pass_flag = !(Ware_SpecialRound && Ware_SpecialRound.opposite_win)
-
-	local can_suicide = Ware_Minigame.allow_suicide
-	local player_indices_passed = "", player_indices_valid = ""
-	foreach (data in Ware_MinigamePlayersData)
-	{
-		local index_char = data.index.tochar()
-		player_indices_valid += index_char
-		if (data.passed == pass_flag)
-		{
-			all_failed = false
-			player_indices_passed += index_char
-			if (data.suicided && !can_suicide)
-			{
-				data.passed = !pass_flag
-				Ware_ChatPrint(data.player, "{color}You were not given points for suiciding.", TF_COLOR_DEFAULT)
-			}
-		}	
-		else
-		{
-			all_passed = false
-		}
-	}
 	
 	foreach (data in Ware_MinigamePlayersData)
 	{
@@ -1648,7 +1654,9 @@ function Ware_FinishMinigameInternal()
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
 	
-	if ((Ware_MinigamesPlayed > Ware_GetBossThreshold() && Ware_BossgamesPlayed >= Ware_GetBossCount()) || Ware_DebugGameOver)
+	if ((Ware_MinigamesPlayed > Ware_GetBossThreshold() && Ware_BossgamesPlayed >= Ware_GetBossCount()) 
+		|| (Ware_SpecialRound && Ware_SpecialRound.cb_on_check_gameover())
+		|| Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), sound_duration)
 	else if (Ware_MinigamesPlayed >= Ware_GetBossThreshold() && Ware_BossgamesPlayed < Ware_GetBossCount())
 		CreateTimer(@() Ware_BeginBoss(), sound_duration)
