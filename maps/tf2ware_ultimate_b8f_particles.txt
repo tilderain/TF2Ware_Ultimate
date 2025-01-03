@@ -1,0 +1,4 @@
+"particles_manifest"
+{
+	"file" "!particles/tf2ware_ultimate.pcf"
+}
