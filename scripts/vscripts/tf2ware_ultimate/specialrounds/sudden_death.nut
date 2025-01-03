@@ -15,6 +15,7 @@ function OnStart()
 
 function OnMinigameCleanup()
 {
+	local knocked_out = 0
 	foreach (data in Ware_PlayersData)
 	{
 		local player = data.player
@@ -24,10 +25,27 @@ function OnMinigameCleanup()
 
 		if (!data.passed || !(player.GetTeam() & 2))
 		{
+			knocked_out++
+			Ware_ChatPrint(player, "You have been {color}KNOCKED OUT{color}!", COLOR_RED, TF_COLOR_DEFAULT)
 			ValidPlayers.remove(idx)
 			if (player.IsAlive())
 				Ware_SuicidePlayer(player)
 		}
+	}
+	
+	if (knocked_out > 0)
+	{
+		Ware_ChatPrint(null, "{int} {str} been knocked out! There is {int} {str} still standing.", 
+			knocked_out,
+			knocked_out > 1 ? "players have" : "player has",
+			ValidPlayers.len(),
+			ValidPlayers.len() > 1 ? "players" : "player")
+	}
+	else
+	{
+		Ware_ChatPrint(null, "No one has been knocked out! There is {int} {str} still standing.", 
+			ValidPlayers.len(),
+			ValidPlayers.len() > 1 ? "players" : "player")		
 	}
 }
 
