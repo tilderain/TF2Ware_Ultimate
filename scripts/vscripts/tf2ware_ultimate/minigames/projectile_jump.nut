@@ -55,7 +55,7 @@ function OnStart()
 	else if (mode == 3)
 	{
 		player_class = TF_CLASS_ENGINEER
-		weapon = [ "Construction PDA", "Wrangler", "Toolbox"]
+		weapon = [ "Construction PDA", "Toolbox", "Wrangler"]
 		Ware_SetGlobalAttribute("build rate bonus", 0, -1)
 	}
 	else if (mode == 4)
