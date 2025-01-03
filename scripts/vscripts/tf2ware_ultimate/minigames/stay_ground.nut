@@ -6,14 +6,12 @@ minigame <- Ware_MinigameData
 	duration      = 4.0
 	music         = "falling"
 	start_pass    = true
-	allow_damage  = true
 	fail_on_death = true
 })
 
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Launcher")
-	Ware_SetGlobalCondition(TF_COND_CRITBOOSTED)
 }
 
 function OnTakeDamage(params)
