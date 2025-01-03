@@ -82,8 +82,21 @@ function OnEnd()
 		COLOR_LIME, hour, minute, TF_COLOR_DEFAULT, COLOR_LIME, hour + 12, minute)
 }
 
+function HasDigits(text)
+{
+	foreach (c in text)
+	{
+		if (c >= '0' && c <= '9')
+			return true
+	}
+	return false
+}
+
 function OnPlayerSay(player, text)
 {	
+	if (!HasDigits(text))
+		return
+	
 	local clean_text = text.tolower()
 	// remove pm/am suffixes
 	local idx = clean_text.find("pm")
