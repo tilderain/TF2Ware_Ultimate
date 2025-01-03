@@ -699,6 +699,11 @@ Ware_MeleeAttributeOverrides <-
 		"drop health pack on kill" : 0,
 		"dmg taken from blast increased" : 1,
 	},
+	// boston basher
+	[325] = 
+	{ 
+		"hit self on miss" : 0,
+	},	
 	// discipilinary action
 	[447] =
 	{ 
