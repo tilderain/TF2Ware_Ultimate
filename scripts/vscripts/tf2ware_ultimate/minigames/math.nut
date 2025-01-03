@@ -74,35 +74,34 @@ function OnEnd()
 
 function OnPlayerSay(player, text)
 {
-	try
-	{
-		local num = text.tointeger()
-		if (num != answer)
-			throw "wrong"
-		if (!Ware_IsPlayerPassed(player) && player.IsAlive())
-		{
-			local text = format("%d %s %d = %d", a, operator, b, num)
-			Ware_ShowMinigameText(player, text)
-			Ware_PassPlayer(player, true)
-			
-			if (first)
-			{
-				Ware_ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT)
-				Ware_GiveBonusPoints(player)
-				first = false
-			}
-		}
-		return false
-	}
-	catch (error)
+	local num = StringToInteger(text)
+	if (num == null)
+		return
+	
+	if (num != answer)
 	{
 		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
 		{
 			local text = format("%d %s %d = %s", a, operator, b, text)
 			Ware_ShowMinigameText(player, text)
 			Ware_SuicidePlayer(player)
-		}
-		
+		}		
 		return true
 	}
+		
+	if (!Ware_IsPlayerPassed(player) && player.IsAlive())
+	{
+		local text = format("%d %s %d = %d", a, operator, b, num)
+		Ware_ShowMinigameText(player, text)
+		Ware_PassPlayer(player, true)
+		
+		if (first)
+		{
+			Ware_ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT)
+			Ware_GiveBonusPoints(player)
+			first = false
+		}
+	}
+	
+	return false
 }

@@ -142,6 +142,7 @@ class Ware_MinigameData
 	// OnPlayerDisconnect(player)          - Called by OnGameEvent_player_disconnect, and passes the player.
 	cb_on_player_disconnect	= null
 	// OnPlayerSay(player, text)           - Called by OnGameEvent_player_say, and passes the player and what they typed.
+	//									   - Leading and trailing whitespace is removed from the text
 	cb_on_player_say		= null
 	// OnPlayerVoiceline(player, name)     - Called by Ware_OnUpdate, and passes the player who used a voiceline and the name of the voiceline.
 	cb_on_player_voiceline	= null

@@ -321,6 +321,19 @@ function ReverseString(str)
 	return result
 }
 
+// Safely converts a text to string, returns null if couldn't be converted
+function StringToInteger(text)
+{
+	try
+	{
+		return text.tointeger()	
+	}
+	catch (e)
+	{
+		return null
+	}
+}
+
 // Converts float timestamp to ticks
 function TimeToTicks(time)
 {

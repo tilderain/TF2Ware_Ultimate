@@ -63,18 +63,20 @@ function OnEnd()
 
 function OnPlayerSay(player, text)
 {
-	try
-	{
-		local num = text.tointeger()
-		if (num != count)
-			throw "wrong"
-		if (player.IsAlive())
-			Ware_PassPlayer(player, true)
-		// intentionally allow the message to be shown as it can be easily inferred otherwise
-	}
-	catch (error)
+	local num = StringToInteger(text)
+	if (num == null)
+		return
+		
+	if (num != count)
 	{
 		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
 			Ware_SuicidePlayer(player)
 	}
+	else
+	{
+		if (player.IsAlive())
+			Ware_PassPlayer(player, true)
+	}
+	
+	// intentionally allow the message to be shown as it can be easily inferred otherwise
 }

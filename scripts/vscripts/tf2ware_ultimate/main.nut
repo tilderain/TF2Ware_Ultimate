@@ -1909,9 +1909,13 @@ function Ware_OnUpdate()
 
 function Ware_OnPlayerSay(player, text)
 {
-	if (player == null || text.len() == 0)
+	if (player == null)
 		return false
 
+	text = lstrip(rstrip(text))
+	if (text.len() == 0)
+		return false
+	
 	if (startswith(text, "!ware_"))
 	{
 		local steamid3 = GetPlayerSteamID3(player)
