@@ -100,7 +100,7 @@ function GenerateMaze(width, height, start_y, end_y)
 	}
 	
 	// wilson's
-	while (unvisited.len() > 0) 
+	while (0 in unvisited)
 	{
 		local current = unvisited[0]
 		local path = [{x = current.x, y = current.y}]
