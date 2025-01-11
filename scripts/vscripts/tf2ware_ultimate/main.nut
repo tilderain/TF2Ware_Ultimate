@@ -1518,7 +1518,7 @@ function Ware_FinishMinigameInternal()
 			SetPropInt(player, "m_nImpulse", 101) // refill ammo						
 			Ware_StripPlayer(player, true)
 		}
-		else if (!Ware_SpecialRound || Ware_SpecialRound.cb_can_player_respawn(player))
+		else if (!Ware_SpecialRound || Ware_SpecialRound.cb_can_player_respawn(player) != false)
 		{
 			respawn_players.append(player)
 		}
