@@ -92,28 +92,34 @@ Ware_DevCommands <-
 	"restart" : function(player, text)
 	{
 		SetConvarValue("mp_restartgame_immediate", 1)
-		Ware_ChatPrint(player, "Restarting...")
+		Ware_ChatPrint(null, "Admin has forced a restart")
 	}
 	"gameover" : function(player, text)
 	{
 		Ware_DebugGameOver = true
-		Ware_ChatPrint(player, "Forcing game over...")		
+		Ware_ChatPrint(player, "Admin has forced a game over")		
 	}
+	// I never remember which word is the right one, so let's have both
 	"stop" : function(player, text)
 	{
 		Ware_DebugStop = true
-		Ware_ChatPrint(player, "Stopping...")
+		Ware_ChatPrint(null, "Admin has forced the game to pause")
+	}
+	"pause" : function(player, text)
+	{
+		Ware_DebugStop = true
+		Ware_ChatPrint(null, "Admin has forced the game to pause")
 	}
 	"resume" : function(player, text)
 	{
 		Ware_DebugStop = false
-		Ware_ChatPrint(player, "Resuming...")
+		Ware_ChatPrint(null, "Admin has resumed the game")
 	}
 	"end" : function(player, text)
 	{
 		if (Ware_Minigame)
 		{
-			Ware_ChatPrint(player, "Ending current {str}..." Ware_Minigame.boss ? "bossgame" : "minigame")
+			Ware_ChatPrint(null, "Admin has ended the current {str}..." Ware_Minigame.boss ? "bossgame" : "minigame")
 			Ware_EndMinigame()
 		}
 		else
@@ -169,17 +175,25 @@ Ware_DevCommands <-
 			local target = player
 			if (args.len() > 1)
 				target = Ware_FindPlayerByName(args[arg++])
-			printl(target)
 			if (target)
-				Ware_GetPlayerData(target).score += args[arg].tointeger()
+			{
+				local points = args[arg].tointeger()
+				Ware_ChatPrint(player, "Gave {int} points to {player}", points, target)
+				if (target != player)
+					Ware_ChatPrint(target, "Admin has given you {int} points", points)
+				Ware_GetPlayerData(target).score += points
+			}
 			else
+			{
 				Ware_ChatPrint(player, "Player not found")
+			}
 		}
 		else
 		{
 			Ware_ChatPrint(player, "Arguments: [player name] <score>")
 		}
 	}
+	// TODO remove this on release
 	"run" : function(player, text)
 	{
 		try
@@ -213,7 +227,7 @@ Ware_DevCommands <-
 		{
 			local scale = args[0].tofloat()
 			Ware_SetTimeScale(scale)
-			Ware_ChatPrint(player, "Set timescale to {%g}", scale)
+			Ware_ChatPrint(null, "Admin has forced timescale to {%g}", scale)
 		}
 		else		
 		{
