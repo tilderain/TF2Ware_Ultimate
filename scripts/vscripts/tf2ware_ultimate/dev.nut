@@ -196,8 +196,8 @@ Ware_DevCommands <-
 						text += "\""
 				}		
 			}
-			local code = "return (@() " + text + ").bindenv(ROOT)()"
-			printf("Player '%s' executed code: %s\n", GetPlayerName(player), code)
+			local code = "return (function() {" + text + "}).call(ROOT)"
+			printf("[TF2Ware] Player '%s' executed code: %s\n", GetPlayerName(player), code)
 			local ret = compilestring(code)()
 			ClientPrint(player, HUD_PRINTTALK, "\x07FFFFFFRETURN: " + ret)
 		}
