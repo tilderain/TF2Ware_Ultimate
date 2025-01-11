@@ -7,6 +7,7 @@ foreach (k, v in NetProps.getclass())
 		
 FindByClassname        <- Entities.FindByClassname.bindenv(Entities)
 FindByClassnameNearest <- Entities.FindByClassnameNearest.bindenv(Entities)
+FindByClassnameWithin  <- Entities.FindByClassnameWithin.bindenv(Entities)
 FindByName             <- Entities.FindByName.bindenv(Entities)
 
 SetConvarValue  <- Convars.SetValue.bindenv(Convars)
