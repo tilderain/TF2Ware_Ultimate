@@ -1213,7 +1213,7 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_Minigame.file_name = minigame
 	Ware_MinigameStartTime = Time()
 	
-	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame);
+	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
 	
 	local player_indices_valid = ""
 	foreach (player in valid_players)
@@ -1752,7 +1752,7 @@ function Ware_GameOverInternal()
 	local player_scores = ""
 	for (local i = 1; i <= MAX_CLIENTS; i++)
 	{
-		local player = PlayerInstanceFromIndex(i);
+		local player = PlayerInstanceFromIndex(i)
 		local score = player ? player.GetScriptScope().ware_data.score : 0
 		player_scores += score.tochar()
 	}
