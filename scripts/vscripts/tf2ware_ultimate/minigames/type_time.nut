@@ -49,15 +49,20 @@ function OnStart()
 	local mm = m.len() == 1 ? "0" + m : m
 	
 	if (minute == 0)
-		accepted_text.append(h)			 // "h"
+		accepted_text.append(h)           // "h"
 	
-	accepted_text.append(h + ":" + m)    // "h:m"
-	accepted_text.append(hh + ":" + mm)  // "hh:mm"
-	accepted_text.append(h + m)          // "hm"
-	accepted_text.append(hh + mm)        // "hhmm"
+	accepted_text.append(h + ":" + m)     // "h:m"
+	accepted_text.append(h + ":" + mm)    // "h:mm"
+	accepted_text.append(hh + ":" + m)    // "hh:m"
+	accepted_text.append(hh + ":" + mm)   // "hh:mm"
+	accepted_text.append(h + m)           // "hm"
+	accepted_text.append(hh + mm)         // "hhmm"
 	
 	// accept AM/PM ambiguity
 	local ahh = (hour + 12).tostring()
+	
+	if (minute == 0)
+		accepted_text.append(ahh)         // "ahh"
 	
 	accepted_text.append(ahh + ":" + m)   // "ahh:m"
 	accepted_text.append(ahh + ":" + mm)  // "ahh:m"
