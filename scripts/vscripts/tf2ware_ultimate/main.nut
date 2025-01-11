@@ -111,6 +111,15 @@ function Ware_ErrorHandler(e)
 		Ware_Error("Critical error detected. Restarting in 5 seconds...")
 	}
 }
+
+function Ware_HandleError(e)
+{
+	local critical = Ware_CriticalZone
+	Ware_CriticalZone = false
+	Ware_ErrorHandler(e)
+	Ware_CriticalZone = critical
+}
+
 seterrorhandler(Ware_ErrorHandler)
 
 SetConvarValue("sv_gravity", 800.00006) // hide the sv_tags message
@@ -330,7 +339,7 @@ function Ware_PrecacheNext()
 		}
 		catch (e)
 		{
-			Ware_ErrorHandler(format("Failed to precache '%s.nut'. Missing from disk or syntax error", path))
+			Ware_HandleError(format("Failed to precache '%s.nut'. Missing from disk or syntax error", path))
 		}
 		
 		return true
@@ -817,7 +826,7 @@ function Ware_BeginSpecialRoundInternal()
 		}
 		catch (e)
 		{
-			Ware_ErrorHandler(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
+			Ware_HandleError(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
 		}
 		
 		if (is_forced && !success)
@@ -1190,7 +1199,7 @@ function Ware_StartMinigameInternal(is_boss)
 		}
 		catch (e)
 		{
-			Ware_ErrorHandler(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
+			Ware_HandleError(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
 		}
 		
 		// TODO if all minigames left in rotation failed to be pick (i.e. they all failed the pick condition)
