@@ -115,7 +115,7 @@ Ware_SpecialRounds <-
 	"adrenaline_shot"
 	"all_in"
 	"bonk"
-	//"bonus_points" // TODO add bonus points to minigames
+	"bonus_points"
 	"boss_rush"
 	"cocanium"
 	"collisions"

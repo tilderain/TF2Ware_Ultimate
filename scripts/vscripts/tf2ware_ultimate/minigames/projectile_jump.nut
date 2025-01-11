@@ -3,7 +3,7 @@ mode_infos <-
 	[ "Needle jump!",       "needle_jump",        480.0],
 	[ "Rocket jump!",       "rocket_jump",        512.0],
 	[ "Sticky jump!",       "sticky_jump",        512.0],
-	[ "Sentry jump!",       "sentry_jump",        512.0],
+	[ "Sentry jump!",       "sentry_jump",        384.0],
 	[ "Flare jump!",        "flare_jump",         400.0],
 	[ "Short Circuit jump!", "shortcircuit_jump", 384.0],
 ]
@@ -57,6 +57,8 @@ function OnStart()
 		player_class = TF_CLASS_ENGINEER
 		weapon = [ "Construction PDA", "Toolbox", "Wrangler"]
 		Ware_SetGlobalAttribute("build rate bonus", 0, -1)
+		foreach (player in Ware_MinigamePlayers)
+			Ware_GetPlayerMiniData(player).took_dmgtype <- 0
 	}
 	else if (mode == 4)
 	{
@@ -98,9 +100,7 @@ function OnUpdate()
 		for (local orb; orb = Entities.FindByClassname(orb, "tf_projectile_mechanicalarmorb");)
 		{
 			if (!(orb in orbs) && !orb.IsEFlagSet(EFL_KILLME))
-			{
 				orbs[orb] <- { origin = orb.GetOrigin(), owner = orb.GetOwner() }
-			}
 		}
 		
 		foreach (orb, data in dead_orbs)
@@ -132,6 +132,20 @@ function OnUpdate()
 	}
 }
 
+function OnEnd()
+{
+	if (mode == 3)
+	{
+		foreach (player in Ware_MinigamePlayers)
+		{
+			local dmgtype = Ware_GetPlayerMiniData(player).took_dmgtype
+			// bonus point if player passed by bullet knockback only
+			if (!(dmgtype & DMG_BLAST) && (dmgtype & DMG_BULLET) && Ware_IsPlayerPassed(player))
+				Ware_GiveBonusPoints(player)
+		}
+	}
+}
+
 if (mode == 0)
 {
 	function OnPlayerAttack(player)
@@ -146,6 +160,15 @@ if (mode == 0)
 }
 else if (mode == 3)
 {
+	function OnTakeDamage(params)
+	{
+		if (params.const_entity.IsPlayer())
+		{
+			local minidata = Ware_GetPlayerMiniData(params.const_entity)
+			minidata.took_dmgtype = minidata.took_dmgtype | params.damage_type
+		}
+	}
+	
 	function OnGameEvent_player_builtobject(params)
 	{
 		local building = EntIndexToHScript(params.index)

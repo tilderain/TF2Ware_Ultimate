@@ -36,7 +36,10 @@ function OnStart()
 function OnPlayerVoiceline(player, voiceline)
 {
 	if (voiceline.find("taunt05.vcd") != null)
-		Ware_PassPlayer(player, true)
+	{
+		if (Ware_PassPlayer(player, true))
+			Ware_GiveBonusPoints(player)
+	}
 }
 
 function OnEnd()

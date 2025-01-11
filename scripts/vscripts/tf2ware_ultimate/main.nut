@@ -1230,10 +1230,10 @@ function Ware_StartMinigameInternal(is_boss)
 	
 	Ware_EventCallback("minigame_start", 
 	{ 
-		name = Ware_Minigame.name
-		file_name = minigame
+		name          = Ware_Minigame.name
+		file_name     = minigame
 		players_valid = player_indices_valid
-		is_boss = is_boss
+		is_boss       = is_boss
 	})
 	
 	foreach (name, value in Ware_Minigame.convars)
@@ -1595,10 +1595,10 @@ function Ware_FinishMinigameInternal()
 	
 	Ware_EventCallback("minigame_end", 
 	{
-		name = Ware_Minigame.name
-		file_name = Ware_Minigame.file_name
-		is_boss = Ware_Minigame.boss
-		players_valid = player_indices_valid		
+		name           = Ware_Minigame.name
+		file_name      = Ware_Minigame.file_name
+		is_boss        = Ware_Minigame.boss
+		players_valid  = player_indices_valid		
 		players_passed = player_indices_passed
 	})
 	
@@ -1768,9 +1768,9 @@ function Ware_GameOverInternal()
 	
 	Ware_EventCallback("game_over", 
 	{
-		players_won        = player_winner_indices
-		players_score      = player_scores
-		special_round_name = Ware_SpecialRound ? Ware_SpecialRound.name : ""
+		players_won             = player_winner_indices
+		players_score           = player_scores
+		special_round_name      = Ware_SpecialRound ? Ware_SpecialRound.name : ""
 		special_round_file_name = Ware_SpecialRound ? Ware_SpecialRound.file_name : ""
 	})
 	

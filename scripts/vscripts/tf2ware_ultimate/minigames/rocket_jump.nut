@@ -33,9 +33,21 @@ function OnStart()
 	EntFire("rocketjump_train", "StartForward", "", RemapValClamped(Ware_GetTimeScale(), 1.0, 2.0, 3.0, 10.0))
 	
 	endzone.ValidateScriptScope()
-	endzone.GetScriptScope().OnStartTouch <- OnEndzoneStartTouch
-	endzone.GetScriptScope().first <- first
+	endzone.GetScriptScope().OnStartTouch <- OnEndzoneStartTouch.bindenv(this)
 	endzone.ConnectOutput("OnStartTouch", "OnStartTouch")
+}
+
+function OnReachEnd(player)
+{
+	Ware_PassPlayer(player, true)
+	
+	if (first)
+	{
+		Ware_ChatPrint(null, "{player} {color}made it to the top first in {%.1f} seconds!",
+			player, TF_COLOR_DEFAULT, Ware_GetMinigameTime())
+		Ware_GiveBonusPoints(player)
+		first = false
+	}
 }
 
 if (minigame.location == "rocketjump")
@@ -49,17 +61,7 @@ if (minigame.location == "rocketjump")
 			{
 				local origin = player.GetOrigin()
 				if (origin.z > threshold)
-				{
-					Ware_PassPlayer(player, true)
-					
-					if (first)
-					{
-						Ware_ChatPrint(null, "{player} {color}made it to the top first in {%.1f} seconds!",
-							player, TF_COLOR_DEFAULT, Ware_GetMinigameTime())
-						Ware_GiveBonusPoints(player)
-						first = false
-					}
-				}
+					OnReachEnd(player)
 			}
 		}
 	}
@@ -67,17 +69,8 @@ if (minigame.location == "rocketjump")
 
 function OnEndzoneStartTouch()
 {
-	local player = activator
-	if (player.IsPlayer() && player.IsValid())
-	{
-		Ware_PassPlayer(player, true)	
-		if (first)
-		{
-			Ware_ChatPrint(null, "{player} {color}made it to the top first in {%.1f} seconds!",
-				player, TF_COLOR_DEFAULT, Ware_GetMinigameTime())
-			first = false
-		}
-	}
+	if (activator && activator.IsPlayer())
+		OnReachEnd(activator)
 }
 
 function OnEnd()

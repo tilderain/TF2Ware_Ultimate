@@ -101,13 +101,14 @@ function Ware_GetPlayerSpecialRoundData(player)
 // Marks a player as "passed" during a minigame
 // This also plays the sound and particle effects
 // This does nothing if the player is already passed
+// Returns true if the player's pass state changed
 function Ware_PassPlayer(player, pass)
 {
 	local data = player.GetScriptScope().ware_data
 	if (data.passed == pass)
-		return
+		return false
 	if (data.suicided && !Ware_Minigame.allow_suicide)
-		return
+		return false
 	
 	if (!Ware_BlockPassEffects)
 	{
@@ -120,6 +121,7 @@ function Ware_PassPlayer(player, pass)
 	}
 	
 	data.passed = pass
+	return true
 }
 
 // Returns true if the player is considered "passed" during a minigame
@@ -133,40 +135,59 @@ function Ware_IsPlayerPassed(player)
 // If multiple players are to be awarded please pass an array of players, to avoid spamming the chat.
 function Ware_GiveBonusPoints(target, points = 1)
 {
+	local award = true
 	if (!Ware_BonusPoints && !(Ware_SpecialRound && Ware_SpecialRound.bonus_points))
-		return
+		award = false
 	
-	// account for multiple possible but we only got 1 player
-	if (typeof(target) == "array" && target.len() == 1)
-		target = target[0]
+	// even if there's no award, this is still tracked for the event	
+	local player_indices_awarded = ""
+	local awarded = target
+	if (typeof(awarded) == "instance")
+		awarded = [target]
+	foreach (player in awarded)
+		player_indices_awarded += player.entindex().tochar()
 	
-	if (typeof(target) == "instance")
+	if (award)
 	{
-		local data = target.GetScriptScope().ware_data
-		data.score += points
-		Ware_ChatPrint(null, "{color}{str}{color} was awarded an extra {str}!",
-			TF_COLOR_RED, GetPlayerName(target), TF_COLOR_DEFAULT, points == 1 ? "point" : format("%d points", points))
-	}
-	else
-	{
-		local text = ""
-		local params = [null, text, points == 1 ? "point" : format("%d points", points), TF_COLOR_RED]
-		foreach(player in target)
-		{
-			local data = p.GetScriptScope().ware_data
-			data.score += points
-			
-			text += text == "" ? "The following players were each awarded an extra {str}: {color}" : "{color}, {color}"
-			text += GetPlayerName(player)
-			params.append(TF_COLOR_DEFAULT)
-			params.append(TF_COLOR_RED)
-		}
-		text += "{color}!"
-		params += TF_COLOR_DEFAULT
-		params[1] = text
+		// account for multiple possible but we only got 1 player
+		if (typeof(target) == "array" && target.len() == 1)
+			target = target[0]
 		
-		Ware_ChatPrint.acall(params)
+		if (typeof(target) == "instance")
+		{
+			local data = target.GetScriptScope().ware_data
+			data.score += points
+			Ware_ChatPrint(null, "{color}{str}{color} was awarded an extra {str}!",
+				TF_COLOR_RED, GetPlayerName(target), TF_COLOR_DEFAULT, points == 1 ? "point" : format("%d points", points))
+		}
+		else
+		{
+			local text = ""
+			local params = [null, text, points == 1 ? "point" : format("%d points", points), TF_COLOR_RED]
+			foreach(player in target)
+			{
+				local data = p.GetScriptScope().ware_data
+				data.score += points
+				
+				text += text == "" ? "The following players were each awarded an extra {str}: {color}" : "{color}, {color}"
+				text += GetPlayerName(player)
+				params.append(TF_COLOR_DEFAULT)
+				params.append(TF_COLOR_RED)
+			}
+			text += "{color}!"
+			params += TF_COLOR_DEFAULT
+			params[1] = text
+			
+			Ware_ChatPrint.acall(params)
+		}
 	}
+	
+	Ware_EventCallback("bonus_points", 
+	{
+		minigame_name      = Ware_Minigame ? Ware_Minigame.name : ""
+		minigame_file_name = Ware_Minigame ? Ware_Minigame.file_name : ""
+		players_awarded    = player_indices_awarded
+	})
 }
 
 // Sets the player's "mission"

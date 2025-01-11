@@ -143,7 +143,9 @@ function OnTakeDamage(params)
 			&& attacker.IsPlayer())
 		{
 			if (victim.IsEFlagSet(EFL_USER))
-			{
+			{			
+				Ware_GiveBonusPoints(attacker)
+				
 				DispatchParticleEffect(break_particle, victim.GetOrigin(), Vector(90, 0, 0))
 				victim.EmitSound(gold_sound)
 				
