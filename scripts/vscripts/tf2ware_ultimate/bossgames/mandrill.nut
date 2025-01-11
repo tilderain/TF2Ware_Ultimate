@@ -65,72 +65,100 @@ function OnStart()
 	}
 }
 
+// wilson's algorithm
 function GenerateMaze(width, height, start_y, end_y) 
 {
 	// S start
 	// E end
 	// # wall
 	// . empty
+	
 	local maze = array(height)
 	for (local y = 0; y < height; y++) 
 		maze[y] = array(width, "#")
 
 	local directions = 
 	[
-		{x = 0,  y = -1}, // up
-		{x = 0,  y =  1}, // down
+		{x = 0,	 y = -1}, // up
+		{x = 0,	 y =  1}, // down
 		{x = -1, y =  0}, // left
-		{x = 1,  y =  0}  // right
+		{x = 1,	 y =  0}  // right
 	]
 
-	// depth-first search
-	function carve_path(x, y, last_dir) 
+	local startX = width - 1
+	maze[start_y][startX] = "."
+	
+	// all possible 2x2 cells
+	local unvisited = []
+	for (local y = 0; y < height; y += 2) 
 	{
-		maze[y][x] = "."
-		// try random directions on each attempt
-		foreach (dir in Shuffle(clone(directions)))
+		for (local x = 0; x < width; x += 2) 
 		{
-			local nx = x + dir.x * 2
-			local ny = y + dir.y * 2
-			// check within bounds and not visited
-			if (nx >= 0 && ny >= 0 && nx < width && ny < height && maze[ny][nx] == "#") 
+			if (!(x == startX && y == start_y)) 
+				unvisited.append({x = x, y = y})
+		}
+	}
+	
+	// wilson's
+	while (unvisited.len() > 0) 
+	{
+		local current = unvisited[0]
+		local path = [{x = current.x, y = current.y}]
+		while (maze[current.y][current.x] != ".") 
+		{
+			local dir = directions[RandomInt(0, 3)]
+			local nx = current.x + dir.x * 2
+			local ny = current.y + dir.y * 2	
+			if (nx >= 0 && ny >= 0 && nx < width && ny < height) 
 			{
-				// force turns to reduce long hallways
-				if (last_dir != null && dir.x == last_dir.x && dir.y == last_dir.y) 
-					continue
-
-				maze[y + dir.y][x + dir.x] = "."
-				carve_path(nx, ny, dir)
+				current = {x = nx, y = ny}
+				
+				// prevent loops
+				local loop = -1
+				foreach (i, p in path)
+				{
+					if (p.x == current.x && p.y == current.y) 
+					{
+						loop = i
+						break
+					}
+				}
+				
+				if (loop != -1) 
+					path.resize(loop + 1)
+				else 
+					path.append(current)
+			}
+		}
+		
+		// carve
+		local path_end_len = path.len() - 1
+		for (local i = 0; i < path_end_len; i++) 
+		{
+			local x = path[i].x
+			local y = path[i].y
+			local nx = path[i + 1].x
+			local ny = path[i + 1].y
+			
+			maze[y][x] = "."
+			maze[ny][nx] = "."
+			maze[y + (ny - y) / 2][x + (nx - x) / 2] = "."
+			
+			foreach (j, u in unvisited)
+			{
+				if (u.x == x && u.y == y) 
+				{
+					unvisited.remove(j)
+					break
+				}
 			}
 		}
 	}
-
-	// carve out from start point
-	local startX = width - 1
-	local start = {x = startX, y = start_y}
-	carve_path(start.x, start.y, null)
 
 	// mark start/end points
 	maze[start_y][startX] = "S"
 	maze[end_y][0] = "E"
 	
-	// block multiple paths to the exit
-	local exitY = end_y
-	local exitX = 0
-	local count = 0
-	foreach (dir in directions) 
-	{
-		local nx = exitX + dir.x
-		local ny = exitY + dir.y
-		// check within bounds
-		if (nx >= 0 && ny >= 0 && nx < width && ny < height && maze[ny][nx] == ".") 
-		{
-			count++
-			if (count > 1) 
-				maze[ny][nx] = "#"
-		}
-	}
-
 	return maze
 }
 
