@@ -35,7 +35,7 @@ function OnUpdate()
 	{
 		if (!player.IsAlive())
 			continue
-		if (Ware_GetPlayerHeight(player) > 250.0)
+		if (Ware_GetPlayerHeight(player) > 48.0)
 			Ware_SuicidePlayer(player)
 	}
 }
