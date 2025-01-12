@@ -169,7 +169,18 @@ function OnGameEvent_teamplay_round_start(params)
 	Ware_PlayGameSound(null, "results", SND_STOP)
 	
 	if (IsInWaitingForPlayers())
+	{
+		// restart if waiting for players was cancelled early
+		CreateTimer(function()
+		{
+			if (!IsInWaitingForPlayers())
+				SetConvarValue("mp_restartgame_immediate", 1)
+			else
+				return 1.0
+		}, 1.0)
 		return
+	}
+	
 	// TODO: why is this check here? this event shouldn't fire again midround
 	if (Ware_Started)
 		return
