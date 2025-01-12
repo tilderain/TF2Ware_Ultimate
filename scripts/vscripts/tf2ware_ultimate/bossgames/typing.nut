@@ -78,8 +78,9 @@ function OnPrecache()
 	PrecacheScriptSound(sound_word_relax)     
 
 	PrecacheOverlay(overlay_type)
+	PrecacheOverlay(overlay_prepare)
+	PrecacheOverlay(overlay_difficulty)
 	PrecacheOverlay(overlay_announcement)
-	PrecacheOverlay(overlay_round_info)
 }
 
 function OnStart()
