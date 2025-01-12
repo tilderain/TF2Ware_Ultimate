@@ -1780,6 +1780,7 @@ function Ware_GameOverInternal()
 		players_won             = player_winner_indices
 		players_score           = player_scores
 		players_bonus           = player_bonuses
+		max_possible_score      = Ware_GetBossThreshold() * Ware_PointsMinigame + Ware_GetBossCount() * Ware_PointsBossgame
 		special_round_name      = Ware_SpecialRound ? Ware_SpecialRound.name : ""
 		special_round_file_name = Ware_SpecialRound ? Ware_SpecialRound.file_name : ""
 	})
