@@ -123,17 +123,23 @@ function StartWords()
 	
 	word_rotation = Shuffle(clone(dictionary[difficulties[difficulty]]))
 	word_high_score = 0
-	foreach (player in Ware_GetAlivePlayers())
+
+	foreach (player in Ware_Players)
 	{
-		local minidata = Ware_GetPlayerMiniData(player)
-		minidata.score <- 0
-		minidata.word_count <- 0
-		if (!("word_count_total" in minidata))
-			minidata.word_count_total <- 0
-		ResetPlayerChatCooldown(player)
 		Ware_ShowScreenOverlay(player, overlay_type)
-		ShowWord(player, 0)
+			
+		if (player.IsAlive() && Ware_MinigamePlayers.find(player) != null)
+		{
+			local minidata = Ware_GetPlayerMiniData(player)
+			minidata.score <- 0
+			minidata.word_count <- 0
+			if (!("word_count_total" in minidata))
+				minidata.word_count_total <- 0
+			ResetPlayerChatCooldown(player)
+			ShowWord(player, 0)		
+		}
 	}
+	
 	word_typing = true
 	word_timer = Ware_SpawnEntity("team_round_timer",
 	{
