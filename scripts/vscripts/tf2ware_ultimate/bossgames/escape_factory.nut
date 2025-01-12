@@ -26,7 +26,8 @@ function OnStart()
 	endzone.GetScriptScope().first <- true
 	endzone.ConnectOutput("OnStartTouch", "OnStartTouch")
 	
-	EntityAcceptInput(FindByName(null, "ERBoss_InitRelay"), "Trigger")
+	EntFire("ERBoss_InitRelay", "Trigger")
+	EntFire("ERBoss_AcidPit_Start", "Trigger")
 	
 	Ware_CreateTimer(function() 
 	{
@@ -63,6 +64,8 @@ function OnEndzoneTouch()
 function OnEnd()
 {
 	endzone.DisconnectOutput("OnStartTouch", "OnStartTouch")
+	
+	EntFire("ERBoss_AcidPit_Stop", "Trigger")
 }
 
 function OnCheckEnd()

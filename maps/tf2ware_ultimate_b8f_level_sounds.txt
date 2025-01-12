@@ -293,3 +293,121 @@ TF2Ware_Ultimate.Error
 	soundlevel		SNDLVL_NONE
 	wave			ui/system_message_alert.wav
 }
+
+TF2Ware_Ultimate.TypingBossStart
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/typing/bossstart.mp3
+}
+
+TF2Ware_Ultimate.TypingDescentBegin
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/typing/descentbegin.mp3
+}
+
+TF2Ware_Ultimate.TypingSpiralInward
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/typing/spiralinward.mp3
+}
+
+TF2Ware_Ultimate.TypingBadEnd
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/typing/badend.mp3
+}
+
+TF2Ware_Ultimate.TypingGoodEnd
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/typing/goodend.mp3
+}
+
+TF2Ware_Ultimate.TypingLevelUp
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/typing/levelup.mp3
+}
+
+TF2Ware_Ultimate.TypingDifficultyUp
+{
+	channel			CHAN_VOICE2
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			vo/announcer_warning.mp3
+}
+
+TF2Ware_Ultimate.TypingOverviewStart
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/typing/overviewstart.mp3
+}
+
+TF2Ware_Ultimate.TypingWordFail
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	rndwave
+	{
+		wave		tf2ware_ultimate/typing/wordfail_1.mp3
+		wave		tf2ware_ultimate/typing/wordfail_2.mp3
+	}
+}
+
+TF2Ware_Ultimate.TypingWordStart
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/typing/typingstart.mp3
+}
+
+TF2Ware_Ultimate.TypingWordSuccess
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	rndwave
+	{
+		wave		tf2ware_ultimate/typing/wordsuccess_pinch1.mp3
+		wave		tf2ware_ultimate/typing/wordsuccess_pinch2.mp3
+		wave		tf2ware_ultimate/typing/wordsuccess_pinch3.mp3
+		wave		tf2ware_ultimate/typing/wordsuccess_pinch4.mp3
+	}
+}
+
+TF2Ware_Ultimate.TypingWordRelax
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			95,105
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/typing/wordsuccess_relax.mp3
+}

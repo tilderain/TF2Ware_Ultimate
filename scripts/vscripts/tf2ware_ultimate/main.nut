@@ -1372,7 +1372,8 @@ function Ware_StartMinigameInternal(is_boss)
 			Ware_ShowScreenOverlay2(data.player, overlays2[mission])
 	}
 	
-	Ware_PlayMinigameMusic(null, Ware_Minigame.music)
+	if (Ware_Minigame.music)
+		Ware_PlayMinigameMusic(null, Ware_Minigame.music)
 	
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_minigame_start()
@@ -1554,7 +1555,8 @@ function Ware_FinishMinigameInternal()
 	if (Ware_Minigame.allow_damage)
 		Ware_ToggleTruce(true)
 		
-	Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
+	if (Ware_Minigame.music)	
+		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
 	
 	foreach (data in Ware_MinigamePlayersData)
 	{

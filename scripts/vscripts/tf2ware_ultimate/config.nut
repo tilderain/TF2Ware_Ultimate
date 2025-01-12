@@ -97,6 +97,7 @@ Ware_Bossgames <-
 	"cuddly_heavies"
 	"escape_factory"
 	"falling_platforms"
+	"frogger"
 	"ghostbusters"
 	"gioca_jouer"
 	"grand_prix"
@@ -106,7 +107,7 @@ Ware_Bossgames <-
 	"monoculus"
 	"obstacle_course"
 	"slender"
-	"frogger"
+	"typing"
 	"wild_west"
 ]
 
@@ -685,7 +686,13 @@ Ware_BossgameMusic <-
 	"monoculus"
 	"slender"
 	"staredown"
-	"steadynow"
+	"steadynow"	
+	"typing-hga"
+	"typing-hvd"
+	"typing-lod"
+	"typing-pta"
+	"typing-spc"
+	"typing-tuh"
 ]
 
 Ware_MeleeAttributeOverrides <- 
@@ -846,6 +853,7 @@ Ware_MeleeAttributeOverrides <-
 const WARE_MAPVERSION = "b8f"
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
+// if you change this make sure to update any sounds in level_sounds.txt too!
 const WARE_MUSICVERSION = 1
 
 foreach (sound in Ware_MinigameMusic) PrecacheSound(format("tf2ware_ultimate/v%d/music_minigame/%s.mp3", WARE_MUSICVERSION, sound))

@@ -269,6 +269,16 @@ function Shuffle(arr)
 	return arr
 }
 
+// Gets median element from array
+function Median(arr)
+{
+	local n = arr.len()
+	if (n % 2 == 0) 
+		return (arr[n / 2 - 1] + arr[n / 2]) / 2
+	else
+		return arr[n / 2]
+}
+
 // Return a random index into the array
 function RandomIndex(arr)
 {
@@ -485,12 +495,6 @@ function KillTimer(timer)
 	}
 }
 
-// Returns true if entity is alive
-function IsEntityAlive(player)
-{
-	return GetPropInt(player, "m_lifeState") == 0
-}
-
 // Sets an entity's rendering color
 function SetEntityColor(entity, r, g, b, a)
 {
@@ -686,6 +690,20 @@ function BrickPlayerScore(player)
 
 	if (!is_bot) 
 		player.RemoveFlag(FL_FAKECLIENT)
+}
+
+// Reset chatting cooldown on a player
+function ResetPlayerChatCooldown(player)
+{
+	SetPropFloat(player, "m_fLastPlayerTalkTime", 0.0)
+	SetPropFloat(player, "m_flPlayerTalkAvailableMessagesTier1", 2.0)
+	SetPropFloat(player, "m_flPlayerTalkAvailableMessagesTier2", 10.0)
+}
+
+// Equivalent but for entfire (useful for player_say)
+function ResetSelfChatCooldown()
+{
+	ResetPlayerChatCooldown(self)
 }
 
 // Plays a sound on a player, if they are valid and alive

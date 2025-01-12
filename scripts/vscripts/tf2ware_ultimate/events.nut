@@ -279,7 +279,8 @@ function OnGameEvent_scorestats_accumulated_update(params)
 			SetConvarValue(name, value)
 		Ware_MinigameSavedConvars.clear()
 		
-		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
+		if (Ware_Minigame.music)
+			Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
 	}
 
 	if (Ware_SpecialRound) // same as above

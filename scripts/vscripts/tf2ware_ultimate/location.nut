@@ -444,8 +444,14 @@ Ware_Location.factory <-
 
 Ware_Location.typing <-
 {
-	center = Vector(7176, 2468, -6392)
-	cameras = ["DRBoss_CloseupCamera_Point", "DRBoss_DescentCamera_Point", "DRBoss_SpiralCamera_Point"]
+	center = Vector(7192, 2648, -6392)
+	radius = 355.0
+	// these are converted to point_viewcontrol
+	//cameras = ["DRBoss_CloseupCamera_Point", "DRBoss_DescentCamera_Point", "DRBoss_SpiralCamera_Point"]
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersCircle(players,	center, radius)
+	}
 }
 
 Ware_Location.boxingring <-

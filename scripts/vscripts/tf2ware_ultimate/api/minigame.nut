@@ -45,11 +45,11 @@ class Ware_MinigameData
 	description		= null
 	// Length before ending
 	duration		= null
-	// Music to play
-	music			= null
 	
 	// == Optional settings ==
 	
+	// Music to play
+	music			= null
 	// Map location to teleport to (Ware_Location enum), default is home
 	location		= null
 	// Minimum amount of players needed to start, default is 0

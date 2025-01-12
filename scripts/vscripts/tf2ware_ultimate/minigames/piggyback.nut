@@ -137,8 +137,7 @@ function OnUpdate()
 {
 	local can_piggyback = false
 	
-	if (piggybacker.IsValid() 
-		&& IsEntityAlive(piggybacker))
+	if (piggybacker.IsValid() && piggybacker.IsAlive())
 	{
 		local win_y = Ware_MinigameLocation.center_bottom.y - 400.0
 		if (piggybacker.GetOrigin().y > win_y)
