@@ -1,8 +1,12 @@
+mode <- 0
+if (RandomInt(1, 10) == 1 || (Ware_SpecialRound && Ware_SpecialRound.file_name == "math_only"))
+	mode = 1
+
 minigame <- Ware_MinigameData
 ({
-	name           = "Typing"
+	name           = mode == 0 ? "Typing" : "Math Blitz"
 	author         = "ficool2"
-	description    = "Type each word as fast as you can!"
+	description    = mode == 0 ? "Type each word as fast as you can!" : "Solve each question as fast as you can!"
 	duration       = 210.0
 	end_delay      = 5.0
 	location       = "typing"
@@ -23,20 +27,33 @@ sound_word_fail        <- "TF2Ware_Ultimate.TypingWordFail"
 sound_word_success     <- "TF2Ware_Ultimate.TypingWordSuccess"
 sound_word_relax       <- "TF2Ware_Ultimate.TypingWordRelax"
 
-overlay_type         <- "hud/tf2ware_ultimate/minigames/typing"
-overlay_prepare      <- "hud/tf2ware_ultimate/minigames/typing_prepare"
+if (mode == 0)
+{
+	overlay_type         <- "hud/tf2ware_ultimate/minigames/typing"
+	overlay_prepare      <- "hud/tf2ware_ultimate/minigames/typing_prepare"
+	overlay_difficulty   <- "hud/tf2ware_ultimate/minigames/typing_difficulty"
+}
+else
+{
+	overlay_type         <- "hud/tf2ware_ultimate/minigames/type_answers"
+	overlay_prepare      <- "hud/tf2ware_ultimate/minigames/type_answers_prepare"
+	overlay_difficulty   <- "hud/tf2ware_ultimate/minigames/type_answers_difficulty"
+}
+
 overlay_announcement <- "hud/tf2ware_ultimate/minigames/announcement"
-overlay_difficulty   <- "hud/tf2ware_ultimate/minigames/typing_difficulty"
 
 music_choices <- ["hga", "hvd", "lod", "pta", "spc", "tuh"]
 current_music <- null
 
-difficulties <- ["Easy", "Medium", "Hard"]
 difficulty <- 0
 level <- 0
 
-dictionary <- {}
-IncludeScript("tf2ware_ultimate/bossgames/data/dictionary", dictionary)
+if (mode == 0)
+{
+	difficulties <- ["Easy", "Medium", "Hard"]
+	dictionary <- {}
+	IncludeScript("tf2ware_ultimate/bossgames/data/dictionary", dictionary)
+}
 
 word_typing <- false
 word_type_duration <- 20.0
@@ -115,14 +132,70 @@ function Prepare()
 	CreateTimer(StartWords, 3.5)
 }
 
+function GenerateWords()
+{
+	word_rotation.clear()
+	
+	if (mode != 0)
+	{
+		for (local n = 0; n < 50; n++)
+		{
+			local var_count = difficulty + 2
+			local min = 0, max = 12
+			local numbers = [RandomInt(min, max)]
+			local operators = ["+", "-", "*"]
+			local expression = numbers[0].tostring()
+			local result = numbers[0]
+
+			for (local i = 1; i < var_count; i++)
+			{
+				// only first operator can be multiply/divide
+				local operator_max = i == 1 ? 2 : 1
+				local operator = operators[RandomInt(0, operator_max)]
+				local number
+				
+				switch (operator) 
+				{
+					case "+":
+						number = RandomInt(min, max + 3)
+						result += number
+						break
+					case "-":
+						number = RandomInt(min, max + 3)
+						result -= number
+						break
+					case "*":
+						local mul = RandomInt(1, 10) == 1 ? -1 : 1
+						number = RandomInt(min, max) * mul
+						result *= number
+						break
+				}	
+				
+				numbers.append(number)
+				expression += " " + operator + " " + number
+			}
+			
+			word_rotation.append
+			({
+				numbers    = numbers				
+				expression = expression
+				result     = result	
+			})			
+		}
+	}
+	else
+	{
+		word_rotation = Shuffle(clone(dictionary[difficulties[difficulty]]))
+	}
+}
+
 function StartWords()
 {
 	EntFire("DRBoss_CloseupCamera_Start", "Trigger")
 	SetCamera("DRBoss_CloseupCamera_Point")
 	Ware_PlaySoundOnAllClients(sound_word_start)
 	
-	word_rotation = Shuffle(clone(dictionary[difficulties[difficulty]]))
-	word_high_score = 0
+	GenerateWords()
 
 	foreach (player in Ware_Players)
 	{
@@ -176,8 +249,11 @@ function EndWords()
 			scores.append(minidata.score)
 		}
 		
-		Ware_ChatPrint(player, "Your words-per-minute (WPM) was {color}{int}", COLOR_LIME, 
-			(minidata.word_count / (word_type_duration / 60.0)).tointeger())
+		if (mode == 0)
+		{
+			Ware_ChatPrint(player, "Your words-per-minute (WPM) was {color}{int}", COLOR_LIME, 
+				(minidata.word_count / (word_type_duration / 60.0)).tointeger())
+		}
 	}
 	if (scores.len() == 0)
 	{
@@ -192,8 +268,12 @@ function EndWords()
 	
 	local failed = 0, max_display = 6
 	local failed_players = []
+	local text
+	if (mode == 0)
+		text = "The players with the lowest number of words typed were...\n"	
+	else
+		text = "The players with the lowest number of solved questions were...\n"
 	
-	local text = "The players with the lowest number of words typed were...\n"	
 	if (median_score != scores[0]) // if median is same as highest score then everyone succeeded
 	{
 		foreach (player in players)
@@ -265,10 +345,14 @@ function CheckGameOver()
 				local player = players[0]
 				local average_word_count = Ware_GetPlayerMiniData(player).word_count_total / (level + 1).tofloat()
 				Ware_ShowMinigameText(null, format("The winner is...\n%s!", GetPlayerName(player)))
-				Ware_ChatPrint(null, "{player}{color} had a total WPM of {color}{int}{color}!", 
-					player, TF_COLOR_DEFAULT, COLOR_LIME,
-					(average_word_count / (word_type_duration / 60.0)).tointeger(), 
-					TF_COLOR_DEFAULT)		
+				
+				if (mode == 0)
+				{
+					Ware_ChatPrint(null, "{player}{color} had a total WPM of {color}{int}{color}!", 
+						player, TF_COLOR_DEFAULT, COLOR_LIME,
+						(average_word_count / (word_type_duration / 60.0)).tointeger(), 
+						TF_COLOR_DEFAULT)		
+				}
 			}
 		}
 		else
@@ -334,7 +418,10 @@ function ShowWord(player, score)
 {
 	local word      = word_rotation[score]
 	local next_word = word_rotation[score + 1]
-	Ware_ShowMinigameText(player, format("%s\n\nNext word: %s\n", word, next_word))	
+	if (mode != 0)
+		Ware_ShowMinigameText(player, format("%s = ?\n\nNext question: %s\n", word.expression, next_word.expression))	
+	else
+		Ware_ShowMinigameText(player, format("%s\n\nNext word: %s\n", word, next_word))	
 }
 
 function OnPlayerSay(player, text)
@@ -348,7 +435,14 @@ function OnPlayerSay(player, text)
 			local minidata = Ware_GetPlayerMiniData(player)
 			// should be impossible to run out of words
 			local word = word_rotation[minidata.score]
-			if (text.tolower() == word.tolower())
+			
+			local pass = false
+			if (mode != 0)
+				pass = word.result == StringToInteger(text)
+			else
+				pass = text.tolower() == word.tolower()
+			
+			if (pass)
 			{
 				minidata.word_count++
 				minidata.word_count_total++
