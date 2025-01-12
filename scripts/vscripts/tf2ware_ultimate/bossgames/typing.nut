@@ -128,15 +128,18 @@ function StartWords()
 	{
 		Ware_ShowScreenOverlay(player, overlay_type)
 			
-		if (player.IsAlive() && Ware_MinigamePlayers.find(player) != null)
+		if (Ware_MinigamePlayers.find(player) != null)
 		{
 			local minidata = Ware_GetPlayerMiniData(player)
 			minidata.score <- 0
 			minidata.word_count <- 0
 			if (!("word_count_total" in minidata))
 				minidata.word_count_total <- 0
-			ResetPlayerChatCooldown(player)
-			ShowWord(player, 0)		
+			if (player.IsAlive())
+			{
+				ResetPlayerChatCooldown(player)
+				ShowWord(player, 0)		
+			}
 		}
 	}
 	
