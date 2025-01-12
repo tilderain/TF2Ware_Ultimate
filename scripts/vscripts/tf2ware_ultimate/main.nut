@@ -1759,18 +1759,27 @@ function Ware_GameOverInternal()
 	
 	Ware_CriticalZone = false
 	
-	local player_scores = ""
+	local player_scores = "", player_bonuses = ""
 	for (local i = 1; i <= MAX_CLIENTS; i++)
 	{
 		local player = PlayerInstanceFromIndex(i)
-		local score = player ? player.GetScriptScope().ware_data.score : 0
+		local score = 0, bonus = 0
+		if (player)
+		{
+			local ware_data = player.GetScriptScope().ware_data
+			score = ware_data.score
+			bonus = ware_data.bonus
+		}
+		
 		player_scores += score.tochar()
+		player_bonuses += bonus.tochar()
 	}
 	
 	Ware_EventCallback("game_over", 
 	{
 		players_won             = player_winner_indices
 		players_score           = player_scores
+		players_bonus           = player_bonuses
 		special_round_name      = Ware_SpecialRound ? Ware_SpecialRound.name : ""
 		special_round_file_name = Ware_SpecialRound ? Ware_SpecialRound.file_name : ""
 	})

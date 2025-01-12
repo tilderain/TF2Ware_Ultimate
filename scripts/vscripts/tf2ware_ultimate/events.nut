@@ -157,6 +157,7 @@ function OnGameEvent_teamplay_round_start(params)
 	{
 		local player = data.player
 		data.score = 0
+		data.bonus = 0
 		if (data.start_sound)
 			Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 		player.SetScriptOverlayMaterial("")

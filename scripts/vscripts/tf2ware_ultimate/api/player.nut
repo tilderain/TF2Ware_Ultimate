@@ -18,6 +18,7 @@ class Ware_PlayerData
 		melee_attributes = {}
 		start_sound      = false
 		score			 = 0
+		bonus            = 0
 		horn_timer		 = 0.0
 		horn_buttons	 = 0
 		spawn_time       = 0.0
@@ -57,8 +58,10 @@ class Ware_PlayerData
 	saved_scale         = null
 	// The player's stored team if a particular minigame is altering it.
 	saved_team       	= null
-	// The player's current score.
+	// The player's current score, including bonus points.
 	score			 	= null
+	// 	The player's bonus points
+	bonus               = null
 	// Used to track horn cooldown while the player is in a kart.
 	horn_timer		 	= null
 	// Used to track if the player is currently pressing the horn button while in a kart.
@@ -157,17 +160,20 @@ function Ware_GiveBonusPoints(target, points = 1)
 		{
 			local data = target.GetScriptScope().ware_data
 			data.score += points
+			data.bonus += points
+			
 			Ware_ChatPrint(null, "{color}{str}{color} was awarded an extra {str}!",
 				TF_COLOR_RED, GetPlayerName(target), TF_COLOR_DEFAULT, points == 1 ? "point" : format("%d points", points))
 		}
 		else
 		{
 			local text = ""
-			local params = [null, text, points == 1 ? "point" : format("%d points", points), TF_COLOR_RED]
-			foreach(player in target)
+			local params = [this, text, points == 1 ? "point" : format("%d points", points), TF_COLOR_RED]
+			foreach (player in target)
 			{
-				local data = p.GetScriptScope().ware_data
+				local data = player.GetScriptScope().ware_data
 				data.score += points
+				data.bonus += points
 				
 				text += text == "" ? "The following players were each awarded an extra {str}: {color}" : "{color}, {color}"
 				text += GetPlayerName(player)
