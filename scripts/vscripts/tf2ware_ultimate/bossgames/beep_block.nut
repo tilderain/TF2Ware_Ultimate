@@ -7,7 +7,7 @@ arenas <-
 minigame <- Ware_MinigameData
 ({
 	name           = "Beep Block Skyway"
-	author         = "pokemonPasta"
+	author         = ["gemidyne", "pokemonPasta"]
 	description    = "Get to the End!"
 	custom_overlay = "get_end"
 	duration       = 130.0

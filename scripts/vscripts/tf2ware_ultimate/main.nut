@@ -254,8 +254,7 @@ if (!("Ware_Precached" in this))
 	Ware_Authors                  <- {
 		"OctatonicSunrise": 1 // adding manually for logo credit
 	}
-	Ware_Credits                  <- "{color}TF2Ware Ultimate {color}by ficool2 and pokemonPasta, based on \"{color}TF2Ware Universe{color}\" by SLAG.TF. See console for a full list of contributors. Logo by OctatonicSunrise."
-	
+
 	// this shuts up incursion distance warnings from the nav mesh
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
 }
