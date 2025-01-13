@@ -43,6 +43,7 @@ function FixTypingCameras()
 		{
 			local camera = SpawnEntityFromTableSafe("point_viewcontrol",
 			{
+				classname  = "ware_viewcontrol" // don't preserve
 				targetname = entity.GetName()
 				origin     = entity.GetOrigin()
 				angles     = entity.GetAbsAngles()
