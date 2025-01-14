@@ -263,7 +263,7 @@ Ware_PublicCommands <-
 		authors.sort(@(a, b) Ware_Authors[b] <=> Ware_Authors[a])
 		
 		Ware_ChatPrint(player, 
-			"{color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta, based on {color}TF2Ware Universe{color} by SLAG.TF and {color}MicroTF2{color} by Gemidyne. See console for a full list of contributors. Logo by OctatonicSunrise.", 
+			"{color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta, based on {color}TF2Ware Universe{color} by SLAG.TF and {color}MicroTF2{color} by Gemidyne. Logo by OctatonicSunrise. See console for a full list of contributors.", 
 			COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
 		
 		ClientPrint(player, HUD_PRINTCONSOLE, "TF2Ware Ultimate Contributors:")
