@@ -91,3 +91,13 @@ function Ware_GetBossCount()
 	else
 		return 1
 }
+
+// Gets the threshold before a speedup happens
+// Influenced by special rounds
+function Ware_GetSpeedUpThreshold()
+{
+	if (Ware_SpecialRound)
+		return Ware_SpecialRound.speedup_threshold
+	else
+		return Ware_SpeedUpThreshold
+}

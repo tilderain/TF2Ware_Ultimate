@@ -144,6 +144,8 @@ Ware_SpecialRounds <-
 	"two_bosses"
 	"up_down"
 	"wipeout"
+	
+	"trailer" // TODO: Remove after trailer is done
 ]
 
 // only for precaching purposes

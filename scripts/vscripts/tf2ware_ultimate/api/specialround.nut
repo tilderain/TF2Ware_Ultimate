@@ -5,16 +5,17 @@ class Ware_SpecialRoundData
 {
 	function constructor(table = null)
 	{
-		min_players      = 0
-		convars          = {}
-		reverse_text     = false
-		allow_damage     = false
-		force_collisions = false
-		opposite_win     = false
-		friendly_fire    = true
-		bonus_points     = false
-		boss_count       = 1
-		boss_threshold   = Ware_BossThreshold
+		min_players       = 0
+		convars           = {}
+		reverse_text      = false
+		allow_damage      = false
+		force_collisions  = false
+		opposite_win      = false
+		friendly_fire     = true
+		bonus_points      = false
+		boss_count        = 1
+		boss_threshold    = Ware_BossThreshold
+		speedup_threshold = Ware_SpeedUpThreshold
 		
 		if (table)
 		{
@@ -55,6 +56,8 @@ class Ware_SpecialRoundData
 	boss_count       		 = null
 	// Amount of minigames played before a boss, default is Ware_BossThreshold in config.nut
 	boss_threshold           = null
+	// Amount of minigames played before a speedup, default is Ware_SpeedUpThreshold in config.nut
+	speedup_threshold        = null
 	
 	// == Internal use only ==
 	file_name                = null
@@ -79,7 +82,7 @@ class Ware_SpecialRoundData
 	cb_on_update               = null
 	// OnEnd()                    - Called when this special round ends.
 	cb_on_end                  = null
-	// GetMinigame(is_boss)       - Replaces the minigame selection process in Ware_StartMinigame. 
+	// GetMinigameName(is_boss)   - Replaces the minigame selection process in Ware_StartMinigame. 
 	//                            - Return a minigame name for it to be attempted to be selected, or null to use default pick.
 	cb_get_minigame            = null
 	// OnMinigameStart()          - Called by Ware_StartMinigame when a minigame starts. 

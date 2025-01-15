@@ -1670,7 +1670,7 @@ function Ware_FinishMinigameInternal()
 		CreateTimer(@() Ware_GameOver(), sound_duration)
 	else if (Ware_MinigamesPlayed >= Ware_GetBossThreshold() && Ware_BossgamesPlayed < Ware_GetBossCount())
 		CreateTimer(@() Ware_BeginBoss(), sound_duration)
-	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % Ware_SpeedUpThreshold == 0)
+	else if (Ware_MinigamesPlayed > 0 && Ware_MinigamesPlayed % Ware_GetSpeedUpThreshold() == 0)
 		CreateTimer(@() Ware_Speedup(), sound_duration)
 	else
 		CreateTimer(@() Ware_BeginIntermission(false), sound_duration)
