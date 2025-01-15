@@ -1,7 +1,7 @@
 
 // TODO: More testing/fixes when players join or leave mid-round
 // TODO: Make spectators more interesting (use actual spectating stuff?)
-
+// TODO: Give players that join mid-round 1 life, but avoid any cheesing from relogging.
 
 // wipeout description found at https://wiki.teamfortress.com/wiki/TF2Ware
 
@@ -33,7 +33,7 @@ special_round <- Ware_SpecialRoundData
 ({
 	name = "Wipeout"
 	author = "pokemonPasta"
-	description = "3 lives, battle in smaller groups until one player remains!" // TODO: better description
+	description = "2 lives, battle in smaller groups until one player remains!" // TODO: better description
 	
 	min_players = 3
 	
@@ -52,7 +52,7 @@ function OnStart()
 	foreach(player in Ware_Players)
 	{
 		local data = Ware_GetPlayerSpecialRoundData(player)
-		data.lives <- 3
+		data.lives <- 2 // TODO: Find a different fix to the long rounds then set this back to 3.
 		
 		Ware_GetPlayerData(player).score = data.lives
 	}
