@@ -147,6 +147,30 @@ function OnGameEvent_teamplay_round_start(params)
 	if (Ware_NeedsPlugin)
 		return
 	
+	// TODO: Remove this section after the trailer is done
+	// If keeping any trailer cameras, move this part into a parent's think script.
+	
+	if (Ware_RoundsPlayed == 0)
+	{
+		foreach(str in ["trailer_camera_beep_linear", "trailer_camera_frogger_linear", "trailer_camera_pinball_linear"])
+		{
+			local ent = FindByName(null, str)
+			
+			EntityAcceptInput(ent, "Open")
+			ent.ValidateScriptScope()
+			local scope = ent.GetScriptScope()
+			
+			scope.OnFullyOpen   <- @() EntityAcceptInput(self, "Close")
+			scope.OnFullyClosed <- @() EntityAcceptInput(self, "Open")
+			
+			ent.ConnectOutput("OnFullyOpen", "OnFullyOpen")
+			ent.ConnectOutput("OnFullyClosed", "OnFullyClosed")
+		}
+	}
+	
+	//
+	// ...
+	
 	Ware_SetTimeScale(1.0)
 	Ware_SetGlobalPlayerScale(1.0)
 	

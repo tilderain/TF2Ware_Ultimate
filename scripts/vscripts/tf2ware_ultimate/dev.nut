@@ -248,6 +248,23 @@ Ware_DevCommands <-
 			ClientPrint(player, HUD_PRINTCONSOLE, "* " + name)
 		Ware_ChatPrint(player, "See console for list of commands")
 	}
+	
+	// TODO: Remove camera commands when the trailer is done
+	"resetcams": function(player, text)
+	{
+		foreach(str in ["trailer_camera_beep_linear", "trailer_camera_frogger_linear", "trailer_camera_pinball_linear"])
+		{
+			local ent = FindByName(null, str)
+			local speed = GetPropFloat(ent, "m_flSpeed").tointeger()
+			EntityAcceptInput(ent, "Close")
+			EntityAcceptInput(ent, "SetSpeed", "100000")
+			
+			CreateTimer(function(){
+				EntityAcceptInput(ent, "SetSpeed", speed.tostring())
+				EntityAcceptInput(ent, "Open")
+			}, 0.5)
+		}
+	}
 }
 
 Ware_PublicCommands <-
