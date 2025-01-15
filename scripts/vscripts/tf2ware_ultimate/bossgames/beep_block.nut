@@ -24,7 +24,7 @@ minigame <- Ware_MinigameData
 
 // variables
 tempo            <- 0.0
-tempo_increase   <- 1.2 // after interrupt
+tempo_increase   <- 134.0 / 120.0 // TODO: change back to 1.2 after trailer is done
 beat             <- 0.0
 bgm_offset       <- 0.0
 interrupted      <- false
