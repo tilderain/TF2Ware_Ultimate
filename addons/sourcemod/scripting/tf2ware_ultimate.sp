@@ -33,6 +33,8 @@ int g_CheatImpulses[] = { 76, 81, 82, 83, 101, 102, 103, 106, 107, 108, 195, 196
 
 int g_TextProxy = INVALID_ENT_REFERENCE;
 
+float g_AntiFloodValue = 0.0;
+
 ConVar host_timescale;
 ConVar sv_cheats;
 ConVar nb_update_frequency;
@@ -170,6 +172,7 @@ void Enable()
 	host_timescale = FindConVar("host_timescale");
 	sv_cheats = FindConVar("sv_cheats");
 	nb_update_frequency = FindConVar("nb_update_frequency");
+	sm_flood_time = FindConVar("sm_flood_time");
 	
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(1, true, false);
@@ -181,6 +184,7 @@ void Enable()
 	CreateConVar("ware_version", PLUGIN_VERSION, "TF2Ware Ultimate plugin version");
 	ware_cheats = CreateConVar("ware_cheats", "0", "Enable sv_cheats commands");
 	ware_log_cheats = CreateConVar("ware_log_cheats", "1", "Log cheat command attempts");
+
 	
 	// unused event repurposed for vscript <-> sourcemod communication
 	HookEvent("player_rematch_change", ListenerVScript, EventHookMode_Pre);
@@ -217,6 +221,14 @@ void Enable()
 	g_CheatCommandsArgs.PushString("kill");	
 	g_CheatCommandsArgs.PushString("explode");	
 	g_CheatCommandsArgs.PushString("fov");	
+	
+	// HACK for trailer
+	// TODO this needs to be only toggled off for typing boss
+	if (sm_flood_time != INVALID_HANDLE)
+	{
+		g_AntiFloodValue = sm_flood_time.FloatValue;
+		sm_flood_time.SetFloat(-1.0);
+	}
 }
 
 void Disable(bool map_unload)
@@ -230,6 +242,13 @@ void Disable(bool map_unload)
 #if LOADOUT_WHITELISTER
 	LoadoutWhitelister_End(map_unload);
 #endif
+
+	// HACK for playtest this needs to be only toggled off for typing boss
+	// TODO this needs to be only toggled off for typing boss
+	if (sm_flood_time != INVALID_HANDLE)
+	{
+		sm_flood_time.SetFloat(g_AntiFloodValue);
+	}
 
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(0, true, false);
