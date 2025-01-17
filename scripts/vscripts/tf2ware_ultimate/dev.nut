@@ -92,34 +92,35 @@ Ware_DevCommands <-
 	"restart" : function(player, text)
 	{
 		SetConvarValue("mp_restartgame_immediate", 1)
-		Ware_ChatPrint(null, "Admin has forced a restart")
+		// TODO these should be "host" or "admin" if a non-dev executes it
+		Ware_ChatPrint(null, "Developer has forced a restart")
 	}
 	"gameover" : function(player, text)
 	{
 		Ware_DebugGameOver = true
-		Ware_ChatPrint(player, "Admin has forced a game over")		
+		Ware_ChatPrint(player, "Developer has forced a game over")		
 	}
 	// I never remember which word is the right one, so let's have both
 	"stop" : function(player, text)
 	{
 		Ware_DebugStop = true
-		Ware_ChatPrint(null, "Admin has forced the game to pause")
+		Ware_ChatPrint(null, "Developer has forced the game to pause")
 	}
 	"pause" : function(player, text)
 	{
 		Ware_DebugStop = true
-		Ware_ChatPrint(null, "Admin has forced the game to pause")
+		Ware_ChatPrint(null, "Developer has forced the game to pause")
 	}
 	"resume" : function(player, text)
 	{
 		Ware_DebugStop = false
-		Ware_ChatPrint(null, "Admin has resumed the game")
+		Ware_ChatPrint(null, "Developer has resumed the game")
 	}
 	"end" : function(player, text)
 	{
 		if (Ware_Minigame)
 		{
-			Ware_ChatPrint(null, "Admin has ended the current {str}..." Ware_Minigame.boss ? "bossgame" : "minigame")
+			Ware_ChatPrint(null, "Developer has ended the current {str}..." Ware_Minigame.boss ? "bossgame" : "minigame")
 			Ware_EndMinigame()
 		}
 		else
@@ -180,7 +181,7 @@ Ware_DevCommands <-
 				local points = args[arg].tointeger()
 				Ware_ChatPrint(player, "Gave {int} points to {player}", points, target)
 				if (target != player)
-					Ware_ChatPrint(target, "Admin has given you {int} points", points)
+					Ware_ChatPrint(target, "Developer has given you {int} points", points)
 				Ware_GetPlayerData(target).score += points
 			}
 			else
@@ -227,7 +228,7 @@ Ware_DevCommands <-
 		{
 			local scale = args[0].tofloat()
 			Ware_SetTimeScale(scale)
-			Ware_ChatPrint(null, "Admin has forced timescale to {%g}", scale)
+			Ware_ChatPrint(null, "Developer has forced timescale to {%g}", scale)
 		}
 		else		
 		{
