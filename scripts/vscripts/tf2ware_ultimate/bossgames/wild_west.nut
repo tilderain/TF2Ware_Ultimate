@@ -321,7 +321,7 @@ function OnUpdate()
 			{
 				if (buttons & IN_ATTACK)
 				{
-					SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 0.3)
+					SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 1.0)
 					minidata.holding_attack = true
 				}
 				else
@@ -332,7 +332,7 @@ function OnUpdate()
 			else if (shootout)
 			{
 				if (minidata.holding_attack && (buttons & IN_ATTACK))
-					SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 0.2)
+					SetPropFloat(player, "m_Shared.m_flStealthNoAttackExpire", time + 1.0)
 				else
 					minidata.holding_attack = false
 			}
