@@ -38,6 +38,7 @@ float g_AntiFloodValue = 0.0;
 ConVar host_timescale;
 ConVar sv_cheats;
 ConVar nb_update_frequency;
+ConVar sm_flood_time;
 
 //ConVar ware_version;
 ConVar ware_cheats;
