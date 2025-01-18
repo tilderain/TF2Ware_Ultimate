@@ -340,7 +340,7 @@ function OnUpdate()
 			if (minidata.holding_attack && !minidata.hold_warning)
 			{
 				minidata.hold_warning = true
-				Ware_ChatPrint(player, "Do not hold the attack button. {color}Your gun will not fire!", COLOR_YELLOW)
+				Ware_ChatPrint(player, "Do not press the attack button early. {color}Your gun will not fire!", COLOR_YELLOW)
 			}
 		}
 	}
