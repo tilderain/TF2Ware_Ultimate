@@ -837,7 +837,11 @@ Ware_MeleeAttributeOverrides <-
 	// bushwacka
 	[232] = { "dmg taken increase" : 1 },
 	// conniver's kunai
-	[356] = { "max health additive penalty" : 0 },
+	[356] = 
+	{ 
+		"max health additive penalty" : 0 
+		"sanguisuge" : 0
+	},
 	// spy-cicle
 	[649] = { "melts in fire" : 0 },
 	// big earner
