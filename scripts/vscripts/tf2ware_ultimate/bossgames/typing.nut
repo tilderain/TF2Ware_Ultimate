@@ -247,12 +247,13 @@ function EndWords()
 		{
 			players.append(player)		
 			scores.append(minidata.score)
-		}
-		
-		if (mode == 0)
-		{
-			Ware_ChatPrint(player, "Your words-per-minute (WPM) was {color}{int}", COLOR_LIME, 
-				(minidata.word_count / (word_type_duration / 60.0)).tointeger())
+				
+			if (mode == 0)
+			{
+				// double the reported WPM to compensate for chat delay
+				Ware_ChatPrint(player, "Your words-per-minute (WPM) was {color}{int}", COLOR_LIME, 
+					(minidata.word_count / (word_type_duration / 60.0)).tointeger() * 2)
+			}			
 		}
 	}
 	if (scores.len() == 0)
@@ -348,9 +349,10 @@ function CheckGameOver()
 				
 				if (mode == 0)
 				{
+					// double the reported WPM to compensate for chat delay
 					Ware_ChatPrint(null, "{player}{color} had a total WPM of {color}{int}{color}!", 
 						player, TF_COLOR_DEFAULT, COLOR_LIME,
-						(average_word_count / (word_type_duration / 60.0)).tointeger(), 
+						(average_word_count / (word_type_duration / 60.0)).tointeger() * 2, 
 						TF_COLOR_DEFAULT)		
 				}
 			}
