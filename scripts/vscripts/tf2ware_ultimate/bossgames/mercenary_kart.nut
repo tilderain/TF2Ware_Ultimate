@@ -4093,6 +4093,8 @@ item_shock <-
 			AddKillFeedMessage(other.m_driver, kart.m_driver, "spellbook_lightning")
 			DispatchParticleEffect("mk_lightning_parent", other.m_origin, vec3_up)
 			other.Shrink(max_time - delta_time * other.m_position_idx.tofloat() / player_count)
+			
+			other.DropItems()
 		}
 	}	
 }
