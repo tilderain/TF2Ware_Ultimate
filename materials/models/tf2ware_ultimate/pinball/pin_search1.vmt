@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+    $basetexture models/tf2ware_ultimate/pinball/pin_search1
+	$additive 1
+	$model 1
+}

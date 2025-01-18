@@ -1,0 +1,16 @@
+VertexLitGeneric
+{
+	$basetexture models/mariokart/itembox
+	$bumpmap models/mariokart/shared_normal
+
+	$phong 1
+	$phongalbedotint 1
+	$phongexponenttexture models/mariokart/itembox_exponent
+	$lightwarptexture models/mariokart/itembox_lightwarp
+	$phongboost 5
+	$phongfresnelranges "[.2 .7 1]"
+
+	$rimlight 1			
+	$rimlightexponent 4	
+	$rimlightboost 5
+}

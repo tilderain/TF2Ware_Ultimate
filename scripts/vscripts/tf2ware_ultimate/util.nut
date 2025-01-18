@@ -40,28 +40,34 @@ function Round(x)
         return (x + 0.5).tointeger()
 }
 
-// Snap a number to the interval y
+// Snap a number or vector to the interval y
 function Snap(x, y)
 {
 	return Round(x / y) * y
 }
 
 // Lerp a value between A and B, t being percentage from 0 to 1
-function Lerp(t, A, B)
+function Lerp(t, a, b)
 {
-    return A + (B - A) * t
+    return a + (b - a) * t
+}
+
+// Remap a value from the range A - B into C - D
+function RemapVal(x, a, b, c, d)
+{
+	return c + (d - c) * (x - a) / (b - a)
 }
 
 // Remap a value from the range A - B into C - D
 // If the value is outside of the boundary, it is clamped
-function RemapValClamped(v, A, B, C, D)
+function RemapValClamped(v, a, b, c, d)
 {
-	local cv = (v - A) / (B - A)
+	local cv = (v - a) / (b - a)
 	if (cv <= 0.0)
-		return C
+		return c
 	if (cv >= 1.0)
-		return D
-	return C + (D - C) * cv
+		return d
+	return c + (d - c) * cv
 }
 
 // Normalize an angle into [-180, 180] range
@@ -109,6 +115,37 @@ function VectorAngles(forward)
 	return QAngle(pitch, yaw, 0.0)
 }
 
+// Same as VectorAngles but aligned along basis vector
+function VectorAngles2(forward, up)
+{
+	local left = up.Cross(forward)
+	left.Norm()	
+	local xyDist = forward.Length2D()
+	if (xyDist > 0.001)
+	{
+		return QAngle(
+			atan2(-forward.z, xyDist) * RAD2DEG,
+			atan2(forward.y, forward.x) * RAD2DEG,
+			atan2(left.z, (left.y * forward.x) - (left.x * forward.y)) * RAD2DEG)
+	}
+	else
+	{
+		return QAngle(
+			atan2(-forward.z, xyDist) * RAD2DEG,
+			atan2(-left.x, left.y) * RAD2DEG,
+			0.0)
+	}	
+}
+
+// Returns a valid axis perpendicular to the given unit vector (for cross product)
+function VectorPerpendicularAxis(normal)
+{
+	if (fabs(normal.x) > 1e-4 || fabs(normal.y) > 1e-4)
+		return Vector(0, 0, 1)
+	else
+		return Vector(1, 0, 0)
+}
+
 // Ensures quaternion q is within 180 degrees of quaternion p
 function QuaternionAlign(p, q)
 {
@@ -149,6 +186,19 @@ function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs)
     return (a_mins.x <= b_maxs.x && a_maxs.x >= b_mins.x) &&
            (a_mins.y <= b_maxs.y && a_maxs.y >= b_mins.y) &&
            (a_mins.z <= b_maxs.z && a_maxs.z >= b_mins.z)
+}
+
+// Performs line segment vs plane intersection test
+// If successful, returns point of intersection
+// Otherwise returns null
+function IntersectLinePlane(normal, dist, start, end)
+{
+	local dir = end - start
+	local d = normal.Dot(dir)
+	if (fabs(d) < 1e-6)
+		return null
+    local t = (dist - normal.Dot(start)) / normal.Dot(dir)
+    return start + dir * t
 }
 
 // Performs ray vs AABB intersection test, within [near, far] range
@@ -364,6 +414,15 @@ function FloatToTimeHMS(time)
 	return { hours = h, minutes = m, seconds = s }
 }
 
+// Formats a float time into minutes:seconds:milliseconds
+function FloatToTimeFormat(time)
+{
+	local minutes = (time / 60).tointeger()
+	local seconds = (time % 60).tointeger()
+	local milliseconds = ((time - floor(time)) * 1000).tointeger()
+	return format("%02d:%02d:%03d", minutes, seconds, milliseconds)
+}
+
 // Marks an entity as purged for the stringtable
 // For internal use only
 function MarkForPurge(entity)
@@ -440,6 +499,14 @@ function RemoveAllOfEntity(classname)
 		entity.Kill()
 }
 
+// Removes a think function for an entity
+// Works even if called from it's own think function
+function RemoveEntityThink(entity)
+{
+	AddThinkToEnt(entity, null)
+	SetPropString(entity, "m_iszScriptThinkFunction", "")
+}
+
 // Creates a timer that executes the given function after a delay
 // The function may return a float value to repeat the function again after the new delay
 // If the function returns nothing or null, the timer is killed
@@ -514,6 +581,12 @@ function EntityAcceptInput(entity, input, parameter = "", activator = null, call
 	return entity.AcceptInput(input, parameter, activator, caller)
 }
 
+// Disable interpolation for an entity on this frame
+function EntityMarkTeleport(entity)
+{
+	SetPropInt(entity, "m_ubInterpolationFrame", (GetPropInt(entity, "m_ubInterpolationFrame") + 1) % 4)
+}
+
 // Returns true if the entity is a hat wearable
 function IsWearableHat(entity)
 {
@@ -521,17 +594,6 @@ function IsWearableHat(entity)
 		return false
 	
 	return entity.LookupBone("bip_head") >= 0 || entity.LookupBone("prp_helmet") >= 0
-}
-
-// Internal use only
-function PlayerParentFix()
-{
-	self.RemoveEFlags(EFL_KILLME)
-	for (local wearable = self.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
-		wearable.RemoveEFlags(EFL_KILLME)
-	
-	SetPropInt(self, "m_fEffects", 0)
-	SetPropInt(self, "m_iParentAttachment", 0)
 }
 
 // Sets an entity's parent, optionally to a given attachment
@@ -573,6 +635,13 @@ function SetPlayerParentPlayer(player, parent, attachment = null)
 	}
 	
 	SetEntityParent(player, parent, attachment)
+}
+
+// Reset's player heath
+// Intended to workaround health being set to 1 after transforming into ghost mode
+function PlayerResetHealth()
+{
+	self.SetHealth(self.GetMaxHealth())
 }
 
 // Internal use only
@@ -786,6 +855,54 @@ function KillPlayerRagdoll(player)
 	}
 }
 
+// Safely enables or disables a point_viewcontrol to workaround bugs
+function TogglePlayerViewcontrol(player, camera, toggle)
+{
+	if (toggle)
+	{
+		// viewcontrol makes player invulnerable
+		local take_damage = GetPropInt(player, "m_takedamage")	
+		camera.AcceptInput("Enable", "", player, player)
+		SetPropInt(player, "m_takedamage", take_damage) 		
+	}
+	else
+	{
+		// viewcontrol doesn't disable for dead players
+		// and sets the wrong damage state
+		local take_damage = GetPropInt(player, "m_takedamage")
+		local life_state = GetPropInt(player, "m_lifeState")
+		SetPropInt(player, "m_lifeState", 0) 
+		SetPropEntity(camera, "m_hPlayer", player)	
+		camera.AcceptInput("Disable", "", player, player)
+		SetPropInt(player, "m_lifeState", life_state) 	
+		SetPropInt(player, "m_takedamage", take_damage) 	
+	}
+}
+
+// Silently kills a player (no kill feed, screams, etc)
+function KillPlayerSilently(player)
+{
+	SetPropInt(player, "m_iObserverLastMode", OBS_MODE_CHASE)
+	local team = NetProps.GetPropInt(player, "m_iTeamNum")
+	SetPropInt(player, "m_iTeamNum", TEAM_SPECTATOR)
+	player.DispatchSpawn()
+	SetPropInt(player, "m_iTeamNum", team)
+}
+
+// Adds a message to the killfeed
+function AddKillFeedMessage(victim, attacker, icon)
+{
+	SendGlobalGameEvent("player_death"
+	{
+		userid             = GetPlayerUserID(victim)
+		victim_entindex    = victim.entindex()
+		inflictor_entindex = attacker ? attacker.entindex() : 0
+		attacker           = attacker ? GetPlayerUserID(attacker) : 0
+		weapon             = icon
+		death_flags        = TF_DEATH_FEIGN_DEATH
+	})
+}
+
 // Removes a weapon, including any attachments it has
 function KillWeapon(weapon)
 {
@@ -842,5 +959,55 @@ function TriggerHurtDisintegrate()
 		{
 			self.TakeDamage(1000, DMG_BURN, caller)
 		}
+	}
+}
+
+// Think function that does nothing (workaround for MOVETYPE_PUSH bug)
+function ThinkDummy()
+{
+	return -1
+}
+
+// Think function that removes itself when the current animation is done
+function ThinkAdvanceAnimUntilEnd()
+{
+	self.StudioFrameAdvance()
+	if (self.GetCycle() == 1.0)
+		RemoveEntityThink(self)
+	return 0.05 // minimum interpolation
+}
+
+// Draw coordinate axes at given position
+function DebugDrawAxes(pos, size, no_depth_test, duration)
+{
+	DebugDrawLine(
+		pos + Vector(-size, 0, 0), 
+		pos + Vector(size, 0, 0),
+		255, 0, 0, no_depth_test, duration)
+	DebugDrawLine(
+		pos + Vector(0, -size, 0), 
+		pos + Vector(0, size, 0),
+		0, 255, 0, no_depth_test, duration)
+	DebugDrawLine(
+		pos + Vector(0, 0, -size), 
+		pos + Vector(0, 0, size),
+		0, 0, 255, no_depth_test, duration)
+}
+
+// Draw text representing the vector at it's position
+function DebugDrawVector(vec, no_depth_test, duration)
+{
+	DebugDrawText(vec, format("(%g %g %g)", vec.x, vec.y, vec.z), no_depth_test, duration)
+}
+
+// Prints specified levels of call stack
+function DumpCallstack(levels = 16)
+{
+	for (local level = 2; level < levels; level++)
+	{
+		local s = getstackinfos(level)
+		if (!s)
+			break
+		printf("\t%s (line %d) [%s]\n",  s.func, s.line, s.src)
 	}
 }

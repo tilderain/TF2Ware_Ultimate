@@ -1,0 +1,7 @@
+UnlitGeneric
+{
+    $basetexture models/tf2ware_ultimate/pinball/waluigi_pnl1
+	$alphatest 1
+	$allowalphatocoverage 1	
+	$model 1
+}

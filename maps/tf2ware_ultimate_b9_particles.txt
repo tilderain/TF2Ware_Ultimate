@@ -1,0 +1,5 @@
+"particles_manifest"
+{
+	"file" "!particles/tf2ware_ultimate.pcf"
+	"file" "!particles/mariokart.pcf"
+}

@@ -1,0 +1,5 @@
+UnlitGeneric
+{
+	$basetexture models/mariokart/hud/map
+	$nofog 1
+}

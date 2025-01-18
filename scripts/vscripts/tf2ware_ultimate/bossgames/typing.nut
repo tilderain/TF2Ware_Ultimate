@@ -386,8 +386,7 @@ function SetCamera(name)
 	{
 		foreach (player in Ware_Players)
 		{
-			SetPropEntity(camera, "m_hPlayer", player)
-			camera.AcceptInput("Enable", "", player, player)
+			TogglePlayerViewcontrol(player, camera, true)
 			player.SetForceLocalDraw(true)
 			player.AddHudHideFlags(HIDEHUD_TARGET_ID)
 			player.RemoveCond(TF_COND_TAUNTING)
@@ -399,14 +398,7 @@ function SetCamera(name)
 	{
 		foreach (player in Ware_Players)
 		{
-			SetPropEntity(camera, "m_hPlayer", player)
-			
-			// workaround point_viewcontrol bug
-			local life_state = GetPropInt(player, "m_lifeState")
-			SetPropInt(player, "m_lifeState", 0) 
-			camera.AcceptInput("Disable", "", player, player)
-			SetPropInt(player, "m_lifeState", life_state) 
-			
+			TogglePlayerViewcontrol(player, camera, false)		
 			player.SetForceLocalDraw(false)
 			player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
 			player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)

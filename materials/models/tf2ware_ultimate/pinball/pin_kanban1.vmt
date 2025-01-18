@@ -1,0 +1,5 @@
+UnlitGeneric
+{
+    $basetexture models/tf2ware_ultimate/pinball/pin_kanban1
+	$model 1
+}

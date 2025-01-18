@@ -1,0 +1,14 @@
+UnlitGeneric
+{
+    $basetexture models/tf2ware_ultimate/pinball/ob_flipper1
+	$model 1
+	Proxies
+	{
+		TextureScroll
+		{
+			texturescrollvar $baseTextureTransform
+			texturescrollrate 2.0
+			texturescrollangle 180
+		}
+	}
+}

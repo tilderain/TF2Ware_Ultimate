@@ -474,18 +474,11 @@ function OnGameEvent_player_changeclass(params)
 
 function OnGameEvent_player_death(params)
 {
+	if (params.death_flags & TF_DEATH_FEIGN_DEATH)
+		return
+	
 	RemoveAllOfEntity("tf_ammo_pack")
 	RemoveAllOfEntity("halloween_souls_pack")
-	
-	local ammos = []
-	for (local ammo; ammo = FindByClassname(ammo, "tf_ammo_pack");)
-	{
-		MarkForPurge(ammo)
-		ammos.append(ammo)
-	}
-	
-	foreach (ammo in ammos)
-		ammo.Kill()
 		
 	local player = GetPlayerFromUserID(params.userid)
 	if (player)

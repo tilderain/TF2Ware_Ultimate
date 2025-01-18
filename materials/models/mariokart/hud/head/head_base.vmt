@@ -1,0 +1,99 @@
+UnlitGeneric
+{
+	$basetexture models/mariokart/hud/head/head
+	
+	$alphatest 1
+	$allowalphatocoverage 1
+	$nodecal 1
+	$nofog 1
+	$model 1
+	
+	$frame 0
+	
+	$spinout 0
+	
+	$angle 0.0
+	$rotation 360.0
+	$temp 0.0
+	
+	$last_time 0.0
+	$time 0.0
+	$dt 0.0
+	$dt_max 0.1
+	
+	$zero 0
+	$one 1
+	
+	Proxies
+	{
+		TeamTexture
+		{
+		}		
+		LessOrEqual
+		{
+			lessEqualVar $zero
+			greaterVar $one
+			srcVar1 $frame
+			srcVar2 $zero
+			resultVar $spinout
+		}
+		CurrentTime
+		{
+			resultVar $time
+		}
+		Subtract
+		{
+			srcVar1 $time
+			srcVar2 $last_time
+			resultVar $dt
+		}
+		Clamp
+		{
+			srcVar1 $dt
+			min $zero
+			max $dt_max
+			resultVar $dt
+		}
+		Equals
+		{
+			srcVar1 $time
+			resultVar $last_time
+		}
+		Multiply
+		{
+			srcVar1 $rotation
+			srcVar2 $dt
+			resultVar $temp
+		}
+		Add
+		{
+			srcVar1 $angle
+			srcVar2 $temp
+			resultVar $angle
+		}
+		WrapMinMax
+		{
+			srcVar1 $angle
+			minVal $zero
+			maxVal $rotation
+			resultVar $angle
+		}
+		Multiply
+		{
+			srcVar1 $angle
+			srcVar2 $spinout
+			resultVar $angle
+		}
+		TextureTransform
+		{
+			rotateVar $angle
+			resultVar $basetexturetransform
+		}
+		ToggleTexture
+		{
+			toggleTextureVar $basetexture
+			toggleTextureFrameNumVar $frame
+			toggleShouldWrap 0
+		}		
+	}
+}

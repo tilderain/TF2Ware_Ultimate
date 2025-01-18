@@ -1,0 +1,66 @@
+UnlitGeneric
+{
+	$basetexture models/mariokart/hud/itemroulette
+	$basetexturetransform "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+	$envmapmask models/mariokart/hud/frames32
+	
+	$alphatest 1
+	$allowalphatocoverage 1
+	$nodecal 1
+	$nofog 1
+	$model 1
+	
+	$offset 1
+	$firsty 0.03125
+	$lasty 0.625 // (1 / 32) * (19 + 1)
+	$translate "[0 0.0]"
+	
+	$zero 0.0
+	$rate 0.4
+	$scroll 0.0
+	$offset2 0.0
+	$minusone -1
+	$itemmax 20
+	
+	Proxies
+	{
+		ToggleTexture
+		{
+			toggleTextureVar $envmapmask
+			toggleTextureFrameNumVar $offset
+			toggleShouldWrap 0
+		}
+		LinearRamp
+		{
+			rate $rate
+			initialValue $zero
+			resultVar $scroll
+		}
+		WrapMinMax
+		{ 
+			srcVar1 $scroll
+			minVal $firsty
+			maxVal $lasty
+			resultVar $scroll
+		}
+		Multiply
+		{
+			srcVar1 $offset
+			srcVar2 $firsty
+			resultVar $offset2
+		}
+		LessOrEqual
+		{
+			lessEqualVar $offset2
+			greaterVar $scroll
+			srcVar1 $offset
+			srcVar2 $itemmax
+			resultVar "$translate[1]"
+		}
+		TextureTransform
+		{
+			translateVar $translate
+			resultVar $basetexturetransform
+		}
+	}
+}

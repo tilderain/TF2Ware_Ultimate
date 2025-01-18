@@ -148,6 +148,9 @@ else
 	SendToConsole("sv_cheats 1")
 	// this fixes ghosts being stuttery
 	SendToConsole("nb_update_frequency 0.05")
+	// slightly bump this as loading minigames frequently spits this out
+	if (Convars.GetFloat("vscript_perf_warning_spew_ms") <= 1.5)
+		SendToConsole("vscript_perf_warning_spew_ms 5")
 }
 
 class Ware_Callback

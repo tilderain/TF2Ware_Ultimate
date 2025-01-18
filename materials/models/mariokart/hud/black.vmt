@@ -1,0 +1,8 @@
+UnlitGeneric
+{
+	$basetexture vgui/black
+	
+	$nodecal 1
+	$nofog 1
+	$model 1	
+}

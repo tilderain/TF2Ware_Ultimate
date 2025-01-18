@@ -1,0 +1,7 @@
+UnlitGeneric
+{
+	$basetexture models/player/spy/mask_pyro
+	$nodecal 1
+	$nofog 1
+	$model 1
+}

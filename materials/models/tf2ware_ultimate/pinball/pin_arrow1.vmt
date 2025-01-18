@@ -1,0 +1,15 @@
+UnlitGeneric
+{
+    $basetexture models/tf2ware_ultimate/pinball/pin_arrow1
+	$model 1
+	Proxies
+	{
+		TextureScroll
+		{
+			texturescrollvar $baseTextureTransform
+			texturescrollrate 1.0
+			texturescrollangle 0
+		}
+	}
+}
+

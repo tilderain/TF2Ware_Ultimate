@@ -1,0 +1,15 @@
+UnlitGeneric
+{
+    $basetexture models/tf2ware_ultimate/pinball/pin_warpline
+	$additive 1
+	$model 1
+	Proxies
+	{
+		TextureScroll
+		{
+			texturescrollvar $baseTextureTransform
+			texturescrollrate 0.75
+			texturescrollangle 90
+		}
+	}
+}

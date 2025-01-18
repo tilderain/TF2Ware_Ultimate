@@ -1,0 +1,7 @@
+VertexLitGeneric
+{
+    $basetexture models/tf2ware_ultimate/pinball/b_glass
+	$decal 1
+	$alphatest 1
+	$alphatestreference 0.1
+}

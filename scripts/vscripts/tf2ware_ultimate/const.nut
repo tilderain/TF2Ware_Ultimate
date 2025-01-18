@@ -2,15 +2,19 @@
 
 const EFL_USER = 2097152
 
+const INT_MIN = 0x80000000
 const INT_MAX = 0x7FFFFFFF
 const FLT_MAX = 3.402823466e+38
 const RAD2DEG = 57.295779513
 const DEG2RAD = 0.0174532924
 
-vec3_zero <- Vector()
-ang_zero <- QAngle()
+vec3_zero    <- Vector()
+vec3_epsilon <- Vector(0, 0, 1e-6)
+vec3_up      <- Vector(0, 0, 1)
+ang_zero     <- QAngle()
 
 const TICKDT = 0.015 // assuming 66 tickrate
+const NDEBUG_TICK = 0.03 // for debug drawing per-tick
 
 const MASK_ALL                   = -1
 const MASK_SOLID_BRUSHONLY       = 16395
@@ -77,6 +81,8 @@ const TF_STUN_NO_EFFECTS            = 32
 const TF_STUN_LOSER_STATE           = 64
 const TF_STUN_BY_TRIGGER            = 128
 const TF_STUN_SOUND                 = 256 
+
+const TF_DEATH_FEIGN_DEATH = 32
 
 const OBJ_DISPENSER         = 0
 const OBJ_TELEPORTER        = 1

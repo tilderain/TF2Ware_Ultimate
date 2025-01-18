@@ -1,0 +1,97 @@
+VertexlitGeneric
+{
+	$basetexture models/mariokart/karts/tire
+	$bumpmap     models/mariokart/karts/tire_normal
+	
+	$alphatest 1
+	
+	$phong 1
+	$phongexponent 8
+	$phongboost 0.3
+	$phongfresnelranges "[.1 1 8]"
+	
+	$rimlight 1			
+	$rimlightexponent 4	
+	$rimlightboost 2	
+	
+	$frame 0
+	$zero 0
+	$speed 0.0
+	$two 2
+	$factor -0.04
+	
+	//$temp 200.0
+	
+	$x -200.0
+	$y 1200.0
+	$z -31.0
+	$w 63.0
+	$v 47.619
+	
+	Proxies
+	{
+		TeamTexture
+		{
+		}
+		Add
+		{
+			srcVar1 $frame
+			srcVar2 $two
+			resultVar $speed
+		}
+		//Equals
+		//{
+		//	srcVar1 $temp
+		//	resultVar $speed			
+		//}		
+		
+		Subtract
+		{
+			srcVar1 $speed
+			srcVar2 $z
+			resultVar $speed
+		}
+		Multiply
+		{
+			srcVar1 $speed
+			srcVar2 $y
+			resultVar $speed
+		}
+		Divide
+		{
+			srcVar1 $speed
+			srcVar2 $w
+			resultVar $speed
+		}
+		Add
+		{
+			srcVar1 $x
+			srcVar2 $speed
+			resultVar $speed
+		}
+		Add
+		{
+			srcVar1 $speed
+			srcVar2 $v
+			resultVar $speed
+		}
+		
+		Multiply
+		{
+			srcVar1 $speed
+			srcVar2 $factor
+			resultVar $speed
+		}
+		Equals
+		{
+			srcVar1 $zero
+			resultVar $frame	
+		}				
+		TextureScroll
+		{
+			texturescrollvar		$baseTextureTransform
+			texturescrollrate		$speed
+			texturescrollangle		0
+		}
+	}
+}

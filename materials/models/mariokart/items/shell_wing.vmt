@@ -1,0 +1,18 @@
+VertexLitGeneric
+{
+	$basetexture models/mariokart/items/shell_wing
+	$halflambert 1
+	
+	$basemapalphaphongmask 1
+	
+	$phong 1
+	//$phongexponent 5
+	$phongalbedotint 1
+	$phongexponenttexture models/mariokart/karts/kart_exponent
+	$phongboost 2
+	$phongfresnelranges "[.1 .5 1]"
+	
+	$rimlight 1			
+	$rimlightexponent 1	
+	$rimlightboost 5
+}

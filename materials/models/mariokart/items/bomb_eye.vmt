@@ -1,0 +1,8 @@
+VertexLitGeneric
+{
+	$basetexture models/mariokart/items/bomb_eye
+	$halflambert 1
+	
+	$alphatest 1
+	$allowalphatocoverage 1
+}

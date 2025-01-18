@@ -1,0 +1,96 @@
+UnlitGeneric
+{
+	$basetexture models/mariokart/hud/counter
+	
+	$alphatest 1
+	$allowalphatocoverage 1
+	$nodecal 1
+	$nofog 1
+	$model 1
+	
+	$frame 0
+	$time 0.0
+	$delta 0.0
+	$zero 0.0
+	$ten 10.0
+	$hundred 100.0
+	$temp 0.0
+	
+	$start_time 0.0
+	$world_mins "[0.0 0.0 0.0]"
+	$world_maxs "[0.0 0.0 0.0]"
+	
+	Proxies
+	{
+		CurrentTime
+		{
+			resultVar $time
+		}
+		WorldDims
+		{
+		}	
+        Clamp
+        {
+            srcVar1 $zero
+            min "$world_maxs[1]"
+            max "$world_maxs[1]"
+            resultVar $start_time
+        }
+		LessOrEqual
+		{
+			lessEqualVar $time
+			greaterVar $zero
+			srcVar1 $start_time
+			srcVar2 $time
+			resultVar $time
+		}
+		Subtract
+		{
+			srcVar1 $time
+			srcVar2 $start_time
+			resultVar $delta
+		}
+		Multiply
+		{
+			srcVar1 $delta
+			srcVar2 $hundred
+			resultVar $delta
+		}
+		Int
+		{
+			srcVar1 $delta
+			resultVar $delta
+		}
+		// modulo 10
+		Divide
+		{
+			srcVar1 $delta
+			srcVar2 $ten
+			resultVar $temp
+		}
+		Int
+		{
+			srcVar1 $temp
+			resultVar $temp
+		}
+		Multiply
+		{
+			srcVar1 $temp
+			srcVar2 $ten
+			resultVar $temp
+		}
+		Subtract
+		{
+			srcVar1 $delta
+			srcVar2 $temp
+			resultVar $frame
+		}
+		Clamp
+		{
+			srcVar1 $frame
+			min $zero
+			max $ten
+			resultVar $frame
+		}
+	}
+}

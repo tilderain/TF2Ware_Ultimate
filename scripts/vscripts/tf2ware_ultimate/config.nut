@@ -100,10 +100,10 @@ Ware_Bossgames <-
 	"frogger"
 	"ghostbusters"
 	"gioca_jouer"
-	"grand_prix"
 	//"homerun_contest" // NOTE: Not ready for public test yet. Please comment out before any public tests.
 	"jump_rope"
 	"mandrill"
+	"mercenary_kart"
 	"monoculus"
 	"obstacle_course"
 	"slender"
@@ -852,7 +852,8 @@ Ware_MeleeAttributeOverrides <-
 
 // keep updated with latest map version suffix
 // also remember to update the suffixes of the files in /maps
-const WARE_MAPVERSION = "b8g"
+const WARE_MAPVERSION = "b9"
+
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
 // if you change this make sure to update any sounds in level_sounds.txt too!

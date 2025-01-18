@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+	$basetexture models/mariokart/items/blooper_eye
+	$halflambert 1
+}

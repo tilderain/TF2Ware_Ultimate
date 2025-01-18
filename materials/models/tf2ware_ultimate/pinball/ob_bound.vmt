@@ -1,0 +1,5 @@
+UnlitGeneric
+{
+    $basetexture models/tf2ware_ultimate/pinball/ob_bound
+	$model 1
+}

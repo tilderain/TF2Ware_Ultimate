@@ -1,0 +1,5 @@
+UnlitGeneric
+{
+	$basetexture models/mariokart/items/bullet
+	$model 1
+}

@@ -1,0 +1,7 @@
+VertexLitGeneric
+{
+    $basetexture models/tf2ware_ultimate/pinball/pin_ami1
+	$alphatest 1
+	$allowalphatocoverage 1
+	$nocull 1
+}

@@ -49,6 +49,7 @@ function FixTypingCameras()
 				angles     = entity.GetAbsAngles()
 				spawnflags = 8
 			})
+			camera.SetMoveType(0, 0)
 			
 			local parent = entity.GetMoveParent()
 			if (parent)

@@ -1,0 +1,10 @@
+Sprite
+{
+	$basetexture models/mariokart/items/fib_mark
+	
+	$alphatest 1
+	$allowalphatocoverage 1
+	$spriteorientation parallel_upright
+	$spriteorigin "[.5 .5]"
+	$spriterendermode 1
+}

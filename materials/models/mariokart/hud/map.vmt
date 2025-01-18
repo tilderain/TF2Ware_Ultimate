@@ -1,0 +1,13 @@
+UnlitGeneric
+{
+	$basetexture _rt_Camera
+	$model 1
+	$nofog 1
+	
+	//$detail models/mariokart/hud/map
+	//$detailblendfactor 1
+	//$detailblendmode 4
+	//$detailscale 1
+	
+	$alphatest 1
+}
