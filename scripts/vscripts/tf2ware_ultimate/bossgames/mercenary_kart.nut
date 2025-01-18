@@ -211,6 +211,7 @@ function OnPrecache()
 	PrecacheModel("models/mariokart/items/shroom_mega.mdl")
 	PrecacheModel("models/mariokart/items/star.mdl")
 	
+	PrecacheSound("ui/vote_no.wav")
 	PrecacheScriptSound("MK_Music_Pinball")
 	PrecacheScriptSound("MK_Lap")
 	PrecacheScriptSound("MK_Race_Intro")
