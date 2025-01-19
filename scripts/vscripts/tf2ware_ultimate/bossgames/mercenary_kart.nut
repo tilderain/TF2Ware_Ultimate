@@ -720,7 +720,7 @@ function OnUpdate()
 		
 	foreach (i, kart in karts)
 	{
-		kart.SetPosition(position_shift + i, time)
+		kart.SetPosition(i, position_shift, time)
 		kart.Update(time, frame)
 	}
 	
@@ -1048,6 +1048,7 @@ function CreateKart(origin, angles)
 	kart.m_lap_last_time      <- 0.0
 	kart.m_lap_times          <- []
 	kart.m_position_idx       <- 0
+	kart.m_position_relative  <- 0
 	kart.m_position_timer     <- 1e30
 	
 	kart.m_map_point          <- null
@@ -1772,13 +1773,7 @@ kart_routines <-
 					&& Ware_MinigameScope.race_sequence >= 3)
 				{
 					m_engine_idle = true
-					EmitSoundEx
-					({
-						sound_name  = "MK_Kart_Engine"
-						entity      = m_prop
-						flags       = SND_STOP						
-						filter_type = RECIPIENT_FILTER_GLOBAL
-					})					
+					m_prop.StopSound("MK_Kart_Engine")			
 					m_prop.EmitSound("MK_Kart_Engine_Idle")
 				}
 				
@@ -2571,13 +2566,7 @@ kart_routines <-
 	StopStar = function()
 	{
 		RestoreMusic()
-		EmitSoundEx
-		({
-			sound_name  = "MK_Item_Star_Music"
-			flags       = SND_STOP
-			entity      = m_prop
-			filter_type = RECIPIENT_FILTER_GLOBAL
-		})
+		m_prop.StopSound("MK_Item_Star_Music")
 		if (m_driver)
 			m_driver.RemoveCond(TF_COND_INVULNERABLE)
 		m_prop.SetSkin(m_skin)
@@ -2617,14 +2606,7 @@ kart_routines <-
 		m_mega_timer = 0.0
 		
 		RestoreMusic()
-		EmitSoundEx
-		({
-			sound_name  = "MK_Item_Shroom_Mega_Music"
-			flags       = SND_STOP
-			entity      = m_prop
-			filter_type = RECIPIENT_FILTER_GLOBAL
-		})
-		
+		m_prop.StopSound("MK_Item_Shroom_Mega_Music")
 		m_prop.EmitSound("MK_Item_Shroom_Mega_Finish")
 		m_prop.SetModelScale(1.0, 1.0)
 		
@@ -2713,13 +2695,7 @@ kart_routines <-
 			m_driver.SetForceLocalDraw(true)
 		}
 		m_prop.SetModel(m_model)
-		EmitSoundEx
-		({
-			sound_name  = "MK_Item_Bullet_Fly"
-			flags       = SND_STOP
-			entity      = m_prop
-			filter_type = RECIPIENT_FILTER_GLOBAL
-		})
+		m_prop.StopSound("MK_Item_Bullet_Fly")
 		m_prop.EmitSound("MK_Item_Bullet_Off")
 		m_bullet_timer = 0.0
 		
@@ -2886,8 +2862,11 @@ kart_routines <-
 		m_checkpoint_idx = idx
 	}
 	
-	SetPosition = function(idx, time)
+	SetPosition = function(position, shift, time)
 	{	
+		m_position_relative = position
+		
+		local idx = position + shift
 		if (idx == m_position_idx)
 			return
 		
@@ -3008,7 +2987,7 @@ kart_routines <-
 		DrawText("Held items: %d", m_items_held.len())
 		
 		i++
-		DrawText("Position: %d", m_position_idx)
+		DrawText("Position: %d (%d)", m_position_idx, m_position_relative)
 		DrawText("Checkpoint: %d", m_checkpoint_idx)
 		DrawText("Lap: %d", m_lap_idx)
 		if (m_lap_valid_idx != INT_MIN)
@@ -3054,12 +3033,19 @@ local function ExplosionCreate(origin, radius, duration, inflictor, owner_kart, 
 		local origin = m_origin
 		local radius = m_radius
 		local spinout_type = Time() < m_blast_timer ? SPINOUT_LAUNCH_UP : SPINOUT_SPIN
+		
+		// entities may get deleted as they are looped here, so store a list
+		local entities = []
 		for (local entity; entity = Entities.FindInSphere(entity, origin, radius);)
 		{
 			if (entity in m_hits)
 				continue
 			m_hits[entity] <- true
-			
+			entities.append(entity)
+		}
+		
+		foreach (entity in entities)
+		{
 			local classname = entity.GetClassname()
 			if (!(classname in m_classnames))
 				continue
@@ -3287,32 +3273,20 @@ local function ItemCreate(classname, model, owner_kart, type)
 			local hit = "m_hit" in this && m_hit // HACK
 			if (m_type == ITEM_TYPE_SHELL_GREEN) 
 			{
-				EmitSoundEx
-				({
-					sound_name  = "MK_Item_Shell_Green_Follow"
-					flags       = SND_STOP
-					entity      = self
-					filter_type = RECIPIENT_FILTER_GLOBAL
-				})			
+				self.StopSound("MK_Item_Shell_Green_Follow")	
 				DispatchParticleEffect("spell_skeleton_bits_green", self.GetOrigin(), vec3_zero)			
 				self.EmitSound(hit ? "MK_Item_Shell_Hit" : "MK_Item_Shell_Break")
 			}
 			else if (m_type == ITEM_TYPE_SHELL_RED)
 			{
-				EmitSoundEx
-				({
-					sound_name  = "MK_Item_Shell_Red_Follow"
-					flags       = SND_STOP
-					entity      = self
-					filter_type = RECIPIENT_FILTER_GLOBAL
-				})			
+				self.StopSound("MK_Item_Shell_Red_Follow")
 				DispatchParticleEffect("spell_pumpkin_mirv_bits_red", self.GetOrigin(), vec3_zero)
 				self.EmitSound(hit ? "MK_Item_Shell_Hit" : "MK_Item_Shell_Break")
 			}
 		}
 		
 		RemoveEntityThink(self)
-		self.Destroy()
+		self.Kill()
 	}
 	AddThinkToEnt(item, "Physics")
 	return item	
@@ -3748,7 +3722,7 @@ item_shell <-
 			if (item_scope.m_type == ITEM_TYPE_SHELL_RED)
 			{
 				local target_kart
-				for (local i = kart.m_position_idx - 1; i >= 0; i--)
+				for (local i = kart.m_position_relative - 1; i >= 0; i--)
 				{
 					local other = karts[i]
 					if (other.m_rescued || other.m_cannon_end_pos)
@@ -3872,13 +3846,7 @@ item_shell_blue <-
 						m_target_kart_origin = m_target_kart.m_entity.GetOrigin()
 					if ((origin - m_target_kart_origin).Length2D() < 32.0)
 					{
-						EmitSoundEx
-						({
-							sound_name  = "MK_Item_Shell_Blue_Fly"
-							flags       = SND_STOP
-							entity      = self
-							filter_type = RECIPIENT_FILTER_GLOBAL
-						})		
+						self.StopSound("MK_Item_Shell_Blue_Fly")
 						EmitSoundEx
 						({
 							sound_name  = "MK_Item_Shell_Blue_Warning"
@@ -3959,27 +3927,11 @@ item_shell_blue <-
 		scope.Destroy <- function()
 		{
 			if (m_stage >= 2)
-			{
-				EmitSoundEx
-				({
-					sound_name  = "MK_Item_Shell_Blue_Warning"
-					flags       = SND_STOP
-					entity      = self
-					filter_type = RECIPIENT_FILTER_GLOBAL
-				})
-			}
+				self.StopSound("MK_Item_Shell_Blue_Warning")
 			else
-			{
-				EmitSoundEx
-				({
-					sound_name  = "MK_Item_Shell_Blue_Fly"
-					flags       = SND_STOP
-					entity      = self
-					filter_type = RECIPIENT_FILTER_GLOBAL
-				})
-			}
+				self.StopSound("MK_Item_Shell_Blue_Fly")
 			
-			self.Destroy()
+			self.Kill()
 		}
 		
 		EmitSoundEx
