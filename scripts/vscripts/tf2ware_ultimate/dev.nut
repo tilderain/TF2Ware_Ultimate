@@ -18,9 +18,9 @@ function Ware_DevCommandForceMinigame(player, text, is_boss, once)
 	
 	local name = is_boss ? "bossgame" : "minigame"
 	if (once)
-		Ware_ChatPrint(player, "Setting next {str} to '{str}'", name, ROOT[gamename])	
+		Ware_ChatPrint(player, "Developer set next {str} to '{str}'", name, ROOT[gamename])	
 	else
-		Ware_ChatPrint(player, "Forced {str} to '{str}'", name, ROOT[gamename])	
+		Ware_ChatPrint(player, "Developer forced {str} '{str}'", name, ROOT[gamename])	
 }
 
 Ware_DevCommands <-
@@ -42,7 +42,7 @@ Ware_DevCommands <-
 		}
 		else
 			Ware_DebugNextTheme = ""
-		Ware_ChatPrint(player, "Setting next theme to '{str}'", Ware_DebugNextTheme)
+		Ware_ChatPrint(null, "Developer forced next theme to '{str}'", Ware_DebugNextTheme)
 	}
 	"forcetheme": function(player, text)
 	{
@@ -57,7 +57,7 @@ Ware_DevCommands <-
 		}
 		else
 			Ware_DebugForceTheme = ""
-		Ware_ChatPrint(player, "Forced theme to '{str}'", Ware_DebugForceTheme)
+		Ware_ChatPrint(null, "Developer forced theme to '{str}'", Ware_DebugForceTheme)
 	}
 	"nextspecial": function(player, text)
 	{
@@ -66,7 +66,7 @@ Ware_DevCommands <-
 			Ware_DebugNextSpecialRound = args[0]
 		else
 			Ware_DebugNextSpecialRound = ""
-		Ware_ChatPrint(player, "Forced next special round to '{str}'", Ware_DebugNextSpecialRound)
+		Ware_ChatPrint(null, "Developer forced next special round to '{str}'", Ware_DebugNextSpecialRound)
 	}
 	"shownext": function(player, text)
 	{
@@ -98,7 +98,7 @@ Ware_DevCommands <-
 	"gameover" : function(player, text)
 	{
 		Ware_DebugGameOver = true
-		Ware_ChatPrint(player, "Developer has forced a game over")		
+		Ware_ChatPrint(null, "Developer has forced a game over")		
 	}
 	// I never remember which word is the right one, so let's have both
 	"stop" : function(player, text)
@@ -165,7 +165,9 @@ Ware_DevCommands <-
 			}
 		}
 		else
+		{
 			Ware_ChatPrint(player, "Arguments: [mini/boss/special] [name]")
+		}
 	}
 	"givescore" : function(player, text)
 	{
@@ -212,7 +214,7 @@ Ware_DevCommands <-
 				}		
 			}
 			local code = "return (function() {" + text + "}).call(ROOT)"
-			printf("[TF2Ware] Player '%s' executed code: %s\n", GetPlayerName(player), code)
+			printf("[TF2Ware] Developer '%s' executed code: %s\n", GetPlayerName(player), code)
 			local ret = compilestring(code)()
 			ClientPrint(player, HUD_PRINTTALK, "\x07FFFFFFRETURN: " + ret)
 		}
