@@ -18,10 +18,19 @@ cutout_models <-
 ]
 cutout_model <- cutout_models[mode]
 
+cow_sounds <- 
+[
+	"ambient_mp3/cow1.mp3"
+	"ambient_mp3/cow2.mp3"
+	"ambient_mp3/cow3.mp3"
+]
+
 function OnPrecache()
 {
 	foreach (model in cutout_models)
 		PrecacheModel(model)
+	foreach (sound in cow_sounds)
+		PrecacheSound(sound)
 }
 
 function OnTeleport(players)
@@ -44,8 +53,7 @@ function OnStart()
 		origin     = Ware_MinigameLocation.center + Vector(-830, -780, 584)
 		spawnflags = 1
 	})
-	printl(lightorigin.GetOrigin())
-	
+
 	local prop = Ware_SpawnEntity("prop_dynamic",
 	{
 		origin = Ware_MinigameLocation.center + Vector(-960, 0, 584)
@@ -70,6 +78,13 @@ function OnStart()
 		solid  = SOLID_BBOX
 	})
 	SetPropEntity(prop, "m_hLightingOrigin", lightorigin)
+	
+	if (mode == 0)
+	{
+		local sound = RandomElement(cow_sounds)
+		Ware_PlaySoundOnAllClients(sound)
+		Ware_PlaySoundOnAllClients(sound)
+	}
 }
 
 function OnTakeDamage(params)
@@ -80,6 +95,6 @@ function OnTakeDamage(params)
 		&& (params.damage_type & DMG_BLAST)
 		&& params.const_entity.GetModelName() == cutout_model)
 	{
-		Ware_PassPlayer(attacker, true)
+		Ware_PassPlayer(attacker, true)	
 	}
 }
