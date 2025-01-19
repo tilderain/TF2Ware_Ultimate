@@ -84,7 +84,6 @@ function OnTeleport(players)
 	local center = Ware_MinigameLocation.center * 1.0
 	local models = Ware_MinigameLocation.plat_models
 	
-	local base_z = center.z
 	local min_z = -128.0, max_z = 32.0
 	local size = 112.0
 	local speed = 300.0
@@ -92,8 +91,9 @@ function OnTeleport(players)
 	local SpawnHex = function(q, r)
 	{
 		local hex = Hex(q, r)
-		center.z = base_z + Round(RandomFloat(min_z, max_z))
-		hex.Spawn(center, size, RandomElement(models), speed)
+		local pos = center * 1.0
+		pos.z += Round(RandomFloat(min_z, max_z))
+		hex.Spawn(pos, size, RandomElement(models), speed)
 		hexes.append(hex)
 	}
 	
@@ -154,6 +154,16 @@ function OnTeleport(players)
 	lower_delay = (minigame.duration - 17.0) / hexes.len().tofloat()
 	Ware_CreateTimer(@() LowerPlatform(), 10.0)
 	
+	// TODO temporary for debugging
+	local developers = Ware_Players.filter(@(i, player) GetPlayerSteamID3(player) in DEVELOPER_STEAMID3)
+	local PrintDebug = function(msg)
+	{
+		// dev chat
+		foreach (developer in developers)
+			ClientPrint(developer, HUD_PRINTCONSOLE, msg)
+	}
+	PrintDebug(format("*** Platform count: %d, player count %d\n", hexes.len(), players.len()))
+	
 	local hex_len = hexes.len()
 	local hex_idx = 0
 	foreach (player in players)
@@ -166,6 +176,15 @@ function OnTeleport(players)
 		dir.z = 0.0
 		dir.Norm()
 		Ware_TeleportPlayer(player, origin, VectorAngles(dir), vec3_zero)
+		
+		PrintDebug(format("\t* %s - teleported to %s (platform %d)\n", GetPlayerName(player), origin.ToKVString(), hex_idx))
+		
+		// TODO temporary for debugging
+		local frac = TraceLinePlayersIncluded(player.GetCenter(), origin - Vector(0, 0, 512), player)
+		if (frac == 0.0)
+			PrintDebug("\t *** stuck!")
+		else if (frac == 1.0)
+			PrintDebug("\t *** no floor!")			
 	}
 }
 
