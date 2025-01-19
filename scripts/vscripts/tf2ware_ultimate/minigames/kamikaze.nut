@@ -95,7 +95,8 @@ function OnEnd()
 		})
 		
 		kamikaze.EmitSound(explode_sound)
-		Ware_RadiusDamagePlayers(kamikaze_pos, 700.0, 350.0, kamikaze)
+		local radius = Ware_MinigameLocation.name.find("big") != null ? 1000.0 : 500.0
+		Ware_RadiusDamagePlayers(kamikaze_pos, radius, 350.0, kamikaze)
 		ScreenShake(kamikaze_pos, 1024.0, 25.0, 2.5, 4096.0, 0, true)
 	}
 	
