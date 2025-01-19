@@ -30,7 +30,7 @@ function OnStart()
 			Ware_SetPlayerMission(player, 1)
 			Ware_SetPlayerClass(player, TF_CLASS_ENGINEER)
 			Ware_GivePlayerWeapon(player, "Toolbox")
-			Ware_GivePlayerWeapon(player, "Construction PDA")
+			Ware_GivePlayerWeapon(player, "Construction PDA", {}, false)
 		}
 		else
 		{

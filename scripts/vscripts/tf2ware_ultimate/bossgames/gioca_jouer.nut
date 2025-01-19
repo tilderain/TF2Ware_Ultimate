@@ -172,9 +172,8 @@ function OnMicroStart()
 	// loadouts. can move to switch if a non-global loadout function is made
 	if (micro == MICRO_MACHO || micro == MICRO_COMB)
 		Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit")
-	
 	// do this one a minigame early bcuz original did it. otherwise move to MICRO_SUPER
-	if (micro == MICRO_WAVE3)
+	else if (micro == MICRO_WAVE3)
 		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
 }
 
@@ -297,10 +296,10 @@ function OnMicroEnd()
 				player.RemoveCond(TF_COND_HALLOWEEN_KART)
 				break
 			case MICRO_COMB:
-				player.RemoveCond(TF_COND_DISGUISING)
-				if (player.InCond(TF_COND_DISGUISED))
+				if (player.InCond(TF_COND_DISGUISING) || player.InCond(TF_COND_DISGUISED))
 				{
 					GiocaJouer_PassPlayer(player, true)
+					player.RemoveCond(TF_COND_DISGUISING)					
 					player.RemoveCond(TF_COND_DISGUISED)
 				}
 				Ware_StripPlayer(player, true)

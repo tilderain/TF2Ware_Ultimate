@@ -31,7 +31,8 @@ team_idx <- RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit")
+	// don't force switch to the disguise kit as it won't show disguise menu
+	Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit", {}, false, false)
 	
 	local pos = Ware_MinigameLocation.center
 	local match = Ware_SpawnEntity("prop_dynamic",

@@ -219,7 +219,7 @@ function Ware_GetPlayerMission(player)
 // For a list of item names, see items.nut
 // If items is null, the player is switched to their default melee
 // Item attributes is a list of attributes to apply to the given item, or default melee
-function Ware_SetPlayerLoadout(player, player_class, items = null, item_attributes = {}, keep_melee = false)
+function Ware_SetPlayerLoadout(player, player_class, items = null, item_attributes = {}, keep_melee = false, switch_weapon = true)
 {
 	Ware_SetPlayerClass(player, player_class, false)
 	
@@ -231,11 +231,11 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 		{
 			local last_item = items[items.len() - 1]
 			foreach (item in items)
-				Ware_GivePlayerWeapon(player, item, {}, item == last_item)
+				Ware_GivePlayerWeapon(player, item, {}, switch_weapon && item == last_item)
 		}
 		else
 		{
-			Ware_GivePlayerWeapon(player, items, item_attributes)
+			Ware_GivePlayerWeapon(player, items, item_attributes, switch_weapon)
 		}
 	}
 	else
@@ -267,10 +267,10 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 
 // Sets a loadout for all players
 // See Ware_SetPlayerLoadout
-function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {}, keep_melee = false)
+function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {}, keep_melee = false, switch_weapon = true)
 {
 	foreach (player in Ware_MinigamePlayers)
-		Ware_SetPlayerLoadout(player, player_class, items, item_attributes, keep_melee)		
+		Ware_SetPlayerLoadout(player, player_class, items, item_attributes, keep_melee, switch_weapon)		
 }
 
 // Strips all items/weapons from a player
@@ -436,7 +436,8 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 			if (item_id == 25 || item_id == 27) // construction pda
 			{
 				// build/disguise menu will not show up unless its holstered for a bit
-				EntFireByHandle(player, "CallScriptFunction", "Ware_FixupPlayerWeaponSwitch", 0.25, weapon, weapon)
+				// NOTE; avoid switching to PDAs if possible as it's only 99% reliable even with this much delay
+				EntFireByHandle(player, "CallScriptFunction", "Ware_FixupPlayerWeaponSwitch", 0.5, weapon, weapon)
 			}
 			else
 			{
