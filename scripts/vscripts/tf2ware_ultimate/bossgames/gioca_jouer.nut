@@ -132,6 +132,32 @@ function GiocaJouer_PassPlayer(player, pass)
 	Ware_GetPlayerMiniData(player).gj_passed = pass
 }
 
+function GiocaJouer_CheckTauntableMelee(player)
+{
+	// can't taunt with sharp dresser as spy
+	local player_class = player.GetPlayerClass()
+	if (player_class == TF_CLASS_SPY)
+	{
+		local melee = player.GetActiveWeapon()		
+		local id = GetPropInt(melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
+		if (id == 638)
+		{
+			melee.Kill()
+			Ware_GivePlayerWeapon(player, "Knife")			
+		}
+	}
+	// or heavy with all-class melee
+	else if (player_class == TF_CLASS_HEAVYWEAPONS)
+	{
+		local melee = player.GetActiveWeapon()
+		if (melee && melee.GetName() == "tf_weapon_fireaxe")
+		{
+			melee.Kill()
+			Ware_GivePlayerWeapon(player, "Fists")			
+		}
+	}
+}
+
 function OnMicroStart()
 {
 	minigame.description = microgame_info[micro][0]
@@ -166,15 +192,24 @@ function OnMicroStart()
 			case MICRO_HORN:
 				player.AddCond(TF_COND_HALLOWEEN_KART)
 				break
+			case MICRO_WAVE:
+			case MICRO_WAVE2:
+			// WAVE3 forces a class switch
+				GiocaJouer_CheckTauntableMelee(player)
+				break
 		}
 	}
 	
 	// loadouts. can move to switch if a non-global loadout function is made
 	if (micro == MICRO_MACHO || micro == MICRO_COMB)
+	{
 		Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit")
+	}
 	// do this one a minigame early bcuz original did it. otherwise move to MICRO_SUPER
 	else if (micro == MICRO_WAVE3)
+	{
 		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
+	}
 }
 
 function OnUpdate()
