@@ -84,13 +84,28 @@ Ware_Location.circlepit_big <-
 
 Ware_Location.sawrun <-
 {
-	center   = Vector(4480, -3900, -4495)
+	center   = Vector(4480, -4000, -4495)
+	finish   = Vector(4480, -3056, -4495)
 	Teleport = function(players) 
 	{
 		Ware_TeleportPlayersRow(players,
 			center - Vector(40, 0, 0),
 			QAngle(0, 90, 0),
 			480.0,
+			-50.0, 50.0)
+	}
+}
+
+Ware_Location.sawrun_micro <-
+{
+	center   = Vector(-160, 5546, -11887)
+	finish   = Vector(-160, 5948, -11887)
+	Teleport = function(players) 
+	{
+		Ware_TeleportPlayersRow(players,
+			center - Vector(0, 512, 0),
+			QAngle(0, 90, 0),
+			460.0,
 			-50.0, 50.0)
 	}
 }

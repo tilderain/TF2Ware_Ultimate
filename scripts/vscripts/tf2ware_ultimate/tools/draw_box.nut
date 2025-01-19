@@ -113,6 +113,9 @@ function DrawEnd()
 			printl(VectorFormat(draw_anchor_pos))
 			printl(VectorFormat(draw_cur_pos))
 		}
+		
+		local center = (draw_anchor_pos + draw_cur_pos) * 0.5
+		printl(VectorFormat(center))
 	}
 	
 	draw_state = DRAW_NONE

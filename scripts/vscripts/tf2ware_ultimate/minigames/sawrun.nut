@@ -5,7 +5,7 @@ minigame <- Ware_MinigameData
 	description    = "Get to the end!"
 	duration       = 4.0
 	end_delay      = 0.5
-	location       = "sawrun"
+	location       = RandomBool() ? "sawrun_micro" : "sawrun"
 	music          = "getmoving"
 	custom_overlay = "get_end"
 	start_pass     = false
@@ -18,7 +18,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	local threshold = Ware_MinigameLocation.center.y + 844.0
+	local threshold = Ware_MinigameLocation.finish.y
 	foreach (player in Ware_MinigamePlayers)
 	{
 		if (player.IsAlive() && player.GetOrigin().y > threshold)

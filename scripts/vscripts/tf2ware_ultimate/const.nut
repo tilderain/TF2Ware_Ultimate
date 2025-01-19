@@ -19,6 +19,7 @@ const NDEBUG_TICK = 0.03 // for debug drawing per-tick
 const MASK_ALL                   = -1
 const MASK_SOLID_BRUSHONLY       = 16395
 const MASK_PLAYERSOLID_BRUSHONLY = 81931
+const MASK_PLAYERSOLID           = 33636363
 const MASK_SOLID 	             = 33570827
 
 const MAX_WEAPONS = 7
