@@ -5,7 +5,7 @@ minigame <- Ware_MinigameData
 	description    = 
 	[
 		"Piggyback the heavy before he reaches the end!"
-		"Reach the end with less than 3 players on your back!"
+		"Reach the end without all players on your back!"
 	]
 	duration       = 27.7
 	min_players    = 5
@@ -28,6 +28,7 @@ minigame <- Ware_MinigameData
 piggybacker <- null
 piggybacker_dummy <- null
 piggybacked_count <- 0
+piggybacker_max_count <- 0
 piggybacker_killed <- false
 
 dummy_model <- "models/tf2ware_ultimate/dummy_sphere.mdl"
@@ -40,6 +41,7 @@ function OnPrecache()
 function OnTeleport(players)
 {
 	piggybacker = RemoveRandomElement(players)
+	piggybacker_max_count = players.len()
 
 	Ware_TeleportPlayer(piggybacker, Ware_MinigameLocation.center_top + Vector(0, 2912, -777), QAngle(0, 90, 0), vec3_zero)
 	
@@ -142,7 +144,7 @@ function OnUpdate()
 		local win_y = Ware_MinigameLocation.center_bottom.y - 400.0
 		if (piggybacker.GetOrigin().y > win_y)
 		{
-			if (piggybacked_count < 3)
+			if (piggybacked_count < piggybacker_max_count)
 				Ware_PassPlayer(piggybacker, true)
 		}
 		else
