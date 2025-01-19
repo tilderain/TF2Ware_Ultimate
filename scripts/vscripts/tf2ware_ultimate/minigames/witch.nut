@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name          = "Witch"
 	author        = "ficool2"
 	description   = "Don't startle the witch!"
-	duration      = 15.0
+	duration      = 12.0
 	end_delay     = 1.0
 	music         = "witchhour"
 	start_pass    = true
@@ -19,6 +19,7 @@ witch_spawn_sound    <- "Weapon_DRG_Wrench.Teleport"
 witch_cry_sound      <- "TF2Ware_Ultimate.WitchCry"
 witch_scream_sound   <- "TF2Ware_Ultimate.WitchScream"
 witch_shriek_sound   <- "TF2Ware_Ultimate.WitchShriek"
+witch_step_sound     <- "cleats_conc.StepLeft"
 witches              <- []
 
 function OnPrecache()
@@ -30,6 +31,7 @@ function OnPrecache()
 	PrecacheScriptSound(witch_cry_sound)
 	PrecacheScriptSound(witch_scream_sound)
 	PrecacheScriptSound(witch_shriek_sound)
+	PrecacheScriptSound(witch_step_sound)
 }
 
 function OnStart()
@@ -90,6 +92,18 @@ function WitchThink()
 		move_dir.z = 0.0		
 		move_dir.Norm()
 		
+		if (shake_timer < time)
+		{
+			ScreenShake(my_origin, 15, 10, 1.0, 1000.0, 0, true)
+			shake_timer = time + RandomFloat(0.4, 0.6)
+		}
+		
+		if (step_timer < time)
+		{
+			self.EmitSound(step_sound)
+			step_timer = time + 0.15
+		}		
+		
 		// kill anyone in the way
 		foreach (player in Ware_Players)
 		{
@@ -119,7 +133,7 @@ function WitchThink()
 		
 		local angle = new_yaw * DEG2RAD
 		move_dir = Vector(cos(angle), sin(angle))
-		local move_speed = threat ? 370.0 : 60.0
+		local move_speed = threat ? 600.0 : 60.0
 		
 		// collision check
 		// assumes location is flat
@@ -163,7 +177,7 @@ function WitchStartle(player)
 		started_players[player] <- true
 		Ware_ChatPrint(null, "{player} {color}startled the {color}WITCH{color}!", 
 			player, TF_COLOR_DEFAULT, COLOR_RED, TF_COLOR_DEFAULT)
-		Ware_ChatPrint(player, "{color}HINT{color}: Don't make any noise!", 
+		Ware_ChatPrint(player, "{color}TIP{color}: Don't attack, type in chat or use voice!", 
 			COLOR_GREEN, TF_COLOR_DEFAULT)
 		EntityEntFire(player, "SpeakResponseConcept", "TLK_PLAYER_NEGATIVE")
 	}
@@ -189,6 +203,7 @@ function SpawnWitch()
 	local witch = Ware_SpawnEntity("base_boss",
 	{
 		classname = "voodoo_pin" // kill icon
+		targetname = "ware_witch"
 		origin    = witch_origin
 		angles    = QAngle(0, RandomFloat(-180, 180), 0)
 		model     = witch_model
@@ -202,14 +217,23 @@ function SpawnWitch()
 	scope.started_players <- {}
 	scope.amb_timer <- Time() + 0.5
 	scope.path_timer <- 0.0
+	scope.shake_timer <- 0.0
+	scope.step_timer <- 0.0
 	scope.move_dir <- null
 	scope.cry_sound <- witch_cry_sound
 	scope.scream_sound <- witch_scream_sound
 	scope.shriek_sound <- witch_shriek_sound
+	scope.step_sound <- witch_step_sound
 	scope.WitchThink <- WitchThink.bindenv(scope)
 	scope.WitchStartle <- WitchStartle.bindenv(scope)
 	AddThinkToEnt(witch, "WitchThink")
 	witches.append(witch)
+	
+	Ware_SpawnEntity("tf_glow",
+	{
+		target    = "ware_witch"
+		GlowColor = "148 0 211 255"
+	})
 }
 
 function StartleWitch(player, radius)
