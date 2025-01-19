@@ -68,7 +68,7 @@ function OnPrecache()
 	PrecacheScriptSound(pass_sound)
 }
 
-function OnPick(is_forced)
+function OnPick()
 {
 	return Ware_TimeScale == 1.0 // gioca doesnt really work at other timescales
 }
