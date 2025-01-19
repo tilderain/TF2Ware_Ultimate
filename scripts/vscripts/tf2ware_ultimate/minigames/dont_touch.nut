@@ -16,7 +16,9 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Force-a-Nature")
 	foreach (player in Ware_MinigamePlayers)
-	{
+	{		
+		player.SetHealth(player.GetMaxHealth() * 5)
+		
 		local weapon = player.GetActiveWeapon()
 		if (weapon == null)
 			continue
