@@ -7,5 +7,5 @@ special_round <- Ware_SpecialRoundData
 
 function GetMinigameName(is_boss)
 {
-	return is_boss ? null : "math"
+	return is_boss ? "typing" : "math"
 }
