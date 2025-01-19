@@ -78,7 +78,7 @@ Ware_Location.circlepit <-
 Ware_Location.circlepit_big <-
 {
 	center   = Vector(-3304, 2400, 1056)
-	radius   = 512.0
+	radius   = 600.0
 	Teleport = Ware_Location.circlepit.Teleport
 }
 
@@ -289,7 +289,7 @@ Ware_Location.frogger <-
 Ware_Location.sumobox <-
 {
 	center   = Vector(-4600, -9500, -6142)
-	radius   = 400
+	radius   = 480
 	cameras  = ["sumobox_camera"]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
