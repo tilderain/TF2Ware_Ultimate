@@ -555,13 +555,19 @@ function Ware_TogglePlayerWearables(player, toggle)
 	}
 }
 
-// Gets a list of alive players on the given team
+// Gets a list of alive players, optionally on the given team
 function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 {
 	if (team & 2)
 		return Ware_MinigamePlayers.filter(@(i, player) player.GetTeam() == team && player.IsAlive())
 	else
 		return Ware_MinigamePlayers.filter(@(i, player) player.IsAlive())
+}
+
+// Gets a list of players on the given team
+function Ware_GetTeamPlayers(team)
+{
+	return Ware_MinigamePlayers.filter(@(i, player) player.GetTeam() == team)
 }
 
 // Gets a list of players that haven't been passed

@@ -9,7 +9,6 @@ minigame <- Ware_MinigameData
 	music          = "boxfight"
 	custom_overlay = "knockout"
 	min_players    = 2
-	start_pass     = true
 	start_freeze   = true
 	allow_damage   = true
 	fail_on_death  = true
@@ -33,6 +32,20 @@ function OnStart()
 	
 	Ware_PlaySoundOnAllClients(start_sound)
 	Ware_PlaySoundOnAllClients(start_sound)
+	
+	foreach (player in Ware_MinigamePlayers)
+		Ware_GetPlayerMiniData(player).knockouts <- 0
+}
+
+function OnPlayerDeath(params)
+{
+	local attacker = GetPlayerFromUserID(params.attacker)
+	if (attacker == null)
+		return
+	local victim = GetPlayerFromUserID(params.userid)
+	if (victim == attacker)
+		return
+	Ware_GetPlayerMiniData(attacker).knockouts++
 }
 
 function OnEnd()
@@ -42,17 +55,36 @@ function OnEnd()
 	
 	local red_count = Ware_GetAlivePlayers(TF_TEAM_RED).len()
 	local blue_count = Ware_GetAlivePlayers(TF_TEAM_BLUE).len()
+	// if one team is left, only everyone on that team wins
 	if (red_count + blue_count > 0 && red_count == 0 || blue_count == 0)
 	{
 		if (red_count == 0)
 		{
 			Ware_ChatPrint(null, "{color}BLU{color} are the champions!", 
-				TF_COLOR_BLUE, TF_COLOR_DEFAULT)		
+				TF_COLOR_BLUE, TF_COLOR_DEFAULT)
+			foreach (player in Ware_GetTeamPlayers(TF_TEAM_BLUE))
+				Ware_PassPlayer(player, true)
 		}
 		else if (blue_count == 0)
 		{
 			Ware_ChatPrint(null, "{color}RED{color} are the champions!", 
 				TF_COLOR_RED, TF_COLOR_DEFAULT)	
+			foreach (player in Ware_GetTeamPlayers(TF_TEAM_RED))
+				Ware_PassPlayer(player, true)				
+		}
+	}
+	else
+	{
+		// otherwise whoever knocked atleast 1 person out wins
+		foreach (player in Ware_MinigamePlayers)
+		{
+			local knockouts = Ware_GetPlayerMiniData(player).knockouts
+			if (knockouts > 0)
+			{
+				Ware_PassPlayer(player, true)
+				if (knockouts >= 3)
+					Ware_GiveBonusPoints(player)
+			}
 		}
 	}
 }
