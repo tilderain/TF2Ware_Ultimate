@@ -598,6 +598,13 @@ function Ware_ModifyMeleeAttributes(melee)
 		foreach (name, value in attributes)
 			melee.AddAttribute(name, value, -1)
 	}
+	
+	// special case to disable caber
+	if (id == 307)
+	{
+		SetPropBool(melee, "m_bBroken", true)
+		SetPropInt(melee, "m_iDetonated", 1)	
+	}
 }
 
 function Ware_RemovePlayerAttributeInternal(player, name)
