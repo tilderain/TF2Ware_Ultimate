@@ -25,6 +25,7 @@ minigame <- Ware_MinigameData
 	location       = "waluigi_pinball"
 	music          = null
 	custom_overlay = ""
+	min_players    = 2
 	convars = 
 	{
 		sv_maxvelocity = 5000.0
