@@ -27,7 +27,7 @@ function OnStart()
 	endzone.ConnectOutput("OnStartTouch", "OnStartTouch")
 	
 	EntFire("ERBoss_InitRelay", "Trigger")
-	EntFire("ERBoss_AcidPit_Start", "Trigger")
+	EntFire("ERBoss_Start", "Trigger")
 	
 	Ware_CreateTimer(function() 
 	{
@@ -65,7 +65,7 @@ function OnEnd()
 {
 	endzone.DisconnectOutput("OnStartTouch", "OnStartTouch")
 	
-	EntFire("ERBoss_AcidPit_Stop", "Trigger")
+	EntFire("ERBoss_Stop", "Trigger")
 }
 
 function OnCheckEnd()

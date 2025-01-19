@@ -855,8 +855,8 @@ Ware_MeleeAttributeOverrides <-
 }
 
 // keep updated with latest map version suffix
-// also remember to update the suffixes of the files in /maps
-const WARE_MAPVERSION = "b9"
+// also remember to update the suffixes of the files in "maps" folders
+const WARE_MAPVERSION = "b9b"
 
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
