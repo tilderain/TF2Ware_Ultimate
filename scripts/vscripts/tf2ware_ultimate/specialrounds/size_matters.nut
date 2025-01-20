@@ -9,6 +9,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Size Matters"
 	author = "pokemonPasta"
 	description = "Your size will change to reflect your score!"
+	category = "scores"
 })
 
 function OnCalculateTopScorers(top_players)

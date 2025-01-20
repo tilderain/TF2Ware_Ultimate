@@ -1,8 +1,9 @@
 special_round <- Ware_SpecialRoundData
 ({
-	name             = "Math Only"
-	author           = "ficool2"
-	description      = "Only math questions this round!"
+	name        = "Math Only"
+	author      = "ficool2"
+	description = "Only math questions this round!"
+	category    = ""
 })
 
 function GetMinigameName(is_boss)

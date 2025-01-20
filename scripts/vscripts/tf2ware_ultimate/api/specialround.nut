@@ -33,6 +33,10 @@ class Ware_SpecialRoundData
 	author           		 = null
 	// Description shown in chat
 	description      		 = null
+	// Category string
+	// Used when stacking multiple special rounds. More than one special round from a given category cannot be stacked.
+	// If category is blank, it's assumed it has no possible conflicts with any other special round
+	category                 = null
 	
 	// == Optional settings ==
 	// Minimum amount of players needed to start, default is 0
@@ -82,6 +86,11 @@ class Ware_SpecialRoundData
 	cb_on_update               = null
 	// OnEnd()                    - Called when this special round ends.
 	cb_on_end                  = null
+	// GetName(params)            - Called by Ware_GetSpecialRoundName. Overrides the English name for the special round if specified.
+	cb_get_name                = null	
+	// GetOverlay2()              - Replaces the default secondary overlay texture in Ware_ShowScreenOverlay2 (see player.nut). 
+	//                            - Return an overlay texture for it to be set.
+	cb_get_overlay2            = null	
 	// GetMinigameName(is_boss)   - Replaces the minigame selection process in Ware_StartMinigame. 
 	//                            - Return a minigame name for it to be attempted to be selected, or null to use default pick.
 	cb_get_minigame            = null
@@ -99,14 +108,14 @@ class Ware_SpecialRoundData
 	//                              - This replaces a core part of the gameplay loop, 
 	//                                and if Ware_StartMinigame or another appropriate function isn't called, the game will stop.
 	cb_on_begin_intermission   = null
+	// OnSpeedup()                - Called by Ware_Speedup.
+	//                            - If this returns true, replaces the speedup logic in a similar way to OnBeginIntermission.
+	cb_on_speedup              = null	
 	// OnBeginBoss()              - Called by Ware_BeginBoss when a boss notification appears.
 	//                            - If this returns true, the default logic for Ware_BeginBoss is replaced.
 	//                            - Since this replaces a core part of the gameplay loop, 
 	//                            - you need to call Ware_BeginIntermission yourself to continue it.
 	cb_on_begin_boss           = null
-	// GetOverlay2()              - Replaces the default secondary overlay texture in Ware_ShowScreenOverlay2 (see player.nut). 
-	//                            - Return an overlay texture for it to be set.
-	cb_get_overlay2            = null
 	// OnCheckGameOver()          - Called by Ware_FinishMinigameInternal, return true to force an early game over
 	cb_on_check_gameover       = null
 	// GetValidPlayers()          - Replaces Ware_GetValidPlayers, which is used when selecting players to play a minigame.
@@ -135,11 +144,10 @@ class Ware_SpecialRoundData
 	cb_get_player_roll         = null
 	// CanPlayerRespawn(player)   - If returns true, allows a dead player to respawn
 	cb_can_player_respawn      = null
-	// OnSpeedup()                - Called by Ware_Speedup.
-	//                            - If this returns true, replaces the speedup logic in a similar way to OnBeginIntermission.
-	cb_on_speedup              = null
 	// OnTakeDamage(params)       - Called by OnTakeDamage in main.nut and functions as normal.
 	cb_on_take_damage          = null
+	
+	// NOTE: if you are adding callbacks, update the double_trouble special round (it forwards every callback!)
 }
 
 // Rolls and starts a special round

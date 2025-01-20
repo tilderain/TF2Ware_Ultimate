@@ -4,6 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Non-Stop"
 	author = "pokemonPasta"
 	description = "You get no breaks between minigames!"
+	category = "timescale"
 })
 
 function OnBeginIntermission(is_boss)

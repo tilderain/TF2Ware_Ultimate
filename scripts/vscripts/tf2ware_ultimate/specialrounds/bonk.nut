@@ -8,6 +8,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Bonk"
 	author = "ficool2"
 	description = "Everyone gets a BONK BAT!"
+	category = "weapon"
 	allow_damage = true
 })
 

@@ -3,6 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "No Moving Back"
 	author = "ficool2"
 	description = "Forwards is the only option!"	
+	category = ""
 	convars = 
 	{
 		tf_clamp_back_speed = 0.00001

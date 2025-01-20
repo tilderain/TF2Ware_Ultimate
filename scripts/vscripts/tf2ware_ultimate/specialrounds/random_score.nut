@@ -4,6 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Randomized Scores"
 	author = "pokemonPasta"
 	description = "Each minigame will be worth a random amount of points."
+	category = "scores"
 })
 
 random_score <- 0

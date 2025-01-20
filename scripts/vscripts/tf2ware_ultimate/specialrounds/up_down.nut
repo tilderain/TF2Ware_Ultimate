@@ -4,6 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Up and Down"
 	author = "pokemonPasta"
 	description = "The speed will change randomly throughout the round."
+	category = "timescale"
 })
 
 function OnSpeedup()

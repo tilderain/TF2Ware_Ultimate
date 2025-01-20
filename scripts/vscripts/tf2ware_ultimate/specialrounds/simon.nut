@@ -6,6 +6,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Simon Goes Crazy"
 	author = "pokemonPasta"
 	description = "Only do what Simon tells you to do."
+	category = "scores"
 	
 	opposite_win = !simon
 })

@@ -3,6 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name             = "Collisions"
 	author           = "ficool2"
 	description      = "Players are always solid to each other!"
+	category         = ""
 	force_collisions = true
 	convars          =
 	{

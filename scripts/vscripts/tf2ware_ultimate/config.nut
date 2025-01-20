@@ -120,6 +120,7 @@ Ware_SpecialRounds <-
 	"boss_rush"
 	"cocanium"
 	"collisions"
+	"double_trouble"
 	"extended_round"
 	"fov"
 	"inclinity_problem"
@@ -144,8 +145,6 @@ Ware_SpecialRounds <-
 	"two_bosses"
 	"up_down"
 	"wipeout"
-	
-	"trailer" // TODO: Remove after trailer is done
 ]
 
 // only for precaching purposes

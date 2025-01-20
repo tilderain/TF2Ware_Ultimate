@@ -6,6 +6,7 @@ special_round <- Ware_SpecialRoundData
 	name             = mode == 0 ? "Quake Pro" : "Tunnel Vision"
 	author           = "ficool2"
 	description      = mode == 0 ? "FOV increased to 130!" : "FOV decreased to 50!"
+	category         = ""
 })
 
 function OnStart()

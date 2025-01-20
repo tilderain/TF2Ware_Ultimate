@@ -34,6 +34,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Wipeout"
 	author = "pokemonPasta"
 	description = "2 lives, battle in smaller groups until one player remains!" // TODO: better description
+	category = "meta" // TODO: wipeout modifies special_round late which double trouble doesn't support
 	
 	min_players = 3
 	

@@ -1,8 +1,9 @@
 special_round <- Ware_SpecialRoundData
 ({
-	name             = "Skull"
-	author           = ["Mikusch", "ficool2"]
-	description      = "Beware of the skull..."
+	name        = "Skull"
+	author      = ["Mikusch", "ficool2"]
+	description = "Beware of the skull..."
+	category    = ""
 })
 
 skull_model <- "models/props_mvm/mvm_human_skull_collide.mdl"

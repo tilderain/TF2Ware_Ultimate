@@ -4,6 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Adrenaline Shot"
 	author = "pokemonPasta"
 	description = "The round starts fast, then slows down."
+	category = "timescale"
 })
 
 local interval = Ware_SpeedUpInterval * 1.5

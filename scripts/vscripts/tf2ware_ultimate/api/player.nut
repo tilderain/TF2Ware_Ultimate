@@ -827,7 +827,7 @@ function Ware_ShowScreenOverlay2(players, name)
 		{
 			player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
 			
-			local overlay_name = "off";
+			local overlay_name = "off"
 			if (Ware_SpecialRound && Ware_SpecialRound.cb_get_overlay2.IsValid())
 				overlay_name = Ware_SpecialRound.cb_get_overlay2()
 				

@@ -248,6 +248,7 @@ if (!("Ware_Precached" in this))
 	Ware_SpecialRoundSavedConvars <- {}
 	Ware_SpecialRoundEvents       <- []
 	Ware_SpecialRoundPrevious     <- false
+	Ware_SpecialRoundCategories   <- {}
 	
 	Ware_AnnotationIDs            <- 0
 	
@@ -335,7 +336,23 @@ function Ware_PrecacheNext()
 				Ware_AddAuthor(minigame.author)
 			}
 			else if ("special_round" in scope)
+			{
+				if ("category" in scope.special_round)
+				{
+					local category = scope.special_round.category
+					if (category == "")
+						category = "none"
+					if (!(category in Ware_SpecialRoundCategories))
+						Ware_SpecialRoundCategories[category] <- []
+					Ware_SpecialRoundCategories[category].append(name)
+				}
+				else
+				{
+					Ware_Error("Special round '%s' has no category entry", name)
+				}
+				
 				Ware_AddAuthor(scope.special_round.author)
+			}
 		}
 		catch (e)
 		{
@@ -712,12 +729,29 @@ function Ware_IsSpecialRoundValid(str)
 	return false
 }
 
+function Ware_GetSpecialRoundName()
+{
+	if (Ware_SpecialRound)
+	{
+		if (Ware_SpecialRound.cb_get_name.IsValid())
+			return  Ware_SpecialRound.cb_get_name()
+		return Ware_SpecialRound.name
+	}
+	return ""
+}
+
 function Ware_ShowSpecialRoundText(players)
 {
 	local holdtime = 3.0 
-	local text = Ware_SpecialRound ? ("\n\n\n Special Round!\n " + Ware_SpecialRound.name) : ""
-	if (Ware_SpecialRound && Ware_SpecialRound.reverse_text)
-		text = "Special Round!\n" + Ware_SpecialRound.name + "\n\n\n"
+	local text = ""
+	if (Ware_SpecialRound)
+	{
+		local name = Ware_GetSpecialRoundName()
+		if (Ware_SpecialRound.reverse_text)
+			text = "Special Round!\n" + name + "\n\n\n"
+		else
+			text = "\n\n\n Special Round!\n " + name
+	}
 	Ware_ShowText(players, CHANNEL_SPECIALROUND, text, holdtime + 0.2, "255 175 0", 0.0, 0.0)
 	return holdtime // refresh every few seconds
 }
@@ -727,6 +761,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	local special_round = Ware_SpecialRound
 	local scope = Ware_SpecialRoundScope
 	
+	special_round.cb_get_name                = Ware_Callback(scope, "GetName")
 	special_round.cb_get_overlay2            = Ware_Callback(scope, "GetOverlay2")
 	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")
 	special_round.cb_can_player_respawn      = Ware_Callback(scope, "CanPlayerRespawn")
@@ -748,6 +783,37 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_on_speedup              = Ware_Callback(scope, "OnSpeedup")
 	special_round.cb_on_take_damage          = Ware_Callback(scope, "OnTakeDamage")
 	special_round.cb_on_update               = Ware_Callback(scope, "OnUpdate")
+	
+}
+
+// TODO move into specialround.nut
+function Ware_LoadSpecialRound(file_name, player_count, is_forced)
+{
+	local path = format("tf2ware_ultimate/specialrounds/%s", file_name)
+	local scope = {}
+	try
+	{
+		IncludeScript(path, scope)
+	}
+	catch (e)
+	{
+		Ware_HandleError(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
+		return null
+	}
+	
+	local min_players = scope.special_round.min_players
+	if (player_count >= min_players)
+	{
+		if (!("OnPick" in scope) || scope.OnPick())	
+			return scope
+		else if (is_forced)
+			Ware_Error("Not loading '%s' as it rejected the pick", file_name)	
+	}
+	else if (is_forced)
+	{
+		Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)	
+	}
+	return null
 }
 
 function Ware_BeginSpecialRoundInternal()
@@ -758,20 +824,13 @@ function Ware_BeginSpecialRoundInternal()
 	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
 	
-	local success = false
 	local try_debug = true
 	local attempts = 0
 	local round
 	
-	while (!success)
+	for (local attempt = 0; attempt < 16; attempt++)
 	{
 		round = null
-		
-		if (++attempts > 16)
-		{
-			Ware_Error("No valid special round found to pick. There may not be enough minimum players")
-			return
-		}
 		
 		local is_forced = false
 		if (try_debug)
@@ -811,36 +870,16 @@ function Ware_BeginSpecialRoundInternal()
 			round = RemoveRandomElement(Ware_SpecialRoundRotation)
 		}
 		
-		local path = format("tf2ware_ultimate/specialrounds/%s", round)
-		
-		try
-		{
-			Ware_SpecialRoundScope.clear()
-			IncludeScript(path, Ware_SpecialRoundScope)
-			
-			local min_players = Ware_SpecialRoundScope.special_round.min_players
-			if (player_count >= min_players)
-			{
-				if (!("OnPick" in Ware_SpecialRoundScope) || Ware_SpecialRoundScope.OnPick())	
-					success = true
-				else if (is_forced)
-					Ware_Error("Not loading '%s' as it rejected the pick", round)	
-			}
-			else if (is_forced)
-			{
-				Ware_Error("Not enough players to load '%s', minimum is %d", round, min_players)	
-			}
-		}
-		catch (e)
-		{
-			Ware_HandleError(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
-		}
-		
-		if (is_forced && !success)
-		{
-			Ware_Error("Failed to force load '%s', picking another round", round)
-		}
+		Ware_SpecialRoundScope = Ware_LoadSpecialRound(round, player_count, is_forced)
+		if (Ware_SpecialRoundScope)
+			break
 	}
+		
+	if (!Ware_SpecialRoundScope)
+	{
+		Ware_Error("No valid special round found to pick. There may not be enough minimum players")
+		return
+	}	
 	
 	Ware_SpecialRoundPrevious = true
 	

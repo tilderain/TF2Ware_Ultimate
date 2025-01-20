@@ -3,6 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Reversed Text"
 	author = "ficool2"
 	description = "All text is reversed!"
+	category = ""
 	reverse_text = true
 })
 
