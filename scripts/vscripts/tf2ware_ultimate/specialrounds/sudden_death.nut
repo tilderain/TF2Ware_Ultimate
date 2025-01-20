@@ -36,7 +36,7 @@ function OnMinigameCleanup()
 	
 	if (knocked_out > 0)
 	{
-		Ware_ChatPrint(null, "{int} {str} been knocked out! There is {int} {str} still standing.", 
+		Ware_ChatPrint(null, "{int} {str} been knocked out! There are {int} {str} still standing.", 
 			knocked_out,
 			knocked_out > 1 ? "players have" : "player has",
 			ValidPlayers.len(),
@@ -44,7 +44,7 @@ function OnMinigameCleanup()
 	}
 	else
 	{
-		Ware_ChatPrint(null, "No one has been knocked out! There is {int} {str} still standing.", 
+		Ware_ChatPrint(null, "No one has been knocked out! There are {int} {str} still standing.", 
 			ValidPlayers.len(),
 			ValidPlayers.len() == 1 ? "player" : "players")		
 	}
