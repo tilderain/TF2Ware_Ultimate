@@ -1,3 +1,4 @@
+// Whitelist of melees and hats only for dedicated servers
 "item_whitelist"
 {
 	// melees
