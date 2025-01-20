@@ -32,6 +32,8 @@ function OnStart()
 	
 	Ware_CreateTimer(@() SpawnMonoculus(), 0.1)
 	Ware_CreateTimer(@() SpawnMonoculus(), 3.0)
+	if (Ware_MinigamePlayers.len() >= 30)
+		Ware_CreateTimer(@() SpawnMonoculus(), 1.4)
 }
 
 function SpawnMonoculus()
