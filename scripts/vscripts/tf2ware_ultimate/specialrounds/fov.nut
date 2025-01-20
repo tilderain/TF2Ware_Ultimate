@@ -1,11 +1,10 @@
-mode <- RandomInt(0, 1)
-fov <- mode == 0 ? 130 : 50
+fov <- 130 
 
 special_round <- Ware_SpecialRoundData
 ({
-	name             = mode == 0 ? "Quake Pro" : "Tunnel Vision"
+	name             = "Quake Pro"
 	author           = "ficool2"
-	description      = mode == 0 ? "FOV increased to 130!" : "FOV decreased to 50!"
+	description      = "FOV increased to 130!"
 	category         = ""
 })
 
