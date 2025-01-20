@@ -26,6 +26,7 @@ minigame <- Ware_MinigameData
 	music          = null
 	custom_overlay = ""
 	min_players    = 2
+	max_scale      = 1.0
 	convars = 
 	{
 		sv_maxvelocity = 5000.0

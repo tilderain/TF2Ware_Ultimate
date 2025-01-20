@@ -7,6 +7,7 @@ minigame <- Ware_MinigameData
 	end_delay      = 0.5
 	music          = "adventuretime"
 	min_players    = 2
+	max_scale      = 1.5
 	allow_damage   = true
 	collisions     = true
 	custom_overlay = "kill_player"
@@ -14,8 +15,6 @@ minigame <- Ware_MinigameData
 	{
 		tf_avoidteammates = 0
 	}
-	
-	max_scale = 1.5
 })
 
 function OnTeleport(players)

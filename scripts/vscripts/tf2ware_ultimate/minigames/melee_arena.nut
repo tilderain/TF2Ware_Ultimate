@@ -11,6 +11,8 @@ minigame <- Ware_MinigameData
 	music          = "keepitup"
 	custom_overlay = "survive"
 	min_players    = 2
+	// small players fly into the air and i have no idea why - pokepasta
+	max_scale      = 1.0
 	start_pass     = true
 	start_freeze   = true
 	allow_damage   = true
@@ -21,8 +23,6 @@ minigame <- Ware_MinigameData
 		tf_avoidteammates = 0
 	}
 	
-	// small players fly into the air and i have no idea why - pokepasta
-	max_scale = 1.0
 })
 
 

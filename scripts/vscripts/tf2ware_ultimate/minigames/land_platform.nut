@@ -11,8 +11,7 @@ minigame <- Ware_MinigameData
 	duration      = mode == 0 ? 6.0 : 5.0
 	location      = "factoryplatform"
 	music         = mode == 0 ? "sweetdays" : "surfin"
-	
-	max_scale = 1.0
+	max_scale     = 1.0
 })
 
 function OnTeleport(players)

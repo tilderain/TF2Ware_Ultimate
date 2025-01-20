@@ -14,6 +14,7 @@ minigame <- Ware_MinigameData
 	description   = "Push Away the Enemies!"
 	location      = RandomElement(arenas)
 	min_players   = 2
+	max_scale     = 1.0
 	allow_damage  = true
 	fail_on_death = true
 	start_pass    = true
@@ -24,8 +25,6 @@ minigame <- Ware_MinigameData
 		tf_halloween_kart_fast_turn_speed = 200
 		tf_halloween_kart_impact_force = "1.25f"
 	}
-	
-	max_scale = 1.0
 })
 
 function OnStart()

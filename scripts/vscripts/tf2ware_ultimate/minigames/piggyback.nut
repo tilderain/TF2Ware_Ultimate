@@ -22,7 +22,6 @@ minigame <- Ware_MinigameData
 		mp_teams_unbalance_limit = 0
 		tf_allow_sliding_taunt   = 1
 	}
-	max_scale = 2.0
 })
 
 piggybacker <- null

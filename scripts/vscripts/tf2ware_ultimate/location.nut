@@ -297,7 +297,7 @@ Ware_Location.sumobox <-
 Ware_Location.mandrill <-
 {
 	center   = Vector(-1536, -13024, -5344)
-	start    = Vector(2274, -13562, -5343)
+	start    = Vector(2240, -13562, -5343)
 	maze     = Vector(-3584, -14720, -5344)
 	cameras  = ["mandrill_camera"]
 	Teleport = function(players)

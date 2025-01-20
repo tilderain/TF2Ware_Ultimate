@@ -19,6 +19,7 @@ minigame <- Ware_MinigameData
 		"ghostbusters_kill"
 	]
 	min_players   = 5
+	max_scale     = 1.0
 	start_pass    = true
 	allow_damage  = true
 	collisions    = true
@@ -26,8 +27,6 @@ minigame <- Ware_MinigameData
 	{
 		mp_teams_unbalance_limit = 0
 	}
-	
-	max_scale = 1.0
 })
 
 ghost_model <- "models/props_halloween/ghost.mdl"

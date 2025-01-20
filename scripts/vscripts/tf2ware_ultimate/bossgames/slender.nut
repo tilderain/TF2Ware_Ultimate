@@ -17,6 +17,7 @@ minigame <- Ware_MinigameData
 		"slender_kill"
 	]
 	min_players    = 10
+	max_scale      = 1.0
 	start_pass     = true
 	allow_damage   = true
 	friendly_fire  = false

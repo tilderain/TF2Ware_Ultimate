@@ -8,11 +8,10 @@ minigame <- Ware_MinigameData
 	location      = "boxarena"
 	music         = "morning"
 	min_players   = 2
+	max_scale     = 1.5
 	allow_damage  = true
 	friendly_fire = false
 	collisions    = true
-	
-	max_scale = 1.5
 })
 
 loadouts <-

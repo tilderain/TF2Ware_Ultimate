@@ -5,6 +5,7 @@ minigame <- Ware_MinigameData
 	description    = "Get to the end!"
 	duration       = 4.0
 	end_delay      = 0.5
+	max_scale      = 1.5
 	location       = RandomBool() ? "sawrun_micro" : "sawrun"
 	music          = "getmoving"
 	custom_overlay = "get_end"

@@ -11,12 +11,11 @@ minigame <- Ware_MinigameData
 	description    = "Get to the top!"
 	duration       = 37.0
 	end_delay      = 1.0
+	max_scale      = 1.0
 	location       = RandomElement(arenas)
 	music          = "steadynow"
 	custom_overlay = "get_top"
 	start_pass     = false
-	
-	max_scale = 1.0
 })
 
 first <- true

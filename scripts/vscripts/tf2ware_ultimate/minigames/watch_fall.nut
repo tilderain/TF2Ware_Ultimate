@@ -12,7 +12,6 @@ minigame <- Ware_MinigameData
 	fail_on_death  = true
 	thirdperson    = true
 	start_freeze   = true
-	max_scale = 2.0
 })
 
 function OnStart()

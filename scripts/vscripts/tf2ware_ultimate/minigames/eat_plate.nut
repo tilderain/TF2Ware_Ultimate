@@ -20,8 +20,7 @@ minigame <- Ware_MinigameData
 	location       = "beach"
 	custom_overlay = chosen_item[1]
 	thirdperson    = true
-	
-	max_scale = 1.5
+	max_scale      = 1.5
 })
 
 pickup_sound <- "AmmoPack.Touch"

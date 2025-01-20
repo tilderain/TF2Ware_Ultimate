@@ -8,8 +8,7 @@ minigame <- Ware_MinigameData
 	start_freeze  = true
 	allow_damage  = true
 	collisions    = true
-	
-	max_scale = 1.5
+	max_scale     = 1.5
 })
 
 tracks <-

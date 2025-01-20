@@ -8,15 +8,14 @@ minigame <- Ware_MinigameData
 		"Jump over the BLUE ship!"
 	]
 	duration       = 12.0
+	max_scale      = 1.0
 	music          = "piper"
 	location       = "beach"
 	custom_overlay = 
 	[
 		"pirate_red"
 		"pirate_blue"
-	]
-	
-	max_scale = 1.0
+	]	
 })
  
 ship_model <- "models/marioragdoll/super mario galaxy/bj ship/bjship.mdl"

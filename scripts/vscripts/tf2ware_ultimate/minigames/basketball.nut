@@ -8,6 +8,7 @@ minigame <- Ware_MinigameData
 	location       = "ballcourt"
 	music          = "march"
 	start_pass     = false
+	max_scale      = 1.5
 })
 
 hoop_sound <- "Halloween.PumpkinDrop"

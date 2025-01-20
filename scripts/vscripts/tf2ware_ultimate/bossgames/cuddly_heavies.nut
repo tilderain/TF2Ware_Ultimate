@@ -17,6 +17,7 @@ minigame <- Ware_MinigameData
 		"cuddly_hug"
 	]
 	min_players     = 6
+	max_scale       = 1.5
 	start_pass      = true
 	allow_damage    = true
 	collisions      = true

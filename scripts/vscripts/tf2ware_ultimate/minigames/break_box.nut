@@ -8,7 +8,7 @@ minigame <- Ware_MinigameData
 	music          = "digging"
 	custom_overlay = "find_australium"
 	min_players    = 3
-	max_scale = 1.0
+	max_scale      = 1.5
 })
 
 box_model <- "models/props_hydro/barrel_crate_half.mdl"

@@ -32,11 +32,10 @@ minigame <- Ware_MinigameData
 	author         = "ficool2"
 	description    = format("Find the %s!", treasure[1])
 	duration       = 25.0
+	max_scale      = 1.0
 	music          = "undergroundbros"
 	location       = treasure[0]
 	custom_overlay = "treasure_hunt_" + treasure[2]
-	
-	max_scale = 2.0
 })
 
 debug_spawns <- false

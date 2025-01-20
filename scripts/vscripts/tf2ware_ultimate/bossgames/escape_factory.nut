@@ -6,6 +6,7 @@ minigame <- Ware_MinigameData
 	description    = "Escape the Factory!"
 	duration       = 130.0
 	end_delay      = 1.1
+	max_scale      = 1.4
 	location       = "factory"
 	music          = "escape_factory"
 	fail_on_death  = true

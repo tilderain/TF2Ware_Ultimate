@@ -889,6 +889,75 @@ function KillPlayerSilently(player)
 	SetPropInt(player, "m_iTeamNum", team)
 }
 
+// Tries to unstuck a player, assuming they may be stuck in geometry
+// Only does tests horizontally
+// Returns true if player wasn't stuck or has been unstuck, false otherwise
+function UnstuckPlayer(player)
+{
+	local origin = player.GetOrigin()
+	local mins = player.GetPlayerMins()
+	local maxs = player.GetPlayerMaxs()
+	
+	// do a trace to see if they're stuck at all
+	local trace = 
+	{
+		start      = origin
+		end        = origin
+		hullmin    = mins
+		hullmax    = maxs
+		mask       = MASK_PLAYERSOLID_BRUSHONLY
+		ignore     = player
+		startsolid = false
+	}
+	
+	// DebugDrawBox(trace.start, trace.hullmin, trace.hullmax, 255, 255, 255, 15, 10)
+	TraceHull(trace)
+	if (!trace.hit)
+		return true
+	
+	// trace each direction twice, once in opposite direction
+	local nudge_factor = maxs.x - mins.x
+	foreach (vec in UnstuckVectors)
+	{
+		local dir = vec * nudge_factor
+		
+		// assuming "start" is clear, sweep towards the obstacle
+		// so the trace places us as close as possible
+		trace.start = origin + dir
+		trace.startsolid = false
+		
+		// DebugDrawBox(trace.start, trace.hullmin, trace.hullmax, 255, 255, 255, 100, 30)
+		TraceHull(trace)
+		if (!trace.startsolid)
+		{
+			player.SetAbsOrigin(trace.endpos)
+			return true
+		}
+		
+		trace.start = origin - dir
+		trace.startsolid = false
+		
+		// DebugDrawBox(trace.start, trace.hullmin, trace.hullmax, 255, 255, 255, 100, 30)
+		TraceHull(trace)
+		if (!trace.startsolid)
+		{
+			player.SetAbsOrigin(trace.endpos)
+			return true
+		}
+	}
+	
+	return false
+}
+
+// Internal use only
+UnstuckVectors <-
+[
+	Vector(1, 0, 0)  // x
+	Vector(0, 1, 0)  // y
+	Vector(1, 1, 0)  // x+y
+	Vector(1, -1, 0) // x-y
+]
+
 // Adds a message to the killfeed
 function AddKillFeedMessage(victim, attacker, icon)
 {
