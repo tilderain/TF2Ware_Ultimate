@@ -89,6 +89,8 @@ function SpawnLaser(axis, spacing)
 	trigger.GetScriptScope().OnStartTouch <- OnLaserTouch
 	trigger.ConnectOutput("OnStartTouch", "OnStartTouch")
 	SetEntityParent(trigger, mover)
+	
+	Ware_ShowAnnotation(laser_center, "Watch out!")
 }
 
 function OnLaserTouch()
