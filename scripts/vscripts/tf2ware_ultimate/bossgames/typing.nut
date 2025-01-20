@@ -404,12 +404,17 @@ function SetCamera(name)
 
 function ShowWord(player, score)
 {
-	local word      = word_rotation[score]
+	local color = "255 255 40"
+	local word = word_rotation[score]
 	local next_word = word_rotation[score + 1]
 	if (mode != 0)
-		Ware_ShowMinigameText(player, format("%s = ?\n\nNext question: %s\n", word.expression, next_word.expression))	
+	{
+		Ware_ShowMinigameText(player, format("%s = ?\n\nNext question:\n%s\n", word.expression, next_word.expression), color)	
+	}
 	else
-		Ware_ShowMinigameText(player, format("%s\n\nNext word: %s\n", word, next_word))	
+	{
+		Ware_ShowMinigameText(player, format("%s\n\nNext word:\n%s\n", word, next_word), color)	
+	}
 }
 
 function OnPlayerSay(player, text)
