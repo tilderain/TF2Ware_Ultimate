@@ -85,10 +85,7 @@ function OnPrecache()
 
 function OnStart()
 {
-	if (Ware_Plugin)
-	{
-		// TODO call into plugin to disable SM antiflood
-	}
+	Ware_ToggleChatFlood(false)
 	
 	Ware_PlaySoundOnAllClients(sound_boss_start)
 	CreateTimer(Descent, 3.0)
@@ -99,17 +96,14 @@ function OnStart()
 
 function OnCleanup()
 {
+	Ware_ToggleChatFlood(true)
+
 	SetCamera(null)
 	
 	Ware_PlayMinigameMusic(null, current_music, SND_STOP)
 	
 	foreach (player in Ware_Players)
 		player.RemoveFlag(FL_ATCONTROLS)
-	
-	if (Ware_Plugin)
-	{
-		// TODO call into plugin to disable SM antiflood
-	}
 }
 
 function Descent()
@@ -252,7 +246,7 @@ function EndWords()
 			{
 				// double the reported WPM to compensate for chat delay
 				Ware_ChatPrint(player, "Your words-per-minute (WPM) was {color}{int}", COLOR_LIME, 
-					(minidata.word_count / (word_type_duration / 60.0)).tointeger() * 2)
+					(minidata.word_count / (word_type_duration / 60.0)).tointeger() * 1.5)
 			}			
 		}
 	}
@@ -352,7 +346,7 @@ function CheckGameOver()
 					// double the reported WPM to compensate for chat delay
 					Ware_ChatPrint(null, "{player}{color} had a total WPM of {color}{int}{color}!", 
 						player, TF_COLOR_DEFAULT, COLOR_LIME,
-						(average_word_count / (word_type_duration / 60.0)).tointeger() * 2, 
+						(average_word_count / (word_type_duration / 60.0)).tointeger() * 1.5, 
 						TF_COLOR_DEFAULT)		
 				}
 			}

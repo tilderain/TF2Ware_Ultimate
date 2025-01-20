@@ -106,6 +106,21 @@ public Action ListenerVScript(Event event, const char[] name, bool dontBroadcast
 			script_allow_loadout = false;
 #endif
 		}
+		else if (StrEqual(routine, "flood_off"))
+		{
+			if (sm_flood_time != INVALID_HANDLE)
+			{
+				g_AntiFloodValue = sm_flood_time.FloatValue;
+				sm_flood_time.SetFloat(-1.0);
+			}	
+		}	
+		else if (StrEqual(routine, "flood_on"))
+		{
+			if (sm_flood_time != INVALID_HANDLE)
+			{
+				sm_flood_time.SetFloat(g_AntiFloodValue);
+			}
+		}		
 		else
 		{
 			LogMessage("Unknown VScript routine '%s'", routine);
@@ -218,14 +233,6 @@ void Enable()
 	g_CheatCommandsArgs.PushString("kill");	
 	g_CheatCommandsArgs.PushString("explode");	
 	g_CheatCommandsArgs.PushString("fov");	
-	
-	// HACK for trailer
-	// TODO this needs to be only toggled off for typing boss
-	if (sm_flood_time != INVALID_HANDLE)
-	{
-		g_AntiFloodValue = sm_flood_time.FloatValue;
-		sm_flood_time.SetFloat(-1.0);
-	}
 }
 
 void Disable(bool map_unload)
@@ -239,13 +246,6 @@ void Disable(bool map_unload)
 #if LOADOUT_WHITELISTER
 	LoadoutWhitelister_End(map_unload);
 #endif
-
-	// HACK for playtest this needs to be only toggled off for typing boss
-	// TODO this needs to be only toggled off for typing boss
-	if (sm_flood_time != INVALID_HANDLE)
-	{
-		sm_flood_time.SetFloat(g_AntiFloodValue);
-	}
 
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(0, true, false);

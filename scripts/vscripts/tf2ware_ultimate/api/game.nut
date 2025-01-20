@@ -12,17 +12,6 @@ function Ware_GetTimeScale()
 	return Ware_TimeScale
 }
 
-// Sets whether player's full loadout will not be stripped when regenerating
-// Don't change this unless for a specific set of players as it causes lag spikes
-function Ware_TogglePlayerLoadouts(toggle)
-{
-	if (Ware_AllowLoadouts == toggle)
-		return
-	Ware_AllowLoadouts = toggle
-	if (Ware_Plugin)
-		Ware_EventCallback(toggle ? "loadout_on" : "loadout_off", {})
-}
-
 // Sets the intermission state
 // This is the period between minigames
 // The minigame is started when this is finished
@@ -100,4 +89,22 @@ function Ware_GetSpeedUpThreshold()
 		return Ware_SpecialRound.speedup_threshold
 	else
 		return Ware_SpeedUpThreshold
+}
+
+// Sets whether player's full loadout will not be stripped when regenerating
+// Don't change this unless for a specific set of players as it causes lag spikes
+function Ware_TogglePlayerLoadouts(toggle)
+{
+	if (Ware_AllowLoadouts == toggle)
+		return
+	Ware_AllowLoadouts = toggle
+	if (Ware_Plugin)
+		Ware_EventCallback(toggle ? "loadout_on" : "loadout_off", {})
+}
+
+// Sets whether SourceMod's anti chat-flooding should be turned on or off
+function Ware_ToggleChatFlood(toggle)
+{
+	if (Ware_Plugin)
+		Ware_EventCallback(toggle ? "flood_on" : "flood_off", {})
 }
