@@ -99,6 +99,7 @@ words <-
 	"Crash"
 	"Raiden"
 	"Freaky"
+	"Banana"
 	
 	// these two are evil but rare
 	"Bombinomicon"
