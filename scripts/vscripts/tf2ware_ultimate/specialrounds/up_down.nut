@@ -15,5 +15,5 @@ function OnSpeedup()
 
 function OnBeginIntermission(is_boss)
 {
-	Ware_SetTimeScale(RandomFloat(0.6, 2.0))
+	Ware_SetTimeScale(RandomFloat(0.5, 2.5))
 }
