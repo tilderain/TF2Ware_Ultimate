@@ -325,7 +325,8 @@ Ware_Location.rocketjump_micro <-
 Ware_Location.hexplatforms <-
 {
 	center      = Vector(2304, -8448, -4880)
-	cameras     = ["hexplatforms_camera"]
+	// TODO need to dynamically align this camera
+	//cameras     = ["hexplatforms_camera"]
 	plat_models = []
 	Init        = function()
 	{
