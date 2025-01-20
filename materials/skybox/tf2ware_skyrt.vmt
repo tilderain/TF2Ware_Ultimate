@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+    "$basetexture" "skybox/tf2ware_skyrt"
+    "$nofog" "1"
+    "$ignorez" "1"
+
+}
