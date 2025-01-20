@@ -23,7 +23,7 @@ function OnPrecache()
 
 function OnStart()
 {
-	local spacing = 800.0
+	local spacing = Ware_MinigameLocation.name.find("big") != null ? 800.0 : 1200.0
 	local count = 1
 	for (local i = 0; i < count; i++)
 	{
