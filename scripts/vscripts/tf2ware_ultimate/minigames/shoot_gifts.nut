@@ -53,12 +53,12 @@ function SpawnGift()
 	gift_scope.lag_record <- [origin]
 	gift_scope.mins <- gift.GetBoundingMins()
 	gift_scope.maxs <- gift.GetBoundingMaxs()
-	gift_scope.Think <- function()
+	gift_scope.GiftThink <- function()
 	{
 		lag_record.append(self.GetOrigin())
 		return -1
 	}
-	AddThinkToEnt(gift, "Think")
+	AddThinkToEnt(gift, "GiftThink")
 	local gifts = gifts_active
 	gifts.append(gift_scope)
 	Ware_CreateTimer(function()
@@ -91,7 +91,10 @@ function OnPlayerAttack(player)
 		//DebugDrawBox(lag_origin, gift.mins, gift.maxs, 0, 255, 0, 20, 3.0)
 		//DebugDrawLine(eye_position, eye_position + eye_fwd * 2048.0, 255, 0, 0, false, 3.0)
 		
-		if (IntersectRayWithBox(eye_position, eye_fwd, lag_origin + gift.mins, lag_origin + gift.maxs, 0.0, 8192.0) > 0.0)
+		if (IntersectRayWithBox(eye_position, eye_fwd, 
+			lag_origin + gift.mins,
+			lag_origin + gift.maxs, 
+			0.0, 8192.0) > 0.0)
 		{
 			local minidata = Ware_GetPlayerMiniData(player)
 			minidata.points++
