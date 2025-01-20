@@ -37,7 +37,6 @@ float g_AntiFloodValue = 0.0;
 
 ConVar host_timescale;
 ConVar sv_cheats;
-ConVar nb_update_frequency;
 ConVar sm_flood_time;
 
 //ConVar ware_version;
@@ -172,13 +171,10 @@ void Enable()
 
 	host_timescale = FindConVar("host_timescale");
 	sv_cheats = FindConVar("sv_cheats");
-	nb_update_frequency = FindConVar("nb_update_frequency");
 	sm_flood_time = FindConVar("sm_flood_time");
 	
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(1, true, false);
-	// fix ghost jittering
-	nb_update_frequency.SetFloat(0.05, false, false);
 	
 	HookConVarChange(sv_cheats, OnCheatsChanged);
 	
@@ -253,7 +249,6 @@ void Disable(bool map_unload)
 
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(0, true, false);
-	nb_update_frequency.SetFloat(0.1, false, false);
 	
 	UnhookConVarChange(sv_cheats, OnCheatsChanged);
 	

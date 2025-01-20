@@ -47,12 +47,20 @@ function OnGameEvent_player_stunned(params)
 
 function SpawnGhost()
 {
-	Ware_SpawnEntity("ghost",
+	local ghost = Ware_SpawnEntity("ghost",
 	{
 		origin = Vector(
 				RandomFloat(Ware_MinigameLocation.mins.x + 200.0, Ware_MinigameLocation.maxs.x - 200.0),
 				RandomFloat(Ware_MinigameLocation.mins.y + 200.0, Ware_MinigameLocation.maxs.y - 200.0),
-				Ware_MinigameLocation.center.z + RandomFloat(400.0, 600.0)),
+				Ware_MinigameLocation.center.z + RandomFloat(800.0, 1000.0)),
 		angles = QAngle(0, RandomFloat(-180, 180), 0),	
 	})
+	ghost.ValidateScriptScope()
+	ghost.GetScriptScope().GhostThink <- function()
+	{
+		// makes the ghost not look jittery
+		self.FlagForUpdate(true)
+		return 0.05
+	}
+	AddThinkToEnt(ghost, "GhostThink")
 }
