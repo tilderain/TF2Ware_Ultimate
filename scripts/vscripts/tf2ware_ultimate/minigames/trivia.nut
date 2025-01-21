@@ -152,6 +152,9 @@ function OnCorrectTouch()
 		ResetPlayer(player)
 		Ware_Location.beach.Teleport([player])
 		Ware_PassPlayer(player, true)
+		
+		// TODO hack: weapons are going invisible in firstperson, forcing a tp switch fixes it
+		player.SetForcedTauntCam(1)			
 	}
 }
 
@@ -164,6 +167,9 @@ function OnIncorrectTouch()
 		ResetPlayer(player)
 		Ware_PlaySoundOnClient(player, "vo/engineer_No01.mp3")
 		Ware_Location.abcdeathpit.Teleport([player])
+		
+		// TODO hack: weapons are going invisible in firstperson, forcing a tp switch fixes it
+		player.SetForcedTauntCam(1)		
 	}
 }
 
@@ -191,4 +197,7 @@ function OnCleanup()
 {
 	foreach (player in Ware_MinigamePlayers)
 		ResetPlayer(player)
+		
+	// TODO hack: weapons are going invisible in firstperson, forcing a tp switch fixes it
+	player.SetForcedTauntCam(0)
 }
