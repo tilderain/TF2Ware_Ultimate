@@ -161,3 +161,19 @@ function Ware_EndSpecialRound()
 {
 	Ware_EndSpecialRoundInternal()
 }
+
+// Checks if given special round is set by filename
+// This also checks for Double Trouble's two special rounds
+function Ware_IsSpecialRoundSet(file_name)
+{
+	if (Ware_SpecialRound)
+	{
+		if ("IsSet" in Ware_SpecialRoundScope)
+		{	
+			if (Ware_SpecialRoundScope.IsSet(file_name))
+				return true
+		}
+		return Ware_SpecialRound.file_name == file_name
+	}
+	return false
+}

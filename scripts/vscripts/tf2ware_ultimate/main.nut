@@ -830,14 +830,20 @@ function Ware_LoadSpecialRound(file_name, player_count, is_forced)
 	if (player_count >= min_players)
 	{
 		if (!("OnPick" in scope) || scope.OnPick())	
+		{
+			scope.special_round.file_name = file_name
 			return scope
+		}
 		else if (is_forced)
+		{
 			Ware_Error("Not loading '%s' as it rejected the pick", file_name)	
+		}
 	}
 	else if (is_forced)
 	{
 		Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)	
 	}
+	
 	return null
 }
 
@@ -922,7 +928,6 @@ function Ware_BeginSpecialRoundInternal()
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
 	local special_round = Ware_SpecialRoundScope.special_round
-	special_round.file_name = round
 		
 	CreateTimer(function() 
 	{	

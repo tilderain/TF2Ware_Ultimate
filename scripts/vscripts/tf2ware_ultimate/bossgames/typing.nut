@@ -1,5 +1,5 @@
 mode <- 0
-if (RandomInt(1, 10) == 1 || (Ware_SpecialRound && Ware_SpecialRound.file_name == "math_only"))
+if (RandomInt(1, 10) == 1 || Ware_IsSpecialRoundSet("math_only"))
 	mode = 1
 
 minigame <- Ware_MinigameData

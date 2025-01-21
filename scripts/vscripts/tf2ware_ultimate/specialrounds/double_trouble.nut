@@ -6,8 +6,8 @@ special_round <- Ware_SpecialRoundData
 	category = "meta"
 })
 
-special_round_scope_a <- null
-special_round_scope_b <- null
+scope_a <- null
+scope_b <- null
 
 function OnPick()
 {
@@ -42,12 +42,12 @@ function OnPick()
 		local scope = Ware_LoadSpecialRound(pick_a.file_name, player_count, false)
 		if (scope)
 		{
-			special_round_scope_a = scope
+			scope_a = scope
 			break
 		}
 	}
 	
-	if (!special_round_scope_a)
+	if (!scope_a)
 		return false
 		
 	max_count = Min(32, special_rounds.len())
@@ -60,24 +60,24 @@ function OnPick()
 		local scope = Ware_LoadSpecialRound(pick_b.file_name, player_count, false)
 		if (scope)
 		{
-			special_round_scope_b = scope
+			scope_b = scope
 			break
 		}
 	}
 	
-	if (!special_round_scope_b)
+	if (!scope_b)
 		return false
 		
 	foreach (callback_name, func in delegated_callbacks)
 	{
-		if (callback_name in special_round_scope_a || callback_name in special_round_scope_b)
+		if (callback_name in scope_a || callback_name in scope_b)
 			this[callback_name] <- func.bindenv(this)
 	}
 	delete delegated_callbacks
 	
 	local data = special_round
-	local data_a = special_round_scope_a.special_round
-	local data_b = special_round_scope_b.special_round
+	local data_a = scope_a.special_round
+	local data_b = scope_b.special_round
 	
 	foreach (name, value in data_a.convars) data.convars[name] <- value
 	foreach (name, value in data_b.convars) data.convars[name] <- value
@@ -99,16 +99,22 @@ function GetName()
 {
 	return format("%s\n-> %s\n-> %s\n", 
 		special_round.name, 
-		special_round_scope_a.special_round.name
-		special_round_scope_b.special_round.name)	
+		scope_a.special_round.name
+		scope_b.special_round.name)	
+}
+
+// called externally
+function IsSet(file_name)
+{
+	return file_name == scope_a.special_round.file_name || file_name == scope_b.special_round.file_name
 }
 
 function OnStartInternal() 
 {
-	Ware_ChatPrint(null, "{color}{color}{str}{color}! {str}", TF_COLOR_DEFAULT, COLOR_GREEN, special_round_scope_a.special_round.name, 
-		TF_COLOR_DEFAULT,  special_round_scope_a.special_round.description)
-	Ware_ChatPrint(null, "{color}{color}{str}{color}! {str}", TF_COLOR_DEFAULT, COLOR_GREEN, special_round_scope_b.special_round.name, 
-		TF_COLOR_DEFAULT, special_round_scope_b.special_round.description)	
+	Ware_ChatPrint(null, "{color}{color}{str}{color}! {str}", TF_COLOR_DEFAULT, COLOR_GREEN, scope_a.special_round.name, 
+		TF_COLOR_DEFAULT,  scope_a.special_round.description)
+	Ware_ChatPrint(null, "{color}{color}{str}{color}! {str}", TF_COLOR_DEFAULT, COLOR_GREEN, scope_b.special_round.name, 
+		TF_COLOR_DEFAULT, scope_b.special_round.description)	
 }
 
 OnStart <- OnStartInternal // might get overriden below
@@ -132,147 +138,147 @@ delegated_callbacks <-
 	{
 		OnStartInternal()
 		
-		DelegatedCall(special_round_scope_a, "OnStart")
-		DelegatedCall(special_round_scope_b, "OnStart")
+		DelegatedCall(scope_a, "OnStart")
+		DelegatedCall(scope_b, "OnStart")
 	}
 
 	function OnUpdate()
 	{
-		DelegatedCall(special_round_scope_a, "OnUpdate")
-		DelegatedCall(special_round_scope_b, "OnUpdate")
+		DelegatedCall(scope_a, "OnUpdate")
+		DelegatedCall(scope_b, "OnUpdate")
 	}
 
 	function OnEnd()
 	{
-		DelegatedCall(special_round_scope_a, "OnEnd")
-		DelegatedCall(special_round_scope_b, "OnEnd")
+		DelegatedCall(scope_a, "OnEnd")
+		DelegatedCall(scope_b, "OnEnd")
 	}
 
 	function GetOverlay2()
 	{
 		// take first valid result
-		local ret = DelegatedCall(special_round_scope_a, "GetOverlay2")
+		local ret = DelegatedCall(scope_a, "GetOverlay2")
 		if (ret == null)
-			ret = DelegatedCall(special_round_scope_b, "GetOverlay2")	
+			ret = DelegatedCall(scope_b, "GetOverlay2")	
 		return ret
 	}
 
 	function GetMinigameName(is_boss)
 	{
-		local ret = DelegatedCall(special_round_scope_a, "GetMinigameName", is_boss)
+		local ret = DelegatedCall(scope_a, "GetMinigameName", is_boss)
 		if (ret == null)
-			ret = DelegatedCall(special_round_scope_b, "GetMinigameName", is_boss)	
+			ret = DelegatedCall(scope_b, "GetMinigameName", is_boss)	
 		return ret
 	}
 
 	function OnMinigameStart()
 	{
-		DelegatedCall(special_round_scope_a, "OnMinigameStart")
-		DelegatedCall(special_round_scope_b, "OnMinigameStart")
+		DelegatedCall(scope_a, "OnMinigameStart")
+		DelegatedCall(scope_b, "OnMinigameStart")
 	}
 
 	function OnMinigameEnd()
 	{
-		DelegatedCall(special_round_scope_a, "OnMinigameEnd")
-		DelegatedCall(special_round_scope_b, "OnMinigameEnd")
+		DelegatedCall(scope_a, "OnMinigameEnd")
+		DelegatedCall(scope_b, "OnMinigameEnd")
 	}
 
 	function OnMinigameCleanup()
 	{
-		DelegatedCall(special_round_scope_a, "OnMinigameCleanup")
-		DelegatedCall(special_round_scope_b, "OnMinigameCleanup")
+		DelegatedCall(scope_a, "OnMinigameCleanup")
+		DelegatedCall(scope_b, "OnMinigameCleanup")
 	}
 
 	function OnBeginIntermission(is_boss)
 	{
 		// return true if either one wants to override logic
-		local ret_a = DelegatedCall(special_round_scope_a, "OnBeginIntermission", is_boss)
-		local ret_b = DelegatedCall(special_round_scope_b, "OnBeginIntermission", is_boss) 
+		local ret_a = DelegatedCall(scope_a, "OnBeginIntermission", is_boss)
+		local ret_b = DelegatedCall(scope_b, "OnBeginIntermission", is_boss) 
 		return ret_a || ret_b
 	}
 
 	function OnSpeedup()
 	{
-		local ret_a = DelegatedCall(special_round_scope_a, "OnSpeedup")
-		local ret_b = DelegatedCall(special_round_scope_b, "OnSpeedup")
+		local ret_a = DelegatedCall(scope_a, "OnSpeedup")
+		local ret_b = DelegatedCall(scope_b, "OnSpeedup")
 		return ret_a || ret_b
 	}
 	
 	function OnBeginBoss()
 	{
-		local ret_a = DelegatedCall(special_round_scope_a, "OnBeginBoss")
-		local ret_b = DelegatedCall(special_round_scope_b, "OnBeginBoss") 
+		local ret_a = DelegatedCall(scope_a, "OnBeginBoss")
+		local ret_b = DelegatedCall(scope_b, "OnBeginBoss") 
 		return ret_a || ret_b
 	}
 	
 	function OnCheckGameOver()
 	{
 		// if either one returns true then it's game over
-		local ret_a = DelegatedCall(special_round_scope_a, "OnCheckGameOver")
-		local ret_b = DelegatedCall(special_round_scope_b, "OnCheckGameOver") 
+		local ret_a = DelegatedCall(scope_a, "OnCheckGameOver")
+		local ret_b = DelegatedCall(scope_b, "OnCheckGameOver") 
 		return ret_a || ret_b
 	}
 
 	function GetValidPlayers()
 	{
 		// these cannot overlap so don't run two instances
-		local ret = DelegatedCall(special_round_scope_a, "GetValidPlayers")
+		local ret = DelegatedCall(scope_a, "GetValidPlayers")
 		if (call_failed)
-			ret = DelegatedCall(special_round_scope_b, "GetValidPlayers")	
+			ret = DelegatedCall(scope_b, "GetValidPlayers")	
 		return ret
 	}
 
 	function OnCalculateScore(data)
 	{
-		DelegatedCall(special_round_scope_a, "OnCalculateScore", data)
+		DelegatedCall(scope_a, "OnCalculateScore", data)
 		if (call_failed)
-			DelegatedCall(special_round_scope_b, "OnCalculateScore", data)	
+			DelegatedCall(scope_b, "OnCalculateScore", data)	
 	}
 
 	function OnCalculateTopScorers(top_players)
 	{
-		DelegatedCall(special_round_scope_a, "OnCalculateTopScorers", top_players)
+		DelegatedCall(scope_a, "OnCalculateTopScorers", top_players)
 		if (call_failed)
-			DelegatedCall(special_round_scope_b, "OnCalculateTopScorers", top_players)	
+			DelegatedCall(scope_b, "OnCalculateTopScorers", top_players)	
 	}
 
 	function OnDeclareWinners(top_players, top_score, winner_count)
 	{
-		DelegatedCall(special_round_scope_a, "OnDeclareWinners", top_players, top_score, winner_count)
+		DelegatedCall(scope_a, "OnDeclareWinners", top_players, top_score, winner_count)
 		if (call_failed)
-			DelegatedCall(special_round_scope_b, "OnDeclareWinners", top_players, top_score, winner_count)
+			DelegatedCall(scope_b, "OnDeclareWinners", top_players, top_score, winner_count)
 	}
 
 	function OnPlayerConnect(player)
 	{
-		DelegatedCall(special_round_scope_a, "OnPlayerConnect", player)
-		DelegatedCall(special_round_scope_b, "OnPlayerConnect", player)
+		DelegatedCall(scope_a, "OnPlayerConnect", player)
+		DelegatedCall(scope_b, "OnPlayerConnect", player)
 	}
 
 	function OnPlayerDisconnect(player)
 	{
-		DelegatedCall(special_round_scope_a, "OnPlayerDisconnect", player)
-		DelegatedCall(special_round_scope_b, "OnPlayerDisconnect", player)
+		DelegatedCall(scope_a, "OnPlayerDisconnect", player)
+		DelegatedCall(scope_b, "OnPlayerDisconnect", player)
 	}
 
 	function OnPlayerSpawn(player)
 	{
-		DelegatedCall(special_round_scope_a, "OnPlayerSpawn", player)
-		DelegatedCall(special_round_scope_b, "OnPlayerSpawn", player)
+		DelegatedCall(scope_a, "OnPlayerSpawn", player)
+		DelegatedCall(scope_b, "OnPlayerSpawn", player)
 	}
 
 	function OnPlayerInventory(player)
 	{
-		DelegatedCall(special_round_scope_a, "OnPlayerInventory", player)
-		DelegatedCall(special_round_scope_b, "OnPlayerInventory", player)
+		DelegatedCall(scope_a, "OnPlayerInventory", player)
+		DelegatedCall(scope_b, "OnPlayerInventory", player)
 	}
 
 	function GetPlayerRoll(player)
 	{
 		// take first successful call
-		local ret = DelegatedCall(special_round_scope_a, "GetPlayerRoll", player)
+		local ret = DelegatedCall(scope_a, "GetPlayerRoll", player)
 		if (call_failed)
-			ret = DelegatedCall(special_round_scope_b, "GetPlayerRoll", player)	
+			ret = DelegatedCall(scope_b, "GetPlayerRoll", player)	
 		return ret
 	}
 
@@ -280,10 +286,10 @@ delegated_callbacks <-
 	{
 		// only respawn if both agree
 		// if the function doesn't exist then assume it's allowed
-		local ret_a = DelegatedCall(special_round_scope_a, "CanPlayerRespawn", player)
+		local ret_a = DelegatedCall(scope_a, "CanPlayerRespawn", player)
 		if (call_failed)
 			ret_a = true
-		local ret_b = DelegatedCall(special_round_scope_b, "CanPlayerRespawn", player)	
+		local ret_b = DelegatedCall(scope_b, "CanPlayerRespawn", player)	
 		if (call_failed)
 			ret_b = true		
 		return ret_a && ret_b
@@ -292,8 +298,8 @@ delegated_callbacks <-
 	function OnTakeDamage(params)
 	{
 		// cancel damage if either one explicitly returns false
-		local ret_a = DelegatedCall(special_round_scope_a, "OnTakeDamage", params)
-		local ret_b = DelegatedCall(special_round_scope_b, "OnTakeDamage", params)
+		local ret_a = DelegatedCall(scope_a, "OnTakeDamage", params)
+		local ret_b = DelegatedCall(scope_b, "OnTakeDamage", params)
 		if (ret_a == false || ret_b == false)
 			return false
 	}
