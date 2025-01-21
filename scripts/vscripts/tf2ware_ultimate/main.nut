@@ -636,6 +636,30 @@ function Ware_FixupPlayerWeaponSwitch()
 		self.Weapon_Switch(activator)
 }
 
+// failsafe: if a player entity gets deleted without disconnecting (such as via external plugins)
+// it will almost certainly cause critical errors. this allows it to atleast try recover after restarting
+function Ware_CheckPlayerArrayIntegrity()
+{
+	for (local i = Ware_Players.len() - 1; i >=  0; i--)
+	{
+		local player = Ware_Players[i]
+		if (!player.IsValid())
+		{
+			Ware_Players.remove(i)
+			Ware_PlayersData.remove(i)
+		}
+	}
+	for (local i = Ware_MinigamePlayers.len() - 1; i >=  0; i--)
+	{
+		local player = Ware_MinigamePlayers[i]
+		if (!player.IsValid())
+		{
+			Ware_MinigamePlayers.remove(i)
+			Ware_MinigamePlayersData.remove(i)
+		}	
+	}	
+}
+
 function Ware_SetPlayerTeamInternal(player, team)
 {
 	// force cancel duels
@@ -2070,3 +2094,4 @@ IncludeScript("tf2ware_ultimate/api/specialround", ROOT)
 Ware_FindStandardEntities()
 Ware_SetupLocations()
 Ware_PrecacheEverything()
+Ware_CheckPlayerArrayIntegrity()
