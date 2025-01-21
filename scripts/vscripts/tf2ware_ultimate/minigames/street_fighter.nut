@@ -15,6 +15,11 @@ minigame <- Ware_MinigameData
 
 fire_sound <- "TF2Ware_Ultimate.Hadoken"
 
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
+
 function OnPrecache()
 {
 	PrecacheScriptSound(fire_sound)

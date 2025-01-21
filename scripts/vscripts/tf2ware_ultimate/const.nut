@@ -54,6 +54,8 @@ const PATTACH_POINT_FOLLOW		= 4
 const PATTACH_WORLDORIGIN		= 5
 const PATTACH_ROOTBONE_FOLLOW	= 6
 
+const TF_TEAM_MASK = 2 // red and blue
+
 const TF_CLASS_FIRST = 1
 const TF_CLASS_LAST  = 9
 

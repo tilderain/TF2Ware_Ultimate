@@ -27,6 +27,12 @@ minigame <- Ware_MinigameData
 	}
 })
 
+// karts don't bump friendlies
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
+
 function OnStart()
 {
 	Ware_SetGlobalCondition(TF_COND_HALLOWEEN_KART)

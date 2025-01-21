@@ -17,6 +17,11 @@ end_sound <- "player/taunt_bell.wav"
 ball_count <- 0
 ball_max_count <- 0
 
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
+
 function OnPrecache()
 {
 	PrecacheModel(ball_model)

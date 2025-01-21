@@ -16,6 +16,11 @@ blu_score <- 0
 
 top_team <- null
 
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
+
 function OnCalculateScore(data)
 {
 	if (data.passed)

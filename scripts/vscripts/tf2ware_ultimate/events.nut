@@ -380,7 +380,7 @@ function OnGameEvent_player_spawn(params)
 	data.attributes.clear()
 	data.melee_attributes.clear()
 	
-	if (params.team & 2)
+	if (params.team & TF_TEAM_MASK)
 	{
 		data.spawn_time = Time()
 		data.lerp_time = GetPropFloat(player, "m_fLerpTime")

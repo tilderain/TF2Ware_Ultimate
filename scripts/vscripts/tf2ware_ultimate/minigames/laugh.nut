@@ -25,6 +25,11 @@ minigame <- Ware_MinigameData
 // Mission 0: Scout Team
 // Mission 1: Heavy Team
 
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
+
 function OnStart()
 {
 	foreach (player in Ware_MinigamePlayers)

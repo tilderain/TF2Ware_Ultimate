@@ -30,6 +30,12 @@ loadouts <-
 	[ TF_CLASS_SPY,          "Knife"            ],
 ]
 
+// some taunts don't friendlyfire
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
+
 function OnStart()
 {
 	local loadout = RandomElement(loadouts)

@@ -11,7 +11,7 @@ ValidPlayers <- []
 
 function OnStart()
 {
-	ValidPlayers = Ware_Players.filter(@(i, player) (player.GetTeam() & 2) != 0)
+	ValidPlayers = Ware_Players.filter(@(i, player) (player.GetTeam() & TF_TEAM_MASK) != 0)
 }
 
 function OnMinigameCleanup()
@@ -24,7 +24,7 @@ function OnMinigameCleanup()
 		if (idx == null)
 			continue
 
-		if (!data.passed || !(player.GetTeam() & 2))
+		if (!data.passed || !(player.GetTeam() & TF_TEAM_MASK))
 		{
 			knocked_out++
 			Ware_ChatPrint(player, "You have been {color}KNOCKED OUT{color}!", COLOR_RED, TF_COLOR_DEFAULT)

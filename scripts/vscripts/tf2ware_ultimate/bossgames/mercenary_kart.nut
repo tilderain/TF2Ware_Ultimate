@@ -774,7 +774,7 @@ function OnPlayerDeath(params)
 			
 			CreateTimer(function()
 			{
-				if (player.GetTeam() & 2)
+				if (player.GetTeam() & TF_TEAM_MASK)
 				{
 					kart.RescueInit()
 				}
@@ -1223,7 +1223,7 @@ kart_routines <-
 		if (!player)
 			return
 		
-		local spectator = (player.GetTeam() & 2) == 0
+		local spectator = (player.GetTeam() & TF_TEAM_MASK) == 0
 		
 		Ware_GetPlayerMiniData(player).kart = null
 		

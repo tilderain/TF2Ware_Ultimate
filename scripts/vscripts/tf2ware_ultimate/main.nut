@@ -1553,7 +1553,7 @@ function Ware_FinishMinigameInternal()
 	local respawn_players = []
 	foreach (player in Ware_Players)
 	{
-		if (!(player.GetTeam() & 2))
+		if (!(player.GetTeam() & TF_TEAM_MASK))
 			continue
 			
 		player.RemoveFlag(FL_FROZEN)

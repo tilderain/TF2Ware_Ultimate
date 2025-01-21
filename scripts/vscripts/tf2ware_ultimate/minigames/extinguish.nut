@@ -26,6 +26,11 @@ minigame <- Ware_MinigameData
 	}
 })
 
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
+
 function OnStart()
 {
 	local pyro_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)

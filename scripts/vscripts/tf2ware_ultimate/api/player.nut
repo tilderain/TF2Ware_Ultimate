@@ -559,7 +559,7 @@ function Ware_TogglePlayerWearables(player, toggle)
 // Gets a list of alive players, optionally on the given team
 function Ware_GetAlivePlayers(team = TEAM_UNASSIGNED)
 {
-	if (team & 2)
+	if (team & TF_TEAM_MASK)
 		return Ware_MinigamePlayers.filter(@(i, player) player.GetTeam() == team && player.IsAlive())
 	else
 		return Ware_MinigamePlayers.filter(@(i, player) player.IsAlive())
@@ -600,7 +600,7 @@ function Ware_GetValidPlayers()
 		local valid_players = []
 		foreach (player in Ware_Players)
 		{
-			if ((player.GetTeam() & 2) && player.IsAlive())
+			if ((player.GetTeam() & TF_TEAM_MASK) && player.IsAlive())
 				valid_players.append(player)
 		}
 		return valid_players
@@ -617,6 +617,24 @@ function Ware_FindPlayerByName(name)
 			return player
 	}
 	return null
+}
+
+// Returns true if there is atleast one red and one blue player
+function Ware_ArePlayersOnBothTeams()
+{
+	local red = false
+	local blue = false
+	foreach (player in Ware_Players)
+	{
+		local team = player.GetTeam()
+		if (team == TF_TEAM_RED)
+			red = true
+		if (team == TF_TEAM_BLUE)
+			blue = true
+		if (red && blue)
+			return true
+	}
+	return false
 }
 
 // Gets a list of players in a minigame sorted by their score

@@ -21,7 +21,12 @@ minigame <- Ware_MinigameData
 	collisions     = true
 })
 
-jump_team <- 0;
+jump_team <- 0
+
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
 
 function OnStart()
 {

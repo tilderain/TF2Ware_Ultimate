@@ -20,6 +20,11 @@ minigame <- Ware_MinigameData
 	friendly_fire  = false
 })
 
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
+
 function OnStart()
 {
 	local engi_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)

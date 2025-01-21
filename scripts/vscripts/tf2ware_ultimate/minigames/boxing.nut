@@ -19,6 +19,11 @@ minigame <- Ware_MinigameData
 start_sound <- "player/taunt_sfx_bell_single.wav"
 end_sound   <- "player/taunt_bell.wav"
 
+function OnPick()
+{
+	return Ware_ArePlayersOnBothTeams()
+}
+
 function OnPrecache()
 {
 	PrecacheSound(start_sound)
