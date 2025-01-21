@@ -17,10 +17,19 @@ function OnPick()
 		delete categories.meta
 		
 	local special_rounds = []
-	foreach (category, file_names in categories)
+	if (Ware_DebugNextSpecialRound2.len() == 0)
 	{
-		foreach (file_name in file_names)
-			special_rounds.append({category = category, file_name = file_name})
+		foreach (category, file_names in categories)
+		{
+			foreach (file_name in file_names)
+				special_rounds.append({category = category, file_name = file_name})
+		}
+	}
+	else
+	{
+		special_rounds.append({category = "none", file_name = Ware_DebugNextSpecialRound2[0]})
+		special_rounds.append({category = "none", file_name = Ware_DebugNextSpecialRound2[1]})
+		Ware_DebugNextSpecialRound2.clear()
 	}
 
 	local pick_a, pick_b

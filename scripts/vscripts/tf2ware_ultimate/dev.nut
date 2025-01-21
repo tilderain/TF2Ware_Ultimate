@@ -63,9 +63,21 @@ Ware_DevCommands <-
 	{
 		local args = split(text, " ")
 		if (args.len() >= 1)
-			Ware_DebugNextSpecialRound = args[0]
+		{
+			if (args.len() >= 2)
+			{
+				Ware_DebugNextSpecialRound = "double_trouble"
+				Ware_DebugNextSpecialRound2 = [args[0], args[1]]
+			}
+			else
+			{
+				Ware_DebugNextSpecialRound = args[0]
+			}
+		}
 		else
+		{
 			Ware_DebugNextSpecialRound = ""
+		}
 		Ware_ChatPrint(null, "Developer forced next special round to '{str}'", Ware_DebugNextSpecialRound)
 	}
 	"shownext": function(player, text)

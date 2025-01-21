@@ -194,6 +194,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceMinigameOnce <- false
 	Ware_DebugForceBossgameOnce <- false
 	Ware_DebugNextSpecialRound  <- ""
+	Ware_DebugNextSpecialRound2 <- []
 }
 Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
