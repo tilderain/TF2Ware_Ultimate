@@ -9,7 +9,7 @@ minigame <- Ware_MinigameData
 	description   = "Answer the Question!"
 	location      = "inventoryday"
 	collisions    = false
-	thirdperson   = true
+	show_scores   = false
 	convars       = 
 	{
 		tf_avoidteammates = 0

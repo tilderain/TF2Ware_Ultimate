@@ -2037,12 +2037,17 @@ if (Ware_Plugin)
 
 function Ware_LeaderboardUpdate()
 {
-	foreach (data in Ware_PlayersData)
+	if (!Ware_Minigame || Ware_Minigame.show_scores)
 	{
-		local i = data.index
-		SetPropIntArray(self, "m_iTotalScore", data.score, i)
+		foreach (data in Ware_PlayersData)
+			SetPropIntArray(self, "m_iTotalScore", data.score, data.index)
 	}
-	
+	else
+	{
+		foreach (data in Ware_PlayersData)
+			SetPropIntArray(self, "m_iTotalScore", 0, data.index)
+	}
+
 	return -1
 }
 
