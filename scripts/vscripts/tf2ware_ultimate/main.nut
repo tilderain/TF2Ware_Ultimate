@@ -1687,8 +1687,16 @@ function Ware_FinishMinigameInternal()
 	Ware_MinigameEvents.clear()
 		
 	foreach (entity in Ware_Minigame.entities)
+	{
 		if (entity.IsValid())
+		{
+			// an entity still exists for a frame
+			// this prevents connected outputs from firing
+			entity.TerminateScriptScope()
+			
 			entity.Kill()
+		}
+	}
 	
 	foreach (name, v in Ware_Minigame.cleanup_names)
 		EntFire(name, "Kill")

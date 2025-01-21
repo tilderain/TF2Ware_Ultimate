@@ -61,7 +61,7 @@ function OnTeleport(players)
 			Ware_MinigameLocation.center, 
 			QAngle(0, 0, 0), 
 			1200.0, 
-			64.0, 64.0);	
+			64.0, 64.0)
 	}
 	else if (Ware_MinigameLocation.name == "manor")
 	{
@@ -116,7 +116,7 @@ function OnStart()
 				origin     = Ware_MinigameLocation.center + position
 				model      = treasure[4]
 				modelscale = 2.0
-			});	
+			})
 		}
 	}	
 }
@@ -130,7 +130,7 @@ function OnTouchTreasure()
 		Ware_ShowScreenOverlay(player, null)
 		Ware_CreateTimer(function()
 		{
-			if (player) 
+			if (player)
 			{
 				player.EmitSound(Ware_MinigameScope.find_sound)
 				Ware_PassPlayer(player, true)
