@@ -112,6 +112,11 @@ function OnTeleport(players)
 	}
 	else if (shape == 1) // triangle
 	{
+		// this is not really right
+		if (len >= 16)
+			dim++
+		if (len >= 46)
+			dim++		
 		for (local q = 0; q < dim; q++) 
 		{
 			for (local r = 0; r < dim - q; r++) 
@@ -122,7 +127,8 @@ function OnTeleport(players)
 	}
 	else if (shape == 2) // hexagon
 	{
-		dim = Min(dim - 1, 6); // this is not really right
+		// this is also not really right
+		dim = Min(dim - 1, 6)
 		local count = 0
 		for (local q = -dim; q < dim; q++) 
 		{
@@ -154,16 +160,6 @@ function OnTeleport(players)
 	lower_delay = (minigame.duration - 17.0) / hexes.len().tofloat()
 	Ware_CreateTimer(@() LowerPlatform(), 10.0)
 	
-	// TODO temporary for debugging
-	local developers = Ware_Players.filter(@(i, player) GetPlayerSteamID3(player) in DEVELOPER_STEAMID3)
-	local PrintDebug = function(msg)
-	{
-		// dev chat
-		foreach (developer in developers)
-			ClientPrint(developer, HUD_PRINTCONSOLE, msg)
-	}
-	PrintDebug(format("*** Platform count: %d, player count %d\n", hexes.len(), players.len()))
-	
 	local hex_len = hexes.len()
 	local hex_idx = 0
 	foreach (player in players)
@@ -175,16 +171,7 @@ function OnTeleport(players)
 		local dir = center - origin
 		dir.z = 0.0
 		dir.Norm()
-		Ware_TeleportPlayer(player, origin, VectorAngles(dir), vec3_zero)
-		
-		PrintDebug(format("\t* %s - teleported to %s (platform %d)\n", GetPlayerName(player), origin.ToKVString(), hex_idx))
-		
-		// TODO temporary for debugging
-		local frac = TraceLinePlayersIncluded(player.GetCenter(), origin - Vector(0, 0, 512), player)
-		if (frac == 0.0)
-			PrintDebug("\t *** stuck!")
-		else if (frac == 1.0)
-			PrintDebug("\t *** no floor!")			
+		Ware_TeleportPlayer(player, origin, VectorAngles(dir), vec3_zero)		
 	}
 }
 
