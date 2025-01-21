@@ -196,8 +196,9 @@ function OnEnd()
 function OnCleanup()
 {
 	foreach (player in Ware_MinigamePlayers)
-		ResetPlayer(player)
-		
-	// TODO hack: weapons are going invisible in firstperson, forcing a tp switch fixes it
-	player.SetForcedTauntCam(0)
+	{
+		ResetPlayer(player)		
+		// TODO hack: weapons are going invisible in firstperson, forcing a tp switch fixes it
+		player.SetForcedTauntCam(0)
+	}
 }
