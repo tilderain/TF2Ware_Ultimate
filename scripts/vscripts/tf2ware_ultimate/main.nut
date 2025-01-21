@@ -1511,8 +1511,11 @@ function Ware_FinishMinigameInternal()
 
 	local can_suicide = Ware_Minigame.allow_suicide
 	local player_indices_passed = "", player_indices_valid = ""
+	local participated_players = {}
 	foreach (data in Ware_MinigamePlayersData)
 	{
+		participated_players[data.player] <- true
+		
 		local index_char = data.index.tochar()
 		player_indices_valid += index_char
 		if (data.passed == pass_flag)
@@ -1634,10 +1637,28 @@ function Ware_FinishMinigameInternal()
 	if (Ware_Minigame.music)	
 		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
 	
-	foreach (data in Ware_MinigamePlayersData)
+	foreach (data in Ware_PlayersData)
 	{
 		local player = data.player	
+		local participated = player in participated_players
 		local overlay, sound
+		local passed
+		
+		if (participated)
+		{
+			passed = data.passed == pass_flag
+		}
+		else
+		{
+			// if spectating, use the win status of our target
+			// otherwise just count it as "win" so it's not awkward silence
+			local target = GetPropEntity(player, "m_hObserverTarget") 
+			if (target && target in participated_players)
+				passed = target.GetScriptScope().ware_data.passed == pass_flag
+			else
+				passed = true
+		}
+		
 		if (all_passed)
 		{
 			overlay = "hud/tf2ware_ultimate/default_victory_all"
@@ -1648,7 +1669,7 @@ function Ware_FinishMinigameInternal()
 			overlay = "hud/tf2ware_ultimate/default_failure_all"
 			sound = "failure_all"
 		}
-		else if (data.passed == pass_flag)
+		else if (passed)
 		{
 			overlay = "hud/tf2ware_ultimate/default_victory"
 			sound = "victory"
@@ -1665,10 +1686,13 @@ function Ware_FinishMinigameInternal()
 		if (Ware_MinigameOverlay2Set)
 			Ware_ShowScreenOverlay2(player, null)
 		
-		if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_score.IsValid())
-			Ware_SpecialRound.cb_on_calculate_score(data)
-		else if (data.passed)
-			data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
+		if (participated)
+		{
+			if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_score.IsValid())
+				Ware_SpecialRound.cb_on_calculate_score(data)
+			else if (data.passed)
+				data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
+		}
 	}
 	
 	Ware_EventCallback("minigame_end", 
