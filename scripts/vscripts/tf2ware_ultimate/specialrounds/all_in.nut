@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 ({
 	name = "All In"
 	author = "pokemonPasta"
-	description = "If you lose one microgame, you lose ALL your points."
+	description = "If you lose one minigame, you lose ALL your points."
 	category = "scores"
 })
 
