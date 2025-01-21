@@ -10,6 +10,7 @@
 	convars     = 
 	{
 		tf_parachute_deploy_toggle_allowed = 1
+		sv_gravity = RemapValClamped(Ware_TimeScale, 1.0, 2.0, 700.0, 200.0)
 	}
 })
 
