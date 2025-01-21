@@ -22,9 +22,10 @@ function OnStart()
 	{
 		local barrel = Ware_SpawnEntity("prop_physics_override", 
 		{
-			origin = player.GetOrigin() + Vector(0, 0, 400)
-			model  = barrel_model
-			health = 5
+			targetname = "barrel"
+			origin     = player.GetOrigin() + Vector(0, 0, 400)
+			model      = barrel_model
+			health     = 5
 		})
 		Ware_SlapEntity(barrel, 80.0)
 	}
@@ -32,7 +33,8 @@ function OnStart()
 
 function OnTakeDamage(params)
 {
-	if (params.const_entity.GetClassname() == "prop_physics")
+	if ("GetModelName" in params.const_entity
+		&& params.const_entity.GetModelName() == barrel_model)
 	{
 		local attacker = params.attacker
 		if (attacker != null 

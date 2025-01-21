@@ -43,9 +43,10 @@ function SpawnJack(player)
 	
 	local jack = Ware_SpawnEntity("prop_physics_multiplayer",
 	{
-		origin = origin,
-		model = jack_model,
-		skin = player.GetTeam() - 2,
+		targetname = "jack"
+		origin     = origin
+		model      = jack_model
+		skin       = player.GetTeam() - 2
 	})
 	jack.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 }
@@ -58,7 +59,7 @@ function OnTakeDamage(params)
 		if (params.damage_type & DMG_CRUSH)
 			return false
 	}
-	else if (victim.GetClassname() == "prop_physics_multiplayer")
+	else if (victim.GetName() == "jack")
 	{
 		local attacker = params.attacker
 		if (attacker && attacker.IsPlayer())

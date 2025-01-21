@@ -38,6 +38,7 @@ function CreateBomb()
 	
 	local prop = Ware_SpawnEntity("prop_physics_override", 
 	{
+		targetname     = "bomb"
 		model          = prop_model
 		origin         = pos
 		massscale      = 0.01
@@ -100,7 +101,7 @@ function OnTakeDamage(params)
 		return
 	
 	local entity = params.const_entity
-	if (entity.GetClassname() == "prop_physics")
+	if (entity.GetName() == "bomb")
 	{
 		local attacker = params.attacker
 		if (attacker != null && attacker.IsPlayer())

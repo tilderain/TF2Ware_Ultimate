@@ -38,11 +38,12 @@ function OnStart()
 			local name = i == 0 ? target_class : RandomElement(target_names)
 			Ware_SpawnEntity("prop_dynamic",
 			{
-				model  = format("models/props_training/target_%s.mdl", name.tolower())
-				origin = Lerp(RandomFloat(0.0, 1.0), line[0], line[1])
-				angles = angles[side]
-				solid  = SOLID_VPHYSICS
-				skin   = side
+				targetname = "class_target"
+				model      = format("models/props_training/target_%s.mdl", name.tolower())
+				origin     = Lerp(RandomFloat(0.0, 1.0), line[0], line[1])
+				angles     = angles[side]
+				solid      = SOLID_VPHYSICS
+				skin       = side
 			})
 		}
 	}
@@ -51,7 +52,7 @@ function OnStart()
 function OnTakeDamage(params)
 {
 	local victim = params.const_entity
-	if (victim.GetClassname() == "prop_dynamic")
+	if (victim.GetName() == "class_target")
 	{
 		local attacker = params.attacker
 		if (attacker && attacker.IsPlayer())	
