@@ -752,7 +752,7 @@ function Ware_ShowSpecialRoundText(players)
 		else
 			text = "\n\n\n Special Round!\n " + name
 	}
-	Ware_ShowText(players, CHANNEL_SPECIALROUND, text, holdtime + 0.2, "255 175 0", 0.0, 0.0)
+	Ware_ShowText(players, CHANNEL_SPECIALROUND, text, holdtime + 0.2, "255 175 0", 0.0, 0.25)
 	return holdtime // refresh every few seconds
 }
 
