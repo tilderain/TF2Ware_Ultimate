@@ -14,7 +14,7 @@ minigame <- Ware_MinigameData
 	start_freeze   = true
 	convars        =
 	{
-		sv_gravity = RemapValClamped(Ware_TimeScale, 1.0, 2.0, 700.0, 200.0)
+		sv_gravity = RemapValClamped(Ware_TimeScale, 1.0, 2.0, 700.0, 270.0)
 	}
 })
 
@@ -29,7 +29,7 @@ function OnStart()
 
 function OnTeleport(players)
 {
-	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 700), 500.0)
+	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 800), 500.0)
 }
 
 function OnEnd()
