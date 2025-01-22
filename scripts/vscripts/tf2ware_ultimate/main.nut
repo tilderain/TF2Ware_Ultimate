@@ -201,8 +201,9 @@ Ware_DebugOldTheme        <- ""
 Ware_DebugGameOver		  <- false
 
 Ware_TextManager          <- null
-
 Ware_ParticleSpawner      <- null
+
+Ware_RespawnRooms         <- []
 
 Ware_MinigameRotation     <- []
 if (!("Ware_BossgameRotation" in this))
@@ -271,6 +272,9 @@ function Ware_FindStandardEntities()
 	for (local mgr; mgr = FindByClassname(mgr, "tf_team");)
 		TeamMgrs.append(mgr)
 	ClientCmd <- CreateEntitySafe("point_clientcommand")
+	
+	for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
+		Ware_RespawnRooms.append(trigger)
 	
 	// avoid adding the think again to not break global execution order
 	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
@@ -1315,6 +1319,8 @@ function Ware_StartMinigameInternal(is_boss)
 		SetConvarValue(name, value)
 	}
 	
+	Ware_ToggleRespawnRooms(false)
+	
 	local enable_collisions = Ware_Minigame.collisions || (Ware_SpecialRound && Ware_SpecialRound.force_collisions)
 	
 	// small optimization
@@ -1544,6 +1550,8 @@ function Ware_FinishMinigameInternal()
 	foreach (name, value in Ware_MinigameSavedConvars)
 		SetConvarValue(name, value)
 	Ware_MinigameSavedConvars.clear()
+	
+	Ware_ToggleRespawnRooms(true)
 	
 	local restore_collisions = Ware_Minigame.collisions && (!Ware_SpecialRound || !Ware_SpecialRound.force_collisions)
 	

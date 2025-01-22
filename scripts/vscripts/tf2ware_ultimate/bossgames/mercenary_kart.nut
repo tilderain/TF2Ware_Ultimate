@@ -604,6 +604,8 @@ function RaceShowResult()
 
 function RaceResults()
 {
+	Ware_ToggleRespawnRooms(true)
+	
 	foreach (player in Ware_MinigamePlayers)
 		player.ForceRespawn()
 		

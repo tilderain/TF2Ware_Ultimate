@@ -299,3 +299,19 @@ function Ware_HideAnnotation(id)
 			Ware_Minigame.annotations.remove(idx)
 	}
 }
+
+// Toggle whether respawn rooms in the home locations are enabled or not
+// By default, they are disabled when a minigame starts, and enabled when the minigame ends
+function Ware_ToggleRespawnRooms(toggle)
+{
+	if (toggle)
+	{
+		foreach (trigger in Ware_RespawnRooms)
+			trigger.AcceptInput("SetActive", "", null, null)
+	}
+	else
+	{
+		foreach (trigger in Ware_RespawnRooms)
+			trigger.AcceptInput("SetInactive", "", null, null)
+	}
+}
