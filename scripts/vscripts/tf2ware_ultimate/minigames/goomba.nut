@@ -25,7 +25,7 @@ jump_team <- 0
 
 function OnPick()
 {
-	return Ware_ArePlayersOnBothTeams()
+	return Ware_ArePlayersOnBothTeams() && Ware_Players.len() < 16
 }
 
 function OnStart()
