@@ -5,19 +5,20 @@ UnlitGeneric
 
     $translucent 1
     $frame 0
-    $CHEAPWATERSTARTDISTANCE 0.0
-    $CHEAPWATERENDDISTANCE 0.0           
+    $world_mins "[0.0 0.0 0.0]"
+	$world_maxs "[0.0 0.0 0.0]"     
+	$zero 0.0
     Proxies
     {
-        WaterLOD
+        WorldDims
         {
         }
         Clamp
         {
-            srcVar1		$CHEAPWATERENDDISTANCE
-            min			0.0
-            max			1.0
+            srcVar1		$zero
+            min			"$world_mins[0]"
+            max			"$world_mins[0]"
             resultVar   $frame
         }
-    }            
+    }  
 }

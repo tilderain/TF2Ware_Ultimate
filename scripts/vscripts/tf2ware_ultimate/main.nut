@@ -265,15 +265,12 @@ if (!("Ware_Precached" in this))
 function Ware_FindStandardEntities()
 {
 	World     <- FindByClassname(null, "worldspawn")
-	WaterLOD  <- FindByClassname(null, "water_lod_control")
 	GameRules <- FindByClassname(null, "tf_gamerules")
 	PlayerMgr <- FindByClassname(null, "tf_player_manager")
 	TeamMgrs  <- []
 	for (local mgr; mgr = FindByClassname(mgr, "tf_team");)
 		TeamMgrs.append(mgr)
 	ClientCmd <- CreateEntitySafe("point_clientcommand")
-	
-	MarkForPurge(WaterLOD)
 	
 	// avoid adding the think again to not break global execution order
 	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
