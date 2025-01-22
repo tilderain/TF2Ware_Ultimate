@@ -686,9 +686,9 @@ function UpdateIntroCamera(time)
 	{
 		local keyframe_c = keyframes[2]
 
-		local ab = Lerp(t, keyframe_a.origin, keyframe_b.origin)
-		local bc = Lerp(t, keyframe_b.origin, keyframe_c.origin)
-		origin = Lerp(t, ab, bc)
+		local ab = Lerp(keyframe_a.origin, keyframe_b.origin, t)
+		local bc = Lerp(keyframe_b.origin, keyframe_c.origin, t)
+		origin = Lerp(ab, bc, t)
 		
 		local ab_quat = QuaternionBlend(keyframe_a.quat, keyframe_b.quat, t)
 		local bc_quat = QuaternionBlend(keyframe_b.quat, keyframe_c.quat, t)
@@ -696,7 +696,7 @@ function UpdateIntroCamera(time)
 	}
 	else
 	{
-		origin = Lerp(t, keyframe_a.origin, keyframe_b.origin)
+		origin = Lerp(keyframe_a.origin, keyframe_b.origin, t)
 		angles = QuaternionBlend(keyframe_a.quat, keyframe_b.quat, t).ToQAngle()	
 	}
 	
@@ -1425,7 +1425,7 @@ kart_routines <-
 		local c = cos((m_camera_yaw - 90.0) * DEG2RAD)
 		
 		local camera_pitch = sin(m_angles.x * DEG2RAD) * 90.0
-		m_camera_pitch = Lerp(0.05, m_camera_pitch, camera_pitch)
+		m_camera_pitch = Lerp(m_camera_pitch, camera_pitch, 0.05)
 		
 		local horizontal_offset, vertical_offset
 		

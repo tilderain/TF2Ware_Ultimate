@@ -47,7 +47,7 @@ function Snap(x, y)
 }
 
 // Lerp a value linearly between A and B, t being percentage from 0 to 1
-function Lerp(t, a, b)
+function Lerp(a, b, t)
 {
     return a + (b - a) * t
 }

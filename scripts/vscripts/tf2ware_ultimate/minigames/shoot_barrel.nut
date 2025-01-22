@@ -28,7 +28,7 @@ function OnStart()
 function SpawnBarrel()
 {
 	local line = RandomElement(Ware_MinigameLocation.lines)
-	local origin = Lerp(RandomFloat(0.0, 1.0), line[0], line[1])
+	local origin = Lerp(line[0], line[1], RandomFloat(0.0, 1.0))
 	local angles = QAngle(0, -90, 0)
 	barrel = Ware_SpawnEntity("prop_physics_override",
 	{	

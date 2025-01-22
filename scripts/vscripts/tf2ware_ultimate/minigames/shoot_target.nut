@@ -40,7 +40,7 @@ function OnStart()
 			{
 				targetname = "class_target"
 				model      = format("models/props_training/target_%s.mdl", name.tolower())
-				origin     = Lerp(RandomFloat(0.0, 1.0), line[0], line[1])
+				origin     = Lerp(line[0], line[1], RandomFloat(0.0, 1.0))
 				angles     = angles[side]
 				solid      = SOLID_VPHYSICS
 				skin       = side

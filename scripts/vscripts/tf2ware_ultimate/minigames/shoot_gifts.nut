@@ -38,7 +38,7 @@ function OnStart()
 function SpawnGift()
 {
 	local line = RandomElement(Ware_MinigameLocation.lines)
-	local origin = Lerp(RandomFloat(0.0, 1.0), line[0], line[1])
+	local origin = Lerp(line[0], line[1], RandomFloat(0.0, 1.0))
 	local angles = QAngle(0, -90, 0)
 	local gift = Ware_SpawnEntity("prop_physics_override",
 	{	
