@@ -46,10 +46,17 @@ function Snap(x, y)
 	return Round(x / y) * y
 }
 
-// Lerp a value between A and B, t being percentage from 0 to 1
+// Lerp a value linearly between A and B, t being percentage from 0 to 1
 function Lerp(t, a, b)
 {
     return a + (b - a) * t
+}
+
+// Lerp a value quadraticly between A, B, and C, t being percentage from 0 to 1
+function LerpQuadratic(a, b, c, t) 
+{
+	local u = 1.0 - t
+	return (a * (u * u)) + (b * (2.0 * u * t)) + (c * (t * t))
 }
 
 // Remap a value from the range A - B into C - D
@@ -191,13 +198,15 @@ function IntersectBoxBox(a_mins, a_maxs, b_mins, b_maxs)
 // Performs line segment vs plane intersection test
 // If successful, returns point of intersection
 // Otherwise returns null
-function IntersectLinePlane(normal, dist, start, end)
+function IntersectLinePlane(start, end, normal, dist)
 {
 	local dir = end - start
 	local d = normal.Dot(dir)
 	if (fabs(d) < 1e-6)
 		return null
     local t = (dist - normal.Dot(start)) / normal.Dot(dir)
+	if (t < 0.0 || t > 1.0)
+		return null
     return start + dir * t
 }
 
