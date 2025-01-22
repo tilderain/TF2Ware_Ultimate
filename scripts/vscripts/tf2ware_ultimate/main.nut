@@ -1846,14 +1846,7 @@ function Ware_GameOverInternal()
 	{
 		local location = Ware_MinigameHomeLocation
 		CreateTimer(function()
-		{
-			DispatchParticleEffect(PFX_WARE_FIREWORKS, 
-				Vector(
-					RandomFloat(location.mins.x + 100.0, location.maxs.x - 100.0),
-					RandomFloat(location.mins.y + 100.0, location.maxs.y - 100.0),
-					0.0),
-				Vector(1, 0, 0))
-		
+		{	
 			EmitSoundEx
 			({
 				channel    = CHAN_STATIC
@@ -1862,6 +1855,16 @@ function Ware_GameOverInternal()
 			})
 			return RandomFloat(1.5, 3.5)
 		}, 1.5)
+		CreateTimer(function()
+		{
+			DispatchParticleEffect(PFX_WARE_FIREWORKS, 
+				Vector(
+					RandomFloat(location.mins.x + 100.0, location.maxs.x - 100.0),
+					RandomFloat(location.mins.y + 100.0, location.maxs.y - 100.0),
+					RandomFloat(-50.0, 50.0)),
+				Vector(1, 0, 0))	
+			return RandomFloat(0.5, 1.5)
+		}, 1.0)
 	}
 
 	local win = SpawnEntityFromTableSafe("game_round_win", 
