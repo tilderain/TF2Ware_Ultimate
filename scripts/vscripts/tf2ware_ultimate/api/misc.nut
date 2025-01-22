@@ -164,17 +164,10 @@ function Ware_SpawnParticle(entity, name, attach_name = "", attach_type = PATTAC
 // Curently, this is only used by overlay textures to reverse their text during a special round
 function Ware_UpdateGlobalMaterialState()
 {
-	// water_lod_control provides 2 global float variables that are read by client material proxies
-	// unfortunately, mastercomfig overrides these and it results in corrupted rendering
-	// to prevent that, do a dummy update of the network vars so the entity is re-transmitted
-	if (WaterLOD && WaterLOD.IsValid())
-		WaterLOD.Kill()
-	
-	WaterLOD = SpawnEntityFromTableSafe("water_lod_control",
-	{
-		cheapwaterstartdistance = 0
-		cheapwaterenddistance = Ware_SpecialRound && Ware_SpecialRound.reverse_text ? 1 : 0
-	})
+	// 6 global float variables available via worldspawn, these are unused by the game
+	// 3 of these in maxs are reserved for minigames
+	local reverse = Ware_SpecialRound && Ware_SpecialRound.reverse_text ? 1 : 0
+	SetPropVector(World, "m_WorldMins", Vector(reverse, 0, 0))
 }
 
 // Proxy intended to communicate information from VScript to SourceMod plugins

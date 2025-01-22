@@ -1391,8 +1391,6 @@ function Ware_StartMinigameInternal(is_boss)
 	if (custom_teleport)
 		Ware_MinigameScope.OnTeleport(clone(valid_players))
 		
-	Ware_UpdateGlobalMaterialState()
-	
 	if (Ware_Minigame.allow_damage)
 		Ware_ToggleTruce(false)
 		
