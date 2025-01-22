@@ -145,7 +145,8 @@ Ware_SpecialRounds <-
 	"time_attack"
 	"two_bosses"
 	"up_down"
-	"wipeout"
+	// TODO need to complete the missing stuff first
+	//"wipeout"
 ]
 
 // only for precaching purposes
