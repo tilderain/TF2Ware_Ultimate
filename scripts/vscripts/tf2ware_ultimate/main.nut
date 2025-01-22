@@ -1934,12 +1934,6 @@ function Ware_GameOverInternal()
 			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
 		}
 	}
-	
-
-	// TODO: move this to start of next round if it's safe to do so
-	// reason being it's more interesting to still have the special round's convars or what have you going on round end
-	if (Ware_SpecialRound != null)
-		Ware_EndSpecialRound()
 }
 
 function Ware_OnUpdate()
