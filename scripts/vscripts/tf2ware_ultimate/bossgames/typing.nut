@@ -9,6 +9,7 @@ minigame <- Ware_MinigameData
 	description    = mode == 0 ? "Type each word as fast as you can!" : "Solve each question as fast as you can!"
 	duration       = 210.0
 	end_delay      = 5.0
+	min_players    = 2
 	location       = "typing"
 	music          = null
 	custom_overlay = ""
