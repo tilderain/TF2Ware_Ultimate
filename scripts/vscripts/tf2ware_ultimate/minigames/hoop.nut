@@ -33,7 +33,7 @@ function OnTeleport(players)
 		100.0, 60.0)
 		
 	point_a = Ware_MinigameLocation.center + Vector(RandomFloat(-1000, 1000), 700, 0)
-	point_b = Ware_MinigameLocation.center + Vector(0, 0, RandomFloat(2000, 4000))
+	point_b = Ware_MinigameLocation.center + Vector(0, 0, RandomFloat(2000, 3000))
 	point_c = Ware_MinigameLocation.center + Vector(RandomFloat(-1000, 1000), RandomFloat(-1000, -600), 0)
 }
 
