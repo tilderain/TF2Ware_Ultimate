@@ -12,7 +12,6 @@
 // TODO fix sawblade sounds, use soundscape
 // TODO add pinball pass sound
 // TODO convert all sounds to mp3
-// TODO rmeove kart skins
 // TODO timeout for taking too long, or 60 secs since racer crossed finish
 // TODO place background behind results and make it support past 24 players
 
@@ -73,6 +72,8 @@ local karts                  = []
 local karts_finished         = []
 
 local map_data               = {}
+
+local team_battle            = Ware_SpecialRound && !Ware_SpecialRound.friendly_fire
 
 local item_map               = {}
 
@@ -963,14 +964,12 @@ function CreateKart(origin, angles)
 
 	// visuals
 	local kart_model = "models/mariokart/karts/mariokart.mdl"
-	local kart_skin = RandomInt(0, 7)
 	local kart_prop = Ware_SpawnEntity("prop_dynamic_override",
 	{
 		classname      = "mk_prop"
 		origin         = origin
 		angles         = angles
 		model          = kart_model
-		skin           = kart_skin
 		teamnum        = -23 // encodes tire speed (WTF)
 		disableshadows = true
 	})
@@ -982,8 +981,8 @@ function CreateKart(origin, angles)
 	kart.m_entity             <- kart_entity
 	kart.m_prop               <- kart_prop
 	kart.m_model              <- kart_model
-	kart.m_skin               <- kart_skin	
 	kart.m_proxy              <- kart_proxy
+	kart.m_team               <- TF_TEAM_RED
 	
 	kart.m_buttons            <- 0
 	kart.m_buttons_last       <- 0
@@ -1193,9 +1192,13 @@ kart_routines <-
 		m_driver_bot = player.IsFakeClient()
 		Ware_GetPlayerMiniData(player).kart <- this
 		
+		m_team = m_driver.GetTeam()
+		
 		m_head.SetBodygroup(0, player.GetPlayerClass() - 1)		
 		m_head.EnableDraw()
 		m_head_offset.x = -0.04 + player.entindex() * -0.04
+		
+		UpdateSkin()
 		
 		player.SetAbsVelocity(vec3_zero)
 		SetEntityParent(player, m_prop)
@@ -1260,6 +1263,14 @@ kart_routines <-
 			player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
 			player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)
 		}
+	}
+	
+	UpdateSkin = function()
+	{
+		local skin = m_team
+		if (m_star_timer == 0.0)
+			skin -= 2		
+		m_prop.SetSkin(skin)
 	}
 
 	Update = function(time, tick)
@@ -2291,6 +2302,9 @@ kart_routines <-
 			kart_touch_swap = null
 		}
 		
+		if (team_battle && other.m_team == m_team)
+			return
+		
 		local target_origin = other.m_origin
 		local target_direction = other.m_forward
 		local right = (target_origin - m_origin).Cross(target_direction).z <= 0.0
@@ -2561,9 +2575,7 @@ kart_routines <-
 		if (m_star_timer == 0.0)
 		{
 			if (m_driver)
-				m_driver.AddCond(TF_COND_INVULNERABLE)
-			m_prop.SetSkin(8)
-			
+				m_driver.AddCond(TF_COND_INVULNERABLE)		
 			QuietMusic()
 			EmitSoundEx
 			({
@@ -2572,7 +2584,8 @@ kart_routines <-
 				filter_type = RECIPIENT_FILTER_GLOBAL
 			})
 		}
-		m_star_timer = Time() + 6.5
+		m_star_timer = Time() + 6.5	
+		UpdateSkin()
 	}
 	
 	StopStar = function()
@@ -2581,9 +2594,9 @@ kart_routines <-
 		m_prop.StopSound("MK_Item_Star_Music")
 		if (m_driver)
 			m_driver.RemoveCond(TF_COND_INVULNERABLE)
-		m_prop.SetSkin(m_skin)
 		m_prop.EmitSound("TFPlayer.InvulnerableOff")
-		m_star_timer = 0.0
+		m_star_timer = 0.0	
+		UpdateSkin()		
 	}
 	
 	StartMega = function()
@@ -3738,6 +3751,8 @@ item_shell <-
 				{
 					local other = karts[i]
 					if (other.m_rescued || other.m_cannon_end_pos)
+						continue				
+					if (team_battle && other.m_team == m_owner_kart.m_team)
 						continue					
 					item_scope.m_target_point_idx = kart.m_map_next_point_idx
 					item_scope.m_target_point     = kart.m_map_next_point
@@ -3826,11 +3841,15 @@ item_shell_blue <-
 						m_target_point = map_data.points[m_target_point_idx]
 					}
 					
-					if (karts.len() > 0)
-						m_target_kart = karts[0]
-					else
-						m_target_kart = null
-						
+					m_target_kart = null
+					foreach (kart in karts)
+					{
+						if (team_battle && m_owner_kart.m_team == kart.m_team)
+							continue
+						m_target_kart = kart
+						break
+					}
+					
 					local current_point_idx = m_target_point_idx - 1
 					if (current_point_idx < 0)
 						current_point_idx = map_data.point_count - 1
@@ -4049,6 +4068,8 @@ item_shock <-
 			
 			if (other == kart)
 				continue
+			if (team_battle && other.m_team == kart.m_team)
+				continue				
 			if (other.m_rescued 
 				|| other.m_bullet_timer > 0.0 
 				|| other.m_star_timer > 0.0 
@@ -4074,11 +4095,13 @@ item_blooper <-
 		local position = kart.m_position_idx
 		foreach (other in karts)
 		{
+			if (team_battle && other.m_team == kart.m_team)
+				continue		
 			if (other.m_position_idx > position)
 				continue
 			if (other.m_rescued || other.m_bullet_timer > 0.0)
 				continue
-			
+
 			if (other.m_position_idx < position)
 			{
 				EmitSoundOnClient("MK_Item_Blooper_Attack", other.m_driver)

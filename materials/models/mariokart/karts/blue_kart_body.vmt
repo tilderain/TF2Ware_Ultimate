@@ -1,6 +1,6 @@
 VertexlitGeneric
 {
-	$basetexture models/mariokart/karts/luigi_kart_body
+	$basetexture models/mariokart/karts/blue_kart_body
 	$basemapalphaphongmask 1
 	
 	$nocull 1
