@@ -89,7 +89,7 @@ function OnTouchPlate()
 		{
 			if (item == Ware_MinigameScope.chosen_item)
 			{		
-				EmitSoundOnClient(Ware_MinigameScope.pickup_sound, activator)
+				Ware_PlaySoundOnClient(activator, Ware_MinigameScope.pickup_sound)
 				minidata.item <- Ware_GivePlayerWeapon(activator, item[0])
 			}
 			else

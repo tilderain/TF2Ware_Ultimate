@@ -99,7 +99,7 @@ function OnPlayerAttack(player)
 			local minidata = Ware_GetPlayerMiniData(player)
 			minidata.points++
 			
-			EmitSoundOnClient(hit_sound, player)			
+			Ware_PlaySoundOnClient(player, hit_sound)			
 			Ware_ShowText(player, CHANNEL_MINIGAME, "x", 0.25, "255 255 255", -1, -1)
 			
 			if (minidata.points >= 10)

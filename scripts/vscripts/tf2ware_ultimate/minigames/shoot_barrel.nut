@@ -84,7 +84,7 @@ function OnPlayerAttack(player)
 			if (!("hit_sound" in minidata))
 			{
 				minidata.hit_sound <- true
-				EmitSoundOnClient(hit_sound, player)
+				Ware_PlaySoundOnClient(player, hit_sound)
 			}
 			Ware_PassPlayer(player, true)
 		}

@@ -65,7 +65,7 @@ function OnTakeDamage(params)
 			else
 				Ware_SuicidePlayer(attacker)
 			
-			EmitSoundOnClient(class_name + ".PainSevere01", attacker)
+			Ware_PlaySoundOnClient(attacker, class_name + ".PainSevere01")
 		}
 		
 		return false

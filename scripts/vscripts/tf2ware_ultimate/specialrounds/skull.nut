@@ -76,7 +76,7 @@ function OnUpdate()
 					SetPropInt(player, "m_PlayerClass.m_iClass", player_class)
 					if (!player.IsAlive())
 					{			
-						EmitSoundOnClient(skull_kill_sound, player)
+						Ware_PlaySoundOnClient(player, skull_kill_sound)
 						skull_kills++
 						local ragdoll = GetPropEntity(player, "m_hRagdoll")
 						if (ragdoll)

@@ -48,7 +48,7 @@ function OnHoopTouch()
 	local owner = GetPropEntity(activator, "m_hThrower")
 	if (owner)
 	{	
-		EmitSoundOnClient(Ware_MinigameScope.hoop_sound, owner)
+		Ware_PlaySoundOnClient(owner, Ware_MinigameScope.hoop_sound)
 		Ware_PassPlayer(owner, true)
 	}
 	
