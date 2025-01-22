@@ -7,7 +7,7 @@ special_round <- Ware_SpecialRoundData
 	description = "The round keeps speeding up after every minigame."
 	category = "timescale"
 	
-	speedup_interval = INT_MAX
+	speedup_threshold = INT_MAX
 })
 	
 function OnMinigameEnd()
