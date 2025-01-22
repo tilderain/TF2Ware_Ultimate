@@ -177,11 +177,9 @@ function OpenDoors()
 	EntFire("frogger_start_door_" + RandomInt(0, 2), "Open")
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim)
-		victim.EmitSound(death_sound)
+	player.EmitSound(death_sound)
 }
 
 function OnUpdate()

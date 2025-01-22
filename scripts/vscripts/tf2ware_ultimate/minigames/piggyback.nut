@@ -121,10 +121,9 @@ function PiggybackKilled(disconnect)
 	}
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim == piggybacker)
+	if (player == piggybacker)
 		PiggybackKilled(false)
 }
 

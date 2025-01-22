@@ -130,16 +130,14 @@ function OnUpdate()
 	}
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim == shark)
+	if (player == shark)
 	{
-		CreateTimer(@() KillPlayerRagdoll(victim), 0.0)
+		CreateTimer(@() KillPlayerRagdoll(player), 0.0)
 	}
 	else
 	{
-		local attacker = GetPlayerFromUserID(params.attacker)
 		if (attacker && attacker == shark)
 		{
 			if (++shark_kills >= 3)

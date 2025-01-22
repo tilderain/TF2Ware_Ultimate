@@ -102,20 +102,16 @@ function OnTakeDamage(params)
 	}
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local victim = GetPlayerFromUserID(params.userid)
-	if (!victim)
-		return
-		
 	if (boss_idx == 1)
 	{
-		victim.SetCustomModel("")
-		CreateTimer(@() KillPlayerRagdoll(victim), 0.0)
+		player.SetCustomModel("")
+		CreateTimer(@() KillPlayerRagdoll(player), 0.0)
 	}
 	else if (boss_idx == 2)
 	{
-		local minidata = Ware_GetPlayerMiniData(victim)
+		local minidata = Ware_GetPlayerMiniData(player)
 		if (minidata.left_glow.IsValid())
 			minidata.left_glow.Kill()
 		if (minidata.right_glow.IsValid())

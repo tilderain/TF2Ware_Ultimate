@@ -267,13 +267,12 @@ function OnTakeDamage(params)
 	}	
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim && victim.GetPlayerClass() == TF_CLASS_SPY)
+	if (player.GetPlayerClass() == TF_CLASS_SPY)
 	{
-		victim.SetCustomModel("")
-		CreateTimer(@() KillPlayerRagdoll(victim), 0.0)
+		player.SetCustomModel("")
+		CreateTimer(@() KillPlayerRagdoll(player), 0.0)
 	}
 }
 

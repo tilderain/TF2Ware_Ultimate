@@ -338,15 +338,14 @@ function OnTakeDamage(params)
 	}
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim && victim.GetPlayerClass() == TF_CLASS_SPY)
+	if (player.GetPlayerClass() == TF_CLASS_SPY)
 	{
-		Ware_PassPlayer(victim, false)
-		DispatchParticleEffect("ghost_appearation", victim.GetOrigin(), Vector())
-		victim.SetCustomModel("")
-		CreateTimer(@() KillPlayerRagdoll(victim), 0.0)
+		Ware_PassPlayer(player, false)
+		DispatchParticleEffect("ghost_appearation", player.GetOrigin(), Vector())
+		player.SetCustomModel("")
+		CreateTimer(@() KillPlayerRagdoll(player), 0.0)
 	}
 }
 

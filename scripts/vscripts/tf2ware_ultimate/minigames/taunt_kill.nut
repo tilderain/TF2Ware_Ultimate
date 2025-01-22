@@ -48,13 +48,10 @@ function OnTakeDamage(params)
 	return params.const_entity != params.attacker
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local attacker = GetPlayerFromUserID(params.attacker)
-	local victim = GetPlayerFromUserID(params.userid)
-	if (!attacker || attacker == victim)
-		return
-	Ware_PassPlayer(attacker, true)
+	if (attacker && player != attacker)
+		Ware_PassPlayer(attacker, true)
 }
 
 function OnCheckEnd()

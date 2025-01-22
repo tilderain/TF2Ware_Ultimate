@@ -41,15 +41,10 @@ function OnStart()
 		Ware_GetPlayerMiniData(player).knockouts <- 0
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local attacker = GetPlayerFromUserID(params.attacker)
-	if (attacker == null)
-		return
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim == attacker)
-		return
-	Ware_GetPlayerMiniData(attacker).knockouts++
+	if (attacker && player != attacker)
+		Ware_GetPlayerMiniData(attacker).knockouts++
 }
 
 function OnEnd()

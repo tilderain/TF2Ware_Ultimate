@@ -109,12 +109,10 @@ function OnTakeDamage(params)
 	return (params.damage_type & DMG_BLAST) != 0
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local victim = GetPlayerFromUserID(params.userid)
-
 	// get rid of annotation a bit more cleanly
-	if (victim == kamikaze)
+	if (player == kamikaze)
 		Ware_HideAnnotation(annotation_id)
 	
 	if (params.damagebits & DMG_BLAST)
@@ -124,6 +122,6 @@ function OnPlayerDeath(params)
 			Ware_PassPlayer(kamikaze, true)
 	}
 	
-	if (victim != kamikaze)
-		Ware_PassPlayer(victim, false)
+	if (player != kamikaze)
+		Ware_PassPlayer(player, false)
 }

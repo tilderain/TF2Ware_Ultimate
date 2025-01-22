@@ -147,11 +147,10 @@ function OnPlayerTouch(player, other_player)
 	}
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim && victim.GetPlayerClass() == TF_CLASS_SCOUT)
-		Ware_PassPlayer(victim, false)
+	if (player.GetPlayerClass() == TF_CLASS_SCOUT)
+		Ware_PassPlayer(player, false)
 }
 
 function OnEnd()

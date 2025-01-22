@@ -755,38 +755,33 @@ function OnCleanup()
 	}
 }
 
-// TODO: maybe change signature of this to (player, params)
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local player = GetPlayerFromUserID(params.userid)
-	if (player)
-	{	
-		player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
+	player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
 
-		local kart = GetKart(player)
-		if (kart)
+	local kart = GetKart(player)
+	if (kart)
+	{
+		// unsure why this needs to be done again
+		EntFire("tf_ammo_pack", "Kill")
+		EntFire("tf_ragdoll", "Kill")
+		EntityEntFire(player, "DispatchEffect", "ParticleEffectStop")
+		EntityEntFire(player, "CallScriptFunction", "PlayerResetHealth")	
+		player.AddCond(TF_COND_HALLOWEEN_IN_HELL)
+		
+		CreateTimer(function()
 		{
-			// unsure why this needs to be done again
-			EntFire("tf_ammo_pack", "Kill")
-			EntFire("tf_ragdoll", "Kill")
-			EntityEntFire(player, "DispatchEffect", "ParticleEffectStop")
-			EntityEntFire(player, "CallScriptFunction", "PlayerResetHealth")	
-			player.AddCond(TF_COND_HALLOWEEN_IN_HELL)
-			
-			CreateTimer(function()
+			if (player.GetTeam() & TF_TEAM_MASK)
 			{
-				if (player.GetTeam() & TF_TEAM_MASK)
-				{
-					kart.RescueInit()
-				}
-				else
-				{
-					kart = GetKart(player)
-					if (kart)
-						kart.Destroy()
-				}
-			}, 0.0)
-		}
+				kart.RescueInit()
+			}
+			else
+			{
+				kart = GetKart(player)
+				if (kart)
+					kart.Destroy()
+			}
+		}, 0.0)
 	}
 }
 

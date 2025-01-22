@@ -35,15 +35,10 @@ function OnTakeDamage(params)
 	params.damage = 950.0
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local attacker = GetPlayerFromUserID(params.attacker)
-	if (attacker == null)
-		return
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim == attacker)
-		return
-	Ware_PassPlayer(attacker, true)
+	if (attacker && player != attacker)
+		Ware_PassPlayer(attacker, true)
 }
 
 function OnEnd()

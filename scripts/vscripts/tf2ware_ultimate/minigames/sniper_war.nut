@@ -18,15 +18,10 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Hitman's Heatmaker")
 }
 
-function OnPlayerDeath(params)
+function OnPlayerDeath(player, attacker, params)
 {
-	local attacker = GetPlayerFromUserID(params.attacker)
-	if (attacker == null)
-		return
-	local victim = GetPlayerFromUserID(params.userid)
-	if (victim == attacker)
-		return
-	Ware_PassPlayer(attacker, true)
+	if (player && player != attacker)
+		Ware_PassPlayer(attacker, true)
 }
 
 function OnCheckEnd()

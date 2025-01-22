@@ -140,7 +140,8 @@ class Ware_MinigameData
 	cb_on_take_damage		= null
 	// OnPlayerAttack(player)              - Called by Ware_OnUpdate, when a player attacks and passes that player.
 	cb_on_player_attack		= null
-	// OnPlayerDeath(params)               - Called by OnGameEvent_player_death, and passes its parameters.
+	// OnPlayerDeath(player, attacker, params) - Called by OnGameEvent_player_death.
+	//                                       Passes the victim player, attacker player (might be null) and remaining parameters.
 	cb_on_player_death		= null
 	// OnPlayerDisconnect(player)          - Called by OnGameEvent_player_disconnect, and passes the player.
 	cb_on_player_disconnect	= null
