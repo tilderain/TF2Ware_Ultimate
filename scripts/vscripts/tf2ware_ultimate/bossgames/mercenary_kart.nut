@@ -3066,6 +3066,10 @@ local function ExplosionCreate(origin, radius, duration, inflictor, owner_kart, 
 		
 		foreach (entity in entities)
 		{
+			// bomb might delete them...
+			if (!entity.IsValid())
+				continue
+		
 			local classname = entity.GetClassname()
 			if (!(classname in m_classnames))
 				continue
