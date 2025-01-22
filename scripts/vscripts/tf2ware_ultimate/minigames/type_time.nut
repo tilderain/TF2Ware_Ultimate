@@ -55,6 +55,10 @@ function OnStart()
 	accepted_text.append(h + ":" + mm)    // "h:mm"
 	accepted_text.append(hh + ":" + m)    // "hh:m"
 	accepted_text.append(hh + ":" + mm)   // "hh:mm"
+	accepted_text.append(h + " " + m)     // "h m"
+	accepted_text.append(h + " " + mm)    // "h mm"
+	accepted_text.append(hh + " " + m)    // "hh m"
+	accepted_text.append(hh + " " + mm)   // "hh mm"
 	accepted_text.append(h + m)           // "hm"
 	accepted_text.append(hh + mm)         // "hhmm"
 	
@@ -66,6 +70,8 @@ function OnStart()
 	
 	accepted_text.append(ahh + ":" + m)   // "ahh:m"
 	accepted_text.append(ahh + ":" + mm)  // "ahh:m"
+	accepted_text.append(ahh + " " + m)   // "ahh m"
+	accepted_text.append(ahh + " " + mm)  // "ahh m"
 	accepted_text.append(ahh + m)         // "ahhm"
 	accepted_text.append(ahh + mm)        // "ahhmm"
 
