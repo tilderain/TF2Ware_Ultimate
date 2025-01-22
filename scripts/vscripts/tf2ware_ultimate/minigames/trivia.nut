@@ -1,16 +1,18 @@
-
+// TODO hack: weapons are going invisible in firstperson, forcing a tp switch or suicide fixes it
+// players are forced into TP upon crossing the triggers, people who didn't are suicided
 minigame <- Ware_MinigameData
 ({
-	name          = "Trivia"
-	author        = "pokemonPasta"
-	music         = "golden"
-	duration      = 11.0
-	end_delay     = 0.2
-	description   = "Answer the Question!"
-	location      = "inventoryday"
-	collisions    = false
-	show_scores   = false
-	convars       = 
+	name           = "Trivia"
+	author         = "pokemonPasta"
+	music          = "golden"
+	duration       = 11.0
+	end_delay      = 0.2
+	description    = "Answer the Question!"
+	location       = "inventoryday"
+	collisions     = false
+	show_scores    = false
+	suicide_on_end = true
+	convars        = 
 	{
 		tf_avoidteammates = 0
 	}
@@ -153,7 +155,6 @@ function OnCorrectTouch()
 		Ware_Location.beach.Teleport([player])
 		Ware_PassPlayer(player, true)
 		
-		// TODO hack: weapons are going invisible in firstperson, forcing a tp switch fixes it
 		player.SetForcedTauntCam(1)			
 	}
 }
@@ -168,7 +169,6 @@ function OnIncorrectTouch()
 		Ware_PlaySoundOnClient(player, "vo/engineer_No01.mp3")
 		Ware_Location.abcdeathpit.Teleport([player])
 		
-		// TODO hack: weapons are going invisible in firstperson, forcing a tp switch fixes it
 		player.SetForcedTauntCam(1)		
 	}
 }
@@ -198,7 +198,6 @@ function OnCleanup()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		ResetPlayer(player)		
-		// TODO hack: weapons are going invisible in firstperson, forcing a tp switch fixes it
 		player.SetForcedTauntCam(0)
 	}
 }
