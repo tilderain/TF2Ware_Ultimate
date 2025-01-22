@@ -46,6 +46,16 @@ const SND_CHANGE_VOL   = 1
 const SND_CHANGE_PITCH = 2
 const SND_STOP         = 4
 
+const CHAN_REPLACE  = -1
+const CHAN_AUTO     = 0
+const CHAN_WEAPON   = 1
+const CHAN_VOICE    = 2
+const CHAN_ITEM     = 3
+const CHAN_BODY     = 4
+const CHAN_STREAM   = 5
+const CHAN_STATIC   = 6
+const CHAN_VOICE2   = 7
+
 const PATTACH_ABSORIGIN			= 0
 const PATTACH_ABSORIGIN_FOLLOW	= 1
 const PATTACH_CUSTOMORIGIN		= 2
@@ -122,10 +132,12 @@ const CHANNEL_MINIGAME     = 2
 const CHANNEL_SPECIALROUND = 3
 const CHANNEL_MISC         = 1
 
+const SFX_WARE_FIREWORKS = "Summer.Fireworks"
 const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
 const SFX_WARE_KART_HORN = "TF2Ware_Ultimate.KartHorn"
 const SFX_WARE_ERROR     = "TF2Ware_Ultimate.Error"
 
+const PFX_WARE_FIREWORKS = "mvm_pow_gold_seq_firework_mid"
 const PFX_WARE_PASS_RED  = "teleportedin_red"
 const PFX_WARE_PASS_BLUE = "teleportedin_blue"
 
@@ -171,15 +183,17 @@ SAXXY_CLASSNAME_MAP <-
 	[TF_CLASS_SPY]          = "tf_weapon_knife",
 }
 
-foreach (key, value in CONST)
-{
-	if (startswith(key, "MDL"))      PrecacheModel(value)
-	else if (startswith(key, "SFX")) PrecacheScriptSound(value)
-	else if (startswith(key, "PFX")) PrecacheEntityFromTable({classname = "info_particle_system", effect_name = value})
-}
+PrecacheScriptSound(SFX_WARE_FIREWORKS)
+PrecacheScriptSound(SFX_WARE_PASS)
+PrecacheScriptSound(SFX_WARE_KART_HORN)
+PrecacheScriptSound(SFX_WARE_ERROR)
 
 PrecacheModel("models/player/items/taunts/bumpercar/parts/bumpercar.mdl")
 PrecacheModel("models/props_halloween/bumpercar_cage.mdl")
+
+PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = PFX_WARE_FIREWORKS })
+PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = PFX_WARE_PASS_RED })
+PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = PFX_WARE_PASS_BLUE })
 
 KART_SOUNDS <-
 [
@@ -197,5 +211,6 @@ KART_SOUNDS <-
     "BumperCar.JumpLand"
 	"sf14.Merasmus.DuckHunt.BonusDucks"
 ]
-foreach (sound in KART_SOUNDS) PrecacheScriptSound(sound)
+foreach (sound in KART_SOUNDS) 
+	PrecacheScriptSound(sound)
 
