@@ -118,6 +118,7 @@ Ware_SpecialRounds <-
 	"bonk"
 	"bonus_points"
 	"boss_rush"
+	"bunnyhop"
 	"cocanium"
 	"collisions"
 	"double_trouble"
