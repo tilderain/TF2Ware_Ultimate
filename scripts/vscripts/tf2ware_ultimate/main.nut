@@ -2127,17 +2127,22 @@ function Ware_OnPlayerSay(player, text)
 		local steamid3 = GetPlayerSteamID3(player)
 		local len = text.find(" ")
 		local cmd = len != null ? text.slice(6, len) : text.slice(6)
-		if (steamid3 in DEVELOPER_STEAMID3 && cmd in Ware_DevCommands)
+		if (cmd in Ware_DevCommands)
 		{
-			Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "")
+			if (steamid3 in DEVELOPER_STEAMID3
+				|| player == Ware_ListenHost
+				|| GetPropBool(player, "m_autoKickDisabled")) // has rcon access
+			{
+				Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "")
+			}
+			else
+			{
+				Ware_ChatPrint(player, "You do not have access to this command")
+			}
 		}
 		else if (cmd in Ware_PublicCommands)
 		{
 			Ware_PublicCommands[cmd](player, len != null ? text.slice(len+1) : "")
-		}
-		else if (cmd in Ware_DevCommands)
-		{
-			Ware_ChatPrint(player, "You do not have access to this command")
 		}
 		else
 		{
