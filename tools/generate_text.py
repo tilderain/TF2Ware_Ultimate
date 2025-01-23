@@ -32,7 +32,7 @@ def generate_image_internal(name, text, color, idx):
     draw = ImageDraw.Draw(image)
 
     # Set the font and size
-    font_name = 'tf2build.ttf'
+    font_name = 'bin/tf2build.ttf'
     #font_path = 'C:/Users/Administrator/AppData/Local/Microsoft/Windows/Fonts/' + font_name 
     font_path = font_name
     font = ImageFont.truetype(font_path, size=font_size)
@@ -72,19 +72,22 @@ def generate_image_internal(name, text, color, idx):
             f.write("""
     $translucent 1
     $frame 0
-    $CHEAPWATERSTARTDISTANCE 0.0
-    $CHEAPWATERENDDISTANCE 0.0           
+    $world_mins "[0.0 0.0 0.0]"
+	$world_maxs "[0.0 0.0 0.0]"
+    $zero 0.0
     Proxies
     {
-        WaterLOD
+        WorldDims
         {
         }
-        Equals
+        Clamp
         {
-            srcVar1		$CHEAPWATERENDDISTANCE
-            resultVar	$frame
+            srcVar1		$zero
+            min			"$world_mins[0]"
+            max			"$world_mins[0]"
+            resultVar   $frame
         }
-    }            
+    }
 """)
             f.write("}")
             
@@ -94,7 +97,7 @@ def generate_image(name, text, color):
     name1 = generate_image_internal(name, text, color, 0)
     name2 = generate_image_internal(name, text, color, 1)
     
-    command = f"VTFCmd.exe -file {name1} -file {name2} -outname {name} -output \"../materials/hud/tf2ware_ultimate/minigames\" -format \"dxt5\" -alphaformat \"dxt5\" -flag CLAMPS -flag CLAMPT -nomipmaps -animated"
+    command = f"bin\\VTFCmd.exe -file {name1} -file {name2} -outname {name} -output \"../materials/hud/tf2ware_ultimate/minigames\" -format \"dxt5\" -alphaformat \"dxt5\" -flag CLAMPS -flag CLAMPT -nomipmaps -animated"
     
     if(os.name == "posix"):
         command = "wine " + command
