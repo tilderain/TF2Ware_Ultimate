@@ -14,6 +14,12 @@ minigame <- Ware_MinigameData
 	max_scale     = 1.0
 })
 
+function OnPrecache()
+{
+	Ware_PrecacheMinigameMusic("sweetdays", false)
+	Ware_PrecacheMinigameMusic("surfin", false)
+}
+
 function OnTeleport(players)
 {
 	local red_players = []

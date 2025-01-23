@@ -56,6 +56,9 @@ function OnPrecache()
 	PrecacheSound(swap_sound)
 	PrecacheSound(hurryup_sound)
 	PrecacheScriptSound(tele_sound)
+	
+	Ware_PrecacheMinigameMusic("beepblockskyway", true)
+	Ware_PrecacheMinigameMusic("beepblockskyway-twelve", true)
 }
 
 function OnStart()

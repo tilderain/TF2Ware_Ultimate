@@ -49,7 +49,8 @@ class Ware_MinigameData
 	
 	// == Optional settings ==
 	
-	// Music to play
+	// Music to play when the minigame starts
+	// If you are going to be playing music yourself, make sure to precache it in OnPrecache with Ware_PrecacheMinigameMusic
 	music			= null
 	// Map location to teleport to (Ware_Location enum), default is home
 	location		= null
@@ -178,6 +179,13 @@ function Ware_GetMinigameTime()
 function Ware_GetMinigameRemainingTime()
 {
 	return (Ware_MinigameStartTime + Ware_Minigame.duration + Ware_Minigame.end_delay) - Time()
+}
+
+// Precache a music file
+// This is done automatically if specified in the minigame's "music" setting
+function Ware_PrecacheMinigameMusic(name, is_boss)
+{
+	PrecacheSound(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, is_boss ? "bossgame" : "minigame", name))
 }
 
 // Sets the value of a convar

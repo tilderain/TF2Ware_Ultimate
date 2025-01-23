@@ -310,6 +310,8 @@ Ware_PrecacheGenerator <- null
 function Ware_PrecacheNext()
 {
 	local authors = {}
+	local music_minigame = {}, music_bossgame = {}
+	
 	local AddAuthor = function(author, folder)
 	{
 		local list = author
@@ -331,7 +333,7 @@ function Ware_PrecacheNext()
 			authors[author][folder]++
 		}
 	}
-	
+
 	local PrecacheFile = function(folder, name)
 	{
 		local path = format("tf2ware_ultimate/%s/%s", folder, name)
@@ -367,6 +369,14 @@ function Ware_PrecacheNext()
 				}
 				
 				AddAuthor(minigame.author, folder)
+				
+				if (minigame.music)
+				{
+					if (folder == "bossgames")
+						music_bossgame[minigame.music] <- true
+					else
+						music_minigame[minigame.music] <- true
+				}
 			}
 			else if ("special_round" in scope)
 			{
@@ -404,6 +414,24 @@ function Ware_PrecacheNext()
 	foreach (special in Ware_SpecialRounds)
 		yield PrecacheFile("specialrounds", special)
 		
+	// sounds aren't loaded from disk when precached so this can be done in one go
+		
+	foreach (name, _ in music_minigame)
+		Ware_PrecacheMinigameMusic(name, false)
+	foreach (name, _ in music_bossgame)
+		Ware_PrecacheMinigameMusic(name, true)
+	
+	foreach (theme in Ware_Themes)
+	{
+		foreach (key, value in theme.sounds)
+			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, theme.theme_name, key))
+	}
+	foreach (theme in Ware_InternalThemes)
+	{
+		foreach (key, value in theme.sounds)
+			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, theme.theme_name, key))
+	}
+
 	foreach (author, credits in authors)
 	{
 		if (!(author in Ware_Authors))

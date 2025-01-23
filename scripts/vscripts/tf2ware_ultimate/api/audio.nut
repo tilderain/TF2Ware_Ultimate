@@ -41,7 +41,6 @@ function Ware_PlayGameSound(player, name, flags = 0, volume = 1.0)
 
 // Plays minigame music to the target player
 // If player is null, the music is played for everyone
-// See Ware_MinigameMusic in the config for a list of available music
 // This function is useful to change the volume/pitch of already playing music or to stop it
 // This can be done by passing SND_CHANGE_VOL/SND_CHANGE_PITCH/SND_STOP flag respectively
 function Ware_PlayMinigameMusic(player, name, flags = 0, volume = 1.0)

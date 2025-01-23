@@ -82,6 +82,9 @@ function OnPrecache()
 	PrecacheOverlay(overlay_prepare)
 	PrecacheOverlay(overlay_difficulty)
 	PrecacheOverlay(overlay_announcement)
+	
+	foreach (choice in music_choices)
+		Ware_PrecacheMinigameMusic("typing-" + choice, true)
 }
 
 function OnStart()

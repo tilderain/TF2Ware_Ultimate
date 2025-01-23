@@ -85,6 +85,9 @@ function OnPrecache()
 {
 	PrecacheModel(ghost_model)
 	PrecacheScriptSound(vo_ghost_sound)
+	
+	Ware_PrecacheMinigameMusic("ghostbusters", true)
+	Ware_PrecacheMinigameMusic("ghostbusters-bustin", true)
 }
 
 function OnStart()

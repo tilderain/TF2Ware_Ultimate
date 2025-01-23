@@ -38,7 +38,7 @@ public void LoadoutWhitelister_Start(GameData gamedata)
 	mp_tournament_whitelist = FindConVar("mp_tournament_whitelist");
 	mp_tournament.Flags = mp_tournament.Flags & ~(FCVAR_NOTIFY);	
 	mp_tournament_whitelist.GetString(g_SavedTournamentWhitelist, sizeof(g_SavedTournamentWhitelist));
-	mp_tournament_whitelist.SetString("scriptdata/tf2ware_ultimate/item_whitelist.txt"); // TODO: don't hardcode this here?
+	mp_tournament_whitelist.SetString("cfg/tf2ware_ultimate/item_whitelist.cfg"); // TODO: don't hardcode this here?
 	loadoutwhitelister_enable = CreateConVar("loadoutwhitelister_enable", "1", "");
 	
 	AddCommandListener(ListenerTournamentRestart, "mp_tournament_restart");

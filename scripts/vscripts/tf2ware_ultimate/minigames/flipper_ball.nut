@@ -18,6 +18,9 @@ ball_model <- "models/tf2ware_ultimate/big_soccer_ball.mdl"
 function OnPrecache()
 {
 	PrecacheModel(ball_model)
+	
+	Ware_PrecacheMinigameMusic("fastbros", false)
+	Ware_PrecacheMinigameMusic("letsgetquirky", false)
 }
 
 function OnTeleport(players)
