@@ -5,7 +5,7 @@ suffixes <- ["Taunt", "Jump", "Crouch", "Medic", "Eat", "Drink", "Inspect", "Hor
 minigame <- Ware_MinigameData
 ({
 	name           = "Simon Says"
-	author         = "ficool2"
+	author         = ["Mecha the Slag", "Gemidyne", "ficool2"]
 	description    = "Simon says..."
 	duration       = 4.0
 	music          = "clumsy"

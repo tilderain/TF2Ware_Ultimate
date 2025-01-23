@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Mandrill Maze"
-	author        = "ficool2"
+	author        = ["Mecha the Slag", "ficool2"]
 	description   = "Escape the Mandrill Maze!"
 	duration      = 83.0
 	end_delay     = 1.5

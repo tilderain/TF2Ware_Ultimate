@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Street Fighter"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = "Taunt kill!"
 	duration       = 21.5
 	end_delay      = 1.0

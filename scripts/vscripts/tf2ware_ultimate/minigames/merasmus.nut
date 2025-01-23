@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name        = "Stun Merasmus"
-	author      = "ficool2"
+	author      = ["TonyBaretta", "ficool2"]
 	description = "Stun Merasmus!"
 	duration    = 8.0
 	music       = "nearend"

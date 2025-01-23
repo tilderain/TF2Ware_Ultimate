@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Wild West"
-	author         = "ficool2"
+	author         = ["Mecha the Slag", "ficool2"]
 	description    = "Get Ready to Shoot..."
 	duration       = 180.0
 	end_delay      = 3.0

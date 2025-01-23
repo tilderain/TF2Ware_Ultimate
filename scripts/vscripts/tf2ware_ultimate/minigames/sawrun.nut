@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Saw Run"
-	author         = "ficool2"
+	author         = ["Mecha the Slag", "Gemidyne", "ficool2"]
 	description    = "Get to the end!"
 	duration       = 4.0
 	end_delay      = 0.5

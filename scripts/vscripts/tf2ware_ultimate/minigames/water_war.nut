@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Water War"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = "Survive!"
 	duration       = 11.5
 	end_delay      = 0.5

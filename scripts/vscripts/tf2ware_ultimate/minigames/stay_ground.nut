@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Stay on the Ground"
-	author        = "ficool2"
+	author        = ["Gemidyne", "ficool2"]
 	description   = "Stay on the ground!"
 	duration      = 4.0
 	music         = "falling"

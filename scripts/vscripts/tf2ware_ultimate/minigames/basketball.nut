@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Basketball"
-	author         = "ficool2"
+	author         =  ["TonyBaretta", "ficool2"]
 	description    = "Score a Goal!"
 	custom_overlay = "score_goal"
 	duration       = 7.0

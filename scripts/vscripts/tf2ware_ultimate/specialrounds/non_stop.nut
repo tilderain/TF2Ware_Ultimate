@@ -2,7 +2,7 @@
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Non-Stop"
-	author = "pokemonPasta"
+	author = ["Gemidyne", "pokemonPasta"]
 	description = "You get no breaks between minigames!"
 	category = "timescale"
 })

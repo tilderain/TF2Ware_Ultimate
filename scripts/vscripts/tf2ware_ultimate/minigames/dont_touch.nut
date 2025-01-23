@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Don't Touch Anyone"
-	author        = "pokemonPasta"
+	author        = ["Gemidyne", "pokemonPasta"]
 	description   = "Don't Touch Anyone!"
 	duration      = 6.0
 	end_delay     = 0.5

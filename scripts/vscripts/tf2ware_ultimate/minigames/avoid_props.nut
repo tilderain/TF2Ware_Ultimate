@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Avoid the Props"
-	author		  = "ficool2"
+	author		  = ["sasch", "ficool2"]
 	description   = "Look out for the props!"
 	duration      = 4.0
 	music         = "actfast"

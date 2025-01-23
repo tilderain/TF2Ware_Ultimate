@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Most Bombs"
-	author         = "ficool2"
+	author         = ["Mecha the Slag", "ficool2"]
 	description    = "Shoot the most occuring color!"
 	duration       = 8.0
 	music          = "thethinker"

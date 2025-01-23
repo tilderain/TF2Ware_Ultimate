@@ -3,7 +3,7 @@ mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
 	name           = "Stand Near"
-	author         = "ficool2"
+	author         = ["sasch", "ficool2"]
 	description    = mode == 1 ? "Don't stand near anybody!" : "Stand near somebody!"
 	duration       = 4.0
 	end_delay      = 1.0

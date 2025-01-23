@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Falling Platforms"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = "Push away the enemies!"
 	duration       = 87.0
 	end_delay      = 1.0

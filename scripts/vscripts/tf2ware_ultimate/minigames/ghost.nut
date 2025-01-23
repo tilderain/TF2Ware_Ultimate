@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name        = "Don't Get Scared"
-	author      = "ficool2"
+	author      = ["TonyBaretta", "ficool2"]
 	description = "Don't get scared!"
 	duration    = 13.3
 	music       = "bliss"

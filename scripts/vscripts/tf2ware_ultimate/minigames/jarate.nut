@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name         = "Jarate an Enemy"
-	author       = "pokemonPasta"
+	author       = ["Gemidyne", "pokemonPasta"]
 	duration     = 4.0
 	music        = "rockingout"
 	description  = "Jarate an Enemy!"

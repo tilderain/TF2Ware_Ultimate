@@ -13,7 +13,7 @@ chosen_item <- RandomElement(items)
 minigame <- Ware_MinigameData
 ({
 	name           = "Eat the Plate"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = format("Eat the %s!", chosen_item[2])
 	duration       = 9.0
 	music          = "catchme"

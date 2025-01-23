@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Kamikaze"
-	author         = "ficool2"
+	author         = ["Mecha the Slag", "ficool2"]
 	description    = 
 	[
 		"Avoid the Kamikaze!"

@@ -7,7 +7,7 @@ arenas <- [
 minigame <- Ware_MinigameData
 ({
 	name           = "Rocket Jump"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "Gemidyne", "ficool2"]
 	description    = "Get to the top!"
 	duration       = 37.0
 	end_delay      = 1.0

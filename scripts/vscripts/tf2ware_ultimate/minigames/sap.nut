@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Sap a Building"
-	author         = "pokemonPasta"
+	author         = ["Gemidyne", "pokemonPasta"]
 	description    = 
 	[
 		"Sap a Building!"

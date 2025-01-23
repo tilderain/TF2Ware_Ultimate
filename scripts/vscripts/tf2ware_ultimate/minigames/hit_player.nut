@@ -4,7 +4,7 @@ player_class <- RandomInt(TF_CLASS_FIRST, TF_CLASS_LAST)
 minigame <- Ware_MinigameData
 ({
 	name           = "Hit a Player"
-	author         = "ficool2"
+	author         = ["Mecha the Slag", "ficool2"]
 	description    = mode_nobody ? "Hit nobody!" : "Hit a player!"
 	duration       = 4.5
 	end_delay      = 0.5

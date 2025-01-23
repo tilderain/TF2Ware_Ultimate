@@ -2,7 +2,7 @@
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Thirdperson"
-	author = "pokemonPasta"
+	author =  ["Gemidyne", "pokemonPasta"]
 	description = "See the game from a new perspective."
 	category = ""
 })

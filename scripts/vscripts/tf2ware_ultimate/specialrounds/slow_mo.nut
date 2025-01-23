@@ -2,7 +2,7 @@
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Slow-Mo"
-	author = "pokemonPasta"
+	author =  ["Gemidyne", "pokemonPasta"]
 	description = "Everything slows down!"
 	category = "timescale"
 	boss_threshold = 10

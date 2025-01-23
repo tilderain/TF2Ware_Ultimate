@@ -12,7 +12,7 @@ building_mode <- building_modes[mode]
 minigame <- Ware_MinigameData
 ({
 	name           = "Build This"
-	author         = "pokemonPasta"	
+	author         = ["Gemidyne", "pokemonPasta"]
 	description    = building_mode[0]
 	duration       = 4.0
 	music          = "sillytime"

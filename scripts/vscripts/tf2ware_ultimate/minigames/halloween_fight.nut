@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Halloween Fight"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = "Fight and Stay Alive!"
 	location       = "circlepit"
 	duration       = 14.5

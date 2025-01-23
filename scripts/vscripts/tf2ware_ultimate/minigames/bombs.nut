@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Bombs Away"
-	author		  = "ficool2"
+	author		  = ["sasch", "ficool2"]
 	description   = "Survive the bombs!"
 	duration      = 4.0
 	music         = "ohno"

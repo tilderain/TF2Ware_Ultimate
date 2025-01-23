@@ -6,7 +6,7 @@ bat_hit_sound <- "TF2Ware_Ultimate.BonkBatHit"
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Bonk"
-	author = "ficool2"
+	author = ["Mecha the Slag", "ficool2"]
 	description = "Everyone gets a BONK BAT!"
 	category = "weapon"
 	allow_damage = true

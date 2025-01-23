@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name            = "Cuddly Heavies"
-	author          = "ficool2"
+	author          = ["TonyBaretta", "ficool2"]
 	description     = 
 	[
 		"Avoid the Cuddly Heavies!"

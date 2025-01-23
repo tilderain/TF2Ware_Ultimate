@@ -3,7 +3,7 @@ heavy_team <- RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 minigame <- Ware_MinigameData
 ({
 	name          = "Don't Laugh"
-	author        = "pokemonPasta"
+	author        = ["Gemidyne", "pokemonPasta"]
 	description   =
 	[
 		"Don't Laugh!"

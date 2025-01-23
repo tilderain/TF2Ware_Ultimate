@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name        = "Hit the Balls!"
-	author      = "ficool2"
+	author      = ["TonyBaretta", "ficool2"]
 	description = "Hit the balls to the other side!"
 	duration    = 20.0
 	end_delay   = 1.0

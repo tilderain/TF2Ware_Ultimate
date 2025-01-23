@@ -1,7 +1,7 @@
 special_round <- Ware_SpecialRoundData
 ({
 	name        = "Math Only"
-	author      = "ficool2"
+	author      = ["Gemidyne", "ficool2"]
 	description = "Only math questions this round!"
 	category    = ""
 })

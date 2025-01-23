@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Change Class"
-	author         = "pokemonPasta"
+	author         = ["Gemidyne", "pokemonPasta"]
 	duration       = 4.0
 	end_delay      = 0.5
 	music          = "settingthescene"

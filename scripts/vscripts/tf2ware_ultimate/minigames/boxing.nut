@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Boxing"
-	author         = "ficool2"
+	author         = ["sasch", "ficool2"]
 	description    = "Knockout your Opponents!"
 	location       = "boxingring"
 	duration       = 20.0

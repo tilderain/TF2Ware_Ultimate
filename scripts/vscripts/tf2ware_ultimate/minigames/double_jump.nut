@@ -3,7 +3,7 @@ mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
 	name           = "Double Jump"
-	author         = "pokemonPasta"
+	author         = ["Gemidyne", "pokemonPasta"]
 	description    = mode == 0 ? "Double Jump!" : "Triple Jump!"
 	custom_overlay = mode == 0 ? "double_jump" : "triple_jump"
 	duration       = 4.0

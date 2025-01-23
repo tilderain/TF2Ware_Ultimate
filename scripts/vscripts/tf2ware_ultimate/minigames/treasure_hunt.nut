@@ -29,7 +29,7 @@ treasure <- RandomElement(treasures)
 minigame <- Ware_MinigameData
 ({
 	name           = "Treasure Hunt"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = format("Find the %s!", treasure[1])
 	duration       = 25.0
 	max_scale      = 1.0

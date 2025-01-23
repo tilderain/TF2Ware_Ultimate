@@ -1,7 +1,7 @@
 special_round <- Ware_SpecialRoundData
 ({
 	name        = "Sudden Death"
-	author      = "ficool2"
+	author      =  ["Gemidyne", "ficool2"]
 	description = "If you lose a minigame, you are out! Last survivor wins."
 	min_players = 3
 	category    = "scores"

@@ -3,7 +3,7 @@ mode <- RandomInt(0, 4)
 minigame <- Ware_MinigameData
 ({
 	name           = "Melee Arena"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = "Survive!"
 	location       = "circlepit"
 	duration       = 10.9

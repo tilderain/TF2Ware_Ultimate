@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Shoot the Barrel"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = "Shoot the Barrel!"
 	location       = "targetrange"
 	duration       = 5.0

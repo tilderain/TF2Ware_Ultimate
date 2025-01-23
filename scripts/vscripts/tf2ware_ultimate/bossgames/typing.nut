@@ -5,7 +5,7 @@ if (RandomInt(1, 10) == 1 || Ware_IsSpecialRoundSet("math_only"))
 minigame <- Ware_MinigameData
 ({
 	name           = mode == 0 ? "Typing" : "Math Blitz"
-	author         = ["gemidyne", "ficool2"]
+	author         = ["Gemidyne", "ficool2"]
 	description    = mode == 0 ? "Type each word as fast as you can!" : "Solve each question as fast as you can!"
 	duration       = 210.0
 	end_delay      = 5.0

@@ -3,7 +3,7 @@
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Team Battles"
-	author = "pokemonPasta"
+	author = ["Gemidyne", "pokemonPasta"]
 	description = "Your score goes towards your team's score. The team with the highest score at the end wins!"
 	category = "scores"	
 	min_players = 4 // 2 on each team minimum seems fair, could do min_players = 3 either maybe. minimum players of 2 is pointless.

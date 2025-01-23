@@ -3,7 +3,7 @@ local bonus_time = Ware_MinigameLocation.name.find("big") != null ? 2.0 : 0.0
 minigame <- Ware_MinigameData
 ({
 	name           = "Flood"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = "Get on a Platform!"
 	duration       = 4.0 + bonus_time
 	end_delay      = 0.5

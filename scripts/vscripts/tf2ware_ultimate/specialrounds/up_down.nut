@@ -2,7 +2,7 @@
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Up and Down"
-	author = "pokemonPasta"
+	author =  ["Gemidyne", "pokemonPasta"]
 	description = "The speed will change randomly throughout the round."
 	category = "timescale"
 })

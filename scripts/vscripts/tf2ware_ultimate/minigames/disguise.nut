@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Disguise"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = "Match the Disguise!"
 	duration       = 6.0
 	end_delay      = 0.5

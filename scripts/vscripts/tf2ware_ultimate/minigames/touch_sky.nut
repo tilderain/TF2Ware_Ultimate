@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name        = "Touch Sky"
-	author      = "ficool2"
+	author      = ["TonyBaretta", "ficool2"]
 	description = "Touch the Sky!"
 	duration    = 10.0
 	end_delay   = 0.2

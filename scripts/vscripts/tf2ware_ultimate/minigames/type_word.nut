@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name            = "Say the Word"
-	author          = "ficool2"
+	author          = ["Gemidyne", "ficool2"]
 	description     = "Say the word below!"
 	duration        = 4.0
 	end_delay       = 0.5

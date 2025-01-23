@@ -1,7 +1,7 @@
 	minigame <- Ware_MinigameData
 ({
 	name        = "Parachute"
-	author      = "ficool2"
+	author      = ["TonyBaretta", "ficool2"]
 	description = "Land on the Platform!"
 	duration    = 7.0
 	location    = "boxarena"

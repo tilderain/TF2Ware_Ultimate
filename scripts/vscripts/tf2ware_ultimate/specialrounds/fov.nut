@@ -3,7 +3,7 @@ fov <- 130
 special_round <- Ware_SpecialRoundData
 ({
 	name             = "Quake Pro"
-	author           = "ficool2"
+	author           = ["TonyBaretta", "ficool2"]
 	description      = "FOV increased to 130!"
 	category         = ""
 })

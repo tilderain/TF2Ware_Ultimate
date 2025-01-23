@@ -3,7 +3,7 @@ mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
 	name           = "Flipper Ball"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = "Get to the end!"
 	duration       = mode == 0 ? 27.0 : 28.0
 	end_delay      = 0.5	

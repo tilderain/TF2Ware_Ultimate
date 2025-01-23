@@ -29,7 +29,7 @@ micro_grace <- false // tracks grace period for certain microgames.
 minigame <- Ware_MinigameData
 ({
 	name          = "Gioca Jouer"
-	author        = "pokemonPasta"
+	author        = ["TonyBaretta", "pokemonPasta"]
 	description   = "Gioca Jouer!"
 	duration      = 140.0
 	end_delay     = 1.0

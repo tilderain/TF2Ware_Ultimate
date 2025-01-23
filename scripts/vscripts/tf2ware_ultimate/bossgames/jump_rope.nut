@@ -1,9 +1,9 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Jump Rope"
-	author        = "ficool2"
+	author        = ["Mecha the Slag", "ficool2"]
 	description   = "Jump the rope!"
-	duration      = 69.0 // :3
+	duration      = 69.0
 	end_delay     = 1.0
 	music         = "jumprope"
 	location      = "jumprope"

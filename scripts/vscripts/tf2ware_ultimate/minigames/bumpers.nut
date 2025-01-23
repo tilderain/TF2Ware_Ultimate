@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Bumpers"
-	author        = "ficool2"
+	author        = ["LiLGuY", "ficool2"]
 	description   = "Bump into others!"
 	duration      = 4.5
 	location      = "circlepit"

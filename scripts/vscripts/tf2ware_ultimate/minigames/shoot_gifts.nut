@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Shoot 10 Gifts"
-	author         = "ficool2"
+	author         = ["Mecha the Slag", "ficool2"]
 	description    = "Shoot the Gift 10 times!"
 	duration       = 29.9
 	music          = "pumpit"

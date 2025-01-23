@@ -7,7 +7,7 @@ arenas <-
 minigame <- Ware_MinigameData
 ({
 	name          = "Sumo Kart"
-	author        = "pokemonPasta"
+	author        = ["TonyBaretta", "pokemonPasta"]
 	music         = "underwater"
 	duration      = 14.0
 	end_delay     = 0.5

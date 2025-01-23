@@ -3,7 +3,7 @@ mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
 	name           = "Move"
-	author         = "ficool2"
+	author         = ["Mecha the Slag", "ficool2"]
 	description    = mode == 0 ? "Move!" : "Don't Move!"
 	duration       = 4.0
 	music          = "actioninsilence"

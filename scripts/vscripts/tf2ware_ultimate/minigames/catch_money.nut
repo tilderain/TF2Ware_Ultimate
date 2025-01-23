@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name        = "Catch the Money"
-	author      = "ficool2"
+	author      = ["Mecha the Slag", "ficool2"]
 	description = "Catch $500!"
 	duration    = 18.0
 	music       = "casino"

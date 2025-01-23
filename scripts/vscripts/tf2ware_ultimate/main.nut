@@ -255,8 +255,16 @@ if (!("Ware_Precached" in this))
 	Ware_AnnotationIDs            <- 0
 	
 	// credits
-	Ware_Authors                  <- {
-		"OctatonicSunrise": 1 // adding manually for logo credit
+	Ware_Authors                  <- 
+	{
+		"ficool2"          : ["Lead Programmer", "Map Porting"],
+		"pokemonPasta"     : ["Programmer", "Themes", "Map Porting", "Trailer"],
+		"OctatonicSunrise" : ["Logo", "Trailer"],
+		"Mecha the Slag"   : ["TF2Ware Universe assets", "OG TF2Ware"],
+		"Gemidyne"         : ["MicroTF2 assets (www.gemidyne.com)"],
+		"TonyBaretta"      : ["TF2Ware v2 assets"],
+		"PigeonVerde"      : ["TF2Ware v2 map"],
+		// authors from minigames and special rounds are added automatically
 	}
 
 	// this shuts up incursion distance warnings from the nav mesh
@@ -301,6 +309,29 @@ function Ware_FindStandardEntities()
 Ware_PrecacheGenerator <- null
 function Ware_PrecacheNext()
 {
+	local authors = {}
+	local AddAuthor = function(author, folder)
+	{
+		local list = author
+		if (typeof(list) != "array")
+			list = [author]
+		
+		foreach (author in list)
+		{
+			if (!(author in authors))
+			{
+				authors[author] <-
+				{
+					minigames     = 0
+					bossgames     = 0
+					specialrounds = 0
+				}
+			}
+				
+			authors[author][folder]++
+		}
+	}
+	
 	local PrecacheFile = function(folder, name)
 	{
 		local path = format("tf2ware_ultimate/%s/%s", folder, name)
@@ -335,7 +366,7 @@ function Ware_PrecacheNext()
 						PrecacheOverlay(overlay)
 				}
 				
-				Ware_AddAuthor(minigame.author)
+				AddAuthor(minigame.author, folder)
 			}
 			else if ("special_round" in scope)
 			{
@@ -353,7 +384,7 @@ function Ware_PrecacheNext()
 					Ware_Error("Special round '%s' has no category entry", name)
 				}
 				
-				Ware_AddAuthor(scope.special_round.author)
+				AddAuthor(scope.special_round.author, folder)
 			}
 		}
 		catch (e)
@@ -373,8 +404,22 @@ function Ware_PrecacheNext()
 	foreach (special in Ware_SpecialRounds)
 		yield PrecacheFile("specialrounds", special)
 		
+	foreach (author, credits in authors)
+	{
+		if (!(author in Ware_Authors))
+			Ware_Authors[author] <- []
+		
+		if (credits.minigames > 0)
+			Ware_Authors[author].append(format("%d Minigame%s", credits.minigames, credits.minigames == 1 ? "" : "s"))
+		if (credits.bossgames > 0)
+			Ware_Authors[author].append(format("%d Bossgame%s", credits.bossgames, credits.bossgames == 1 ? "" : "s"))		
+		if (credits.specialrounds > 0)
+			Ware_Authors[author].append(format("%d Special Round%s", credits.specialrounds,  credits.specialrounds == 1 ? "" : "s"))			
+	}
+		
 	printf("[TF2Ware] Precached %d minigames, %d bossgames, %d special rounds\n", 
 		Ware_Minigames.len(), Ware_Bossgames.len(), Ware_SpecialRounds.len())
+
 	return null
 }
 
@@ -396,27 +441,6 @@ function Ware_PrecacheEverything()
 	// but it seems to crash the VM here if using nested IncludeScript
 	Ware_PrecacheGenerator = Ware_PrecacheNext()
 	EntityEntFire(World, "CallScriptFunction", "Ware_PrecacheStep")
-}
-
-function Ware_AddAuthor(author)
-{
-	local add_author = function(author){
-		foreach(k, v in Ware_Authors)
-		{
-			if (k == author)
-			{
-				Ware_Authors[author]++
-				return
-			}
-		}
-		Ware_Authors[author] <- 1
-	}
-	
-	if (typeof(author) == "array")
-		foreach(str in author)
-			add_author(str)
-	else
-		add_author(author)
 }
 
 function Ware_SetupLocations()

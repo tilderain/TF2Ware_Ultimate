@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Slender"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = 
 	[
 		"Collect every page!"

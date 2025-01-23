@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Caber King"
-	author         = "ficool2"
+	author         = ["LiLGuY", "ficool2"]
 	description    = "Survive!"
 	duration       = 3.5
 	end_delay      = 0.5

@@ -4,7 +4,7 @@ target_class <- RandomElement(target_names)
 minigame <- Ware_MinigameData
 ({
 	name           = "Shoot Target"
-	author         = "ficool2"
+	author         = ["Gemidyne", "ficool2"]
 	description    = format("Shoot the %s target!", target_class)
 	location       = "targetrange"
 	duration       = 4.5

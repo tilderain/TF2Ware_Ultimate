@@ -3,7 +3,7 @@ mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
 	name            = "Type the Color"
-	author          = "ficool2"
+	author          = ["Mecha the Slag", "ficool2"]
 	description     = mode == 0 ? "Type the text below!" : "Type the color below!"
 	duration        = 4.0
 	end_delay       = 0.5

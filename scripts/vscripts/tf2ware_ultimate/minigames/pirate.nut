@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Pirate Attack"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = 
 	[
 		"Jump over the RED ship!"

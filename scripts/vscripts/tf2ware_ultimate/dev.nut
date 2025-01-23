@@ -269,21 +269,30 @@ Ware_PublicCommands <-
 {
 	"credits": function(player, text)
 	{
-		local authors = []
-		foreach(k, v in Ware_Authors)
-		{
-			if (authors.find(k) == null)
-				authors.append(k)
-		}
-		authors.sort(@(a, b) Ware_Authors[b] <=> Ware_Authors[a])
-		
 		Ware_ChatPrint(player, 
-			"{color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta, based on {color}TF2Ware Universe{color} by SLAG.TF and {color}MicroTF2{color} by Gemidyne. Logo by OctatonicSunrise. See console for a full list of contributors.", 
-			COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
+			"{color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta, based on {color}TF2Ware Universe{color} by SLAG.TF, {color}MicroTF2{color} by Gemidyne and {color}TF2Ware v2{color} by TonyBaretta. See console for full list.", 
+			COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
 		
 		ClientPrint(player, HUD_PRINTCONSOLE, "TF2Ware Ultimate Contributors:")
-		foreach(author in authors)
-			ClientPrint(player, HUD_PRINTCONSOLE, "* " + author)
+		
+		local all_credits = []
+		foreach (author, credits in Ware_Authors)
+			all_credits.append([author].extend(credits))
+		all_credits.sort(@(a, b) a[0].tolower() <=> b[0].tolower())
+						
+		foreach (credits in all_credits)
+		{
+			local author = credits.remove(0)
+			local text = ""
+			local last = credits.len() - 1
+			foreach (i, credit in credits)
+			{
+				text += credit
+				if (i < last)
+					text += ", "
+			}
+			ClientPrint(player, HUD_PRINTCONSOLE, format("* %s - %s", author, text))
+		}
 	}
 	"help" : function(player, text)
 	{

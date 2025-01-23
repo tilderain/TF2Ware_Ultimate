@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Count Bombs"
-	author         = "ficool2"
+	author         = ["sasch", "ficool2"]
 	description    = "How many bombs?"
 	duration       = 8.0
 	end_delay      = 0.5

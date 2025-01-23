@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name        = "Catch the Cubes"
-	author      = "ficool2"
+	author      = ["TonyBaretta", "ficool2"]
 	description = "Catch the cubes!"
 	duration    = 14.0
 	location    = "boxarena"

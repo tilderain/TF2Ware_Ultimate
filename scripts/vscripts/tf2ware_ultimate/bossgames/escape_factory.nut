@@ -2,7 +2,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Escape the Factory"
-	author         = ["gemidyne", "pokemonPasta"]
+	author         = ["Gemidyne", "pokemonPasta"]
 	description    = "Escape the Factory!"
 	duration       = 130.0
 	end_delay      = 1.1

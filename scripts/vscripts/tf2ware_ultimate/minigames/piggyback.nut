@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Piggyback Heavy"
-	author         = "ficool2"
+	author         = ["TonyBaretta", "ficool2"]
 	description    = 
 	[
 		"Piggyback the heavy before he reaches the end!"

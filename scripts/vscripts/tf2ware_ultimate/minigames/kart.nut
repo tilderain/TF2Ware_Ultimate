@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Kart Race"
-	author        = "pokemonPasta"
+	author        = ["TonyBaretta", "pokemonPasta"]
 	music         = "moomoofarm"
 	description   = "Race to the End!"
 	end_delay     = 0.5

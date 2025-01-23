@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Spycrab Limbo"
-	author        = "pokemonPasta"
+	author        = ["TonyBaretta", "pokemonPasta"]
 	description   = "Limbo under the laser!"
 	duration      = 11.0
 	location      = "boxarena"

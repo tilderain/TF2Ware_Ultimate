@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Pop the JACK"
-	author        = "ficool2"
+	author        = ["TonyBaretta", "ficool2"]
 	description   = "Hit the JACK until it pops!"
 	duration      = 8.3
 	location      = "boxarena"

@@ -6,7 +6,7 @@ mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
 	name          = "Land the Platform"
-	author        = ["gemidyne", "ficool2"]
+	author        = ["Gemidyne", "ficool2"]
 	description   = "Land on the platform!"
 	duration      = mode == 0 ? 6.0 : 5.0
 	location      = "factoryplatform"
