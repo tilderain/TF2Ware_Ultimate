@@ -355,7 +355,8 @@ function OnGameEvent_player_spawn(params)
 		if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_connect.IsValid())
 			Ware_SpecialRound.cb_on_player_connect(player)
 			
-		Ware_ChatPrint(player, "Welcome to {color}TF2Ware Ultimate{color}! Type {color}!ware_credits{color} for more info.", COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_YELLOW, TF_COLOR_DEFAULT)
+		Ware_ChatPrint(player, "Welcome to {color}TF2Ware{color} Ultimate{color}! Type {color}!ware_credits{color} for more information.",
+		COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_YELLOW, TF_COLOR_DEFAULT)
 		
 		if (params.team == TEAM_UNASSIGNED)
 			return
