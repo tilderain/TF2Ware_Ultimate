@@ -481,11 +481,11 @@ function Ware_SetupThemeSounds()
 	{
 		local sound_name = key
 		
-		if (sound_name in Ware_Theme.sounds)
+		if (sound_name in Ware_Theme.sounds) // If the given sound exists in the requested theme then set that sound
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Theme.theme_name, Ware_Theme.sounds[sound_name]]
-		else if (parent_theme != null && sound_name in parent_theme.sounds)
+		else if (parent_theme != null && sound_name in parent_theme.sounds) // Otherwise, check for a parent theme. If it exists and that theme has the requested sound, set it.
 			Ware_CurrentThemeSounds[sound_name] <- [parent_theme.theme_name, parent_theme.sounds[sound_name]]
-		else
+		else // Otherwise, set the requested sound to the default theme's sound (which by definition always exists).
 			Ware_CurrentThemeSounds[sound_name] <- [Ware_Themes[0].theme_name, Ware_Themes[0].sounds[sound_name]]
 	}
 }
