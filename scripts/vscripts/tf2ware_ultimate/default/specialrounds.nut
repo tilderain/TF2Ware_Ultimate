@@ -11,7 +11,7 @@ double_trouble
 extended_round
 fov
 inclinity_problem
-//""invisible""  TODO need a better performance implementation
+//invisible  TODO need a better performance implementation
 low_gravity
 math_only
 mirrored_world
@@ -31,4 +31,4 @@ thirdperson
 time_attack
 two_bosses
 up_down
-//""wipeout"" 	// TODO need to complete the missing stuff first"
+//wipeout 	TODO need to complete the missing stuff first"
