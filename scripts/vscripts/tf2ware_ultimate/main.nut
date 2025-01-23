@@ -975,18 +975,22 @@ function Ware_BeginSpecialRoundInternal()
 	
 	local start_time = Time()
 	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
-	local reveal_time = duration * 0.6
-	local end_time = duration - reveal_time
-	local text_interval = 0.05
+	local reveal_duration = duration * 0.6
+	local start_interval = 0.5, end_interval = 0.05
+	local end_time = duration - reveal_duration
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
 	local special_round = Ware_SpecialRoundScope.special_round
 		
 	CreateTimer(function() 
 	{	
-		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds).toupper(), text_interval * 2.0)
+		local time = Time()
+		local t = RemapValClamped(time, start_time + duration * 0.3, time + reveal_duration, 0.0, 1.0)
+		local interval = Lerp(0.05, 0.5, pow(t * 4.0, 2.5))
 		
-		if (Time() - start_time > reveal_time)
+		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds).toupper(), interval * 2.0)
+		
+		if (time - start_time > reveal_duration)
 		{
 			Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, special_round.name.toupper(), end_time)
 			
@@ -1039,7 +1043,7 @@ function Ware_BeginSpecialRoundInternal()
 		}
 		else
 		{
-			return text_interval
+			return interval
 		}
 	}, 0.0)
 	
