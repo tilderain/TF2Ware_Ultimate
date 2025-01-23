@@ -977,7 +977,7 @@ function Ware_BeginSpecialRoundInternal()
 	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
 	local reveal_time = duration * 0.6
 	local end_time = duration - reveal_time
-	local text_interval = 0.15
+	local text_interval = 0.05
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
 	local special_round = Ware_SpecialRoundScope.special_round
