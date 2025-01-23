@@ -2124,12 +2124,11 @@ function Ware_OnPlayerSay(player, text)
 	
 	if (startswith(text, "!ware_"))
 	{
-		local steamid3 = GetPlayerSteamID3(player)
 		local len = text.find(" ")
 		local cmd = len != null ? text.slice(6, len) : text.slice(6)
 		if (cmd in Ware_DevCommands)
 		{
-			if (steamid3 in DEVELOPER_STEAMID3
+			if (GetPlayerSteamID3(player) in DEVELOPER_STEAMID3
 				|| player == Ware_ListenHost
 				|| GetPropBool(player, "m_autoKickDisabled")) // has rcon access
 			{

@@ -4,6 +4,16 @@ DEVELOPER_STEAMID3 <-
 	"[U:1:111328277]" : 1 // pokemonPasta
 }
 
+function Ware_DevCommandTitle(player)
+{
+	if (GetPlayerSteamID3(player) in DEVELOPER_STEAMID3)
+		return "Developer"
+	else if (player == Ware_ListenHost)
+		return "Host"
+	else
+		return "Admin"
+}
+
 function Ware_DevCommandForceMinigame(player, text, is_boss, once)
 {
 	local gamename = is_boss ? "Ware_DebugForceBossgame" : "Ware_DebugForceMinigame"
@@ -18,9 +28,9 @@ function Ware_DevCommandForceMinigame(player, text, is_boss, once)
 	
 	local name = is_boss ? "bossgame" : "minigame"
 	if (once)
-		Ware_ChatPrint(player, "Developer set next {str} to '{str}'", name, ROOT[gamename])	
+		Ware_ChatPrint(player, "{str} set next {str} to '{str}'", Ware_DevCommandTitle(player), name, ROOT[gamename])	
 	else
-		Ware_ChatPrint(player, "Developer forced {str} '{str}'", name, ROOT[gamename])	
+		Ware_ChatPrint(player, "{str} forced {str} '{str}'", Ware_DevCommandTitle(player), name, ROOT[gamename])	
 }
 
 Ware_DevCommands <-
@@ -42,7 +52,7 @@ Ware_DevCommands <-
 		}
 		else
 			Ware_DebugNextTheme = ""
-		Ware_ChatPrint(null, "Developer forced next theme to '{str}'", Ware_DebugNextTheme)
+		Ware_ChatPrint(null, "{str} forced next theme to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextTheme)
 	}
 	"forcetheme": function(player, text)
 	{
@@ -57,7 +67,7 @@ Ware_DevCommands <-
 		}
 		else
 			Ware_DebugForceTheme = ""
-		Ware_ChatPrint(null, "Developer forced theme to '{str}'", Ware_DebugForceTheme)
+		Ware_ChatPrint(null, "{str} forced theme to '{str}'", Ware_DevCommandTitle(player), Ware_DebugForceTheme)
 	}
 	"nextspecial": function(player, text)
 	{
@@ -78,7 +88,7 @@ Ware_DevCommands <-
 		{
 			Ware_DebugNextSpecialRound = ""
 		}
-		Ware_ChatPrint(null, "Developer forced next special round to '{str}'", Ware_DebugNextSpecialRound)
+		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextSpecialRound)
 	}
 	"shownext": function(player, text)
 	{
@@ -105,34 +115,35 @@ Ware_DevCommands <-
 	{
 		SetConvarValue("mp_restartgame_immediate", 1)
 		// TODO these should be "host" or "admin" if a non-dev executes it
-		Ware_ChatPrint(null, "Developer has forced a restart")
+		Ware_ChatPrint(null, "{str} has forced a restart", Ware_DevCommandTitle(player))
 	}
 	"gameover" : function(player, text)
 	{
 		Ware_DebugGameOver = true
-		Ware_ChatPrint(null, "Developer has forced a game over")		
+		Ware_ChatPrint(null, "{str} has forced a game over", Ware_DevCommandTitle(player))		
 	}
 	// I never remember which word is the right one, so let's have both
 	"stop" : function(player, text)
 	{
 		Ware_DebugStop = true
-		Ware_ChatPrint(null, "Developer has forced the game to pause")
+		Ware_ChatPrint(null, "{str} has forced the game to pause", Ware_DevCommandTitle(player))
 	}
 	"pause" : function(player, text)
 	{
 		Ware_DebugStop = true
-		Ware_ChatPrint(null, "Developer has forced the game to pause")
+		Ware_ChatPrint(null, "{str} has forced the game to pause", Ware_DevCommandTitle(player))
 	}
 	"resume" : function(player, text)
 	{
 		Ware_DebugStop = false
-		Ware_ChatPrint(null, "Developer has resumed the game")
+		Ware_ChatPrint(null, "{str} has resumed the game", Ware_DevCommandTitle(player))
 	}
 	"end" : function(player, text)
 	{
 		if (Ware_Minigame)
 		{
-			Ware_ChatPrint(null, "Developer has ended the current {str}..." Ware_Minigame.boss ? "bossgame" : "minigame")
+			Ware_ChatPrint(null, "{str} has ended the current {str}...", 
+				Ware_DevCommandTitle(player), Ware_Minigame.boss ? "bossgame" : "minigame")
 			Ware_EndMinigame()
 		}
 		else
@@ -195,7 +206,7 @@ Ware_DevCommands <-
 				local points = args[arg].tointeger()
 				Ware_ChatPrint(player, "Gave {int} points to {player}", points, target)
 				if (target != player)
-					Ware_ChatPrint(target, "Developer has given you {int} points", points)
+					Ware_ChatPrint(target, "{str} has given you {int} points", Ware_DevCommandTitle(player), points)
 				Ware_GetPlayerData(target).score += points
 			}
 			else
@@ -226,7 +237,7 @@ Ware_DevCommands <-
 				}		
 			}
 			local code = "return (function() {" + text + "}).call(ROOT)"
-			printf("[TF2Ware] Developer '%s' executed code: %s\n", GetPlayerName(player), code)
+			printf("[TF2Ware] %s '%s' executed code: %s\n", Ware_DevCommandTitle(player), GetPlayerName(player), code)
 			local ret = compilestring(code)()
 			ClientPrint(player, HUD_PRINTTALK, "\x07FFFFFFRETURN: " + ret)
 		}
@@ -242,7 +253,7 @@ Ware_DevCommands <-
 		{
 			local scale = args[0].tofloat()
 			Ware_SetTimeScale(scale)
-			Ware_ChatPrint(null, "Developer has forced timescale to {%g}", scale)
+			Ware_ChatPrint(null, "{str} has forced timescale to {%g}", Ware_DevCommandTitle(player), scale)
 		}
 		else		
 		{
