@@ -6,13 +6,10 @@
 // TODO fix $bbox for course model
 // TODO bonuspoint
 // TODO fix EmitSoundOnClient calls to be pitched (need to check every minigame)
-// TODO migrate all vmts to use worldextents instead of water control
 // TODO responses
 // TODO drift pfx
-// TODO fix sawblade sounds, use soundscape
 // TODO add pinball pass sound
 // TODO convert all sounds to mp3
-// TODO timeout for taking too long, or 60 secs since racer crossed finish
 // TODO place background behind results and make it support past 24 players
 
 minigame <- Ware_MinigameData
