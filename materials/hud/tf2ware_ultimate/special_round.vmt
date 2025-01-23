@@ -1,24 +1,5 @@
-UnlitGeneric
+"UnlitGeneric"
 {
-	$basetexture hud/tf2ware_ultimate/special_round
-	$basetexturetransform "center .5 .2 scale 3 14 rotate 0 translate 0 0"
-
-    $translucent 1
-    $frame 0
-    $world_mins "[0.0 0.0 0.0]"
-	$world_maxs "[0.0 0.0 0.0]"     
-	$zero 0.0
-    Proxies
-    {
-        WorldDims
-        {
-        }
-        Clamp
-        {
-            srcVar1		$zero
-            min			"$world_mins[0]"
-            max			"$world_mins[0]"
-            resultVar   $frame
-        }
-    }            
+	"$baseTexture" "hud/tf2ware_ultimate/special_round"
+	$translucent 1
 }

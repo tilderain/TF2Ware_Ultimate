@@ -1,7 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
 buffer<-@"// only for precaching purposes
-__logo_text
-__logo_textless
 chalkboard
 countdown_1
 countdown_2
@@ -21,4 +19,5 @@ default_victory
 default_victory_all
 minigame_blank
 slow_down
-special_round"
+special_round
+waiting_players"

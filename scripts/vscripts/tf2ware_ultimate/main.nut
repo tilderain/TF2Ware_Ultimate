@@ -748,7 +748,7 @@ function Ware_PlayStartSound()
 	if (IsInWaitingForPlayers())
 	{
 		Ware_PlayGameSound(self, "lets_get_started")
-		Ware_ShowScreenOverlay2(self, "shaders/tf2ware_ultimate/logozoom")
+		Ware_ShowScreenOverlay(self, "hud/tf2ware_ultimate/waiting_players")
 	}
 }
 
