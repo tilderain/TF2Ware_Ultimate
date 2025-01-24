@@ -146,6 +146,8 @@ if (Ware_Plugin)
 else
 {
 	SendToConsole("sv_cheats 1")
+	// more helpful to troubleshoot
+	SendToConsole("net_disconnect_reason 1")
 	// slightly bump this as loading minigames frequently spits this out
 	if (Convars.GetFloat("vscript_perf_warning_spew_ms") <= 1.5)
 		SendToConsole("vscript_perf_warning_spew_ms 5")
