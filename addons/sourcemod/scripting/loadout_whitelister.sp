@@ -10,6 +10,7 @@ ConVar mp_tournament;
 ConVar mp_tournament_whitelist;
 ConVar loadoutwhitelister_enable;
 
+bool loadoutwhitelister_init = false;
 public bool script_allow_loadout = false;
 
 DynamicHook g_DHook_CTFPlayerInitClass;
@@ -22,7 +23,7 @@ public void LoadoutWhitelister_Start(GameData gamedata)
 	if (!LibraryExists("dhooks"))
 	{
 		LogMessage("Cannot start loadout whitelister as DHooks extension is not loaded");
-		return
+		return;
 	}
 	
 	g_DHook_CTFPlayerInitClass = DynamicHook.FromConf(gamedata, "CTFPlayer::InitClass");
@@ -38,6 +39,8 @@ public void LoadoutWhitelister_Start(GameData gamedata)
 		LogError("Failed to setup detour for CTFPlayer::GetLoadoutItem");		
 		return;
 	}
+	
+	loadoutwhitelister_init = true;
 	
 	g_DDetour_CTFPlayerGetLoadoutItem.Enable(Hook_Pre, DHookPre_CTFPlayerGetLoadoutItem);
 	
@@ -59,6 +62,10 @@ public void LoadoutWhitelister_Start(GameData gamedata)
 
 public void LoadoutWhitelister_End(bool map_unload)
 {
+	if (!loadoutwhitelister_init)
+		return;
+	loadoutwhitelister_init = false;
+	
 	mp_tournament.Flags = mp_tournament.Flags | (FCVAR_NOTIFY);	
 	mp_tournament_whitelist.SetString(g_SavedTournamentWhitelist);
 	
@@ -71,6 +78,9 @@ public void LoadoutWhitelister_End(bool map_unload)
 
 public void LoadoutWhitelister_InitClient(int client)
 {
+	if (!loadoutwhitelister_init)
+		return;
+	
 	if (g_DHook_CTFPlayerInitClass)
 	{
 		g_DHook_CTFPlayerInitClass.HookEntity(Hook_Pre, client, DHookPre_CTFPlayerInitClass);
