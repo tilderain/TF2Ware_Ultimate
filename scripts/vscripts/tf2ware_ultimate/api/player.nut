@@ -476,8 +476,7 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	player.Regenerate(true)
 	player.SetCustomModel(GetPropString(player, "m_PlayerClass.m_iszCustomModel"))
 	player.SetHealth(player.GetMaxHealth())
-	SetPropBool(player, "m_Shared.m_bShieldEquipped", false)
-	
+
 	local melee = Ware_ParseLoadout(player)
 	if (melee)
 		Ware_ModifyMeleeAttributes(melee)

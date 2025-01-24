@@ -316,8 +316,7 @@ function OnGameEvent_recalculate_truce(params)
 {
 	if (Ware_TimeScale != 1.0)
 		self.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
-	SetPropBool(self, "m_Shared.m_bShieldEquipped", false)
-	
+
 	local melee = ware_data.special_melee
 	if (melee == null)
 		melee = ware_data.melee

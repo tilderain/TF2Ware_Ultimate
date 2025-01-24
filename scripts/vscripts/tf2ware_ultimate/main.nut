@@ -591,8 +591,14 @@ function Ware_ToggleTruce(toggle)
 
 function Ware_ParseLoadout(player)
 {
-	local data = player.GetScriptScope().ware_data
+	if (player.GetPlayerClass() == TF_CLASS_DEMOMAN)
+	{
+		RemoveAllOfEntity("tf_wearable_demoshield")
+		SetPropBool(player, "m_Shared.m_bShieldEquipped", false)
+	}
 	
+	local data = player.GetScriptScope().ware_data
+
 	local special_melee = data.special_melee
 	if (special_melee && special_melee.IsValid())
 	{
