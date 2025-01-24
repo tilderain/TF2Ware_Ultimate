@@ -10,7 +10,7 @@
 #include <sdktools>
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
-#define PLUGIN_VERSION "1.1.0"
+#define PLUGIN_VERSION "1.2.0"
 
 public Plugin myinfo =
 {
