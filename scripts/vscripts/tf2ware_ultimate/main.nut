@@ -2180,9 +2180,9 @@ function Ware_OnPlayerSay(player, text)
 		local cmd = len != null ? text.slice(6, len) : text.slice(6)
 		if (cmd in Ware_DevCommands)
 		{
-			if (GetPlayerSteamID3(player) in DEVELOPER_STEAMID3
-				|| player == Ware_ListenHost
-				|| GetPropBool(player, "m_autoKickDisabled")) // has rcon access
+			if (/*GetPlayerSteamID3(player) in DEVELOPER_STEAMID3 ||*/
+				player == Ware_ListenHost || 
+				GetPropBool(player, "m_autoKickDisabled")) // has rcon access
 			{
 				Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "")
 			}
