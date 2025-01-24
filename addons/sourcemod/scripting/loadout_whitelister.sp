@@ -1,3 +1,4 @@
+#undef REQUIRE_EXTENSIONS
 #include <sdktools>
 #include <dhooks>
 
@@ -18,6 +19,12 @@ char g_SavedTournamentWhitelist[256];
 
 public void LoadoutWhitelister_Start(GameData gamedata)
 {
+	if (!LibraryExists("dhooks"))
+	{
+		LogMessage("Cannot start loadout whitelister as DHooks extension is not loaded");
+		return
+	}
+	
 	g_DHook_CTFPlayerInitClass = DynamicHook.FromConf(gamedata, "CTFPlayer::InitClass");
 	if (!g_DHook_CTFPlayerInitClass)
 	{

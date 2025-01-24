@@ -172,7 +172,7 @@ void Enable()
 	LogMessage("Enabling...");
 	
 #if LOADOUT_WHITELISTER
-	GameData gamedata = new GameData("tf2ware_ultimate");
+	GameData gamedata = LoadGameConfigFile("tf2ware_ultimate");
 	if (gamedata)	
 	{
 		LoadoutWhitelister_Start(gamedata);
