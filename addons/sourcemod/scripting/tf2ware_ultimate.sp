@@ -120,10 +120,10 @@ public Action ListenerVScript(Event event, const char[] name, bool dontBroadcast
 			{
 				sm_flood_time.SetFloat(g_AntiFloodValue);
 			}
-		}		
+		}	
 		else
 		{
-			LogMessage("Unknown VScript routine '%s'", routine);
+			//LogMessage("Unknown VScript routine '%s'", routine);
 		}
 		
 		return Plugin_Handled;
