@@ -106,6 +106,6 @@ function Ware_LoadConfig()
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
 // if you change this make sure to update any sounds in level_sounds.txt too!
-const WARE_MUSICVERSION = 1
+const WARE_MUSICVERSION = 2
 
 Ware_LoadConfig()

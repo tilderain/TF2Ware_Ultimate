@@ -13,7 +13,8 @@ mode <- RandomInt(0, 1)
 
 train_model <- "models/props_vehicles/train_enginecar.mdl"
 
-train_rain <- [
+train_rain <- 
+[
 	"tf2ware_ultimate/train_rain/train_rain_3.mp3"
 	"tf2ware_ultimate/train_rain/train_rain_5.mp3"
 	"tf2ware_ultimate/train_rain/train_rain_6.mp3"
@@ -21,15 +22,7 @@ train_rain <- [
 	"tf2ware_ultimate/train_rain/train_rain_17.mp3"
 ]
 
-horn_sounds <- [
-	"tf2ware_ultimate/v1/kart_horns/beepbeep.mp3"
-	"tf2ware_ultimate/v1/kart_horns/hazzard.mp3"
-	"tf2ware_ultimate/v1/kart_horns/horn1.mp3"
-	"tf2ware_ultimate/v1/kart_horns/horn2.mp3"
-	"tf2ware_ultimate/v1/kart_horns/horn3.mp3"
-	"tf2ware_ultimate/v1/kart_horns/horn4.mp3"
-	"tf2ware_ultimate/v1/kart_horns/horn5.mp3"
-]
+horn_sound <- "TF2Ware_Ultimate.KartHorn"
 
 function OnPrecache()
 {
@@ -38,8 +31,7 @@ function OnPrecache()
 	foreach(sound in train_rain)
 		PrecacheSound(sound)
 	
-	foreach(sound in horn_sounds)
-		PrecacheSound(sound)
+	PrecacheScriptSound(horn_sound)
 }
 
 function OnStart()
@@ -127,11 +119,7 @@ function OnTakeDamage(params)
 		local scope = train.GetScriptScope()
 		if (!scope.played_sound)
 		{
-			if (horn_sounds.len() > 0)
-			{
-				local sound = RemoveRandomElement(horn_sounds)
-				train.EmitSound(sound)
-			}
+			train.EmitSound(horn_sound)
 			scope.played_sound = true
 		}
 	}
