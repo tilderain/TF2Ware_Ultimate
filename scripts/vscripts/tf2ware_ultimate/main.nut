@@ -237,7 +237,7 @@ if (!("Ware_Precached" in this))
 	// which eats up +1 native call per player
 	Ware_PlayersData              <- []
 	Ware_MinigamePlayersData      <- []
-	
+
 	Ware_RoundsPlayed             <- 0
 	Ware_MapResetTimer            <- null
 	
@@ -2036,6 +2036,8 @@ function Ware_GameOverInternal()
 
 function Ware_OnUpdate()
 {
+	Ware_SDRUpdate()
+
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_update()
 		

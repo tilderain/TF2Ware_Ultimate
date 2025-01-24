@@ -278,9 +278,38 @@ Ware_DevCommands <-
 
 Ware_PublicCommands <-
 {
-	"credits": function(player, text)
+	"credits" : function(player, text)
 	{
 		Ware_ShowCredits(player, true)
+	}
+	"ip" : function(player, args)
+	{
+		if (IsDedicatedServer())
+		{
+			Ware_ChatPrint(player, "This command is not supported on dedicated servers.")
+			return
+		}		
+		
+		if (Ware_ServerIP == null)
+		{
+			Ware_ChatPrint(player, "Failed to retrieve server IP. Type 'status' in console to find it manually")
+			return
+		}
+		
+		if (!Ware_SDR)
+		{
+			Ware_ChatPrint(player, "Warning: You don't have {color}-enablefakeip{color} in your launch options. Friends cannot join you unless you are port forwarded or playing on LAN."
+				COLOR_LIME, TF_COLOR_DEFAULT)
+		}
+		
+		Ware_ChatPrint(player, "Copy and share the console command below with your friends")
+		// doesn't work with SDR...
+		//ClientPrint(player, HUD_PRINTTALK, format("\x07DEEFF5steam://connect/%s?appid=440", Ware_ServerIP))
+		// skipping Ware_ChatPrint so this doesn't have the prefix or get reversed by special rounds
+		if (Ware_ServerPassword && Ware_ServerPassword.len() > 0)
+			ClientPrint(player, HUD_PRINTTALK, format("\x07DEEFF5connect %s;password %s", Ware_ServerIP, Ware_ServerPassword))
+		else
+			ClientPrint(player, HUD_PRINTTALK, format("\x07DEEFF5connect %s", Ware_ServerIP))
 	}
 	"help" : function(player, text)
 	{
