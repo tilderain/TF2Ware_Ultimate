@@ -678,12 +678,12 @@ function Ware_ModifyMeleeAttributes(melee)
 
 function Ware_ShowCredits(player, full)
 {
-	Ware_ChatPrint(player, 
-		"{color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta, based on {color}TF2Ware Universe{color} by SLAG.TF, {color}MicroTF2{color} by Gemidyne and {color}TF2Ware v2{color} by TonyBaretta. See console for full list.", 
-		COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
-	
 	if (full)
 	{
+		Ware_ChatPrint(player, 
+			"{color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta, based on {color}TF2Ware Universe{color} by SLAG.TF, {color}MicroTF2{color} by Gemidyne and {color}TF2Ware v2{color} by TonyBaretta. See console for all credits.", 
+			COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
+		
 		ClientPrint(player, HUD_PRINTCONSOLE, "TF2Ware Ultimate Contributors:")
 		
 		local all_credits = []
@@ -704,6 +704,12 @@ function Ware_ShowCredits(player, full)
 			}
 			ClientPrint(player, HUD_PRINTCONSOLE, format("* %s - %s", author, text))
 		}
+	}
+	else
+	{
+		Ware_ChatPrint(player, 
+			"Welcome to {color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta! Type {color}!ware_credits{color} for more information.", 
+			COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)	
 	}
 }
 
