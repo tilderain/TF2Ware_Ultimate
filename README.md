@@ -1,7 +1,7 @@
 # TF2Ware Ultimate
 This repository contains the source code and assets for TF2Ware Ultimate.
 
-![logo](materialsrc/__logo.png|width=200)
+<img src="materialsrc/__logo.png" width="500">
 
 ## Dedicated Server Setup
 
