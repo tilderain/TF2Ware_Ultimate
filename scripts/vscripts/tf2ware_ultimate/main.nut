@@ -676,6 +676,37 @@ function Ware_ModifyMeleeAttributes(melee)
 	}
 }
 
+function Ware_ShowCredits(player, full)
+{
+	Ware_ChatPrint(player, 
+		"{color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta, based on {color}TF2Ware Universe{color} by SLAG.TF, {color}MicroTF2{color} by Gemidyne and {color}TF2Ware v2{color} by TonyBaretta. See console for full list.", 
+		COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
+	
+	if (full)
+	{
+		ClientPrint(player, HUD_PRINTCONSOLE, "TF2Ware Ultimate Contributors:")
+		
+		local all_credits = []
+		foreach (author, credits in Ware_Authors)
+			all_credits.append([author].extend(credits))
+		all_credits.sort(@(a, b) a[0].tolower() <=> b[0].tolower())
+						
+		foreach (credits in all_credits)
+		{
+			local author = credits.remove(0)
+			local text = ""
+			local last = credits.len() - 1
+			foreach (i, credit in credits)
+			{
+				text += credit
+				if (i < last)
+					text += ", "
+			}
+			ClientPrint(player, HUD_PRINTCONSOLE, format("* %s - %s", author, text))
+		}
+	}
+}
+
 function Ware_RemovePlayerAttributeInternal(player, name)
 {
 	if (name == "voice pitch scale")
@@ -744,7 +775,8 @@ function Ware_PlayStartSound()
 		return
 	
 	ware_data.start_sound = true
-	 
+	Ware_ShowCredits(self, false)
+	
 	if (IsInWaitingForPlayers())
 	{
 		Ware_PlayGameSound(self, "lets_get_started")
@@ -2137,6 +2169,10 @@ function Ware_OnPlayerSay(player, text)
 				|| GetPropBool(player, "m_autoKickDisabled")) // has rcon access
 			{
 				Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "")
+			}
+			else if (cmd in Ware_PublicCommands)
+			{
+				Ware_PublicCommands[cmd](player, len != null ? text.slice(len+1) : "")
 			}
 			else
 			{
