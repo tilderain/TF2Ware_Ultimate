@@ -26,9 +26,7 @@ The plugin will automatically enable and disable itself when it detects the map 
 ### Configuration
 TF2Ware Ultimate loads its settings from the `tf/scriptdata/tf2ware_ultimate` folder. These settings will be generated on first launch of the map, if not present already.
 
-Admin commands are supported (see: `!ware_help` in chat for commands), however since this is VScript it cannot detect SourceMod's admin status. 
-You will need to set the `m_autoKickDisabled` netprop on players as true to flag them as admin.
-Successfully running `rcon` will set this netprop to true automatically.
+Admin commands are supported (see: `!ware_help` in chat for commands). Listen server hosts can also use these commands.
 
 ### Events
 The following events are sent by the gamemode if you would like to catch them. 
