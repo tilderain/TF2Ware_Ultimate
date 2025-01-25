@@ -104,19 +104,12 @@ function WitchThink()
 			step_timer = time + 0.15
 		}		
 		
-		// kill anyone in the way
-		foreach (player in Ware_Players)
+		if (VectorDistance(threat.GetOrigin(), my_origin) < 70.0)
 		{
-			if (player.IsAlive())
-			{
-				if (VectorDistance(player.GetOrigin(), my_origin) < 70.0)
-				{
-					self.EmitSound(shriek_sound)
-					player.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
-				}			
-			}
-		}
-		
+			self.EmitSound(shriek_sound)
+			threat.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
+		}			
+
 		amb_timer = time + 1.5
 		path_timer = time
 	}
