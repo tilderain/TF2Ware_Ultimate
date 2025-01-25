@@ -9,20 +9,35 @@ minigame <- Ware_MinigameData
 	min_players  = 2
 })
 
+proj_times <- {}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Sandman")
 	foreach (player in Ware_MinigamePlayers)
-		Ware_SetPlayerAmmo(player, TF_AMMO_GRENADES1, 5)
+		Ware_SetPlayerAmmo(player, TF_AMMO_GRENADES1, 3)
 }
 
 function OnUpdate()
 {
 	local id = ITEM_MAP.Sandman.id
 	local classname = ITEM_PROJECTILE_MAP[id]
+	
+	local projs = []
 	for (local proj; proj = FindByClassname(proj, classname);)
+		projs.append(proj)
+
+	local time = Time()
+	foreach (proj in projs)
 	{
-		proj.SetTeam(TEAM_SPECTATOR)
+		// delete after 2 seconds to prevent edict overflows
+		if (!(proj in proj_times))
+			proj_times[proj] <- time + 1.5
+		
+		if (proj_times[proj] < time)
+			proj.Kill()
+		else
+			proj.SetTeam(TEAM_SPECTATOR)
 	}
 }
 
