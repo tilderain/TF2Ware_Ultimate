@@ -10,6 +10,7 @@ minigame <- Ware_MinigameData
 	music          = "getmoving"
 	custom_overlay = "get_end"
 	start_pass     = false
+	thirdperson    = true
 })
 
 function OnStart()
