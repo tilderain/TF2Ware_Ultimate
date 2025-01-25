@@ -2,7 +2,7 @@ minigame <- Ware_MinigameData
 ({
 	name        = "Catch the Money"
 	author      = ["Mecha the Slag", "ficool2"]
-	description = "Catch $500!"
+	description = "Catch $400!"
 	duration    = 18.0
 	music       = "casino"
 	thirdperson = true
@@ -116,7 +116,7 @@ function OnTakeDamage(params)
 									
 					victim.EmitSound(touch_sound)
 					victim.AddCurrency(GetPropInt(attacker, "m_iHammerID"))
-					if (victim.GetCurrency() >= 500)
+					if (victim.GetCurrency() >= 400)
 						Ware_PassPlayer(victim, true)
 				}
 			}
