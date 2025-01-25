@@ -502,7 +502,7 @@ function RaceShowResult()
 	
 	local win_threshold
 	if (Ware_MinigamePlayers.len() > 24)
-		win_threshold = 5
+		win_threshold = 6
 	else if (Ware_MinigamePlayers.len() > 6)
 		win_threshold = 3
 	else
@@ -553,6 +553,10 @@ function RaceShowResult()
 			if (pos <= win_threshold)
 			{
 				Ware_PassPlayer(player, true)
+				
+				// bonus for getting top 3 with more than 24 racers
+				if (i <= 2 && Ware_MinigamePlayers.len() > 24)
+					Ware_GiveBonusPoints(player)
 			}
 		}
 		
