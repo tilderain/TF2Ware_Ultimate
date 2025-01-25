@@ -95,11 +95,16 @@ function OnUpdate()
 
 function OnEnd()
 {
+	local event_send = true
 	foreach (monoculus in monoculuses)
 	{
 		if (monoculus.IsValid())
 		{
-			SendGlobalGameEvent("eyeball_boss_killed", {})
+			if (event_send)
+			{
+				SendGlobalGameEvent("eyeball_boss_killed", {})
+				event_send = false
+			}
 			monoculus.Kill()
 		}
 	}
