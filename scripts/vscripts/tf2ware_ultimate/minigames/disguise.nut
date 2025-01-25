@@ -62,7 +62,7 @@ function OnEnd()
 				}
 				else
 				{
-					Ware_ChatPrint(player, "You didn't match the disguise team!")
+					Ware_ChatPrint(player, "{color}HINT:{color} You need to match the team too!", COLOR_GREEN, TF_COLOR_DEFAULT)
 				}
 			}
 			else
