@@ -100,7 +100,7 @@ function SetupMap()
 	
 	for (local sawblade; sawblade = FindByName(sawblade, "frogger_saw_linear_*");)
 	{
-		sawblade.KeyValueFromFloat("speed", RandomFloat(150.0, 550.0))
+		sawblade.KeyValueFromFloat("speed", RandomFloat(150.0, 250.0))
 		EntityAcceptInput(sawblade, "Open")
 		MarkForPurge(sawblade)
 	}	
