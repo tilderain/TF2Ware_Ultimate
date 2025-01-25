@@ -207,13 +207,13 @@ function TogglePlayerPowerplay(player, play_vo, toggle)
 		{
 			BurnPlayer(player, 1.0, 5.0)
 			player.AddCond(TF_COND_INVULNERABLE)
+			SetPropFloat(player, "m_flMaxspeed", 500.0)			
 		}
 		else
 		{
 			player.AddCond(TF_COND_INVULNERABLE)
+			SetPropFloat(player, "m_flMaxspeed", 300.0)
 		}
-		
-		SetPropFloat(player, "m_flMaxspeed", 500.0)
 	}
 	else
 	{
