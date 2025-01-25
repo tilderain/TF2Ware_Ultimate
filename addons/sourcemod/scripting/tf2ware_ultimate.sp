@@ -10,6 +10,7 @@
 #include <sdktools>
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
+// if changing this, change it in VScript's config.nut too
 #define PLUGIN_VERSION "1.2.0"
 
 public Plugin myinfo =

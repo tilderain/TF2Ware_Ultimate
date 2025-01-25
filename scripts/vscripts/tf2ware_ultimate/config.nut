@@ -108,4 +108,7 @@ function Ware_LoadConfig()
 // if you change this make sure to update any sounds in level_sounds.txt too!
 const WARE_MUSICVERSION = 2
 
+// keep in sync with sourcemod plugin
+const WARE_PLUGINVERSION = "1.2.0"
+
 Ware_LoadConfig()
