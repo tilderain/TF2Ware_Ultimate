@@ -44,7 +44,7 @@ function Disable()
 
 function OnStartTouch()
 {
-	activator.TakeDamage(1000.0, DMG_SAWBLADE, self)
+	activator.TakeDamage(10000.0, DMG_SAWBLADE, self)
 	DispatchParticleEffect("env_sawblood", activator.GetCenter(), Vector())
 	EmitSoundOn(touch_sound, sawblade)
 	
