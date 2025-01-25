@@ -99,6 +99,16 @@ Game.Nemesis
 	wave  			common/null.wav
 }
 
+
+Game.PenetrationKill
+{
+	channel 	    CHAN_STATIC
+	volume  		0
+	pitch 			0
+	soundlevel	    SNDLVL_NORM
+	wave  			common/null.wav
+}
+
 // - custom
 
 TF2Ware_Ultimate.Pass
