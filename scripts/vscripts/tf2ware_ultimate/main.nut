@@ -206,6 +206,7 @@ Ware_TextManager          <- null
 Ware_ParticleSpawner      <- null
 
 Ware_RespawnRooms         <- []
+Ware_NavAreas             <- []
 
 Ware_MinigameRotation     <- []
 if (!("Ware_BossgameRotation" in this))
@@ -273,7 +274,7 @@ if (!("Ware_Precached" in this))
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
 }
 
-function Ware_FindStandardEntities()
+function Ware_SetupMap()
 {
 	World     <- FindByClassname(null, "worldspawn")
 	GameRules <- FindByClassname(null, "tf_gamerules")
@@ -306,6 +307,20 @@ function Ware_FindStandardEntities()
 	
 	Ware_ParticleSpawner <- CreateEntitySafe("trigger_particle")
 	Ware_ParticleSpawner.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)
+	
+	local areas = {}
+	NavMesh.GetAllAreas(areas)
+	Ware_NavAreas = areas.values()
+}
+
+function Ware_UpdateNav()
+{
+	// HACK this is not efficient, but the map only has 3 nav areas currently
+	foreach (area in Ware_NavAreas)
+	{
+		// must remove this or skeleton pathfinding breaks
+		area.ClearAttributeTF(TF_NAV_SPAWN_ROOM_RED|TF_NAV_SPAWN_ROOM_BLUE)
+	}
 }
 
 Ware_PrecacheGenerator <- null
@@ -2045,6 +2060,8 @@ function Ware_GameOverInternal()
 function Ware_OnUpdate()
 {
 	Ware_SDRUpdate()
+	
+	Ware_UpdateNav()
 
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_update()
@@ -2250,7 +2267,7 @@ IncludeScript("tf2ware_ultimate/api/misc",         ROOT)
 IncludeScript("tf2ware_ultimate/api/player",       ROOT)
 IncludeScript("tf2ware_ultimate/api/specialround", ROOT)
 
-Ware_FindStandardEntities()
+Ware_SetupMap()
 Ware_SetupLocations()
 Ware_PrecacheEverything()
 Ware_CheckPlayerArrayIntegrity()
