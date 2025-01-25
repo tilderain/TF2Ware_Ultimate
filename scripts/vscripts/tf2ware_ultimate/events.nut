@@ -222,7 +222,7 @@ function OnGameEvent_teamplay_round_start(params)
 	local delay = 0.0
 	
 	// double the chance after playing 3 rounds
-	local extra_chance = (Ware_SpecialRoundChance && > 1 Ware_RoundsPlayed >= 3) ? 2 : 1
+	local extra_chance = (Ware_SpecialRoundChance > 1 && Ware_RoundsPlayed >= 3) ? 2 : 1
 	local special_round_chance = Ware_SpecialRoundChance / extra_chance
 	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
