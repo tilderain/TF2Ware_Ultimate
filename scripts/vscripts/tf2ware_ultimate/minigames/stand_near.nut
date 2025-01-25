@@ -48,7 +48,7 @@ function OnEnd()
 			if (dist < threshold)
 			{
 				if (mode == 1)
-					Ware_SuicidePlayer(target1.player)
+					target1.player.TakeDamage(1000.0, DMG_BLAST, target2.player)
 				else
 					target1.kill = false
 				break
@@ -69,6 +69,8 @@ function OnEnd()
 function OnTakeDamage(params)
 {
 	if (params.damage_custom == TF_DMG_CUSTOM_SUICIDE)
+		return
+	if (params.damage_type == DMG_BLAST)
 		return
 	
 	params.damage = 10

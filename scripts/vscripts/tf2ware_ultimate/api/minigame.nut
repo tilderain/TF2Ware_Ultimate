@@ -61,7 +61,7 @@ class Ware_MinigameData
 	// Is damage to other players allowed? Default is false
 	allow_damage	= null
 	// Max player scale allowed in the minigame. If a player's scale is higher, it's clamped to max_scale and restored at the end. Default is null.
-	max_scale     = null
+	max_scale       = null
 	// Do suicides count for points? Default is false
 	allow_suicide   = null	
 	// Allow backstabs with any weapon
