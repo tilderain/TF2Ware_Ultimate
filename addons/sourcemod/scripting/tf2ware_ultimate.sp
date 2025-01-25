@@ -11,7 +11,7 @@
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
 // if changing this, change it in VScript's config.nut too
-#define PLUGIN_VERSION "1.2.0"
+#define PLUGIN_VERSION "1.2.1"
 
 public Plugin myinfo =
 {
@@ -279,9 +279,21 @@ void Disable(bool map_unload)
 
 public void OnClientPutInServer(int client)
 {
+	if (!g_Enabled)
+		return;
+		
 #if LOADOUT_WHITELISTER
 	LoadoutWhitelister_InitClient(client);
 #endif
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	if (!g_Enabled)
+		return;
+	
+	// allow admins to use dev commands
+	SetEntProp(client, Prop_Data, "m_autoKickDisabled", 1);
 }
 
 public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
