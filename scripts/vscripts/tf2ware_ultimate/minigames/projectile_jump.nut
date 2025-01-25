@@ -1,8 +1,8 @@
 mode_infos <- 
 [
 	[ "Needle jump!",       "needle_jump",        480.0],
-	[ "Rocket jump!",       "rocket_jump",        512.0],
-	[ "Sticky jump!",       "sticky_jump",        512.0],
+	[ "Rocket jump!",       "rocket_jump",        384.0],
+	[ "Sticky jump!",       "sticky_jump",        384.0],
 	[ "Sentry jump!",       "sentry_jump",        384.0],
 	[ "Flare jump!",        "flare_jump",         400.0],
 	[ "Short Circuit jump!", "shortcircuit_jump", 384.0],
