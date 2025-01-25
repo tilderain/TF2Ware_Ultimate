@@ -4,11 +4,13 @@
 
 #define SLOT_MELEE 2
 #define SLOT_WEARABLES 7
-#define SLOT_TAUNTS 11
+#define SLOT_TAUNT1 11
+#define SLOT_TAUNT8 18
 
 ConVar mp_tournament;
 ConVar mp_tournament_whitelist;
 ConVar loadoutwhitelister_enable;
+ConVar loadoutwhitelister_taunts;
 
 bool loadoutwhitelister_init = false;
 public bool script_allow_loadout = false;
@@ -50,6 +52,7 @@ public void LoadoutWhitelister_Start(GameData gamedata)
 	mp_tournament_whitelist.GetString(g_SavedTournamentWhitelist, sizeof(g_SavedTournamentWhitelist));
 	mp_tournament_whitelist.SetString("cfg/tf2ware_ultimate/item_whitelist.cfg"); // TODO: don't hardcode this here?
 	loadoutwhitelister_enable = CreateConVar("loadoutwhitelister_enable", "1", "");
+	loadoutwhitelister_taunts = CreateConVar("loadoutwhitelister_taunts", "4", "Allow up to N amount of taunts (0 for none)");
 	
 	AddCommandListener(ListenerTournamentRestart, "mp_tournament_restart");
 	
@@ -154,9 +157,12 @@ static MRESReturn DHookPre_CTFPlayerGetLoadoutItem(int client, DHookReturn ret, 
 	if (g_InitClass && loadoutwhitelister_enable.BoolValue && !script_allow_loadout)
 	{
 		int slot = param.Get(2);
-		// remove weapons (except melee) and taunts, keep wearables (whitelist will kill those)
-		// TODO: measure impact of having taunts
-		if (slot == SLOT_MELEE || (slot >= SLOT_WEARABLES && slot < SLOT_TAUNTS))
+		// remove weapons (except melee)
+		// keep up to N taunts (defined by convar)
+		// keep wearables (whitelist will kill those)
+		if (slot == SLOT_MELEE 
+			|| (slot >= SLOT_WEARABLES 
+				&& slot < (SLOT_TAUNT1 + loadoutwhitelister_taunts.IntValue)))
 		{
 		}
 		else
