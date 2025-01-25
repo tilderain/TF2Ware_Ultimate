@@ -28,6 +28,9 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Necro Smasher")
 	foreach (player in Ware_MinigamePlayers)
 	{
+		// make melees pass through
+		player.AddSolidFlags(FSOLID_NOT_SOLID)
+		
 		local target = player // need this to make squirrel happy
 		Ware_CreateTimer(@() SpawnJack(target), RandomFloat(0.2, 0.3))
 	}
@@ -79,4 +82,10 @@ function OnTakeDamage(params)
 			}
 		}
 	}
+}
+
+function OnCleanup()
+{
+	foreach (player in Ware_MinigamePlayers)
+		player.RemoveSolidFlags(FSOLID_NOT_SOLID)
 }

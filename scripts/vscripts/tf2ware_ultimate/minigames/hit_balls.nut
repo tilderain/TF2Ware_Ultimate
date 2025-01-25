@@ -57,6 +57,10 @@ function OnTeleport(players)
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Necro Smasher")
+	
+	// make melees pass through
+	foreach (player in Ware_MinigamePlayers)
+		player.AddSolidFlags(FSOLID_NOT_SOLID)
 
 	local beam = Ware_CreateEntity("env_beam")
 	beam.SetOrigin(Ware_MinigameLocation.center + Vector(-1000, 0, 64))
@@ -134,4 +138,10 @@ function OnEnd()
 				Ware_PassPlayer(player, true)
 		}
 	}
+}
+
+function OnCleanup()
+{
+	foreach (player in Ware_MinigamePlayers)
+		player.RemoveSolidFlags(FSOLID_NOT_SOLID)
 }
