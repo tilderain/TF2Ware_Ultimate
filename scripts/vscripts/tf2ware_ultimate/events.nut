@@ -221,11 +221,15 @@ function OnGameEvent_teamplay_round_start(params)
 	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
 	local delay = 0.0
 	
+	// double the chance after playing 3 rounds
+	local extra_chance = (Ware_SpecialRoundChance && > 1 Ware_RoundsPlayed >= 3) ? 2 : 1
+	local special_round_chance = Ware_SpecialRoundChance / extra_chance
+	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
 		(Ware_RoundsPlayed > 0
 		&& !Ware_SpecialRoundPrevious
-		&& Ware_SpecialRoundChance != 0
-		&& RandomInt(1, Ware_SpecialRoundChance) == Ware_SpecialRoundChance))
+		&& special_round_chance != 0
+		&& RandomInt(1, special_round_chance) == special_round_chance))
 	{
 		delay = Ware_GetThemeSoundDuration("special_round")
 		Ware_BeginSpecialRound()
