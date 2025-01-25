@@ -20,7 +20,19 @@ minigame <- Ware_MinigameData
 function OnTeleport(players)
 {
 	local radius = ((Ware_MinigameLocation.maxs.x - Ware_MinigameLocation.mins.x) * 0.5) - 76.0
-	Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, 1024), radius)
+	local height = 1024.0
+	if (players.len() >= 24)
+	{
+		// split into 2 circles
+		local half1 = players.filter(@(i, player) i % 2 == 0)
+		local half2 = players.filter(@(i, player) i % 2 != 0)
+		Ware_TeleportPlayersCircle(half1, Ware_MinigameLocation.center + Vector(0, 0, height), radius)
+		Ware_TeleportPlayersCircle(half2, Ware_MinigameLocation.center + Vector(0, 0, height + 256.0), radius)
+	}
+	else
+	{
+		Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, height), radius)
+	}
 }
 
 function OnStart()
