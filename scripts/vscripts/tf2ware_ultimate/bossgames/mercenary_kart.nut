@@ -47,6 +47,7 @@ race_max_laps       <- 3
 race_sequence       <- 0
 race_results        <- []
 race_finish_timer   <- null
+race_bonus_players  <- []
 
 itembox_respawn_time <- 0.0
 item_shock_timer     <- 0.0
@@ -553,10 +554,11 @@ function RaceShowResult()
 			if (pos <= win_threshold)
 			{
 				Ware_PassPlayer(player, true)
-				
+
 				// bonus for getting top 3 with more than 24 racers
+				// NOTE; not awarding bonus immediately because the callback breaks the generator
 				if (i <= 2 && Ware_MinigamePlayers.len() > 24)
-					Ware_GiveBonusPoints(player)
+					race_bonus_players.append(player)
 			}
 		}
 		
@@ -617,6 +619,11 @@ function RaceResults()
 		if (delay != null)
 			return delay		
 		game_over = true
+		foreach (player in race_bonus_players)
+		{
+			if (player.IsValid())
+				Ware_GiveBonusPoints(player)
+		}
 	}, 0.5)
 }
 
