@@ -169,7 +169,7 @@ function OnStart()
 
 function OnTeleport(players)
 {
-	local slender_count = Clamp(ceil(players.len() / 8.0).tointeger(), 1, 2)
+	local slender_count = Clamp(ceil(players.len() / 10.0).tointeger(), 1, 3)
 	for (local i = 0; i < slender_count; i++)
 		slenders.append(RemoveRandomElement(players))
 	
