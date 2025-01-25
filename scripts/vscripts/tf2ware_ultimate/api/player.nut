@@ -475,11 +475,12 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	player.SetPlayerClass(player_class)
 	player.Regenerate(true)
 	player.SetCustomModel(GetPropString(player, "m_PlayerClass.m_iszCustomModel"))
-	player.SetHealth(player.GetMaxHealth())
 
 	local melee = Ware_ParseLoadout(player)
 	if (melee)
 		Ware_ModifyMeleeAttributes(melee)
+		
+	player.SetHealth(player.GetMaxHealth())
 	
 	// teleport effect gets cleared on class change, need to recreate it here
 	// creating timers is expensive so avoid doing that for every player
