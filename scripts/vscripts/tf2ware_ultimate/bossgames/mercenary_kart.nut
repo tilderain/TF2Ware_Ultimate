@@ -17,7 +17,7 @@ minigame <- Ware_MinigameData
 	name           = "Mercenary kart"
 	author         = "ficool2"
 	description    = "Complete 3 laps faster than your opponents!"
-	duration       = 600.0
+	duration       = 360.0
 	location       = "waluigi_pinball"
 	music          = null
 	custom_overlay = ""
@@ -637,10 +637,10 @@ function RaceCheckFinishers()
 			{
 				if (race_sequence == 4)
 				{
-					Ware_ChatPrint(null, "The race has ended because the winner was decided more than 60 seconds ago")
+					Ware_ChatPrint(null, "The race has ended because the winner was decided more than 30 seconds ago")
 					RaceEnd()
 				}
-			}, 60.0)
+			}, 30.0)
 		}
 		
 		kart.Finish()
