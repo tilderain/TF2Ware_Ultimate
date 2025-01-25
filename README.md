@@ -77,7 +77,7 @@ Once you are done, add the file's name to the `minigames.cfg`/`bossgames.cfg`/`s
 
 Note that minigames, bossgames  and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one (type `!ware_help` in chat).
 
-The text overlays for minigames and bossgames are static images. To generate one, run the `generate_text` Python script in the `tools` folder. This will automatically place all the materials and textures in the correct folder.
+The text overlays for minigames and bossgames are static images. To generate one, run the `generate_text` Python script in the `tools` folder. This will automatically place all the materials and textures in the correct folder. Note if you are not using custom_overlay, the overlay must have the same file name as the minigame/bossgame .nut. There are also some common overlays in materials/hud/tf2ware_ultimate (such as get_end for any "course" minigames).
 
 ## Credits
 Type `!ware_credits` in chat for a list of contributors in console.
