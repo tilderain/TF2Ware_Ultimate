@@ -1505,7 +1505,7 @@ function Ware_StartMinigameInternal(is_boss)
 		{
 			foreach (player in Ware_MinigamePlayers) 
 				player.RemoveFlag(FL_FROZEN)
-		}, 0.3)
+		}, 0.5)
 	}
 	
 	local custom_teleport = "OnTeleport" in Ware_MinigameScope
