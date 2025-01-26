@@ -678,6 +678,10 @@ function Ware_ParseLoadout(player)
 			melee = weapon
 			data.melee = weapon
 			data.melee_index = i
+
+			// disable half-zatoichi honourbound
+			if(weapon.GetName() == "tf_weapon_katana")
+				SetPropInt(player, "m_Shared.m_iKillCountSinceLastDeploy", 1)
 		}
 		else if (!Ware_AllowLoadouts)
 		{
