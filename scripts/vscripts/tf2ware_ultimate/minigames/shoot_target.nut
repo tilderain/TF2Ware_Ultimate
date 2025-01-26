@@ -7,7 +7,7 @@ minigame <- Ware_MinigameData
 	author         = ["Gemidyne", "ficool2"]
 	description    = format("Shoot the %s target!", target_class)
 	location       = "targetrange"
-	duration       = 4.5
+	duration       = 5.0
 	music          = "cheerful"
 	custom_overlay = "shoot_target_" + target_class.tolower()
 })
