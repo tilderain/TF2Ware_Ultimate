@@ -79,6 +79,10 @@ Ware_DevCommands <-
 				Ware_DebugNextSpecialRound = "double_trouble"
 				Ware_DebugNextSpecialRound2 = [args[0], args[1]]
 			}
+			else if (args[0] == "any")
+			{
+				Ware_ForceSpecialRound()
+			}
 			else
 			{
 				Ware_DebugNextSpecialRound = args[0]

@@ -272,6 +272,7 @@ if (!("Ware_Precached" in this))
 	Ware_SpecialRoundSavedConvars <- {}
 	Ware_SpecialRoundEvents       <- []
 	Ware_SpecialRoundPrevious     <- false
+	Ware_SpecialRoundNext         <- false
 	Ware_SpecialRoundCategories   <- {}
 	
 	Ware_AnnotationIDs            <- 0

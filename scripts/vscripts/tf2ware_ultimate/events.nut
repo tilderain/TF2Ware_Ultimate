@@ -226,11 +226,13 @@ function OnGameEvent_teamplay_round_start(params)
 	local special_round_chance = Ware_SpecialRoundChance / extra_chance
 	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
+		Ware_SpecialRoundNext ||
 		(Ware_RoundsPlayed > 0
 		&& !Ware_SpecialRoundPrevious
 		&& special_round_chance != 0
 		&& RandomInt(1, special_round_chance) == special_round_chance))
 	{
+		Ware_SpecialRoundNext = false
 		delay = Ware_GetThemeSoundDuration("special_round")
 		Ware_BeginSpecialRound()
 	}

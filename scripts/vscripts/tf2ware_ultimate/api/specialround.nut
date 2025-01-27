@@ -162,6 +162,12 @@ function Ware_EndSpecialRound()
 	Ware_EndSpecialRoundInternal()
 }
 
+// Forces next round to be a special round
+function Ware_ForceSpecialRound()
+{
+	Ware_SpecialRoundNext = true
+}
+
 // Checks if given special round is set by filename
 // This also checks for Double Trouble's two special rounds
 function Ware_IsSpecialRoundSet(file_name)
