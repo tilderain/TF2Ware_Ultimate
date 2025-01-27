@@ -218,19 +218,14 @@ function OnGameEvent_teamplay_round_start(params)
 	foreach (minigame in Ware_Minigames)
 		Ware_MinigameRotation.append(minigame)
 	
+	// special rounds always occur every N rounds
 	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
 	local delay = 0.0
 	
-	// double the chance after playing 3 rounds
-	local extra_chance = (Ware_SpecialRoundChance > 1 && Ware_RoundsPlayed >= 3) ? 2 : 1
-	local special_round_chance = Ware_SpecialRoundChance / extra_chance
-	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
 		Ware_SpecialRoundNext ||
-		(Ware_RoundsPlayed > 0
-		&& !Ware_SpecialRoundPrevious
-		&& special_round_chance != 0
-		&& RandomInt(1, special_round_chance) == special_round_chance))
+		(!Ware_SpecialRoundPrevious &&
+			(Ware_RoundsPlayed + 1) % Ware_SpecialRoundInterval == 0))
 	{
 		Ware_SpecialRoundNext = false
 		delay = Ware_GetThemeSoundDuration("special_round")
