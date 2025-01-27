@@ -433,7 +433,7 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	{
 		if (item_id != 28) // toolbox
 		{
-			if (item_id == 25 || item_id == 27) // construction pda
+			if (Ware_DelayPDASwitch && (item_id == 25 || item_id == 27)) // construction pda
 			{
 				// build/disguise menu will not show up unless its holstered for a bit
 				// NOTE; avoid switching to PDAs if possible as it's only 99% reliable even with this much delay
@@ -461,6 +461,11 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	
 	return weapon
 }
+
+// Players that are force switched to PDAs not show the menu unless given with a delay
+// Set this to true and revert back to false before giving a weapon if you want to show the menu
+// Note this is not reliable depending on lag, and may sometimes still not show the menu
+Ware_DelayPDASwitch <- false
 
 // Sets the player's class, and regenerates their health, ammo, melee etc
 // If "switch_melee" is true, the player will be switched to their new melee
