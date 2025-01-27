@@ -109,6 +109,6 @@ function Ware_LoadConfig()
 const WARE_MUSICVERSION = 2
 
 // keep in sync with sourcemod plugin
-const WARE_PLUGINVERSION = "1.2.1"
+const WARE_PLUGINVERSION = "1.2.2"
 
 Ware_LoadConfig()

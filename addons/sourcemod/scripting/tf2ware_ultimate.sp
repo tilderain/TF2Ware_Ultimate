@@ -11,7 +11,10 @@
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
 // if changing this, change it in VScript's config.nut too
-#define PLUGIN_VERSION "1.2.1"
+#define PLUGIN_VERSION "1.2.2"
+
+// unused event repurposed for vscript <-> sourcemod communication
+#define PROXY_EVENT "tf_map_time_remaining"
 
 public Plugin myinfo =
 {
@@ -200,7 +203,7 @@ void Enable()
 
 	
 	// unused event repurposed for vscript <-> sourcemod communication
-	HookEvent("player_rematch_change", ListenerVScript, EventHookMode_Pre);
+	HookEvent(PROXY_EVENT, ListenerVScript, EventHookMode_Pre);
 
 	char name[64];
 	char description[128];
@@ -253,7 +256,7 @@ void Disable(bool map_unload)
 	
 	UnhookConVarChange(sv_cheats, OnCheatsChanged);
 	
-	UnhookEvent("player_rematch_change", ListenerVScript, EventHookMode_Pre);
+	UnhookEvent(PROXY_EVENT, ListenerVScript, EventHookMode_Pre);
 	
 	// OnPluginEnd will clear these automatically
 	if (map_unload)

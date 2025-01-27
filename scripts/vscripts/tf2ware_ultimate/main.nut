@@ -1,56 +1,6 @@
 // by ficool2 and pokemonpasta
 
-function Ware_CheckPlugin()
-{
-	Ware_PluginVersion = Convars.GetStr("ware_version")
-	if (IsDedicatedServer() || Ware_PluginVersion != null)
-	{
-		Ware_Plugin = true
-		if (Ware_PluginVersion == null)
-		{
-			ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + Ware_NeedsPluginMsg)
-			printl(Ware_NeedsPluginMsg)
-			Ware_NeedsPlugin = true
-		}
-		else
-		{
-			Ware_NeedsPlugin = false
-			printl("\tVScript: TF2Ware Ultimate linked to SourceMod plugin")
-		}
-	}
-}
-
-function Ware_CheckPluginOutdated()
-{
-	if (Ware_PluginVersion == null)
-		return
-	
-	Ware_PluginOutdated = Ware_PluginVersion != WARE_PLUGINVERSION
-	if (Ware_PluginOutdated)
-	{
-		local msg = format(Ware_PluginOutdatedMsg, WARE_PLUGINVERSION, Ware_PluginVersion)
-		ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + msg)
-		printl(msg)
-	}
-}
-
-if (!("Ware_Plugin" in this))
-{
-	Ware_Plugin <- false
-	Ware_PluginVersion <- ""
-	Ware_PluginOutdated <- false
-	Ware_NeedsPlugin <- false
-	Ware_NeedsPluginMsg <- "** TF2Ware Ultimate requires the SourceMod plugin installed on dedicated servers"
-	Ware_PluginOutdatedMsg <- "** SourceMod plugin version is outdated. Expected version %s, got %s"
-	Ware_CheckPlugin()
-	printl("\tVScript: TF2Ware Ultimate Started")
-}
-else if (Ware_NeedsPlugin)
-{
-	Ware_CheckPlugin()
-}
-
-Ware_CheckPluginOutdated()
+Ware_LinkPlugin()
 
 // force a game restart if an error occurs while inside code marked as "critical"
 Ware_CriticalZone <- false
