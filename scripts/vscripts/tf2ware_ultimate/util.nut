@@ -726,6 +726,12 @@ function PlaySoundOnAllClients(name, volume = 1.0, pitch = 100, flags = 0)
 	})
 }
 
+// Returns true if the handle is the "fake" player for SourceTV or replays
+function IsPlayerSourceTV(player)
+{
+	return PlayerInstanceFromIndex(player.entindex()) == null
+}
+
 // Gets a player's chat name
 function GetPlayerName(player)
 {

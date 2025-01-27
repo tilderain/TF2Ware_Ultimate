@@ -318,6 +318,27 @@ function OnGameEvent_recalculate_truce(params)
 	}
 }
 
+::Ware_PlayerInit <- function()
+{
+	local player = self
+	MarkForPurge(player)
+	
+	// don't include SourceTV because it's not a real player
+	printl(IsPlayerSourceTV(player))
+	if (IsPlayerSourceTV(player))
+		return
+		
+	player.ValidateScriptScope()
+	local scope = player.GetScriptScope()
+	scope.ware_data <- Ware_PlayerData(player)
+	scope.ware_minidata <- {}
+	scope.ware_specialdata <- {}
+	Ware_Players.append(player)
+	Ware_PlayersData.append(scope.ware_data)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_connect.IsValid())
+		Ware_SpecialRound.cb_on_player_connect(player)		
+}
+
 ::Ware_PlayerPostSpawn <- function()
 {
 	if (Ware_TimeScale != 1.0)
@@ -347,21 +368,11 @@ function OnGameEvent_player_spawn(params)
 	if (player == null)
 		return
 	
-	if (Ware_Players.find(player) == null)
+	if (params.team == TEAM_UNASSIGNED)
 	{
-		MarkForPurge(player)
-		player.ValidateScriptScope()
-		local scope = player.GetScriptScope()
-		scope.ware_data <- Ware_PlayerData(player)
-		scope.ware_minidata <- {}
-		scope.ware_specialdata <- {}
-		Ware_Players.append(player)
-		Ware_PlayersData.append(scope.ware_data)
-		if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_connect.IsValid())
-			Ware_SpecialRound.cb_on_player_connect(player)
-			
-		if (params.team == TEAM_UNASSIGNED)
-			return
+		// delay this to end of frame as SourceTV won't be registered here yet
+		EntityEntFire(player, "CallScriptFunction", "Ware_PlayerInit", 0.0)
+		return
 	}
 	
 	local data = player.GetScriptScope().ware_data
