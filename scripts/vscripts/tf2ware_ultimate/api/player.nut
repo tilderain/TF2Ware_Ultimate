@@ -421,12 +421,15 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	// bit of a hack: penetration is required for friendlyfire to work
 	if (startswith(item_classname, "tf_weapon_sniperrifle"))
 		weapon.AddAttribute("projectile penetration", 1, -1)
-	
-	foreach (attribute, value in attributes)
-		weapon.AddAttribute(attribute, value, -1.0)
+		
+	// this is to give people more time to react
+	weapon.AddAttribute("deploy time increased", 1.5, -1)
 		
 	// prevent thriller taunt
 	weapon.AddAttribute("special taunt", 1, -1)
+	
+	foreach (attribute, value in attributes)
+		weapon.AddAttribute(attribute, value, -1.0)
 
 	player.Weapon_Equip(weapon)
 	if (switch_weapon)
