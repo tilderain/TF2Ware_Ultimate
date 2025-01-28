@@ -128,9 +128,10 @@ const TF_COLOR_RED     = "FF3F3F"
 const TF_COLOR_BLUE    = "99CCFF"
 const TF_COLOR_SPEC    = "CCCCCC"
 
-const CHANNEL_MINIGAME     = 2
-const CHANNEL_SPECIALROUND = 3
-const CHANNEL_MISC         = 1
+// skipping channel 0 and 1 to reduce chance of conflicts with sourcemod plugins
+const CHANNEL_MINIGAME     = 3
+const CHANNEL_SPECIALROUND = 4
+const CHANNEL_MISC         = 2
 
 const SFX_WARE_FIREWORKS = "Summer.Fireworks"
 const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
