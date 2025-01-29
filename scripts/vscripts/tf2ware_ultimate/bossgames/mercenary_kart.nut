@@ -311,7 +311,12 @@ function OnTeleport(players)
 		karts.append(kart)
 	}
 	
-	itembox_respawn_time = players.len() > 12 ? 1.5 : 3.0
+	if (players.len() > 24)
+		itembox_respawn_time = 0.75
+	else if (players.len() > 12)
+		itembox_respawn_time = 1.5
+	else
+		itembox_respawn_time = 3.0
 }
 
 function OnStart()
