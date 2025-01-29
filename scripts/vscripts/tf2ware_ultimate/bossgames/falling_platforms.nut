@@ -178,7 +178,14 @@ function OnTeleport(players)
 function LowerPlatform()
 {
 	local hex = RemoveRandomElement(hexes)
-	EntityAcceptInput(hex.entity, "Open")
+	
+	EntityEntFire(hex.entity, "Color", "255 50 50", 0.0)
+	EntityEntFire(hex.entity, "Color", "255 255 255", 0.5)
+	EntityEntFire(hex.entity, "Color", "255 50 50", 1.0)
+	EntityEntFire(hex.entity, "Color", "255 255 255", 1.5)
+	EntityEntFire(hex.entity, "Color", "255 50 50", 2.0)
+	EntityEntFire(hex.entity, "Color", "255 255 255", 2.5)
+	EntityEntFire(hex.entity, "Open", "", 2.5)
 	
 	if (hexes.len() > 1)
 		return lower_delay
