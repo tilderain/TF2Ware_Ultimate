@@ -432,6 +432,46 @@ function FloatToTimeFormat(time)
 	return format("%02d:%02d:%03d", minutes, seconds, milliseconds)
 }
 
+function CollectGameEventsInScope(scope)
+{
+	local events = []
+	local event_prefix = "OnGameEvent_"
+	local event_prefix_len = event_prefix.len()
+	foreach (key, value in scope)
+	{
+		if (typeof(value) == "function"
+			&& typeof(key) == "string"
+			&& key.find(event_prefix, 0) == 0)
+		{
+				local event_name = key.slice(event_prefix_len)
+				if (event_name.len() > 0)
+				{
+					if (!(event_name in GameEventCallbacks))
+					{
+						GameEventCallbacks[event_name] <- []
+						RegisterScriptGameEventListener(event_name)
+					}
+					
+					GameEventCallbacks[event_name].push(scope)
+					events.append(event_name)
+				}
+		}
+	}	
+	return events
+}
+
+function ClearGameEventsFromScope(scope, events)
+{
+	foreach (event_name in events)
+	{
+		local callbacks = GameEventCallbacks[event_name]
+		local idx = callbacks.find(scope)
+		if (idx != null)
+			callbacks.remove(idx)
+	}
+	events.clear()
+}
+
 // Marks an entity as purged for the stringtable
 // For internal use only
 function MarkForPurge(entity)

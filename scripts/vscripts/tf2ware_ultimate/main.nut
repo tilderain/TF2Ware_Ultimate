@@ -1054,26 +1054,8 @@ function Ware_BeginSpecialRoundInternal()
 				if (special_round.allow_damage)
 					Ware_ToggleTruce(false)
 				
-				local event_prefix = "OnGameEvent_"
-				local event_prefix_len = event_prefix.len()
-				foreach (key, value in Ware_SpecialRoundScope)
-				{
-					if (typeof(value) == "function" && typeof(key) == "string" && key.find(event_prefix, 0) == 0)
-					{
-							local event_name = key.slice(event_prefix_len)
-							if (event_name.len() > 0)
-							{
-								if (!(event_name in GameEventCallbacks))
-								{
-									GameEventCallbacks[event_name] <- []
-									RegisterScriptGameEventListener(event_name)
-								}
-								
-								GameEventCallbacks[event_name].push(Ware_SpecialRoundScope)
-								Ware_SpecialRoundEvents.append(event_name)
-							}
-					}
-				}
+				// TODO this doesn't work with double_trouble
+				Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
 			}, end_time)
 		}
 		else
@@ -1097,9 +1079,7 @@ function Ware_EndSpecialRoundInternal()
 		SetConvarValue(name, value)
 	Ware_SpecialRoundSavedConvars.clear()
 	
-	foreach (event_name in Ware_SpecialRoundEvents)
-		GameEventCallbacks[event_name].pop()
-	Ware_SpecialRoundEvents.clear()
+	ClearGameEventsFromScope(Ware_SpecialRoundScope, Ware_SpecialRoundEvents)
 	
 	foreach(player in Ware_Players)
 	{
@@ -1494,26 +1474,7 @@ function Ware_StartMinigameInternal(is_boss)
 		Ware_MinigameScope.OnStart()	
 	Ware_BlockPassEffects = false
 
-	local event_prefix = "OnGameEvent_"
-	local event_prefix_len = event_prefix.len()
-	foreach (key, value in Ware_MinigameScope)
-	{
-		if (typeof(value) == "function" && typeof(key) == "string" && startswith(key, event_prefix))
-		{
-				local event_name = key.slice(event_prefix_len)
-				if (event_name.len() > 0)
-				{
-					if (!(event_name in GameEventCallbacks))
-					{
-						GameEventCallbacks[event_name] <- []
-						RegisterScriptGameEventListener(event_name)
-					}
-					
-					GameEventCallbacks[event_name].push(Ware_MinigameScope)
-					Ware_MinigameEvents.append(event_name)
-				}
-		}
-	}
+	Ware_MinigameEvents = CollectGameEventsInScope(Ware_MinigameScope)
 	
 	Ware_TextManager.KeyValueFromFloat("holdtime", Ware_Minigame.duration + Ware_Minigame.end_delay)
 	
@@ -1830,10 +1791,8 @@ function Ware_FinishMinigameInternal()
 				player.AddCond(TF_COND_TELEPORTED)
 	}, 0.25)
 
-	foreach (event_name in Ware_MinigameEvents)
-		GameEventCallbacks[event_name].pop()
-	Ware_MinigameEvents.clear()
-		
+	ClearGameEventsFromScope(Ware_MinigameScope, Ware_MinigameEvents)
+
 	foreach (entity in Ware_Minigame.entities)
 	{
 		if (entity.IsValid())
