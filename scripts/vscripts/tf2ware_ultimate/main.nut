@@ -1622,7 +1622,9 @@ function Ware_FinishMinigameInternal()
 		}
 			
 		if (player.IsAlive())
-		{
+		{		
+			player_count++
+		
 			local melee
 			if (data.special_melee)
 				melee = data.special_melee
@@ -1646,11 +1648,10 @@ function Ware_FinishMinigameInternal()
 			Ware_StripPlayer(player, true)
 		}
 		else if (!Ware_SpecialRound || Ware_SpecialRound.cb_can_player_respawn(player) != false)
-		{
+		{	
+			player_count++
 			respawn_players.append(player)
 		}
-		
-		player_count++
 	}
 
 	Ware_CheckHomeLocation(player_count)
