@@ -64,7 +64,13 @@ Pull requests to add new minigames, bossgames, special rounds or themes are welc
 Getting started with creating a new one is easy.
 
 ### Getting started
-First, go into `scripts/vscripts/tf2ware_ultimate` and then pick either `minigames`, `bossgames` or `specialrounds`.
+To get started, you will need to load the unpacked map of TF2Ware Ultimate, so you can modify assets and scripts easily.
+
+First, download this repository into your TF2's `custom` folder. 
+
+The repo comes with a built BSP without packed content. Type `map tf2ware_ultimate` in console to load this.
+
+Now, go into `scripts/vscripts/tf2ware_ultimate` and then pick either `minigames`, `bossgames` or `specialrounds`.
 Create a new .nut file there.
 
 Next, for a minigame/bossgame (note that TF2Ware stores them in the same way), create a `Ware_MinigameData` definition. If making a special round, create a `Ware_SpecialRoundData` definition instead. Look at the other scripts in the same folder for plenty of examples.

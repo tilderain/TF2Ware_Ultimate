@@ -153,9 +153,10 @@ class Ware_SpecialRoundData
 }
 
 // Rolls and starts a special round
+// Returns true if a special round was successfully rolled
 function Ware_BeginSpecialRound()
 {
-	Ware_BeginSpecialRoundInternal()
+	return Ware_BeginSpecialRoundInternal()
 }
 
 // Ends the current special round if present

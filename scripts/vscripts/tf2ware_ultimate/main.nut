@@ -830,17 +830,6 @@ function Ware_GetOverlays(overlays)
 	else
 		return [FixupOverlay(overlays)]
 }
-	
-function Ware_IsSpecialRoundValid(str)
-{
-	foreach(round in Ware_SpecialRounds)
-	{
-		if (round == str)
-			return true
-	}
-	
-	return false
-}
 
 function Ware_GetSpecialRoundName()
 {
@@ -944,7 +933,6 @@ function Ware_BeginSpecialRoundInternal()
 	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
 	
-	local try_debug = true
 	local attempts = 0
 	local round
 	
@@ -953,35 +941,20 @@ function Ware_BeginSpecialRoundInternal()
 		round = null
 		
 		local is_forced = false
-		if (try_debug)
+		if (Ware_DebugNextSpecialRound.len() > 0)
 		{
-			if(Ware_DebugNextSpecialRound.len() > 0)
-			{
-				if (Ware_IsSpecialRoundValid(Ware_DebugNextSpecialRound))
-				{
-					round = Ware_DebugNextSpecialRound
-					Ware_DebugNextSpecialRound = ""
-					is_forced = true
-				}
-				else
-				{
-					Ware_Error("No special round named %s was found. Picking another round instead.", Ware_DebugNextSpecialRound)
-					Ware_DebugNextSpecialRound = ""
-					is_forced = false
-				}
-			}
-			
-			try_debug = false
-		}
-		
-		if (!is_forced)
+			round = Ware_DebugNextSpecialRound
+			Ware_DebugNextSpecialRound = ""
+			is_forced = true
+		}		
+		else
 		{
 			if (Ware_SpecialRoundRotation.len() == 0)
 			{
 				if (Ware_SpecialRounds.len() == 0)
 				{
 					Ware_Error("Special Round rotation is empty")
-					return
+					return false
 				}
 				
 				Ware_SpecialRoundRotation = Ware_SpecialRounds
@@ -998,7 +971,7 @@ function Ware_BeginSpecialRoundInternal()
 	if (!Ware_SpecialRoundScope)
 	{
 		Ware_Error("No valid special round found to pick. There may not be enough minimum players")
-		return
+		return false
 	}	
 	
 	Ware_SpecialRoundPrevious = true
@@ -1013,7 +986,7 @@ function Ware_BeginSpecialRoundInternal()
 	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
 	local reveal_duration = duration * 0.6
 	local start_interval = 0.5, end_interval = 0.05
-	local end_time = duration - reveal_duration
+	local end_duration = duration - reveal_duration
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
 	local special_round = Ware_SpecialRoundScope.special_round
@@ -1024,11 +997,15 @@ function Ware_BeginSpecialRoundInternal()
 		local t = RemapValClamped(time, start_time + duration * 0.3, time + reveal_duration, 0.0, 1.0)
 		local interval = Lerp(0.05, 0.5, pow(t * 4.0, 2.5))
 		
-		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds).toupper(), interval * 2.0)
+		local finished = time - start_time > reveal_duration
+		local text_duration = interval
+		if (!finished)
+			text_duration *= 2.0
+		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds).toupper(), text_duration)
 		
-		if (time - start_time > reveal_duration)
+		if (finished)
 		{
-			Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, special_round.name.toupper(), end_time)
+			Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, special_round.name.toupper(), end_duration)
 			
 			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, special_round.name, TF_COLOR_DEFAULT, special_round.description)
 			
@@ -1047,8 +1024,6 @@ function Ware_BeginSpecialRoundInternal()
 					SetConvarValue(name, value)
 				}
 				
-				CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)
-				
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
 					
@@ -1057,7 +1032,14 @@ function Ware_BeginSpecialRoundInternal()
 				
 				// TODO this doesn't work with double_trouble
 				Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
-			}, end_time)
+					
+				CreateTimer(function() 
+				{
+					Ware_ShowSpecialRoundText(Ware_Players)
+					Ware_BeginIntermission(false)
+				}, 0.0)
+			
+			}, end_duration - 1.0) // hack: more closely syncs up with the theme
 		}
 		else
 		{
@@ -1066,6 +1048,7 @@ function Ware_BeginSpecialRoundInternal()
 	}, 0.0)
 	
 	Ware_CriticalZone = false
+	return true
 }
 
 function Ware_EndSpecialRoundInternal()
@@ -2026,6 +2009,15 @@ function Ware_OnUpdate()
 			}
 			data.horn_buttons = buttons
 		}
+		
+		local special_melee = data.special_melee
+		local special_vm = data.special_vm
+		if (special_melee && special_melee.IsValid())
+			SetPropBool(special_melee, "m_bBeingRepurposedForTaunt", true)
+		else
+			special_melee = null
+		if (special_vm && special_vm.IsValid())
+			special_vm.SetDrawEnabled(player.GetActiveWeapon() == special_melee)
 	}
 	
 	Ware_Minigame.cb_on_update()
