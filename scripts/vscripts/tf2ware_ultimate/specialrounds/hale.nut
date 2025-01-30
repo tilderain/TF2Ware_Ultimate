@@ -231,7 +231,7 @@ function OnPlayerVoiceline(player, voiceline)
 					local dist = VectorDistance(origin, victim.GetOrigin())
 					if (dist < 600.0)
 					{
-						activator.StunPlayer(duration, 0.75, TF_STUN_BY_TRIGGER, null)
+						victim.StunPlayer(duration, 0.75, TF_STUN_BY_TRIGGER, null)
 					}
 				}
 			}
