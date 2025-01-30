@@ -713,9 +713,16 @@ function Ware_ShowCredits(player, full)
 function Ware_RemovePlayerAttributeInternal(player, name)
 {
 	if (name == "voice pitch scale")
-		player.AddCustomAttribute(name, Ware_GetPitchFactor(), -1)
+	{
+		if (Ware_SpecialRound && Ware_SpecialRound.pitch_override >= 0)
+			player.AddCustomAttribute(name, Ware_SpecialRound.pitch_override, -1)
+		else
+			player.AddCustomAttribute(name, Ware_GetPitchFactor(), -1)
+	}
 	else
+	{
 		player.RemoveCustomAttribute(name)
+	}
 }
 
 function Ware_FixupPlayerWeaponSwitch()
@@ -1146,7 +1153,7 @@ function Ware_SetTimeScaleInternal(timescale)
 	Ware_TimeScale = timescale
 	
 	foreach (player in Ware_MinigamePlayers)
-		player.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
+		Ware_RemovePlayerAttributeInternal(player, "voice pitch scale")
 }
 
 function Ware_BeginBossInternal()
@@ -1982,6 +1989,29 @@ function Ware_OnUpdate()
 
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_update()
+	
+	if ((Ware_Minigame != null && Ware_Minigame.cb_on_player_voiceline.IsValid()) || (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_voiceline.IsValid()))
+	{
+		for (local scene; scene = FindByClassname(scene, "instanced_scripted_scene");)
+		{
+			scene.KeyValueFromString("classname", "ware_voiceline")
+			MarkForPurge(scene)
+			
+			local player = GetPropEntity(scene, "m_hOwner")
+			if (player)
+			{
+				local name = GetPropString(scene, "m_szInstanceFilename")
+				if (name.find("idleloop") == null && name.find("attack") == null)
+				{
+					if (Ware_Minigame != null && Ware_Minigame.cb_on_player_voiceline.IsValid())
+						Ware_Minigame.cb_on_player_voiceline(player, name.tolower())
+					
+					if(Ware_SpecialRound && Ware_SpecialRound.cb_on_player_voiceline.IsValid())
+						Ware_SpecialRound.cb_on_player_voiceline(player, name.tolower())
+				}
+			}
+		}
+	}
 		
 	if (Ware_Minigame == null)
 		return -1
@@ -2035,29 +2065,6 @@ function Ware_OnUpdate()
 				{
 					Ware_Minigame.cb_on_player_attack(player)
 					scope.last_fire_time = fire_time
-				}
-			}
-		}
-	}
-	
-	if (Ware_Minigame.cb_on_player_voiceline.IsValid() || (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_voiceline.IsValid()))
-	{
-		for (local scene; scene = FindByClassname(scene, "instanced_scripted_scene");)
-		{
-			scene.KeyValueFromString("classname", "ware_voiceline")
-			MarkForPurge(scene)
-			
-			local player = GetPropEntity(scene, "m_hOwner")
-			if (player)
-			{
-				local name = GetPropString(scene, "m_szInstanceFilename")
-				if (name.find("idleloop") == null && name.find("attack") == null)
-				{
-					if (Ware_Minigame.cb_on_player_voiceline.IsValid())
-						Ware_Minigame.cb_on_player_voiceline(player, name.tolower())
-					
-					if(Ware_SpecialRound && Ware_SpecialRound.cb_on_player_voiceline.IsValid())
-						Ware_SpecialRound.cb_on_player_voiceline(player, name.tolower())
 				}
 			}
 		}

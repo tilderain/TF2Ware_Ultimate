@@ -16,6 +16,7 @@ class Ware_SpecialRoundData
 		boss_count        = 1
 		boss_threshold    = Ware_BossThreshold
 		speedup_threshold = Ware_SpeedUpThreshold
+		pitch_override    = -1
 		
 		if (table)
 		{
@@ -62,6 +63,8 @@ class Ware_SpecialRoundData
 	boss_threshold           = null
 	// Amount of minigames played before a speedup, default is Ware_SpeedUpThreshold in config.nut
 	speedup_threshold        = null
+	// Override player voice pitch if set
+	pitch_override           = null
 	
 	// == Internal use only ==
 	file_name                = null

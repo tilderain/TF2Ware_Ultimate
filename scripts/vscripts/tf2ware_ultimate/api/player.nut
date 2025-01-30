@@ -730,8 +730,15 @@ function Ware_GetSortedScorePlayers(reverse)
 // Given attributes are removed automatically when the minigame ends
 function Ware_AddPlayerAttribute(player, name, value, duration)
 {
-	player.AddCustomAttribute(name, value, duration)
-	player.GetScriptScope().ware_data.attributes[name] <- value
+	if (name == "voice pitch scale" && Ware_SpecialRound && Ware_SpecialRound.pitch_override >= 0)
+	{
+		player.AddCustomAttribute(name, Ware_SpecialRound.pitch_override, -1)
+	}
+	else
+	{
+		player.AddCustomAttribute(name, value, duration)
+		player.GetScriptScope().ware_data.attributes[name] <- value
+	}
 }
 
 // Removes an attribute from the player
