@@ -1052,6 +1052,7 @@ if (!("TriggerHurtDisintegrateProxy" in this) || !TriggerHurtDisintegrateProxy.I
 {
 	// Spoof an item to create the disintegration effect
     TriggerHurtDisintegrateProxy <- CreateEntitySafe("tf_weapon_bat")
+	TriggerHurtDisintegrateProxy.KeyValueFromString("classname", "ware_disintegrate")
     SetPropInt(TriggerHurtDisintegrateProxy, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 349)
     SetPropBool(TriggerHurtDisintegrateProxy, "m_AttributeManager.m_Item.m_bInitialized", true)
     TriggerHurtDisintegrateProxy.DispatchSpawn()
