@@ -953,7 +953,7 @@ function Ware_BeginSpecialRoundInternal()
 				if (Ware_SpecialRounds.len() == 0)
 				{
 					Ware_Error("Special Round rotation is empty")
-					return
+					return false
 				}
 				
 				Ware_SpecialRoundRotation = Ware_SpecialRounds
@@ -970,7 +970,7 @@ function Ware_BeginSpecialRoundInternal()
 	if (!Ware_SpecialRoundScope)
 	{
 		Ware_Error("No valid special round found to pick. There may not be enough minimum players")
-		return
+		return false
 	}	
 	
 	Ware_SpecialRoundPrevious = true
@@ -985,7 +985,7 @@ function Ware_BeginSpecialRoundInternal()
 	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
 	local reveal_duration = duration * 0.6
 	local start_interval = 0.5, end_interval = 0.05
-	local end_time = duration - reveal_duration
+	local end_duration = duration - reveal_duration
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
 	local special_round = Ware_SpecialRoundScope.special_round
@@ -996,11 +996,15 @@ function Ware_BeginSpecialRoundInternal()
 		local t = RemapValClamped(time, start_time + duration * 0.3, time + reveal_duration, 0.0, 1.0)
 		local interval = Lerp(0.05, 0.5, pow(t * 4.0, 2.5))
 		
-		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds).toupper(), interval * 2.0)
+		local finished = time - start_time > reveal_duration
+		local text_duration = interval
+		if (!finished)
+			text_duration *= 2.0
+		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds).toupper(), text_duration)
 		
-		if (time - start_time > reveal_duration)
+		if (finished)
 		{
-			Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, special_round.name.toupper(), end_time)
+			Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, special_round.name.toupper(), end_duration)
 			
 			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, special_round.name, TF_COLOR_DEFAULT, special_round.description)
 			
@@ -1019,8 +1023,6 @@ function Ware_BeginSpecialRoundInternal()
 					SetConvarValue(name, value)
 				}
 				
-				CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)
-				
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
 					
@@ -1029,7 +1031,14 @@ function Ware_BeginSpecialRoundInternal()
 				
 				// TODO this doesn't work with double_trouble
 				Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
-			}, end_time)
+					
+				CreateTimer(function() 
+				{
+					Ware_ShowSpecialRoundText(Ware_Players)
+					Ware_BeginIntermission(false)
+				}, 0.0)
+			
+			}, end_duration - 1.0) // hack: more closely syncs up with the theme
 		}
 		else
 		{
@@ -1038,6 +1047,7 @@ function Ware_BeginSpecialRoundInternal()
 	}, 0.0)
 	
 	Ware_CriticalZone = false
+	return true
 }
 
 function Ware_EndSpecialRoundInternal()

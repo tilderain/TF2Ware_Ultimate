@@ -220,7 +220,7 @@ function OnGameEvent_teamplay_round_start(params)
 	
 	// special rounds always occur every N rounds
 	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
-	local delay = 0.0
+	local begin_intermission = true
 	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
 		Ware_SpecialRoundNext ||
@@ -228,15 +228,17 @@ function OnGameEvent_teamplay_round_start(params)
 			(Ware_RoundsPlayed + 1) % Ware_SpecialRoundInterval == 0))
 	{
 		Ware_SpecialRoundNext = false
-		delay = Ware_GetThemeSoundDuration("special_round")
-		Ware_BeginSpecialRound()
+		if (Ware_BeginSpecialRound())
+			begin_intermission = false
 	}
 	else
 	{
 		Ware_SpecialRoundPrevious = false
 	}
 	
-	CreateTimer(@() Ware_BeginIntermission(false), delay)
+	// special rounds decide their own intermission delay
+	if (begin_intermission)
+		CreateTimer(@() Ware_BeginIntermission(false), 0.0)
 }
 
 // called only on mp_restartgame
