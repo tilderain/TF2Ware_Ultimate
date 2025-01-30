@@ -11,7 +11,10 @@
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
 // if changing this, change it in VScript's config.nut too
-#define PLUGIN_VERSION "1.2.1"
+#define PLUGIN_VERSION "1.2.2"
+
+// unused event repurposed for vscript <-> sourcemod communication
+#define PROXY_EVENT "tf_map_time_remaining"
 
 public Plugin myinfo =
 {
@@ -34,9 +37,11 @@ int g_CheatImpulses[] = { 76, 81, 82, 83, 101, 102, 103, 106, 107, 108, 195, 196
 
 int g_TextProxy = INVALID_ENT_REFERENCE;
 
+float g_ScriptPerfValue = 1.5;
 float g_AntiFloodValue = 0.0;
 
 ConVar host_timescale;
+ConVar vscript_perf_warning_spew_ms;
 ConVar sv_cheats;
 ConVar sm_flood_time;
 
@@ -186,21 +191,28 @@ void Enable()
 #endif
 
 	host_timescale = FindConVar("host_timescale");
+	vscript_perf_warning_spew_ms = FindConVar("vscript_perf_warning_spew_ms");
 	sv_cheats = FindConVar("sv_cheats");
 	sm_flood_time = FindConVar("sm_flood_time");
 	
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(1, true, false);
 	
+	// bump this because loading minigames from disk frequently takes a few ms and clogs the log
+	if (vscript_perf_warning_spew_ms.FloatValue < 10.0)
+	{
+		g_ScriptPerfValue = vscript_perf_warning_spew_ms.FloatValue;
+		vscript_perf_warning_spew_ms.SetFloat(10.0, false, false);
+	}
+	
 	HookConVarChange(sv_cheats, OnCheatsChanged);
 	
 	CreateConVar("ware_version", PLUGIN_VERSION, "TF2Ware Ultimate plugin version");
 	ware_cheats = CreateConVar("ware_cheats", "0", "Enable sv_cheats commands");
 	ware_log_cheats = CreateConVar("ware_log_cheats", "1", "Log cheat command attempts");
-
 	
 	// unused event repurposed for vscript <-> sourcemod communication
-	HookEvent("player_rematch_change", ListenerVScript, EventHookMode_Pre);
+	HookEvent(PROXY_EVENT, ListenerVScript, EventHookMode_Pre);
 
 	char name[64];
 	char description[128];
@@ -250,10 +262,11 @@ void Disable(bool map_unload)
 
 	host_timescale.SetFloat(1.0, true, false);
 	sv_cheats.SetInt(0, true, false);
+	vscript_perf_warning_spew_ms.SetFloat(g_ScriptPerfValue, false, false);
 	
 	UnhookConVarChange(sv_cheats, OnCheatsChanged);
 	
-	UnhookEvent("player_rematch_change", ListenerVScript, EventHookMode_Pre);
+	UnhookEvent(PROXY_EVENT, ListenerVScript, EventHookMode_Pre);
 	
 	// OnPluginEnd will clear these automatically
 	if (map_unload)

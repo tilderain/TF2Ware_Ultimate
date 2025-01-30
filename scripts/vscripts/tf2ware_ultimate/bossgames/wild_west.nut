@@ -134,7 +134,7 @@ function PlacePlayers(players)
 
 function GiveGuns()
 {
-	local clip = mexican_standoff ? 6 : 2
+	local clip = mexican_standoff ? 6 : 3
 	foreach (player in Ware_MinigamePlayers)
 	{
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/wildwest_ready")	

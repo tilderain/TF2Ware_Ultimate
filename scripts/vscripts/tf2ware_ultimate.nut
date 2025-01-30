@@ -16,6 +16,7 @@ IncludeScript("tf2ware_ultimate/config",   ROOT)
 IncludeScript("tf2ware_ultimate/location", ROOT)
 IncludeScript("tf2ware_ultimate/sdr",      ROOT)
 IncludeScript("tf2ware_ultimate/dev",      ROOT)
+IncludeScript("tf2ware_ultimate/plugin",   ROOT)
 IncludeScript("tf2ware_ultimate/main",     ROOT)
 
 if ("Ware_Events" in ROOT)

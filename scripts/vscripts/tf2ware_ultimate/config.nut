@@ -23,15 +23,26 @@ function Ware_LoadConfigFile(file_name)
 
 function Ware_LoadConfigSettings()
 {
+	// default values (should match settings.cfg)
+	// incase they aren't present there
+	Ware_BossThreshold        <- 20
+	Ware_SpeedUpThreshold     <- 5
+	Ware_SpeedUpInterval      <- 0.15
+	Ware_SpecialRoundInterval <- 3
+	Ware_PointsMinigame       <- 1
+	Ware_PointsBossgame       <- 5
+	Ware_BonusPoints          <- 0
+		
 	local settings_map = 
 	{
-		boss_threshold       = "Ware_BossThreshold"
-		speedup_threshold    = "Ware_SpeedUpThreshold"
-		speedup_interval     = "Ware_SpeedUpInterval"
-		special_round_chance = "Ware_SpecialRoundChance"
-		points_minigame      = "Ware_PointsMinigame"
-		points_bossgame      = "Ware_PointsBossgame"
-		bonus_points         = "Ware_BonusPoints"
+		boss_threshold         = "Ware_BossThreshold"
+		speedup_threshold      = "Ware_SpeedUpThreshold"
+		speedup_interval       = "Ware_SpeedUpInterval"
+		// removed: special_round_chance = "Ware_SpecialRoundChance" 
+		specialround_interval  = "Ware_SpecialRoundInterval"
+		points_minigame        = "Ware_PointsMinigame"
+		points_bossgame        = "Ware_PointsBossgame"
+		bonus_points           = "Ware_BonusPoints"
 	}
 	
 	local file = Ware_LoadConfigFile("settings")
@@ -45,7 +56,7 @@ function Ware_LoadConfigSettings()
 		if (key in settings_map)
 		{
 			local value = keyvalue[1]
-			this[settings_map[key]] <- value.find(".") != null ? value.tofloat() : value.tointeger()
+			this[settings_map[key]] = value.find(".") != null ? value.tofloat() : value.tointeger()
 		}
 	}
 }
@@ -109,6 +120,6 @@ function Ware_LoadConfig()
 const WARE_MUSICVERSION = 2
 
 // keep in sync with sourcemod plugin
-const WARE_PLUGINVERSION = "1.2.1"
+const WARE_PLUGINVERSION = "1.2.2"
 
 Ware_LoadConfig()

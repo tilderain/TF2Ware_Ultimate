@@ -201,9 +201,15 @@ function OnMicroStart()
 	}
 	
 	// loadouts. can move to switch if a non-global loadout function is made
-	if (micro == MICRO_MACHO || micro == MICRO_COMB)
+	if (micro == MICRO_MACHO)
 	{
 		Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit")
+	}
+	else if (micro == MICRO_COMB)
+	{
+		Ware_DelayPDASwitch = true
+		Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit")
+		Ware_DelayPDASwitch = false
 	}
 	// do this one a minigame early bcuz original did it. otherwise move to MICRO_SUPER
 	else if (micro == MICRO_WAVE3)

@@ -14,21 +14,7 @@ minigame <- Ware_MinigameData
 	collisions    = true
 })
 
-loadouts <-
-[
-	[ TF_CLASS_SCOUT,        "Sandman"          ],
-	[ TF_CLASS_SOLDIER,      "Equalizer"        ],
-	[ TF_CLASS_PYRO,         "Flare Gun"        ],
-	[ TF_CLASS_PYRO,         "Rainblower"       ],
-	[ TF_CLASS_PYRO,         "Scorch Shot"      ],
-	[ TF_CLASS_DEMOMAN,      "Eyelander"        ],
-	[ TF_CLASS_HEAVYWEAPONS, "Fists"            ],
-	[ TF_CLASS_ENGINEER,     "Frontier Justice" ],
-	[ TF_CLASS_ENGINEER,     "Gunslinger"       ],
-	[ TF_CLASS_MEDIC,        "Ubersaw"          ],
-	[ TF_CLASS_SNIPER,       "Huntsman"         ],
-	[ TF_CLASS_SPY,          "Knife"            ],
-]
+suicide_callback <- null
 
 // some taunts don't friendlyfire
 function OnPick()
@@ -38,9 +24,28 @@ function OnPick()
 
 function OnStart()
 {
+	local loadouts =
+	[
+		[ TF_CLASS_SCOUT,        "Sandman"          , @(player) SuicideLine(player, 64.0)    ],
+		[ TF_CLASS_SOLDIER,      "Equalizer"        , @(player) SuicideSphere(player, 100.0) ],
+		[ TF_CLASS_PYRO,         "Flare Gun"        , @(player) SuicideLine(player, 64.0)    ],
+		[ TF_CLASS_PYRO,         "Rainblower"       , @(player) SuicideSphere(player, 100.0) ],
+		[ TF_CLASS_PYRO,         "Scorch Shot"      , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_DEMOMAN,      "Eyelander"        , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_HEAVYWEAPONS, "Fists"            , @(player) SuicideLine(player, 500.0)   ],
+		[ TF_CLASS_ENGINEER,     "Frontier Justice" , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_ENGINEER,     "Gunslinger"       , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_MEDIC,        "Ubersaw"          , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_SNIPER,       "Huntsman"         , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_SPY,          "Knife"            , @(player) SuicideLine(player, 64.0)    ],
+	]
 	local loadout = RandomElement(loadouts)
+	
 	Ware_SetGlobalLoadout(loadout[0], loadout[1])
 	Ware_SetGlobalAttribute("no_attack", 1, -1)
+	
+	// simple anti-griefing
+	suicide_callback = loadout[2]
 }
 
 function OnTakeDamage(params)
@@ -50,8 +55,57 @@ function OnTakeDamage(params)
 
 function OnPlayerDeath(player, attacker, params)
 {
-	if (attacker && player != attacker)
+	if (params.customkill == TF_DMG_CUSTOM_SUICIDE)
+		suicide_callback(player)
+	else if (attacker && player != attacker)
 		Ware_PassPlayer(attacker, true)
+}
+
+function OnPlayerDisconnect(player)
+{
+	suicide_callback(player)
+}
+
+function SuicideFilter(player, team)
+{
+	return player.IsAlive() && player.IsTaunting() && player.GetTeam() != team && GetPropInt(player, "m_nActiveTauntSlot") < 0
+}
+
+function SuicideLine(player, radius)
+{
+	local player_origin = player.GetOrigin()
+	local player_team = player.GetTeam()
+	for (local other; other = FindByClassnameWithin(other, "player", player_origin, radius);)
+	{
+		if (!SuicideFilter(other, player_team))
+			continue
+		local start = other.GetCenter()
+		local forward = other.EyeAngles().Forward()	
+		forward.z = 0.0
+		forward.Norm()
+		
+		local mins = player_origin + other.GetPlayerMins()
+		local maxs = player_origin + other.GetPlayerMaxs()
+		
+		//DebugDrawLine(start, start + forward * radius, 255, 0, 0, false, 5.0)
+		//DebugDrawBox(vec3_zero, mins, maxs, 255, 0, 0, 20, 5.0)
+
+		local t = IntersectRayWithBox(start, forward, mins, maxs, 0.0, radius)
+		if (t >= 0.0)
+			Ware_PassPlayer(other, true)
+	}
+}
+
+function SuicideSphere(player, radius)
+{
+	local player_origin = player.GetOrigin()
+	local player_team = player.GetTeam()
+	for (local other; other = FindByClassnameWithin(other, "player", player_origin, radius);)
+	{
+		if (!SuicideFilter(other, player_team))
+			continue
+		Ware_PassPlayer(other, true)
+	}
 }
 
 function OnCheckEnd()

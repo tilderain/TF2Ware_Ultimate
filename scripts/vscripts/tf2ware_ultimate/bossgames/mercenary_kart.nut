@@ -311,7 +311,12 @@ function OnTeleport(players)
 		karts.append(kart)
 	}
 	
-	itembox_respawn_time = players.len() > 12 ? 1.5 : 3.0
+	if (players.len() > 24)
+		itembox_respawn_time = 0.75
+	else if (players.len() > 12)
+		itembox_respawn_time = 1.5
+	else
+		itembox_respawn_time = 3.0
 }
 
 function OnStart()
@@ -4071,8 +4076,8 @@ item_shock <-
 		
 		foreach (other in karts)
 		{
-			other.HudStartShock()
-			
+			DispatchParticleEffect("mk_lightning_parent", other.m_origin, vec3_up)		
+			other.HudStartShock()		
 			EntityEntFire(other.m_entity, "CallScriptFunction", "HudResetShock", 1.5)
 			
 			if (other == kart)
@@ -4086,7 +4091,6 @@ item_shock <-
 				continue
 	
 			AddKillFeedMessage(other.m_driver, kart.m_driver, "spellbook_lightning")
-			DispatchParticleEffect("mk_lightning_parent", other.m_origin, vec3_up)
 			other.Shrink(max_time - delta_time * other.m_position_idx.tofloat() / player_count)
 			
 			other.DropItems()

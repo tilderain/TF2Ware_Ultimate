@@ -218,19 +218,16 @@ function OnGameEvent_teamplay_round_start(params)
 	foreach (minigame in Ware_Minigames)
 		Ware_MinigameRotation.append(minigame)
 	
+	// special rounds always occur every N rounds
 	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
 	local delay = 0.0
 	
-	// double the chance after playing 3 rounds
-	local extra_chance = (Ware_SpecialRoundChance > 1 && Ware_RoundsPlayed >= 3) ? 2 : 1
-	local special_round_chance = Ware_SpecialRoundChance / extra_chance
-	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
-		(Ware_RoundsPlayed > 0
-		&& !Ware_SpecialRoundPrevious
-		&& special_round_chance != 0
-		&& RandomInt(1, special_round_chance) == special_round_chance))
+		Ware_SpecialRoundNext ||
+		(!Ware_SpecialRoundPrevious &&
+			(Ware_RoundsPlayed + 1) % Ware_SpecialRoundInterval == 0))
 	{
+		Ware_SpecialRoundNext = false
 		delay = Ware_GetThemeSoundDuration("special_round")
 		Ware_BeginSpecialRound()
 	}
@@ -316,6 +313,27 @@ function OnGameEvent_recalculate_truce(params)
 	}
 }
 
+::Ware_PlayerInit <- function()
+{
+	local player = self
+	MarkForPurge(player)
+	
+	// don't include SourceTV because it's not a real player
+	printl(IsPlayerSourceTV(player))
+	if (IsPlayerSourceTV(player))
+		return
+		
+	player.ValidateScriptScope()
+	local scope = player.GetScriptScope()
+	scope.ware_data <- Ware_PlayerData(player)
+	scope.ware_minidata <- {}
+	scope.ware_specialdata <- {}
+	Ware_Players.append(player)
+	Ware_PlayersData.append(scope.ware_data)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_connect.IsValid())
+		Ware_SpecialRound.cb_on_player_connect(player)		
+}
+
 ::Ware_PlayerPostSpawn <- function()
 {
 	if (Ware_TimeScale != 1.0)
@@ -345,21 +363,11 @@ function OnGameEvent_player_spawn(params)
 	if (player == null)
 		return
 	
-	if (Ware_Players.find(player) == null)
+	if (params.team == TEAM_UNASSIGNED)
 	{
-		MarkForPurge(player)
-		player.ValidateScriptScope()
-		local scope = player.GetScriptScope()
-		scope.ware_data <- Ware_PlayerData(player)
-		scope.ware_minidata <- {}
-		scope.ware_specialdata <- {}
-		Ware_Players.append(player)
-		Ware_PlayersData.append(scope.ware_data)
-		if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_connect.IsValid())
-			Ware_SpecialRound.cb_on_player_connect(player)
-			
-		if (params.team == TEAM_UNASSIGNED)
-			return
+		// delay this to end of frame as SourceTV won't be registered here yet
+		EntityEntFire(player, "CallScriptFunction", "Ware_PlayerInit", 0.0)
+		return
 	}
 	
 	local data = player.GetScriptScope().ware_data
