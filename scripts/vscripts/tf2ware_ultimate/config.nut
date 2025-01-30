@@ -1,7 +1,9 @@
+Ware_CfgPath <- "tf2ware_ultimate/%s.cfg"
+
 function Ware_LoadConfigFile(file_name)
 {
 	// try load the config from "scriptdata" first
-	local cfg_name = format("tf2ware_ultimate/%s.cfg", file_name)
+	local cfg_name = format(Ware_CfgPath, file_name)
 	local file = FileToString(cfg_name)
 	if (file)
 	{
@@ -61,16 +63,77 @@ function Ware_LoadConfigSettings()
 	}
 }
 
-function Ware_LoadConfigList(file_name, list)
+function Ware_LoadConfigList(file_name, list, expected_version = 0, version_callback = null)
 {
 	local file = Ware_LoadConfigFile(file_name)
 	local lines = split(file, "\r\n", true)
+
+	// legacy configs had no VERSION header
+	local version = 0
+	if (lines.len() >= 1)
+	{
+		if (startswith(lines[0], "VERSION "))
+			version = lines.remove(0).slice(8).tointeger()
+	}
+	
+	if (version < expected_version && version_callback)
+	{
+		version_callback(version, lines)
+		Ware_WriteConfigList(file_name, expected_version, lines)
+	}	
+	
 	foreach (line in lines)
 	{
-		if (startswith(line, "//"))
-			continue
-		list.append(line)
+		if (!startswith(line, "//"))
+			list.append(line)
 	}
+
+	return version
+}
+
+function Ware_LoadConfigMinigames()
+{
+	// bump this when new entries are added, and fill in the switch below
+	local latest_version = 0
+	local version = Ware_LoadConfigList("minigames", Ware_Minigames, latest_version, function(version, lines)
+	{
+		switch (version)
+		{
+			case 1:
+			case 0:
+				//lines.append("test")
+		}
+	})
+}
+
+function Ware_LoadConfigBossgames()
+{
+	// bump this when new entries are added, and fill in the switch below
+	local latest_version = 0
+	local version = Ware_LoadConfigList("bossgames", Ware_Bossgames, latest_version, function(version, lines)
+	{
+		switch (version)
+		{
+			case 1:
+			case 0:
+				//lines.append("test")
+		}
+	})
+}
+
+function Ware_LoadConfigSpecialRounds()
+{
+	// bump this when new entries are added, and fill in the switch below
+	local latest_version = 0
+	local version = Ware_LoadConfigList("specialrounds", Ware_SpecialRounds, latest_version, function(version, lines)
+	{
+		switch (version)
+		{
+			case 1:
+			case 0:
+				//lines.append("test")
+		}
+	})
 }
 
 function Ware_LoadConfigThemes()
@@ -105,13 +168,24 @@ function Ware_LoadConfig()
 	Ware_GameOverlays      <- []
 	
 	Ware_LoadConfigSettings()
-	Ware_LoadConfigList("minigames", Ware_Minigames)
-	Ware_LoadConfigList("bossgames", Ware_Bossgames)
-	Ware_LoadConfigList("specialrounds", Ware_SpecialRounds)
+	Ware_LoadConfigMinigames()
+	Ware_LoadConfigBossgames()
+	Ware_LoadConfigSpecialRounds()
 	Ware_LoadConfigList("fake_specialrounds", Ware_FakeSpecialRounds)	
 	Ware_LoadConfigList("overlays", Ware_GameOverlays)	
 	Ware_LoadConfigThemes()
 	Ware_LoadConfigMeleeAttributes()
+}
+
+function Ware_WriteConfigList(file_name, version, lines)
+{	
+	lines.insert(0, "VERSION " + version)
+	
+	local cfg_name = format(Ware_CfgPath, file_name)
+	local buffer = ""
+	foreach (line in lines)
+		buffer += line + "\n"
+	StringToFile(cfg_name, buffer)
 }
 
 // everytime music is changed AND the map is *publicly* updated
