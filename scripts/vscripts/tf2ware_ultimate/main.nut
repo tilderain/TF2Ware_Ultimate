@@ -830,17 +830,6 @@ function Ware_GetOverlays(overlays)
 	else
 		return [FixupOverlay(overlays)]
 }
-	
-function Ware_IsSpecialRoundValid(str)
-{
-	foreach(round in Ware_SpecialRounds)
-	{
-		if (round == str)
-			return true
-	}
-	
-	return false
-}
 
 function Ware_GetSpecialRoundName()
 {
@@ -943,7 +932,6 @@ function Ware_BeginSpecialRoundInternal()
 	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
 	
-	local try_debug = true
 	local attempts = 0
 	local round
 	
@@ -952,28 +940,13 @@ function Ware_BeginSpecialRoundInternal()
 		round = null
 		
 		local is_forced = false
-		if (try_debug)
+		if (Ware_DebugNextSpecialRound.len() > 0)
 		{
-			if(Ware_DebugNextSpecialRound.len() > 0)
-			{
-				if (Ware_IsSpecialRoundValid(Ware_DebugNextSpecialRound))
-				{
-					round = Ware_DebugNextSpecialRound
-					Ware_DebugNextSpecialRound = ""
-					is_forced = true
-				}
-				else
-				{
-					Ware_Error("No special round named %s was found. Picking another round instead.", Ware_DebugNextSpecialRound)
-					Ware_DebugNextSpecialRound = ""
-					is_forced = false
-				}
-			}
-			
-			try_debug = false
-		}
-		
-		if (!is_forced)
+			round = Ware_DebugNextSpecialRound
+			Ware_DebugNextSpecialRound = ""
+			is_forced = true
+		}		
+		else
 		{
 			if (Ware_SpecialRoundRotation.len() == 0)
 			{
