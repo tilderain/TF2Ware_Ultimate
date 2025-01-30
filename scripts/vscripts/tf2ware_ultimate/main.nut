@@ -2040,7 +2040,7 @@ function Ware_OnUpdate()
 		}
 	}
 	
-	if (Ware_Minigame.cb_on_player_voiceline.IsValid())
+	if (Ware_Minigame.cb_on_player_voiceline.IsValid() || (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_voiceline.IsValid()))
 	{
 		for (local scene; scene = FindByClassname(scene, "instanced_scripted_scene");)
 		{
@@ -2052,7 +2052,13 @@ function Ware_OnUpdate()
 			{
 				local name = GetPropString(scene, "m_szInstanceFilename")
 				if (name.find("idleloop") == null && name.find("attack") == null)
-					Ware_Minigame.cb_on_player_voiceline(player, name.tolower())
+				{
+					if (Ware_Minigame.cb_on_player_voiceline.IsValid())
+						Ware_Minigame.cb_on_player_voiceline(player, name.tolower())
+					
+					if(Ware_SpecialRound && Ware_SpecialRound.cb_on_player_voiceline.IsValid())
+						Ware_SpecialRound.cb_on_player_voiceline(player, name.tolower())
+				}
 			}
 		}
 	}
