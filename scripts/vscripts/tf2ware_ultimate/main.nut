@@ -2025,6 +2025,15 @@ function Ware_OnUpdate()
 			}
 			data.horn_buttons = buttons
 		}
+		
+		local special_melee = data.special_melee
+		local special_vm = data.special_vm
+		if (special_melee && special_melee.IsValid())
+			SetPropBool(special_melee, "m_bBeingRepurposedForTaunt", true)
+		else
+			special_melee = null
+		if (special_vm && special_vm.IsValid())
+			special_vm.SetDrawEnabled(player.GetActiveWeapon() == special_melee)
 	}
 	
 	Ware_Minigame.cb_on_update()

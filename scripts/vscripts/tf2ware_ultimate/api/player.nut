@@ -465,6 +465,75 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	return weapon
 }
 
+// Equips a melee that should override the default one, if the player doesn't have one already
+// This melee will only be used if the minigame doesn't strip out melees
+// A viewmodel entity can also be equipped, intended to complement the special weapon
+// Either "melee" or "vm" can be null to not equip them respectively
+function Ware_EquipSpecialMelee(player, melee, vm)
+{
+	local data = Ware_GetPlayerData(player)
+	
+	if (melee)
+	{
+		player.Weapon_Equip(melee)
+		local index = data.melee_index
+		for (local i = 0; i < MAX_WEAPONS; i++)
+		{
+			local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
+			if (weapon == melee)
+			{
+				SetPropEntityArray(player, "m_hMyWeapons", null, i)
+				index = i
+				data.melee_index = i
+				break
+			}
+		}
+		
+		SetPropEntityArray(player, "m_hMyWeapons", melee, index)
+		player.Weapon_Switch(melee)
+		data.special_melee = melee	
+	}
+	
+	if (vm)
+	{
+		local special_vm = data.special_vm	
+		if (!special_vm || !special_vm.IsValid())
+		{
+			player.EquipWearableViewModel(vm)
+			vm.KeyValueFromString("classname", "ware_specialvm")
+			data.special_vm = vm
+		}
+	}	
+}
+
+// Destroys the special melee a player has, and the viewmodel for it, if any
+function Ware_DestroySpecialMelee(player)
+{
+	local data = Ware_GetPlayerData(player)
+	
+	local special_vm = data.special_vm	
+	local special_melee = data.special_melee
+	
+	if (special_vm)
+	{
+		if (special_vm.IsValid())
+			special_vm.Kill()
+		data.special_vm = null
+	}
+	
+	if (special_melee)
+	{	
+		local weapon = player.GetActiveWeapon()		
+		if (weapon == special_melee)
+			player.Weapon_Switch(data.melee)
+			
+		if (special_melee.IsValid())
+			KillWeapon(special_melee)
+		
+		data.special_melee = null
+	}
+}
+
 // Players that are force switched to PDAs not show the menu unless given with a delay
 // Set this to true and revert back to false before giving a weapon if you want to show the menu
 // Note this is not reliable depending on lag, and may sometimes still not show the menu

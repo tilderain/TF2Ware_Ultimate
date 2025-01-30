@@ -21,84 +21,42 @@ function OnPrecache()
 function GiveSpecialMelee(player)
 {
 	local data = Ware_GetPlayerData(player)
+	local melee, vm
 	
-	local special_melee = data.special_melee
-	if (!special_melee || !special_melee.IsValid())
+	if (!data.special_melee || !data.special_melee.IsValid())
 	{
-		special_melee = CreateEntitySafe("tf_weapon_bat")
-		SetPropInt(special_melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 1123)
-		SetPropBool(special_melee, "m_AttributeManager.m_Item.m_bInitialized", true)
-		special_melee.DispatchSpawn()
+		melee = CreateEntitySafe("tf_weapon_bat")
+		SetPropInt(melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 1123)
+		SetPropBool(melee, "m_AttributeManager.m_Item.m_bInitialized", true)
+		melee.DispatchSpawn()
 		
 		for (local i = 0; i < 4; i++)
-			SetPropIntArray(special_melee, "m_nModelIndexOverrides", bat_modelindex, i)
-		SetPropBool(special_melee, "m_bBeingRepurposedForTaunt", true)
-		SetPropInt(special_melee, "m_nRenderMode", kRenderTransColor)
-			
-		player.Weapon_Equip(special_melee)
-		local index = data.melee_index
-		for (local i = 0; i < MAX_WEAPONS; i++)
-		{
-			local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
-			if (weapon == special_melee)
-			{
-				SetPropEntityArray(player, "m_hMyWeapons", null, i)
-				index = i
-				data.melee_index = i
-				break
-			}
-		}
-		
-		SetPropEntityArray(player, "m_hMyWeapons", special_melee, index)
-		player.Weapon_Switch(special_melee)
-		data.special_melee = special_melee
+			SetPropIntArray(melee, "m_nModelIndexOverrides", bat_modelindex, i)
+		SetPropBool(melee, "m_bBeingRepurposedForTaunt", true)
+		SetPropInt(melee, "m_nRenderMode", kRenderTransColor)
+	}
+
+	if (!data.special_vm || !data.special_vm.IsValid())
+	{
+		vm = Entities.CreateByClassname("tf_wearable_vm")
+		SetPropInt(vm, "m_nModelIndex", bat_modelindex)
+		SetPropBool(vm, "m_bValidatedAttachedEntity", true)
+		vm.DispatchSpawn()
 	}
 	
-	local special_vm = data.special_vm
-	if (!special_vm || !special_vm.IsValid())
-	{
-		special_vm = Entities.CreateByClassname("tf_wearable_vm")
-		SetPropInt(special_vm, "m_nModelIndex", bat_modelindex)
-		SetPropBool(special_vm, "m_bValidatedAttachedEntity", true)
-		special_vm.DispatchSpawn()
-		player.EquipWearableViewModel(special_vm)
-		special_vm.KeyValueFromString("classname", "ware_specialvm")
-		data.special_vm = special_vm
-	}
+	if (melee || vm)
+		Ware_EquipSpecialMelee(player, melee, vm)
 }
 
 function OnStart()
 {
-	local players = Ware_GetValidPlayers()
-	foreach (player in players)
-	{
-		if (player.IsAlive())
-		{
-			GiveSpecialMelee(player)
-		}
-	}
+	foreach (player in Ware_GetValidPlayers())
+		GiveSpecialMelee(player)
 }
 
 function OnPlayerInventory(player)
 {
 	GiveSpecialMelee(player)
-}
-
-function OnUpdate()
-{
-	foreach (data in Ware_PlayersData)
-	{
-		local special_melee = data.special_melee
-		local special_vm = data.special_vm
-				
-		if (special_melee && special_melee.IsValid())
-			SetPropBool(special_melee, "m_bBeingRepurposedForTaunt", true)
-		else
-			special_melee = null
-		
-		if (special_vm && special_vm.IsValid())
-			special_vm.SetDrawEnabled(data.player.GetActiveWeapon() == data.special_melee)
-	}
 }
 
 function OnTakeDamage(params)
@@ -134,30 +92,6 @@ function OnTakeDamage(params)
 
 function OnEnd()
 {
-	foreach (data in Ware_PlayersData)
-	{
-		local player = data.player
-		
-		local special_vm = data.special_vm	
-		local special_melee = data.special_melee
-		
-		if (special_vm)
-		{
-			if (special_vm.IsValid())
-				special_vm.Kill()
-			data.special_vm = null
-		}
-		
-		if (special_melee)
-		{	
-			local weapon = player.GetActiveWeapon()		
-			if (weapon == special_melee)
-				player.Weapon_Switch(data.melee)
-				
-			if (special_melee.IsValid())
-				KillWeapon(special_melee)
-			
-			data.special_melee = null
-		}
-	}
+	foreach (player in Ware_Players)
+		Ware_DestroySpecialMelee(player)
 }
