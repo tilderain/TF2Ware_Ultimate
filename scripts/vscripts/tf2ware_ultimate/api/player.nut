@@ -551,7 +551,7 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", player_class)
 	player.SetPlayerClass(player_class)
 	player.Regenerate(true)
-	player.SetCustomModel(GetPropString(player, "m_PlayerClass.m_iszCustomModel"))
+	player.SetCustomModelWithClassAnimations(GetPropString(player, "m_PlayerClass.m_iszCustomModel"))
 
 	local melee = Ware_ParseLoadout(player)
 	if (melee)

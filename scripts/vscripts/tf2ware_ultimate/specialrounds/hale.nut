@@ -98,91 +98,94 @@ function OnUpdate()
 	foreach (data in Ware_PlayersData)
 	{
 		local player = data.player
-		local special = Ware_GetPlayerSpecialRoundData(player)
-		local rage = special.hale_rage
-		local jump = special.hale_jumptime
-		local text = ""
-		local buttons = GetPropInt(player, "m_nButtons")
-		local time = Time()
-
-		if (jump < 0.0)
+		if (player.IsAlive())
 		{
-			// Jump is on cooldown
-			jump += time
-			if (jump > 0.0)
+			local special = Ware_GetPlayerSpecialRoundData(player)
+			local rage = special.hale_rage
+			local jump = special.hale_jumptime
+			local text = ""
+			local buttons = GetPropInt(player, "m_nButtons")
+			local time = Time()
+
+			if (jump < 0.0)
 			{
-				jump = 0.0
-				special.hale_jumptime = jump
-			}
-		}
-		else if ((buttons & IN_ATTACK2) || (buttons & IN_DUCK))
-		{
-			// Charging jump
-			if (jump == 0.0)
-			{
-				jump = time
-				special.hale_jumptime = jump
-			}
-
-			// 1.5s to full charge
-			jump = (time - jump) * 66.66667
-			if(jump > 100.0)
-				jump = 100.0
-		}
-		else if (jump > 0.0)
-		{
-			// Jump if possible
-			if (player.GetMoveType() == MOVETYPE_WALK && player.EyeAngles().x < -20.0)
-			{
-				if (jump > 100.0)
-					jump = 100.0
-
-				local velocity = player.GetAbsVelocity()
-
-				velocity.x *= 1.0 + (jump * 0.00275)
-				velocity.y *= 1.0 + (jump * 0.00275)
-				velocity.z = 750.0 + (jump * 3.25)
-
-				player.SetAbsVelocity(velocity)
-				SetPropBool(player, "m_bJumping", true)
-
-				EmitSoundEx(
+				// Jump is on cooldown
+				jump += time
+				if (jump > 0.0)
 				{
-					sound_name = hale_jump_sound,
-					volume = 1.0,
-					pitch = 100 * Ware_GetPitchFactor(),
-					entity = player,
-					filter_type = RECIPIENT_FILTER_GLOBAL
-				})
+					jump = 0.0
+					special.hale_jumptime = jump
+				}
+			}
+			else if ((buttons & IN_ATTACK2) || (buttons & IN_DUCK))
+			{
+				// Charging jump
+				if (jump == 0.0)
+				{
+					jump = time
+					special.hale_jumptime = jump
+				}
 
-				special.hale_jumptime = -(time + 5.0)
+				// 1.5s to full charge
+				jump = (time - jump) * 66.66667
+				if(jump > 100.0)
+					jump = 100.0
+			}
+			else if (jump > 0.0)
+			{
+				// Jump if possible
+				if (player.GetMoveType() == MOVETYPE_WALK && player.EyeAngles().x < -20.0)
+				{
+					if (jump > 100.0)
+						jump = 100.0
+
+					local velocity = player.GetAbsVelocity()
+
+					velocity.x *= 1.0 + (jump * 0.00275)
+					velocity.y *= 1.0 + (jump * 0.00275)
+					velocity.z = 750.0 + (jump * 3.25)
+
+					player.SetAbsVelocity(velocity)
+					SetPropBool(player, "m_bJumping", true)
+
+					EmitSoundEx(
+					{
+						sound_name = hale_jump_sound,
+						volume = 1.0,
+						pitch = 100 * Ware_GetPitchFactor(),
+						entity = player,
+						filter_type = RECIPIENT_FILTER_GLOBAL
+					})
+
+					special.hale_jumptime = -(time + 5.0)
+				}
+				else
+				{
+					jump = 0.0
+					special.hale_jumptime = jump
+				}
+			}
+
+			if (rage >= 100)
+			{
+				text = "Call Medic to activate RAGE."
 			}
 			else
 			{
-				jump = 0.0
-				special.hale_jumptime = jump
+				text = "RAGE meter: " + rage.tostring() + " percent!"
 			}
-		}
 
-		if (rage >= 100)
-		{
-			text = "Call Medic to activate RAGE."
-		}
-		else
-		{
-			text = "RAGE meter: " + rage.tostring() + " percent!"
-		}
+			if (jump >= 0.0)
+			{
+				text += "\nJump charge: " + jump.tointeger().tostring() + " percent. Look up and stand up to use super-jump."
+			}
+			else
+			{
+				text += "\nSuper Jump will be ready again in: " + (-jump).tointeger().tostring()
+			}
 
-		if (jump >= 0.0)
-		{
-			text += "\nJump charge: " + jump.tointeger().tostring() + " percent. Look up and stand up to use super-jump."
+			Ware_ShowText(player, CHANNEL_MISC, text, 0.2, rage >= 100 ? "255 0 0" : "255 255 255", -1.0, 0.83)
 		}
-		else
-		{
-			text += "\nSuper Jump will be ready again in: " + (-jump).tointeger().tostring()
-		}
-
-		Ware_ShowText(player, CHANNEL_MISC, text, 0.2, rage >= 100 ? "255 0 0" : "255 255 255", -1.0, 0.83)
 	}
 }
 
