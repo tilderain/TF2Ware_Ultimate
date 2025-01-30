@@ -8,7 +8,7 @@ minigame <- Ware_MinigameData
 		"Hug every Scout!"
 	]
 	duration        = 65.0
-	end_delay       = 0.6
+	end_delay       = 0.3
 	music           = "cuddly"
 	location        = "love"
 	custom_overlay  =
