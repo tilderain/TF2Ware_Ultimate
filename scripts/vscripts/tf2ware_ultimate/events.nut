@@ -319,7 +319,6 @@ function OnGameEvent_recalculate_truce(params)
 	MarkForPurge(player)
 	
 	// don't include SourceTV because it's not a real player
-	printl(IsPlayerSourceTV(player))
 	if (IsPlayerSourceTV(player))
 		return
 		
