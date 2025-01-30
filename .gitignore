@@ -1,5 +1,5 @@
 # Hammer
-*.bsp
+mapsrc/*.bsp
 *.bsp.unpacked
 *.vmx
 *.log
