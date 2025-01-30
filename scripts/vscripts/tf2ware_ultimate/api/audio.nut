@@ -27,12 +27,12 @@ function Ware_PlaySoundOnAllClients(name, volume = 1.0, pitch = 100, flags = 0)
 function Ware_PlayGameSound(player, name, flags = 0, volume = 1.0)
 {
 	local path
-
+	
 	if (name in Ware_CurrentThemeSounds)
 		path = format("%s/%s", Ware_CurrentThemeSounds[name][0], name)
 	else
 		path = format("%s/%s", Ware_Themes[0].theme_name, name)
-
+	
 	if (player)
 		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), volume, 100, flags)
 	else
