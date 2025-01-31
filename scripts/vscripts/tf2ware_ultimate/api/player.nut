@@ -551,7 +551,7 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", player_class)
 	player.SetPlayerClass(player_class)
 	player.Regenerate(true)
-	player.SetCustomModel(GetPropString(player, "m_PlayerClass.m_iszCustomModel"))
+	player.SetCustomModelWithClassAnimations(GetPropString(player, "m_PlayerClass.m_iszCustomModel"))
 
 	local melee = Ware_ParseLoadout(player)
 	if (melee)
@@ -730,8 +730,15 @@ function Ware_GetSortedScorePlayers(reverse)
 // Given attributes are removed automatically when the minigame ends
 function Ware_AddPlayerAttribute(player, name, value, duration)
 {
-	player.AddCustomAttribute(name, value, duration)
-	player.GetScriptScope().ware_data.attributes[name] <- value
+	if (name == "voice pitch scale" && Ware_SpecialRound && Ware_SpecialRound.pitch_override >= 0)
+	{
+		Ware_UpdatePlayerVoicePitch(player)
+	}
+	else
+	{
+		player.AddCustomAttribute(name, value, duration)
+		player.GetScriptScope().ware_data.attributes[name] <- value
+	}
 }
 
 // Removes an attribute from the player

@@ -230,9 +230,10 @@ delegated_callbacks <-
 
 	function OnCalculateScore(data)
 	{
-		DelegatedCall(scope_a, "OnCalculateScore", data)
-		if (call_failed)
-			DelegatedCall(scope_b, "OnCalculateScore", data)	
+		local ret = DelegatedCall(scope_a, "OnCalculateScore", data)
+		if (call_failed || ret == false)
+			ret = DelegatedCall(scope_b, "OnCalculateScore", data)	
+		return ret
 	}
 
 	function OnCalculateTopScorers(top_players)
@@ -272,6 +273,12 @@ delegated_callbacks <-
 		DelegatedCall(scope_a, "OnPlayerInventory", player)
 		DelegatedCall(scope_b, "OnPlayerInventory", player)
 	}
+	
+	function OnPlayerVoiceline(player, name)
+	{
+		DelegatedCall(scope_a, "OnPlayerVoiceline", player, name)
+		DelegatedCall(scope_b, "OnPlayerVoiceline", player, name)
+	}	
 
 	function GetPlayerRoll(player)
 	{

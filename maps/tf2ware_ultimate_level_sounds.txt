@@ -440,6 +440,138 @@ TF2Ware_Ultimate.TypingWordRelax
 	wave			tf2ware_ultimate/typing/wordsuccess_relax.mp3
 }
 
+TF2Ware_Ultimate.HaleStart
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	rndwave
+	{
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start3.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start4.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start5.mp3
+	}
+}
+
+TF2Ware_Ultimate.HaleJump
+{
+	channel			CHAN_ITEM
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_90dB
+	rndwave
+	{
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_jump_1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_jump_2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_jump1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_jump2.mp3
+	}
+}
+
+TF2Ware_Ultimate.HaleRage
+{
+	channel			CHAN_ITEM
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_90dB
+	rndwave
+	{
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_rage1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_rage2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_rage3.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_rage4.mp3
+	}
+}
+
+TF2Ware_Ultimate.HaleRamble
+{
+	channel			CHAN_ITEM
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_90dB
+	rndwave
+	{
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_demo.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_engie_1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_engie_2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_heavy.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_scout.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_spie.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_toy.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_w_and_m1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kspree_1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kspree_2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_last.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_stub_1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_stub_2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_stub_3.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_stub_4.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_3.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_eggineer1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_eggineer2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_medic.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_sniper1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_sniper2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_spy1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_spy2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree3.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree4.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree5.mp3
+	}
+}
+
+TF2Ware_Ultimate.HaleDeath
+{
+	channel			CHAN_ITEM
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_90dB
+	rndwave
+	{
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail3.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail3.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman4.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman4.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman5.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman5.mp3
+	}
+}
+
+TF2Ware_Ultimate.HaleWin
+{
+	channel			CHAN_ITEM
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_90dB
+	rndwave
+	{
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_win1.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_win2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman2.mp3
+		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman3.mp3
+	}
+}
+
+TF2Ware_Ultimate.HaleLand
+{
+	channel			CHAN_STATIC
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_80dB
+	wave			weapons/rocket_pack_land.wav
+}
+
 // mercenary kart
 
 MK_Race_Countdown

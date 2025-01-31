@@ -16,6 +16,7 @@ class Ware_SpecialRoundData
 		boss_count        = 1
 		boss_threshold    = Ware_BossThreshold
 		speedup_threshold = Ware_SpeedUpThreshold
+		pitch_override    = -1
 		
 		if (table)
 		{
@@ -62,6 +63,8 @@ class Ware_SpecialRoundData
 	boss_threshold           = null
 	// Amount of minigames played before a speedup, default is Ware_SpeedUpThreshold in config.nut
 	speedup_threshold        = null
+	// Override player voice pitch if set
+	pitch_override           = null
 	
 	// == Internal use only ==
 	file_name                = null
@@ -121,8 +124,9 @@ class Ware_SpecialRoundData
 	// GetValidPlayers()          - Replaces Ware_GetValidPlayers, which is used when selecting players to play a minigame.
 	//                            - Return an array of players in this function and those players will be assigned to play a minigame and added to Ware_MinigamePlayers.
 	cb_get_valid_players       = null
-	// OnCalculateScore(data)     - Replaces score calculation at the end of a minigame.
+	// OnCalculateScore(data)     - Called when performing score calculation at the end of a minigame.
 	//                            - This function is called for each player in Ware_MinigamePlayers, and passes that player's data each time.
+	//                            - Return false to use the normal score calculation instead
 	cb_on_calculate_score      = null
 	// OnCalculateTopScorers(top_players) - Replaces assignment to Ware_MinigameTopScorers, which is used for assigning top scorer particle effects
 	//                              and determining the winner at the end of the game. 
@@ -140,6 +144,8 @@ class Ware_SpecialRoundData
 	// OnPlayerInventory(player)  - Called by OnGameEvent_post_inventory_application. 
 	//                            - This happens when a player spawns, but is intended for manipulating loadouts.
 	cb_on_player_inventory     = null
+	// OnPlayerVoiceline(player, name) - Called by Ware_OnUpdate, and passes the player who used a voiceline and the name of the voiceline.
+	cb_on_player_voiceline	= null
 	// GetPlayerRoll(player)      - Replaces the z value in player QAngles on spawn and teleport.
 	cb_get_player_roll         = null
 	// CanPlayerRespawn(player)   - If returns true, allows a dead player to respawn
