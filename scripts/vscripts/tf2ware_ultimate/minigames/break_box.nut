@@ -167,12 +167,12 @@ function OnTakeDamage(params)
 				SetEntityParent(particle_gold, gold)
 				gold.SetModelScale(1.5, 0.0)
 				
-				local glow = Ware_SpawnEntity("tf_glow",
-				{
-					target    = "bignet" // don't get deleted
-					GlowColor = "255 204 0 255"
-				})
-				SetPropEntity(glow, "m_hTarget", gold)
+				//local glow = Ware_SpawnEntity("tf_glow",
+				//{
+				//	target    = "bignet" // don't get deleted
+				//	GlowColor = "255 204 0 255"
+				//})
+				//SetPropEntity(glow, "m_hTarget", gold)
 			}
 			else
 			{
