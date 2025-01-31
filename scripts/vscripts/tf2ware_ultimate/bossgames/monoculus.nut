@@ -45,6 +45,14 @@ function SpawnMonoculus()
 		origin  = Ware_MinigameLocation.center + offset
 		teamnum = 5
 	})
+	monoculus.ValidateScriptScope()
+	monoculus.GetScriptScope().MonoculusThink <- function()
+	{
+		// makes the monoculus not look jittery
+		self.FlagForUpdate(true)
+		return 0.05
+	}
+	AddThinkToEnt(monoculus, "MonoculusThink")	
 	offset.x += 128.0
 	offset.z += 256.0
 	monoculuses.append(monoculus)
@@ -60,6 +68,20 @@ function SpawnSkeletonKing()
 		max_zombies     = 1		
 	})
 	skeleton_spawner.AcceptInput("Enable", "", null, null)
+	Ware_CreateTimer(function()
+	{
+		for (local skeleton; skeleton = FindByClassname(skeleton, "tf_zombie");)
+		{
+			skeleton.ValidateScriptScope()
+			skeleton.GetScriptScope().SkeletonThink <- function()
+			{
+				// makes the skeleton not look jittery
+				self.FlagForUpdate(true)
+				return 0.05
+			}
+			AddThinkToEnt(skeleton, "SkeletonThink")
+		}
+	}, 0.1)
 }
 
 function OnUpdate()
@@ -95,7 +117,7 @@ function OnUpdate()
 
 function OnEnd()
 {
-	local event_send = true
+	local event_send = Ware_GetAlivePlayers().len() > 0
 	foreach (monoculus in monoculuses)
 	{
 		if (monoculus.IsValid())
