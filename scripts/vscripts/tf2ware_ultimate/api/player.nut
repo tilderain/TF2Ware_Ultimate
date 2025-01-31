@@ -732,7 +732,7 @@ function Ware_AddPlayerAttribute(player, name, value, duration)
 {
 	if (name == "voice pitch scale" && Ware_SpecialRound && Ware_SpecialRound.pitch_override >= 0)
 	{
-		player.AddCustomAttribute(name, Ware_SpecialRound.pitch_override, -1)
+		Ware_UpdatePlayerVoicePitch(player)
 	}
 	else
 	{

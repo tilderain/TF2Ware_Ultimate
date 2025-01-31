@@ -445,14 +445,9 @@ TF2Ware_Ultimate.HaleStart
 	channel			CHAN_AUTO
 	volume			VOL_NORM
 	pitch			PITCH_NORM
-	soundlevel		SNDLVL_90dB
+	soundlevel		SNDLVL_NONE
 	rndwave
 	{
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_start_1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_start_2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_start_3.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_start_4.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_start_5.mp3
 		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start1.mp3
 		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start2.mp3
 		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start3.mp3

@@ -714,15 +714,20 @@ function Ware_RemovePlayerAttributeInternal(player, name)
 {
 	if (name == "voice pitch scale")
 	{
-		if (Ware_SpecialRound && Ware_SpecialRound.pitch_override >= 0)
-			player.AddCustomAttribute(name, Ware_SpecialRound.pitch_override, -1)
-		else
-			player.AddCustomAttribute(name, Ware_GetPitchFactor(), -1)
+		Ware_UpdatePlayerVoicePitch(player)
 	}
 	else
 	{
 		player.RemoveCustomAttribute(name)
 	}
+}
+
+function Ware_UpdatePlayerVoicePitch(player)
+{
+	if (Ware_SpecialRound && Ware_SpecialRound.pitch_override >= 0)
+		player.AddCustomAttribute("voice pitch scale", Ware_SpecialRound.pitch_override, -1)
+	else
+		player.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
 }
 
 function Ware_FixupPlayerWeaponSwitch()
@@ -1153,7 +1158,7 @@ function Ware_SetTimeScaleInternal(timescale)
 	Ware_TimeScale = timescale
 	
 	foreach (player in Ware_MinigamePlayers)
-		Ware_RemovePlayerAttributeInternal(player, "voice pitch scale")
+		Ware_UpdatePlayerVoicePitch(player)
 }
 
 function Ware_BeginBossInternal()

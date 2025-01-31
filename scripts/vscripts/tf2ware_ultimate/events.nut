@@ -337,7 +337,7 @@ function OnGameEvent_recalculate_truce(params)
 
 ::Ware_PlayerPostSpawn <- function()
 {
-	Ware_RemovePlayerAttributeInternal(self, "voice pitch scale")
+	Ware_UpdatePlayerVoicePitch(self)
 
 	local melee = ware_data.special_melee
 	if (melee == null)
