@@ -304,10 +304,8 @@ function OnPlayerVoiceline(player, voiceline)
 				filter_type = RECIPIENT_FILTER_GLOBAL
 			})
 
-			local origin = player.GetOrigin()
-			local duration = 30.0 / Ware_MinigamePlayers.len()
-
-			duration = Clamp(duration, 1.0, 3.0)
+			local origin = player.GetOrigin()	
+			local duration = Clamp(30.0 / Max(1, Ware_MinigamePlayers.len()), 1.5, 3.0)
 
 			player.AddCondEx(TF_COND_NOHEALINGDAMAGEBUFF, duration, null)
 
