@@ -20,6 +20,8 @@ tracks <-
 
 mode <- RandomInt(0, 2)
 
+first <- true
+
 minigame.location    = tracks[mode][0]
 endzone_vector      <- tracks[mode][1]
 minigame.duration    = tracks[mode][2]
@@ -100,6 +102,13 @@ function OnUpdate()
 			player.GetOrigin().z > endzone_vector.z)
 		{
 			Ware_PassPlayer(player, true)
+			
+			if (first)
+			{
+				Ware_ChatPrint(null, "{player} {color}finished the race first!", player, TF_COLOR_DEFAULT)
+				Ware_GiveBonusPoints(player)
+				first = false
+			}			
 		}
 	}
 }
