@@ -11,7 +11,7 @@
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
 // if changing this, change it in VScript's config.nut too
-#define PLUGIN_VERSION "1.2.2"
+#define PLUGIN_VERSION "1.2.3"
 
 // unused event repurposed for vscript <-> sourcemod communication
 #define PROXY_EVENT "tf_map_time_remaining"
@@ -231,21 +231,27 @@ void Enable()
 	while ( FindNextConCommand(hConCommandIter, name, sizeof(name), is_command, flags, description, sizeof(description)));
 	
 	// special cases
-	AddCommandListener(ListenerCheatCommand, "addcond");
-	AddCommandListener(ListenerCheatCommand, "removecond");
-	AddCommandListener(ListenerCheatCommand, "mp_playgesture");
-	AddCommandListener(ListenerCheatCommand, "mp_playanimation");
+	g_CheatCommands.PushString("give");	
+	g_CheatCommands.PushString("te");
 	g_CheatCommands.PushString("addcond");	
 	g_CheatCommands.PushString("removecond");	
 	g_CheatCommands.PushString("mp_playgesture");	
 	g_CheatCommands.PushString("mp_playanimation");	
+	for (int i = 0; i < g_CheatCommands.Length; i++)	
+	{		
+		g_CheatCommands.GetString(i, name, sizeof(name));
+		AddCommandListener(ListenerCheatCommand, name);
+	}
 	
-	AddCommandListener(ListenerCheatCommandArgs, "kill");
-	AddCommandListener(ListenerCheatCommandArgs, "explode");
-	AddCommandListener(ListenerCheatCommandArgs, "fov");
 	g_CheatCommandsArgs.PushString("kill");	
 	g_CheatCommandsArgs.PushString("explode");	
-	g_CheatCommandsArgs.PushString("fov");	
+	g_CheatCommandsArgs.PushString("fov");		
+	for (int i = 0; i < g_CheatCommandsArgs.Length; i++)	
+	{		
+		g_CheatCommandsArgs.GetString(i, name, sizeof(name));
+		AddCommandListener(ListenerCheatCommandArgs, name);
+	}	
+	
 }
 
 void Disable(bool map_unload)
