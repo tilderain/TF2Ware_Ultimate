@@ -5,7 +5,7 @@ minigame <- Ware_MinigameData
 	description    = "Get Ready to Shoot..."
 	duration       = 180.0
 	end_delay      = 3.0
-	music          = "staredown"
+	music          = null
 	location       = "dirtsquare"
 	custom_overlay = ""
 	min_players    = 2
@@ -20,6 +20,7 @@ dueling <- true
 mexican_standoff <- false
 game_over <- false
 shootout <- false
+music <- "staredown"
 sound_standoff <- "tf2ware_ultimate/mexican_standoff.mp3"
 sound_bell <- "player/taunt_sfx_bell_single.wav"
 sound_winner <- "player/taunt_bell.wav"
@@ -31,6 +32,7 @@ function OnPrecache()
 	PrecacheSound(sound_winner)
 	PrecacheOverlay("hud/tf2ware_ultimate/minigames/wildwest_ready")
 	PrecacheOverlay("hud/tf2ware_ultimate/minigames/wildwest_shoot")
+	Ware_PrecacheMinigameMusic(music, true)
 }
 
 function OnStart()
@@ -46,6 +48,10 @@ function OnStart()
 		minidata.hold_warning <- false
 		player.AddFlag(FL_ATCONTROLS)
 	}
+	
+	// mexican standoff has its own "music"
+	if (Ware_MinigamePlayers.len() > 3)
+		Ware_PlayMinigameMusic(null, music)
 }
 
 function OnTeleport(players)
@@ -67,7 +73,7 @@ function PlacePlayers(players)
 		foreach (player in players)
 			Ware_GetPlayerMiniData(player).opponent <- null
 
-		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
+		Ware_PlayMinigameMusic(null, music, SND_STOP)
 		Ware_PlaySoundOnAllClients(sound_standoff)
 		
 		Ware_CreateTimer(@() GiveGuns(), 2.0)
@@ -166,7 +172,7 @@ function StartShootout()
 	if (mexican_standoff)
 		Ware_PlaySoundOnAllClients(sound_standoff, 0.1, 100, SND_CHANGE_VOL)
 	else
-		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_CHANGE_VOL, 0.1)
+		Ware_PlayMinigameMusic(null, music, SND_CHANGE_VOL, 0.1)
 	
 	foreach (player in Ware_MinigamePlayers)
 	{
@@ -250,7 +256,7 @@ function StopShootout()
 	if (count > 1)
 	{
 		if (count > 3)
-			Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_CHANGE_VOL, 1.0)
+			Ware_PlayMinigameMusic(null, music, SND_CHANGE_VOL, 1.0)
 			
 		Ware_PlaySoundOnAllClients(sound_bell)
 		PlacePlayers(final_players)
