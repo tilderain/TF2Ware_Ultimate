@@ -10,6 +10,7 @@ collisions
 double_trouble
 extended_round
 fov
+hale
 inclinity_problem
 //invisible  TODO need a better performance implementation
 low_gravity

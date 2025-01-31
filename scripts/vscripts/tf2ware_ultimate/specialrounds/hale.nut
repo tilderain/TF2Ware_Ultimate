@@ -7,6 +7,9 @@ hale_talk_sound <- "TF2Ware_Ultimate.HaleRamble"
 hale_death_sound <- "TF2Ware_Ultimate.HaleDeath"
 hale_win_sound <- "TF2Ware_Ultimate.HaleWin"
 
+land_sound <- "TF2Ware_Ultimate.HaleLand"
+land_particle <- "taunt_flip_land"
+
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Versus Saxton Hale"
@@ -25,6 +28,18 @@ function OnPrecache()
 	PrecacheScriptSound(hale_talk_sound)
 	PrecacheScriptSound(hale_death_sound)
 	PrecacheScriptSound(hale_win_sound)
+	PrecacheScriptSound(land_sound)
+	PrecacheParticle(taunt_flip_land)
+}
+
+function InitHale(player)
+{
+	local special = Ware_GetPlayerSpecialRoundData(player)
+	special.hale_rage <- 0
+	special.hale_jumptime <- 0.0
+	special.hale_injump <- 0
+	special.hale_rambletime <- 0.0
+	special.hale_lastorigin <- Vector()
 }
 
 function ApplyHaleMelee(player)
@@ -59,14 +74,10 @@ function ApplyHaleModel(player)
 
 function OnStart()
 {
-	foreach(player in Ware_Players)
+	foreach (player in Ware_Players)
 	{
-		local special = Ware_GetPlayerSpecialRoundData(player)
-		special.hale_rage <- 0
-		special.hale_jumptime <- 0.0
-		special.hale_injump <- 0
-		special.hale_rambletime <- 0.0
-
+		InitHale(player)
+		
 		if (player.IsAlive())
 		{
 			ApplyHaleMelee(player)
@@ -80,11 +91,7 @@ function OnStart()
 
 function OnPlayerConnect(player)
 {
-	local special = Ware_GetPlayerSpecialRoundData(player)
-	special.hale_rage <- 0
-	special.hale_jumptime <- 0.0
-	special.hale_injump <- 0
-	special.hale_rambletime <- 0.0
+	InitHale(player)
 }
 
 function OnPlayerInventory(player)
@@ -98,11 +105,19 @@ function OnPlayerSpawn(player)
 	ApplyHaleModel(player)
 }
 
+function OnMinigameCleanup()
+{
+	foreach (player in Ware_MinigamePlayers)
+	{
+		if (player.IsAlive())
+			ApplyHaleModel(player)
+	}
+}
+
 function OnUpdate()
 {
-	foreach (data in Ware_PlayersData)
+	foreach (player in Ware_Players)
 	{
-		local player = data.player
 		if (player.IsAlive())
 		{
 			local special = Ware_GetPlayerSpecialRoundData(player)
@@ -111,37 +126,45 @@ function OnUpdate()
 			local text = ""
 			local buttons = GetPropInt(player, "m_nButtons")
 			local time = Time()
-
+			
+			local origin = player.GetOrigin()	
+			
 			if (special.hale_injump != 0)
 			{
-				if (player.GetFlags() & FL_ONGROUND)
+				local teleported = VectorDistance(origin, special.hale_lastorigin) > 64.0
+				
+				if (teleported || (player.GetFlags() & FL_ONGROUND))
 				{
 					Ware_RemovePlayerAttribute(player, "cancel falling damage")
 
 					if (special.hale_injump == 2)
 					{
 						player.SetGravity(1.0)
-
-						local origin = player.GetOrigin()
-
-						foreach (victim in Ware_MinigamePlayers)
+						
+						// don't slam after getting teleported
+						if (!teleported)
 						{
-							if (player == victim || !victim.IsAlive())
-								continue
+							player.EmitSound(land_sound)
+							DispatchParticleEffect(land_particle, origin, vec3_up)					
 
-							local vector = victim.GetOrigin()
-							local dist = VectorDistance(origin, vector)
-							if (dist < 300.0)
+							foreach (victim in Ware_MinigamePlayers)
 							{
-								local angles =  VectorAngles(vector - origin)
-								local vector = angles.Forward()
-								vector *= 400.0
+								if (player == victim || !victim.IsAlive() || victim.IsTaunting())
+									continue
 
-								// Lift off ground
-								if(victim.GetFlags() & FL_ONGROUND)
-									vector.z = Max(vector.z, 300.0);
+								local vector = victim.GetOrigin()
+								local dir = vector - origin
+								local dist = dir.Norm()
+								if (dist < 256.0)
+								{
+									local vector = dir * 320.0
 
-								victim.SetAbsVelocity(vector)
+									// Lift off ground
+									if(victim.GetFlags() & FL_ONGROUND)
+										vector.z = Max(vector.z, 300.0)
+
+									victim.SetAbsVelocity(vector)
+								}
 							}
 						}
 					}
@@ -216,6 +239,8 @@ function OnUpdate()
 					special.hale_jumptime = jump
 				}
 			}
+
+			special.hale_lastorigin = origin
 
 			if (rage >= 100)
 			{
@@ -320,6 +345,9 @@ function OnCalculateScore(data)
 
 		Ware_PlaySoundOnClient(player, hale_death_sound, 1.0, 100, SND_CHANGE_PITCH)
 	}
+	
+	// use normal score calculations
+	return false
 }
 
 function OnEnd()

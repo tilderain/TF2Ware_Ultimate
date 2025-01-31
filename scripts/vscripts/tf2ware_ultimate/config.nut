@@ -93,45 +93,42 @@ function Ware_LoadConfigList(file_name, list, expected_version = 0, version_call
 
 function Ware_LoadConfigMinigames()
 {
-	// bump this when new entries are added, and fill in the switch below
+	// bump this when new entries are added, and fill in the loop below
 	local latest_version = 0
-	local version = Ware_LoadConfigList("minigames", Ware_Minigames, latest_version, function(version, lines)
+	Ware_LoadConfigList("minigames", Ware_Minigames, latest_version, function(version, lines)
 	{
-		switch (version)
+		for (local v = version + 1; v <= latest_version; v++)
 		{
-			case 1:
-			case 0:
-				//lines.append("test")
+			//if (v == 1)
+			//	lines.append("test")
 		}
 	})
 }
 
 function Ware_LoadConfigBossgames()
 {
-	// bump this when new entries are added, and fill in the switch below
+	// bump this when new entries are added, and fill in the loop below
 	local latest_version = 0
-	local version = Ware_LoadConfigList("bossgames", Ware_Bossgames, latest_version, function(version, lines)
+	Ware_LoadConfigList("bossgames", Ware_Bossgames, latest_version, function(version, lines)
 	{
-		switch (version)
+		for (local v = version + 1; v <= latest_version; v++)
 		{
-			case 1:
-			case 0:
-				//lines.append("test")
+			//if (v == 1)
+			//	lines.append("test")
 		}
 	})
 }
 
 function Ware_LoadConfigSpecialRounds()
 {
-	// bump this when new entries are added, and fill in the switch below
-	local latest_version = 0
-	local version = Ware_LoadConfigList("specialrounds", Ware_SpecialRounds, latest_version, function(version, lines)
+	// bump this when new entries are added, and fill in the loop below
+	local latest_version = 1
+	Ware_LoadConfigList("specialrounds", Ware_SpecialRounds, latest_version, function(version, lines)
 	{
-		switch (version)
+		for (local v = version + 1; v <= latest_version; v++)
 		{
-			case 1:
-			case 0:
-				//lines.append("test")
+			if (v == 1)
+				lines.append("hale")
 		}
 	})
 }
@@ -179,10 +176,8 @@ function Ware_LoadConfig()
 
 function Ware_WriteConfigList(file_name, version, lines)
 {	
-	lines.insert(0, "VERSION " + version)
-	
 	local cfg_name = format(Ware_CfgPath, file_name)
-	local buffer = ""
+	local buffer = "VERSION " + version
 	foreach (line in lines)
 		buffer += line + "\n"
 	StringToFile(cfg_name, buffer)

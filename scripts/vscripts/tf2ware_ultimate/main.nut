@@ -888,6 +888,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_on_player_disconnect    = Ware_Callback(scope, "OnPlayerDisconnect")
 	special_round.cb_on_player_spawn         = Ware_Callback(scope, "OnPlayerSpawn")
 	special_round.cb_on_player_inventory     = Ware_Callback(scope, "OnPlayerInventory")
+	special_round.cb_on_player_voiceline     = Ware_Callback(scope, "OnPlayerVoiceline")
 	special_round.cb_get_minigame            = Ware_Callback(scope, "GetMinigameName")
 	special_round.cb_on_minigame_start       = Ware_Callback(scope, "OnMinigameStart")
 	special_round.cb_on_minigame_end         = Ware_Callback(scope, "OnMinigameEnd")
@@ -896,7 +897,6 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_on_begin_boss           = Ware_Callback(scope, "OnBeginBoss")
 	special_round.cb_on_speedup              = Ware_Callback(scope, "OnSpeedup")
 	special_round.cb_on_take_damage          = Ware_Callback(scope, "OnTakeDamage")
-	special_round.cb_on_player_voiceline     = Ware_Callback(scope, "OnPlayerVoiceline")
 	special_round.cb_on_update               = Ware_Callback(scope, "OnUpdate")
 	
 }
@@ -1739,9 +1739,14 @@ function Ware_FinishMinigameInternal()
 		
 		if (participated)
 		{
+			local add_score = data.passed
 			if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_score.IsValid())
-				Ware_SpecialRound.cb_on_calculate_score(data)
-			else if (data.passed)
+			{
+				if (Ware_SpecialRound.cb_on_calculate_score(data) != false)
+					add_score = false
+			}
+				
+			if (add_score)
 				data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
 		}
 	}
