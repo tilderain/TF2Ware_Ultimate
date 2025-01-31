@@ -222,7 +222,7 @@ Ware_Location.kart_containers <-
 	cameras        = ["kartcontainers_camera"]
 	Teleport = function(players)
 	{
-		Ware_TeleportPlayersRow(players, 
+		Ware_TeleportPlayersRow(Ware_GetSortedScorePlayers(false), 
 			center,
 			QAngle(0, 180, 0),
 			900.0,
@@ -240,8 +240,9 @@ Ware_Location.kart_paths <-
 	spacing        = 100.0
 	Teleport = function(players)
 	{
-		local red_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED)
-		local blue_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_BLUE)
+		local sorted_players = Ware_GetSortedScorePlayers(true)
+		local red_players = sorted_players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED)
+		local blue_players = sorted_players.filter(@(i, player) player.GetTeam() == TF_TEAM_BLUE)
 		
 		local left_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 		
@@ -264,7 +265,7 @@ Ware_Location.kart_ramp <-
 	center   = Vector(-7000, -10400, -6494)
 	Teleport = function(players)
 	{
-		Ware_TeleportPlayersRow(players, 
+		Ware_TeleportPlayersRow(Ware_GetSortedScorePlayers(true), 
 			center,
 			QAngle(0, 90, 0),
 			1500.0,
