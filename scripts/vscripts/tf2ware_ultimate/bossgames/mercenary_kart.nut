@@ -2956,7 +2956,7 @@ kart_routines <-
 			local params =
 			{
 				sound_name  = "MK_Music_Pinball"
-				volume      = 0.9
+				volume      = 1.0
 				entity      = m_driver
 				flags       = SND_CHANGE_VOL
 				filter_type = RECIPIENT_FILTER_SINGLE_PLAYER			

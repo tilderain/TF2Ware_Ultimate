@@ -605,7 +605,7 @@ MK_Music_Pinball
 {
 	soundlevel	SNDLVL_NONE
 	channel		CHAN_AUTO
-	volume		0.9
+	volume		1.0
 	pitch		PITCH_NORM
 	wave		tf2ware_ultimate/pinball/music.wav
 }
