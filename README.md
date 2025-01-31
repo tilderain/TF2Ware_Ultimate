@@ -17,7 +17,7 @@ This is used as an optimization for high player servers, as constantly loading a
 The whitelister will only allow hat cosmetics, which is a good middleground for allowing some player customization while preventing big stutters.
 
 ### Installation
-Make sure you have SourceMod installed. This is not covered here, there is plenty of guides online.
+Make sure you have SourceMod installed. This is not covered here, there are plenty of guides online.
 
 Download the [latest release](https://github.com/ficool2/TF2Ware_Ultimate/releases). Extract it into your `addons` folder.
 
