@@ -48,9 +48,15 @@ function OnTeleport(players)
 function OnStart()
 {
 	if (mode == 0)
+	{
 		Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Iron Bomber")
+	}
 	else
+	{
 		Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Thermal Thruster")
+		foreach (player in Ware_MinigamePlayers)
+			SetPropFloatArray(player, "m_Shared.m_flItemChargeMeter", 50.0, 1)
+	}
 }
 
 function OnUpdate()
