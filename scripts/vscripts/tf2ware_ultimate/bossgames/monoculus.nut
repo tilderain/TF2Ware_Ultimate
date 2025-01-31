@@ -115,7 +115,7 @@ function OnUpdate()
 	}
 }
 
-function OnEnd()
+function OnCleanup()
 {
 	local event_send = Ware_GetAlivePlayers().len() > 0
 	foreach (monoculus in monoculuses)
