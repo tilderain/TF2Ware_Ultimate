@@ -13,7 +13,7 @@ land_particle <- "taunt_flip_land"
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Versus Saxton Hale"
-	author = ["Batfoxkid", "ficool2"]  // Put OG modeler and voice actor here?
+	author = ["Batfoxkid", "Lizard of Oz", "Druoxtheshredder", "ficool2"]  // includes OG modeler and voice actor
 	description = "Everyone is SAXTON HALE!"
 	category = "weapon"
 	pitch_override = 0
@@ -29,7 +29,7 @@ function OnPrecache()
 	PrecacheScriptSound(hale_death_sound)
 	PrecacheScriptSound(hale_win_sound)
 	PrecacheScriptSound(land_sound)
-	PrecacheParticle(taunt_flip_land)
+	PrecacheParticle(land_particle)
 }
 
 function InitHale(player)
