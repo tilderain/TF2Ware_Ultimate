@@ -942,10 +942,13 @@ function Ware_BeginSpecialRoundInternal()
 	Ware_CriticalZone = true
 	
 	// copied logic from minigame start
+	Ware_SpecialRoundScope.clear()
+	
 	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
 	
 	local attempts = 0
+	local success = false
 	local round
 	
 	for (local attempt = 0; attempt < 16; attempt++)
@@ -980,11 +983,13 @@ function Ware_BeginSpecialRoundInternal()
 			break
 	}
 		
-	if (!Ware_SpecialRoundScope)
+	if (Ware_SpecialRoundScope.len() == 0)
 	{
 		Ware_Error("No valid special round found to pick. There may not be enough minimum players")
 		return false
 	}	
+	
+	printf("[TF2Ware] Starting special round '%s'\n", round)
 	
 	Ware_SpecialRoundPrevious = true
 	
@@ -1203,72 +1208,109 @@ function Ware_SpeedupInternal()
 	}
 }
 
+function Ware_LoadMinigame(file_name, player_count, is_boss, is_forced)
+{
+	local path = format("tf2ware_ultimate/%s/%s", is_boss ? "bossgames" : "minigames", file_name)
+	local scope = {}
+	try 
+	{
+		IncludeScript(path, scope)
+	}
+	catch (e)
+	{
+		Ware_HandleError(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
+		return null
+	}
+	
+	// TODO should cache this when precaching minigames and filter it from the array earlier
+	// instead of having to load the minigame from disk first (expensive)
+	local min_players = scope.minigame.min_players
+	if (player_count >= min_players)
+	{
+		if (!("OnPick" in scope) || scope.OnPick())	
+		{
+			scope.minigame.boss = is_boss
+			scope.minigame.file_name = file_name		
+			return scope
+		}
+		else if (is_forced)
+		{
+			Ware_Error("Not loading '%s' as it rejected the pick", file_name)	
+		}
+	}
+	else if (is_forced)
+	{
+		Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)	
+	}
+	
+	return null	
+}
+
+Ware_CheckMinigameIsBoss <- false
+function Ware_CheckMinigameDebug(is_boss)
+{
+	if (Ware_DebugForceBossgame.len() > 0)
+	{
+		if (Ware_DebugForceBossgameOnce)
+		{
+			if (is_boss)
+			{
+				local minigame = Ware_DebugForceBossgame
+				Ware_DebugForceBossgame = ""
+				Ware_DebugForceBossgameOnce = false	
+				Ware_CheckMinigameIsBoss = true
+				return minigame
+			}
+		}
+		else
+		{
+			local minigame = Ware_DebugForceBossgame
+			Ware_CheckMinigameIsBoss = true
+			return minigame
+		}
+	}
+	
+	if (Ware_DebugForceMinigame.len() > 0)
+	{
+		local minigame = Ware_DebugForceMinigame
+		if (Ware_DebugForceMinigameOnce)
+		{
+			Ware_DebugForceMinigame = ""
+			Ware_DebugForceMinigameOnce = false
+		}
+		Ware_CheckMinigameIsBoss = false
+		return minigame
+	}	
+	
+	return null
+}
+
 function Ware_StartMinigameInternal(is_boss)
 {
 	Ware_CriticalZone = true
 
+	Ware_MinigameScope.clear()
 	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
 	
-	local success = false
 	local try_debug = true
 	local prev_is_boss = is_boss
 	local attempts = 0
 	local minigame
 	
-	// TODO move this whole rolling to its own function for cleanness
-	while (!success)
+	for (local attempt = 0; attempt < 16; attempt++)
 	{
 		minigame = null
-		
-		if (++attempts > 16)
-		{
-			Ware_Error("No valid %s found to pick. There may not be enough minimum players", is_boss ? "bossgame" : "minigame")
-			return
-		}
 		
 		local is_forced = false
 		if (try_debug)
 		{
-			do 
+			minigame = Ware_CheckMinigameDebug(is_boss)	
+			if (minigame)
 			{
-				if (Ware_DebugForceBossgame.len() > 0)
-				{
-					if (Ware_DebugForceBossgameOnce)
-					{
-						if (is_boss)
-						{
-							minigame = Ware_DebugForceBossgame
-							Ware_DebugForceBossgame = ""
-							Ware_DebugForceBossgameOnce = false
-							is_forced = true			
-							break
-						}
-					}
-					else
-					{
-						minigame = Ware_DebugForceBossgame
-						is_boss = true
-						is_forced = true
-						break
-					}
-				}
-				
-				if (Ware_DebugForceMinigame.len() > 0)
-				{
-					minigame = Ware_DebugForceMinigame
-					if (Ware_DebugForceMinigameOnce)
-					{
-						Ware_DebugForceMinigame = ""
-						Ware_DebugForceMinigameOnce = false
-					}
-					is_boss = false
-					is_forced = true
-					break
-				}	
+				is_boss = Ware_CheckMinigameIsBoss
+				is_forced = true
 			}
-			while (0)
-			
 			try_debug = false
 		}
 		else
@@ -1320,50 +1362,25 @@ function Ware_StartMinigameInternal(is_boss)
 			}
 		}
 		
-		local path = format("tf2ware_ultimate/%s/%s", is_boss ? "bossgames" : "minigames", minigame)
-		try
+		Ware_MinigameScope = Ware_LoadMinigame(minigame, player_count, is_boss, is_forced)
+		if (Ware_MinigameScope)
 		{
-			Ware_MinigameScope.clear()
-			IncludeScript(path, Ware_MinigameScope)
-
-			// TODO should cache this when precaching minigames and filter it from the array earlier
-			// instead of having to load the minigame from disk first (expensive)
-			local min_players = Ware_MinigameScope.minigame.min_players
-			if (player_count >= min_players)
-			{
-				if (!("OnPick" in Ware_MinigameScope) || Ware_MinigameScope.OnPick())	
-					success = true
-				else if (is_forced)
-					Ware_Error("Not loading '%s' as it rejected the pick", minigame)	
-			}
-			else if (is_forced)
-			{
-				Ware_Error("Not enough players to load '%s', minimum is %d", minigame, min_players)	
-			}
-		}
-		catch (e)
-		{
-			Ware_HandleError(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
-		}
-		
-		// TODO if all minigames left in rotation failed to be pick (i.e. they all failed the pick condition)
-		// need to reset the rotation, I think right now this is extremely rare to happen though
-		if (success)
-		{
+			// TODO if all minigames left in rotation failed to be pick (i.e. they all failed the pick condition)
+			// need to reset the rotation, I think right now this is extremely rare to happen though			
 			if (minigame_idx != null)
 				minigame_arr.remove(minigame_idx)
+			break
 		}
-		else
-		{
-			if (is_forced)
-				Ware_Error("Failed to force load '%s', falling back to rotation", minigame)
-		}
+	}
+	
+	if (Ware_MinigameScope.len() == 0)
+	{
+		Ware_Error("No valid %s found to pick. There may not be enough minimum players", is_boss ? "bossgame" : "minigame")
+		return false
 	}
 
 	Ware_MinigameEnded = false
 	Ware_Minigame = Ware_MinigameScope.minigame
-	Ware_Minigame.boss = is_boss
-	Ware_Minigame.file_name = minigame
 	Ware_MinigameStartTime = Time()
 	
 	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
