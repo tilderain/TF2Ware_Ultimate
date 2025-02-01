@@ -217,6 +217,9 @@ if (!("Ware_Precached" in this))
 	Ware_CurrentThemeSounds 	  <- {}
 	Ware_DebugNextTheme           <- ""
 	
+	Ware_MinigameCache            <- {}
+	Ware_BossgameCache            <- {}
+	
 	Ware_SpecialRound             <- null
 	Ware_SpecialRoundScope        <- {}
 	Ware_SpecialRoundSavedConvars <- {}
@@ -364,6 +367,12 @@ function Ware_PrecacheNext()
 					else
 						music_minigame[minigame.music] <- true
 				}
+				
+				local cache = folder == "bossgames" ? Ware_BossgameCache : Ware_MinigameCache
+				cache[name] <-
+				{
+					min_players = minigame.min_players
+				}					
 			}
 			else if ("special_round" in scope)
 			{
@@ -1222,8 +1231,6 @@ function Ware_LoadMinigame(file_name, player_count, is_boss, is_forced)
 		return null
 	}
 	
-	// TODO should cache this when precaching minigames and filter it from the array earlier
-	// instead of having to load the minigame from disk first (expensive)
 	local min_players = scope.minigame.min_players
 	if (player_count >= min_players)
 	{
@@ -1285,6 +1292,46 @@ function Ware_CheckMinigameDebug(is_boss)
 	return null
 }
 
+function Ware_ReloadMinigameRotation(is_boss)
+{
+	if (is_boss)
+	{
+		if (Ware_Bossgames.len() == 0)
+			Ware_Error("Bossgame rotation is empty")
+		Ware_BossgameRotation = clone(Ware_Bossgames)
+		return Ware_BossgameRotation
+	}
+	else
+	{
+		if (Ware_Minigames.len() == 0)
+			Ware_Error("Minigame rotation is empty")			
+		Ware_MinigameRotation = clone(Ware_Minigames)
+		return Ware_MinigameRotation
+	}	
+}
+
+function Ware_GetMinigameRotation(is_boss, player_count)
+{
+	local rotation = is_boss ? Ware_BossgameRotation : Ware_MinigameRotation
+	local cache = is_boss ? Ware_BossgameCache : Ware_MinigameCache	
+	local function CacheFilter(i, file_name)
+	{
+		if (file_name in cache)
+			return player_count >= cache[file_name].min_players 
+		// if not cached, player count is checked later during load
+		return true		
+	}
+
+	rotation = rotation.filter(CacheFilter)
+	if (rotation.len() == 0)
+	{
+		// try again if previous rotation was exhausted
+		rotation = Ware_ReloadMinigameRotation(is_boss)
+		rotation = rotation.filter(CacheFilter)
+	}
+	return rotation
+}
+
 function Ware_StartMinigameInternal(is_boss)
 {
 	Ware_CriticalZone = true
@@ -1293,14 +1340,18 @@ function Ware_StartMinigameInternal(is_boss)
 	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
 	
-	local try_debug = true
+	local try_debug = true, try_specialround = true
 	local prev_is_boss = is_boss
 	local attempts = 0
-	local minigame
+	local minigame, rotation
 	
 	for (local attempt = 0; attempt < 16; attempt++)
 	{
 		minigame = null
+		
+		// 1) check debug overrides first
+		// 2) check special round
+		// 3) lastly try normal rotation
 		
 		local is_forced = false
 		if (try_debug)
@@ -1318,57 +1369,45 @@ function Ware_StartMinigameInternal(is_boss)
 			is_boss = prev_is_boss
 		}
 		
-		local minigame_arr, minigame_idx
+		local minigame_arr
+		local from_rotation = false
 		if (!is_forced)
 		{
-			if (Ware_SpecialRound && Ware_SpecialRound.cb_get_minigame.IsValid())
-				minigame = Ware_SpecialRound.cb_get_minigame(is_boss)
+			if (try_specialround)
+			{
+				try_specialround = false
+				if (Ware_SpecialRound && Ware_SpecialRound.cb_get_minigame.IsValid())
+					minigame = Ware_SpecialRound.cb_get_minigame(is_boss)
+			}
 			
 			if (minigame == null)
 			{
-				if (is_boss)
-				{
-					if (Ware_BossgameRotation.len() == 0)
-					{
-						if (Ware_Bossgames.len() == 0)
-						{
-							Ware_Error("Bossgame rotation is empty")
-							return
-						}
-						
-						Ware_BossgameRotation = clone(Ware_Bossgames)
-					}
+				if (rotation == null || rotation.len() == 0)
+					rotation = Ware_GetMinigameRotation(is_boss, player_count)
 					
-					minigame_arr = Ware_BossgameRotation
-				}
-				else
+				if (rotation.len() == 0)
 				{
-					if (Ware_MinigameRotation.len() == 0)
-					{
-						if (Ware_Minigames.len() == 0)
-						{
-							Ware_Error("Minigame rotation is empty")
-							return
-						}
-						
-						Ware_MinigameRotation = clone(Ware_Minigames)
-					}
-					
-					minigame_arr = Ware_MinigameRotation
+					// nothing in rotation after refreshing it... fail
+					break
 				}
-
-				minigame_idx = RandomIndex(minigame_arr)
-				minigame = minigame_arr[minigame_idx]
+					
+				minigame = RemoveRandomElement(rotation)
+				from_rotation = true
 			}
 		}
 		
 		Ware_MinigameScope = Ware_LoadMinigame(minigame, player_count, is_boss, is_forced)
 		if (Ware_MinigameScope)
-		{
-			// TODO if all minigames left in rotation failed to be pick (i.e. they all failed the pick condition)
-			// need to reset the rotation, I think right now this is extremely rare to happen though			
-			if (minigame_idx != null)
-				minigame_arr.remove(minigame_idx)
+		{		
+			// success!
+			
+			if (from_rotation)
+			{
+				local arr = is_boss ? Ware_BossgameRotation : Ware_MinigameRotation
+				local idx = arr.find(minigame)
+				if (idx != null)
+					arr.remove(idx)
+			}
 			break
 		}
 	}
