@@ -24,8 +24,9 @@ function Ware_CheckPlugin()
 			// killswitch for security
 			if (Ware_PluginVersion[0] <= 1 && Ware_PluginVersion[1] <= 2 && Ware_PluginVersion[2] <= 3)
 			{
-				ClientPrint(null, HUD_PRINTTALK, "\x07FF0000You must update to the latest plugin version. TF2Ware Ultimate will not start until you update the plugin.")
-				printl(Ware_NeedsPluginMsg)
+				local plugin_msg = "** You must update to the latest plugin version. TF2Ware Ultimate will not start until you update the plugin."
+				ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + plugin_msg)
+				printl(plugin_msg)
 				Ware_NeedsPlugin = true
 			}
 			else
