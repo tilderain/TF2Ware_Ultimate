@@ -194,6 +194,10 @@ delegated_callbacks <-
 		// return true if either one wants to override logic
 		local ret_a = DelegatedCall(scope_a, "OnBeginIntermission", is_boss)
 		local ret_b = DelegatedCall(scope_b, "OnBeginIntermission", is_boss) 
+		
+		// for simon special round
+		special_round.opposite_win = scope_a.special_round.opposite_win || scope_b.special_round.opposite_win
+	
 		return ret_a || ret_b
 	}
 
