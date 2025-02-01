@@ -325,7 +325,7 @@ function OnTakeDamage(params)
 	
 	local victim = params.const_entity
 	local attacker = params.attacker
-	if (attacker && attacker.IsPlayer())
+	if (victim.IsPlayer() && attacker && attacker.IsPlayer())
 	{
 		local victim_class = victim.GetPlayerClass()
 		local attacker_class = attacker.GetPlayerClass()
