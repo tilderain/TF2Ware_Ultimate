@@ -2141,7 +2141,7 @@ function Ware_OnPlayerSay(player, text)
 	if (text.len() == 0)
 		return false
 	
-	if (startswith(text, "!ware_"))
+	if (startswith(text, "!ware_") || startswith(text, "/ware_"))
 	{
 		local len = text.find(" ")
 		local cmd = len != null ? text.slice(6, len) : text.slice(6)
