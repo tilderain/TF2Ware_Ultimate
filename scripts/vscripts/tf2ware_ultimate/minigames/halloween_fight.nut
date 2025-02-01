@@ -81,6 +81,7 @@ function OnStart()
 			SetEntityParent(minidata.right_glow, player, "righteye")
 		}
 
+		Ware_AddPlayerAttribute(player, "restore health on kill", 100.0, -1)
 		player.SetHealth(1000)
 	}
 }
