@@ -81,16 +81,17 @@ function OnPick()
 	
 	foreach (name, value in data_a.convars) data.convars[name] <- value
 	foreach (name, value in data_b.convars) data.convars[name] <- value
-	data.reverse_text = data_a.reverse_text || data_b.reverse_text
-	data.allow_damage = data_a.allow_damage || data_b.allow_damage
-	data.force_collisions = data_a.force_collisions || data_b.force_collisions
-	data.opposite_win = data_a.opposite_win || data_b.opposite_win
-	data.friendly_fire = data_a.friendly_fire && data_b.friendly_fire
-	data.bonus_points = data_a.bonus_points || data_b.bonus_points
+	data.reverse_text      = data_a.reverse_text || data_b.reverse_text
+	data.allow_damage      = data_a.allow_damage || data_b.allow_damage
+	data.force_collisions  = data_a.force_collisions || data_b.force_collisions
+	data.opposite_win      = data_a.opposite_win || data_b.opposite_win
+	data.friendly_fire     = data_a.friendly_fire && data_b.friendly_fire
+	data.bonus_points      = data_a.bonus_points || data_b.bonus_points
 	// choose whichever one has non-default value
-	data.boss_count = data_a.boss_threshold != data.boss_count ? data_a.boss_count : data_b.boss_count
-	data.boss_threshold = data_a.boss_threshold != data.boss_threshold ? data_a.boss_threshold : data_b.boss_threshold
+	data.boss_count        = data_a.boss_threshold != data.boss_count ? data_a.boss_count : data_b.boss_count
+	data.boss_threshold    = data_a.boss_threshold != data.boss_threshold ? data_a.boss_threshold : data_b.boss_threshold
 	data.speedup_threshold = data_a.speedup_threshold != data.speedup_threshold ? data_a.speedup_threshold : data_b.speedup_threshold
+	data.pitch_override    = data_a.pitch_override != data.pitch_override ? data_a.pitch_override : data_b.pitch_override
 	
 	return true
 }
