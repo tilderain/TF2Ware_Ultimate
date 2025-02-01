@@ -8,8 +8,9 @@ function Ware_CheckPlugin()
 		Ware_Plugin = true
 		if (Ware_PluginVersionString == null)
 		{
-			ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + Ware_NeedsPluginMsg)
-			printl(Ware_NeedsPluginMsg)
+			local plugin_msg = "** TF2Ware Ultimate requires the SourceMod plugin installed on dedicated servers"
+			ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + plugin_msg)
+			printl(plugin_msg)
 			Ware_NeedsPlugin = true
 		}
 		else
@@ -19,9 +20,18 @@ function Ware_CheckPlugin()
 			
 			foreach (i, digit in split(Ware_PluginVersionString, "."))
 				Ware_PluginVersion[i] = digit.tointeger()				
-
-			printf("%d - %d - %d\n", Ware_PluginVersion[0], Ware_PluginVersion[1], Ware_PluginVersion[2])
-			Ware_PluginLegacyEvents = Ware_PluginVersion[0] <= 1 && Ware_PluginVersion[1] <= 2 && Ware_PluginVersion[2] <= 1
+				
+			// killswitch for security
+			if (Ware_PluginVersion[0] <= 1 && Ware_PluginVersion[1] <= 2 && Ware_PluginVersion[2] <= 3)
+			{
+				ClientPrint(null, HUD_PRINTTALK, "\x07FF0000You must update to the latest plugin version. TF2Ware Ultimate will not start until you update the plugin.")
+				printl(Ware_NeedsPluginMsg)
+				Ware_NeedsPlugin = true
+			}
+			else
+			{
+				Ware_PluginLegacyEvents = Ware_PluginVersion[0] <= 1 && Ware_PluginVersion[1] <= 2 && Ware_PluginVersion[2] <= 1
+			}
 		}
 	}
 }
@@ -34,7 +44,7 @@ function Ware_CheckPluginOutdated()
 	Ware_PluginOutdated = Ware_PluginVersionString != WARE_PLUGINVERSION
 	if (Ware_PluginOutdated)
 	{
-		local msg = format(Ware_PluginOutdatedMsg, WARE_PLUGINVERSION, Ware_PluginVersionString)
+		local msg = format("** SourceMod plugin version is outdated. Expected version %s, got %s", WARE_PLUGINVERSION, Ware_PluginVersionString)
 		ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + msg)
 		printl(msg)
 	}
@@ -50,8 +60,6 @@ function Ware_LinkPlugin()
 		Ware_PluginOutdated <- false
 		Ware_PluginLegacyEvents <- false
 		Ware_NeedsPlugin <- false
-		Ware_NeedsPluginMsg <- "** TF2Ware Ultimate requires the SourceMod plugin installed on dedicated servers"
-		Ware_PluginOutdatedMsg <- "** SourceMod plugin version is outdated. Expected version %s, got %s"
 		Ware_CheckPlugin()
 		printl("\tVScript: TF2Ware Ultimate Started")
 	}
