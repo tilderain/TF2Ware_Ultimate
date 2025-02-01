@@ -223,33 +223,6 @@ Ware_DevCommands <-
 			Ware_ChatPrint(player, "Arguments: [player name] <score>")
 		}
 	}
-	// TODO remove this on release
-	"run" : function(player, text)
-	{
-		try
-		{
-			local quotes = split(text, "'")
-			local quote_len = quotes.len() - 1
-			if (quote_len > 0)
-			{
-				text = ""
-				foreach (i, quote in quotes)
-				{
-					text += quote
-					if (i != quote_len)
-						text += "\""
-				}		
-			}
-			local code = "return (function() {" + text + "}).call(ROOT)"
-			printf("[TF2Ware] %s '%s' executed code: %s\n", Ware_DevCommandTitle(player), GetPlayerName(player), code)
-			local ret = compilestring(code)()
-			ClientPrint(player, HUD_PRINTTALK, "\x07FFFFFFRETURN: " + ret)
-		}
-		catch (e)
-		{
-			ClientPrint(player, HUD_PRINTTALK, "\x07FF0000ERROR: " + e)
-		}	
-	}
 	"timescale" : function(player, text)
 	{
 		local args = split(text, " ")
