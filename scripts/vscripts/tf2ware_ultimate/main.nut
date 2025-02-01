@@ -1045,9 +1045,9 @@ function Ware_BeginSpecialRoundInternal()
 				// TODO this doesn't work with double_trouble
 				Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
 					
+				CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)			
 				CreateTimer(function() 
 				{
-					Ware_ShowSpecialRoundText(Ware_Players)
 					Ware_BeginIntermission(false)
 				}, 0.0)
 			
