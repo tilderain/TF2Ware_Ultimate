@@ -27,7 +27,7 @@ function OnTeleport(players)
 		local half1 = players.filter(@(i, player) i % 2 == 0)
 		local half2 = players.filter(@(i, player) i % 2 != 0)
 		Ware_TeleportPlayersCircle(half1, Ware_MinigameLocation.center + Vector(0, 0, height), radius)
-		Ware_TeleportPlayersCircle(half2, Ware_MinigameLocation.center + Vector(0, 0, height + 256.0), radius)
+		Ware_TeleportPlayersCircle(half2, Ware_MinigameLocation.center + Vector(0, 0, height + 384.0), radius)
 	}
 	else
 	{
