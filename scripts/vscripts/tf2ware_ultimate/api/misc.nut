@@ -177,7 +177,5 @@ function Ware_EventCallback(name, keyvalues)
 	keyvalues.id <- "tf2ware_ultimate"
 	keyvalues.routine <- name
 	// unused event repurposed for vscript <-> sourcemod communication
-	// backwards compatibility: earlier versions used "player_rematch_change"
-	// but not all servers supported that, so newer ones use this
-	SendGlobalGameEvent(Ware_PluginLegacyEvents ? "player_rematch_change" : "tf_map_time_remaining", keyvalues)
+	SendGlobalGameEvent("tf_map_time_remaining", keyvalues)
 }

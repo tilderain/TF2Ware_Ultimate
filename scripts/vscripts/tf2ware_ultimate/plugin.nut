@@ -29,10 +29,6 @@ function Ware_CheckPlugin()
 				printl(plugin_msg)
 				Ware_NeedsPlugin = true
 			}
-			else
-			{
-				Ware_PluginLegacyEvents = Ware_PluginVersion[0] <= 1 && Ware_PluginVersion[1] <= 2 && Ware_PluginVersion[2] <= 1
-			}
 		}
 	}
 }
@@ -59,7 +55,6 @@ function Ware_LinkPlugin()
 		Ware_PluginVersion <- array(3, 9)
 		Ware_PluginVersionString <- ""
 		Ware_PluginOutdated <- false
-		Ware_PluginLegacyEvents <- false
 		Ware_NeedsPlugin <- false
 		Ware_CheckPlugin()
 		printl("\tVScript: TF2Ware Ultimate Started")
