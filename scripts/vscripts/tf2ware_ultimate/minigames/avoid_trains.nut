@@ -89,9 +89,10 @@ function SpawnTrain(pos)
 	
 	local train = Ware_SpawnEntity("prop_dynamic",
 	{
-		model  = train_model
-		origin = train_pos
-		angles = train_ang
+		targetname = "train"
+		model      = train_model
+		origin     = train_pos
+		angles     = train_ang
 	})
 	train.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
 	train.SetAbsVelocity(train_vel)
@@ -115,12 +116,18 @@ function OnTakeDamage(params)
 {
 	if (params.damage_type & DMG_VEHICLE)
 	{
-		local train = GetEntityParent(params.inflictor)
-		local scope = train.GetScriptScope()
-		if (!scope.played_sound)
+		if (params.inflictor)
 		{
-			train.EmitSound(horn_sound)
-			scope.played_sound = true
+			local train = params.inflictor.GetMoveParent()
+			if (train.GetName() == "train")
+			{
+				local scope = train.GetScriptScope()
+				if (!scope.played_sound)
+				{
+					train.EmitSound(horn_sound)
+					scope.played_sound = true
+				}
+			}
 		}
 	}
 }

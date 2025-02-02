@@ -661,12 +661,6 @@ function SetEntityParent(entity, parent, attachment = null)
 	}
 }
 
-// Gets an entity's parent, if one exists.
-function GetEntityParent(entity)
-{
-	return GetPropEntity(entity, "m_pParent")
-}
-
 // Sets a player's parent
 // Unlike SetEntityParent, this is intended when parenting players to another player
 // Prevents the player from going invisible
@@ -1052,12 +1046,12 @@ if (!("TriggerHurtDisintegrateProxy" in this) || !TriggerHurtDisintegrateProxy.I
 {
 	// Spoof an item to create the disintegration effect
     TriggerHurtDisintegrateProxy <- CreateEntitySafe("tf_weapon_bat")
-	TriggerHurtDisintegrateProxy.KeyValueFromString("classname", "ware_disintegrate")
     SetPropInt(TriggerHurtDisintegrateProxy, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 349)
     SetPropBool(TriggerHurtDisintegrateProxy, "m_AttributeManager.m_Item.m_bInitialized", true)
     TriggerHurtDisintegrateProxy.DispatchSpawn()
 	TriggerHurtDisintegrateProxy.DisableDraw()
     TriggerHurtDisintegrateProxy.AddAttribute("ragdolls become ash", 1, -1)
+	TriggerHurtDisintegrateProxy.KeyValueFromString("classname", "ware_disintegrate")
 }
   
 // Trigger hurt effect used by the map
