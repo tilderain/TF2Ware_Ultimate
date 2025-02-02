@@ -38,10 +38,14 @@ function Ware_CheckPluginOutdated()
 	if (Ware_PluginVersionString == null)
 		return
 	
-	Ware_PluginOutdated = Ware_PluginVersionString != WARE_PLUGINVERSION
+	// don't check the minor version, thats an optional upgrades
+	Ware_PluginOutdated = WARE_PLUGINVERSION[0] < Ware_PluginVersion[0] 
+						|| (WARE_PLUGINVERSION[0] == Ware_PluginVersion[0] && Ware_PluginVersion[1] < WARE_PLUGINVERSION[1])
+	
 	if (Ware_PluginOutdated)
 	{
-		local msg = format("** SourceMod plugin version is outdated. Expected version %s, got %s", WARE_PLUGINVERSION, Ware_PluginVersionString)
+		local msg = format("** SourceMod plugin version is outdated. Expected version %d.%d.%d, got %s", 
+			WARE_PLUGINVERSION[0], WARE_PLUGINVERSION[1], WARE_PLUGINVERSION[2], Ware_PluginVersionString)
 		ClientPrint(null, HUD_PRINTTALK, "\x07FF0000" + msg)
 		printl(msg)
 	}
