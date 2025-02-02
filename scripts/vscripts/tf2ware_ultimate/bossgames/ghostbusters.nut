@@ -152,8 +152,15 @@ function OnStart()
 
 function OnTeleport(players)
 {
-	local medic_count = Clamp(ceil(players.len() / 3.5).tointeger(), 2, 7)
-	local heavy_count = Min(Clamp(players.len() / 4, 1, 3), players.len())
+	local max_medic_count = 7, max_heavy_count = 3
+	if (players.len() > 40)
+	{
+		max_medic_count *= 2
+		max_heavy_count *= 2
+	}
+	
+	local medic_count = Clamp(ceil(players.len() / 3.5).tointeger(), 2, max_medic_count)
+	local heavy_count = Min(Clamp(players.len() / 4, 1, max_heavy_count), players.len())
 	
 	medic_count = Min(medic_count, players.len())
 	for (local i = 0; i < medic_count; i++)

@@ -73,8 +73,11 @@ function OnStart()
 	
 	Ware_SetGlobalAttribute("no_attack", 1, -1)
 	
-	EntFire("love_door*", "SetSpeed", "14")
-	EntFire("love_door*", "Open", "", 0.5)
+	foreach (wall in Ware_MinigameLocation.walls)
+	{
+		EntityAcceptInput(wall, "SetSpeed", "14")
+		EntityEntFire(wall, "Open", "", 0.5)
+	}
 	
 	vo_count = vo_heavies.len()
 	for (local i = 0; i < vo_count; i++)
@@ -95,7 +98,13 @@ function OnStart()
 
 function OnTeleport(players)
 {
-	local heavy_count = Clamp(players.len() / 4, 2, 4)
+	local max_heavy_count = 4
+	if (players.len() > 32)
+		max_heavy_count++
+	if (players.len() >= 64)
+		max_heavy_count++
+		
+	local heavy_count = Clamp(players.len() / 4, 2, max_heavy_count)
 	for (local i = 0; i < heavy_count; i++)
 		heavies.append(RemoveRandomElement(players))
 		
@@ -109,7 +118,7 @@ function OnTeleport(players)
 		Ware_MinigameLocation.center_right,
 		QAngle(0, 90, 0),
 		400.0,
-		-50.0, 50.0)
+		-50.0, 33.0)
 }
 
 function OnTakeDamage(params)
@@ -167,9 +176,12 @@ function OnEnd()
 
 function OnCleanup()
 {
-	EntFire("love_door*", "SetSpeed", "1000")
-	EntFire("love_door*", "Close")
-	
+	foreach (wall in Ware_MinigameLocation.walls)
+	{
+		EntityAcceptInput(wall, "SetSpeed", "1000")
+		EntityAcceptInput(wall, "Close")
+	}
+
 	foreach (player in Ware_MinigamePlayers)
 		player.SetCustomModel("")
 }

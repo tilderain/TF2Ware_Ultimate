@@ -48,9 +48,9 @@ function OnTeleport(players)
 	shark = RemoveRandomElement(players)
 
 	Ware_TeleportPlayersRow(players,
-		Ware_MinigameLocation.center + Vector(3500, 0, -250),
+		Ware_MinigameLocation.center + Vector(3500, -90, -250),
 		QAngle(0, -180, 0),
-		1300.0,
+		1600.0,
 		65.0, 65.0)
 		
 	Ware_TeleportPlayer(shark, Ware_MinigameLocation.center + Vector(1500, 0, -200), ang_zero, vec3_zero)

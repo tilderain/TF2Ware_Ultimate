@@ -47,10 +47,14 @@ function OnPick()
 
 function OnTeleport(players)
 {
-	local pos = Ware_MinigameLocation.side
+	local left = Ware_MinigameLocation.side_left
+	local right = Ware_MinigameLocation.side_right
 	local ang = QAngle(0, -25, 0)
 	foreach (player in players)
+	{
+		local pos = player.GetTeam() == TF_TEAM_RED ? left : right
 		Ware_TeleportPlayer(player, pos, ang, vec3_zero)
+	}
 }
 
 function OnStart()
@@ -62,7 +66,7 @@ function OnStart()
 		player.AddCond(TF_COND_GRAPPLED_TO_PLAYER) // prevent taunting
 		player.RemoveCond(TF_COND_TELEPORTED)
 		player.AddHudHideFlags(HIDEHUD_TARGET_ID)
-		SetPropInt(player, "m_nRenderMode", kRenderNone)
+		//SetPropInt(player, "m_nRenderMode", kRenderNone)
 		Ware_TogglePlayerWearables(player, false)
 	}
 	

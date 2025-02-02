@@ -33,16 +33,20 @@ function OnTeleport(players)
 			blue_players.append(player)
 	}
 	
+	local spacing_x = 58.0, spacing_y = 65.0
+	if (players.len() > 40)
+		spacing_y *= 0.6
+	
 	Ware_TeleportPlayersRow(red_players,
 		Ware_MinigameLocation.center_left,
 		QAngle(0, 0, 0),
 		500.0,
-		-65.0, 65.0)
+		-spacing_x, spacing_y)
 	Ware_TeleportPlayersRow(blue_players,
 		Ware_MinigameLocation.center_right,
 		QAngle(0, 180, 0),
 		500.0,
-		65.0, 65.0)
+		spacing_x, spacing_y)
 }
 
 function OnStart()

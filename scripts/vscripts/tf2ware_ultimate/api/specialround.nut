@@ -6,6 +6,7 @@ class Ware_SpecialRoundData
 	function constructor(table = null)
 	{
 		min_players       = 0
+		max_players       = 256
 		convars           = {}
 		reverse_text      = false
 		allow_damage      = false
@@ -42,6 +43,8 @@ class Ware_SpecialRoundData
 	// == Optional settings ==
 	// Minimum amount of players needed to start, default is 0
 	min_players      		 = null
+	// Maximum amount of players needed to start, default is 256
+	max_players      		 = null	
 	// Table of convars to set for this special round
 	// Reverted to previous values after special round ends	
 	convars          		 = null

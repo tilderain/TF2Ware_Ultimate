@@ -5,6 +5,7 @@ special_round <- Ware_SpecialRoundData
 	description      = "Players are always solid to each other!"
 	category         = ""
 	force_collisions = true
+	max_players      = 40
 	convars          =
 	{
 		tf_avoidteammates = 0

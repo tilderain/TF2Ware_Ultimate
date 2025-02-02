@@ -90,6 +90,9 @@ function PlacePlayers(players)
 	local x_spacing = 70.0
 	local y_spacing = 150.0
 	
+	if (players.len() > 40)
+		x_spacing *= 0.5
+	
 	local last_player = null
 	
 	local candidates = []

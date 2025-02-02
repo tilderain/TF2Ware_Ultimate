@@ -21,10 +21,10 @@ function OnPrecache()
 function OnTeleport(players)
 {
 	Ware_TeleportPlayersRow(players, 
-		Ware_MinigameLocation.center + Vector(0, -600, 0), 
+		Ware_MinigameLocation.center + Vector(0, -700, 0), 
 		QAngle(0, 90, 0), 
 		1600.0, 
-		128.0, 120.0)
+		60.0, 120.0)
 }
 
 function OnStart()
@@ -68,7 +68,7 @@ function OnUpdate()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{		
-		if (player.GetOrigin().y > goal_vectors.y + 50.0)
+		if (player.GetOrigin().y > goal_vectors.y + 30.0)
 			Ware_PassPlayer(player, true)
 		
 		if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))

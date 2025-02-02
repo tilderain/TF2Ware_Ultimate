@@ -17,7 +17,7 @@ minigame <- Ware_MinigameData
 	start_freeze   = true
 	allow_damage   = true
 	fail_on_death  = true
-	collisions     = true
+	collisions     = Ware_Players.len() <= 40
 	convars =
 	{
 		tf_avoidteammates = 0

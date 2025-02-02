@@ -80,6 +80,8 @@ function OnStart()
 	barrier.SetCollisionGroup(TFCOLLISION_GROUP_RESPAWNROOMS)
 	
 	ball_max_count = Ware_MinigamePlayers.len() > 24 ? 20 : 10
+	if (Ware_MinigamePlayers.len() >= 64)
+		ball_max_count *= 2
 	Ware_CreateTimer(@() SpawnBalls(), 0.1)
 }
 

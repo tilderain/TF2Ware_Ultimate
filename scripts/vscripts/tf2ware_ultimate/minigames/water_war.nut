@@ -21,17 +21,12 @@ function OnTeleport(players)
 {
 	local radius = ((Ware_MinigameLocation.maxs.x - Ware_MinigameLocation.mins.x) * 0.5) - 76.0
 	local height = 1024.0
-	if (players.len() >= 24)
+	local circles = Clamp(ceil(players.len() / 24.0).tointeger(), 1, 4)
+	for (local c = 0; c < circles; c++)
 	{
-		// split into 2 circles
-		local half1 = players.filter(@(i, player) i % 2 == 0)
-		local half2 = players.filter(@(i, player) i % 2 != 0)
-		Ware_TeleportPlayersCircle(half1, Ware_MinigameLocation.center + Vector(0, 0, height), radius)
-		Ware_TeleportPlayersCircle(half2, Ware_MinigameLocation.center + Vector(0, 0, height + 384.0), radius)
-	}
-	else
-	{
-		Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center + Vector(0, 0, height), radius)
+		local targets = players.filter(@(i, player) i % circles == c)
+		Ware_TeleportPlayersCircle(targets, Ware_MinigameLocation.center + Vector(0, 0, height), radius)
+		height += 384.0
 	}
 }
 

@@ -15,6 +15,7 @@ minigame <- Ware_MinigameData
 		"jump_heavy"
 	]
 	min_players    = 2
+	max_players    = 12
 	start_pass     = true
 	allow_damage   = true
 	fail_on_death  = true
@@ -25,7 +26,7 @@ jump_team <- 0
 
 function OnPick()
 {
-	return Ware_ArePlayersOnBothTeams() && Ware_Players.len() <= 12
+	return Ware_ArePlayersOnBothTeams()
 }
 
 function OnStart()

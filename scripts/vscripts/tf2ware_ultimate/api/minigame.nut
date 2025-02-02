@@ -7,6 +7,7 @@ class Ware_MinigameData
 	{
 		location        = "home"
 		min_players     = 0
+		max_players     = 256
 		start_pass      = false
 		allow_damage    = false
 		allow_suicide   = false
@@ -56,6 +57,8 @@ class Ware_MinigameData
 	location		= null
 	// Minimum amount of players needed to start, default is 0
 	min_players		= null
+	// Maximum amount of players needed to start, default is 256
+	max_players     = null
 	// Whether players will be flagged as passed when minigame starts, default is false
 	start_pass		= null
 	// Is damage to other players allowed? Default is false

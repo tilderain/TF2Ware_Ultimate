@@ -284,6 +284,17 @@ function Ware_SetupMap()
 	local areas = {}
 	NavMesh.GetAllAreas(areas)
 	Ware_NavAreas = areas.values()
+	
+	if (MAX_CLIENTS >= 64)
+	{
+		// saves 217 entities
+		EntFire("beam", "Kill")	
+		if (MAX_CLIENTS >= 100)
+		{
+			// saves 86 entities
+			EntFire("env_sprite", "Kill")
+		}		
+	}
 }
 
 function Ware_UpdateNav()
@@ -372,6 +383,7 @@ function Ware_PrecacheNext()
 				cache[name] <-
 				{
 					min_players = minigame.min_players
+					max_players = minigame.max_players
 				}					
 			}
 			else if ("special_round" in scope)
@@ -591,6 +603,14 @@ function Ware_ParseLoadout(player)
 	{
 		RemoveAllOfEntity("tf_wearable_demoshield")
 		SetPropBool(player, "m_Shared.m_bShieldEquipped", false)
+	}
+	
+	// nothing uses the spy watch currently and this saves entities
+	local viewmodel = GetPropEntityArray(player, "m_hViewModel", 1)
+	if (viewmodel)
+	{
+		MarkForPurge(viewmodel)
+		viewmodel.Kill()
 	}
 	
 	local data = player.GetScriptScope().ware_data
@@ -926,7 +946,8 @@ function Ware_LoadSpecialRound(file_name, player_count, is_forced)
 	}
 	
 	local min_players = scope.special_round.min_players
-	if (player_count >= min_players)
+	local max_players = scope.special_round.max_players
+	if (player_count >= min_players && player_count <= max_players)
 	{
 		if (!("OnPick" in scope) || scope.OnPick())	
 		{
@@ -940,7 +961,10 @@ function Ware_LoadSpecialRound(file_name, player_count, is_forced)
 	}
 	else if (is_forced)
 	{
-		Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)	
+		if (player_count < min_players)
+			Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)	
+		else
+			Ware_Error("Too many players to load '%s', maximum is %d", file_name, max_players)	
 	}
 	
 	return null
@@ -1232,7 +1256,8 @@ function Ware_LoadMinigame(file_name, player_count, is_boss, is_forced)
 	}
 	
 	local min_players = scope.minigame.min_players
-	if (player_count >= min_players)
+	local max_players = scope.minigame.max_players
+	if (player_count >= min_players && player_count <= max_players)
 	{
 		if (!("OnPick" in scope) || scope.OnPick())	
 		{
@@ -1247,7 +1272,10 @@ function Ware_LoadMinigame(file_name, player_count, is_boss, is_forced)
 	}
 	else if (is_forced)
 	{
-		Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)	
+		if (player_count < min_players)
+			Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)	
+		else
+			Ware_Error("Too many players to load '%s', maximum is %d", file_name, max_players)	
 	}
 	
 	return null	
@@ -1317,7 +1345,10 @@ function Ware_GetMinigameRotation(is_boss, player_count)
 	local function CacheFilter(i, file_name)
 	{
 		if (file_name in cache)
-			return player_count >= cache[file_name].min_players 
+		{
+			local entry = cache[file_name]
+			return player_count >= entry.min_players && player_count <= entry.max_players
+		}
 		// if not cached, player count is checked later during load
 		return true		
 	}

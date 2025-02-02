@@ -169,7 +169,8 @@ function OnStart()
 
 function OnTeleport(players)
 {
-	local slender_count = Clamp(ceil(players.len() / 10.0).tointeger(), 1, 3)
+	local max_slender_count = players.len() > 40 ? 5 : 3
+	local slender_count = Clamp(ceil(players.len() / 10.0).tointeger(), 1, max_slender_count)
 	for (local i = 0; i < slender_count; i++)
 		slenders.append(RemoveRandomElement(players))
 	
@@ -179,11 +180,14 @@ function OnTeleport(players)
 		400.0,
 		60.0, 60.0)
 	
+	local spacing = 60.0
+	if (players.len() > 40)
+		spacing *= 0.65
 	Ware_TeleportPlayersRow(players,
 		Ware_MinigameLocation.lobby,
 		QAngle(0, -90, 0),
 		400.0,
-		-60.0, 60.0)
+		spacing, spacing)
 }
 
 function ShowStatusText()

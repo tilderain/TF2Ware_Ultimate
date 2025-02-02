@@ -61,6 +61,7 @@ class Hex
 			disableshadows = true
 			disablereceiveshadows = true
 		})
+		entity.AddFlag(FL_UNBLOCKABLE_BY_PLAYER)
 		SetPropInt(entity, "m_takedamage", DAMAGE_YES)
 	}
 	
@@ -112,11 +113,10 @@ function OnTeleport(players)
 	}
 	else if (shape == 1) // triangle
 	{
-		// this is not really right
-		if (len >= 16)
-			dim++
-		if (len >= 46)
-			dim++		
+		// hack: this is not really right
+		if (len >= 16) dim++
+		if (len >= 46) dim++		
+		if (len >= 79) dim++
 		for (local q = 0; q < dim; q++) 
 		{
 			for (local r = 0; r < dim - q; r++) 

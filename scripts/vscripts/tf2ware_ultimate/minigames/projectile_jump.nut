@@ -7,7 +7,9 @@ mode_infos <-
 	[ "Flare jump!",        "flare_jump",         400.0],
 	[ "Short Circuit jump!", "shortcircuit_jump", 384.0],
 ]
-mode <- RandomInt(0, 5)
+// needle jump generates crazy amount of entities
+local min_mode = Ware_Players.len() > 40 ? 1 : 0
+mode <- RandomInt(min_mode, 5)
 
 minigame <- Ware_MinigameData
 ({
