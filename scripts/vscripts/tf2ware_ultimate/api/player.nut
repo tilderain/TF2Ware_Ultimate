@@ -809,11 +809,18 @@ function Ware_RadiusDamagePlayers(origin, radius, damage, attacker)
 function Ware_TeleportPlayer(player, origin, angles, velocity)
 {
 	local has_origin = true, has_angles = true, has_velocity = true
+	
 	if (origin == null)
 	{
 		has_origin = false
 		origin = vec3_zero
 	}
+	else
+	{
+		// potential fix for players not getting teleported
+		SetPropVector(player, "m_oldOrigin", origin)
+	}
+	
 	if (angles == null)
 	{
 		has_angles = false
