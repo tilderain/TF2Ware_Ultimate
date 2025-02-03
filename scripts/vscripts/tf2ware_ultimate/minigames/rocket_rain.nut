@@ -5,6 +5,7 @@ minigame <- Ware_MinigameData
 	description    = "Airblast the rockets!"
 	duration       = 4.0
 	end_delay      = 1.0
+	max_players    = 64 // client crashed with high particle count on 100 players
 	music          = "goodtimes"
 	custom_overlay = "airblast_rockets"
 	allow_damage   = true
