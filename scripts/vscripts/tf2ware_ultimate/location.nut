@@ -180,7 +180,13 @@ Ware_Location.boxarena <-
 	maxs     = Vector(-832, 9152, -5552)
 	radius   = 512.0
 	cameras  = ["boxarena_camera"]
-	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
+	Teleport = function(players) 
+	{ 
+		local r = radius
+		if (players.len() > 40.0)
+			r += 288.0
+		Ware_TeleportPlayersCircle(players, center, r)
+	}
 }
 
 Ware_Location.beach <-
