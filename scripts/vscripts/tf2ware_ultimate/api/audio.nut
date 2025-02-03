@@ -34,9 +34,9 @@ function Ware_PlayGameSound(player, name, flags = 0, volume = 1.0)
 		path = format("%s/%s", Ware_Themes[0].theme_name, name)
 	
 	if (player)
-		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), volume, 100, flags)
+		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSIC_VERSION, path), volume, 100, flags)
 	else
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), volume, 100, flags)
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSIC_VERSION, path), volume, 100, flags)
 }
 
 // Plays minigame music to the target player
@@ -47,9 +47,9 @@ function Ware_PlayMinigameMusic(player, name, flags = 0, volume = 1.0)
 {
 	local gametype = Ware_Minigame.boss ? "bossgame" : "minigame"
 	if (player)
-		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100, flags)
+		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSIC_VERSION, gametype, name), volume, 100, flags)
 	else
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100, flags)
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSIC_VERSION, gametype, name), volume, 100, flags)
 }
 
 // Gets the duration of a sound under the given theme, and also compensating for timescale

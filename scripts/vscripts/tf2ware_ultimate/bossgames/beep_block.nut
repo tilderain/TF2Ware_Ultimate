@@ -183,7 +183,7 @@ function BeepBlock_Interrupt()
 	Ware_PlaySoundOnAllClients(hurryup_sound)
 	
 	Ware_CreateTimer(function() {
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSICVERSION, minigame.music),
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSIC_VERSION, minigame.music),
 		1.0, 100 * Ware_GetPitchFactor() * tempo_increase)
 		
 		BeepBlock_SetTempo(tempo * tempo_increase)

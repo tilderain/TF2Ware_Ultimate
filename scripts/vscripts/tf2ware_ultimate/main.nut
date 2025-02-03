@@ -432,12 +432,12 @@ function Ware_PrecacheNext()
 	foreach (theme in Ware_Themes)
 	{
 		foreach (key, value in theme.sounds)
-			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, theme.theme_name, key))
+			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSIC_VERSION, theme.theme_name, key))
 	}
 	foreach (theme in Ware_InternalThemes)
 	{
 		foreach (key, value in theme.sounds)
-			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSICVERSION, theme.theme_name, key))
+			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSIC_VERSION, theme.theme_name, key))
 	}
 
 	foreach (author, credits in authors)
@@ -506,28 +506,29 @@ function Ware_SetupLocations()
 	Ware_MinigameLocation = Ware_MinigameHomeLocation
 }
 
+function Ware_FindTheme(name)
+{
+	foreach (theme in Ware_Themes)
+	{
+		if (theme.theme_name == name)
+			return theme
+	}	
+	return null
+}
+
 function Ware_SetTheme(requested_theme)
 {
-	Ware_Theme = {}
-	
-	local theme_found = false
-	
-	foreach(theme in Ware_Themes)
+	local theme = Ware_FindTheme(requested_theme)
+	if (theme)
 	{
-		if (theme.theme_name == requested_theme)
-		{
-			Ware_Theme = theme
-			theme_found = true
-			break
-		}
+		Ware_Theme = theme
 	}
-	
-	if (!theme_found)
+	else
 	{
 		Ware_Error("No theme named '%s' was found. Setting to default theme instead.", requested_theme)
 		Ware_Theme = Ware_Themes[0]
 	}
-	
+
 	Ware_SetupThemeSounds()
 }
 
@@ -550,18 +551,11 @@ function Ware_SetupThemeSounds()
 	}
 }
 
-function Ware_IsThemeValid(test = Ware_Theme)
+function Ware_IsThemeValid(test)
 {
 	if (typeof(test) != "table" || test.len() == 0)
 		return false
-	
-	foreach(theme in Ware_Themes)
-	{
-		if (theme.theme_name == test.theme_name)
-			return true
-	}
-	
-	return false
+	return Ware_FindTheme(test.theme_name) != null
 }
 
 function Ware_GetParentTheme(theme)

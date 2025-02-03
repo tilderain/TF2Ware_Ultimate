@@ -185,21 +185,18 @@ function OnGameEvent_teamplay_round_start(params)
 		Ware_SetTheme(Ware_DebugNextTheme)
 		Ware_DebugNextTheme = ""
 	}
-	else if (Ware_RoundsPlayed > 0)
+	else if (Ware_RoundsPlayed > 0 && Ware_Themes.len() > 1)
 	{
-		// roll until we get a new one
-		local new_theme
-		do 
-		{
-			new_theme = RandomElement(Ware_Themes)
-		}
-		while (new_theme == Ware_Theme)
-		
-		Ware_Theme = new_theme
-		
+		// roll a new one
+		local themes = clone(Ware_Themes)
+		local idx = themes.find(Ware_Theme)
+		if (idx != null)
+			themes.remove(idx)
+
+		Ware_Theme = RandomElement(themes)
 		Ware_SetupThemeSounds()
 	}
-	else if (Ware_IsThemeValid())
+	else if (Ware_IsThemeValid(Ware_Theme))
 	{
 		Ware_SetupThemeSounds()
 	}
