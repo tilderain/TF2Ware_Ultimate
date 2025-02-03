@@ -34,7 +34,7 @@ function OnTeleport(players)
 	Ware_TeleportPlayersRow(red_players, Ware_MinigameLocation.center + Vector(0, 800, 0), QAngle(0, 270, 0), width, spacing, spacing)
 		
 	point_a = Ware_MinigameLocation.center + Vector(RandomFloat(-800, 800), 700, 0)
-	point_b = Ware_MinigameLocation.center + Vector(0, 0, RandomFloat(2000, 3000))
+	point_b = Ware_MinigameLocation.center + Vector(0, 0, RandomFloat(1000, 2000))
 	point_c = Ware_MinigameLocation.center + Vector(RandomFloat(-800, 800), RandomFloat(-1000, -600), 0)
 }
 
