@@ -107,6 +107,18 @@ buffer<-@"{
 	}
 },
 {
+	theme_name = ""ds_touched_mona""
+	visual_name = ""Mona (DS - Touched!)""
+	author = ""tilderain""
+	sounds = 
+	{
+		""failure"": 2.075
+		""intro"":   1.937
+		""results"": 0.0
+		""victory"": 2.022
+	}
+},
+{
 	theme_name = ""ds_touched_wario""
 	visual_name = ""Wario (DS - Touched!)""
 	sounds = 
@@ -171,6 +183,18 @@ buffer<-@"{
 		""intro"":   4.1
 		""results"": 0.0
 		""victory"": 2.097
+	}
+},
+{
+	theme_name = ""wii_penny""
+	visual_name = ""Penny (Wii)""
+	author = ""tilderain""
+	sounds = 
+	{
+		""failure"": 2.052
+		""intro"":   4.115
+		""results"": 0.0
+		""victory"": 2.078
 	}
 },
 // these aren't rolled and should never be set as Ware_Theme, but rather Ware_SetupThemeSounds() checks for them
