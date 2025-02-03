@@ -90,7 +90,6 @@ function OnTouchPlate()
 		local minidata = Ware_GetPlayerMiniData(activator)
 		if (!("item" in minidata))
 		{
-			printf("%d == %d\n", item_idx, Ware_GetPlayerMission(activator))
 			if (item_idx == Ware_GetPlayerMission(activator))
 			{		
 				Ware_PlaySoundOnClient(activator, Ware_MinigameScope.pickup_sound)

@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Caber King"
 	author         = ["LiLGuY", "ficool2"]
 	description    = "Survive!"
-	duration       = 3.5
+	duration       = 4.5
 	end_delay      = 0.5
 	music          = "falling"
 	custom_overlay = "survive"
