@@ -356,6 +356,15 @@ function RemoveRandomElement(arr)
 	return arr.remove(RandomIndex(arr))
 }
 
+// Returns the given column from a 2D array
+function GetElementsColumn(arr, column)
+{
+	local elements = []
+	foreach (elem in arr)
+		elements.append(elem[column])
+	return elements
+}
+
 // Returns either true or false at random
 function RandomBool()
 {

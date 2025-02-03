@@ -1,24 +1,23 @@
 items <-
 [
-	["Sandvich"              , "eat_plate_sandvich",      "Sandvich",         "models/items/plate.mdl"],
-	["Festive Sandvich"      , "eat_plate_sandvich_xmas", "Festive Sandvich", "models/items/plate_sandwich_xmas.mdl"],
-	["Robo-Sandvich"         , "eat_plate_sandvich_robo", "Robo-Sandvich",    "models/items/plate_robo_sandwich.mdl"],
-	["Dalokohs Bar"          , "eat_plate_chocolate",     "Chocolate Bar",    "models/workshop/weapons/c_models/c_chocolate/plate_chocolate.mdl"],
-	["Fishcake"              , "eat_plate_fishcake",      "Fishcake",         "models/workshop/weapons/c_models/c_fishcake/plate_fishcake.mdl"],
-	["Buffalo Steak Sandvich", "eat_plate_steak",         "Steak",            "models/workshop/weapons/c_models/c_buffalo_steak/plate_buffalo_steak.mdl"],
-	["Second Banana"         , "eat_plate_banana",        "Banana",           "models/items/banana/plate_banana.mdl"],
+	["Sandvich"              , "eat_plate_sandvich",      "Eat the Sandvich!",         "models/items/plate.mdl"],
+	["Festive Sandvich"      , "eat_plate_sandvich_xmas", "Eat the Festive Sandvich!", "models/items/plate_sandwich_xmas.mdl"],
+	["Robo-Sandvich"         , "eat_plate_sandvich_robo", "Eat the Robo-Sandvich!",    "models/items/plate_robo_sandwich.mdl"],
+	["Dalokohs Bar"          , "eat_plate_chocolate",     "Eat the Chocolate Bar!",    "models/workshop/weapons/c_models/c_chocolate/plate_chocolate.mdl"],
+	["Fishcake"              , "eat_plate_fishcake",      "Eat the Fishcake!",         "models/workshop/weapons/c_models/c_fishcake/plate_fishcake.mdl"],
+	["Buffalo Steak Sandvich", "eat_plate_steak",         "Eat the Steak!",            "models/workshop/weapons/c_models/c_buffalo_steak/plate_buffalo_steak.mdl"],
+	["Second Banana"         , "eat_plate_banana",        "Eat the Banana!",           "models/items/banana/plate_banana.mdl"],
 ]
-chosen_item <- RandomElement(items)
 
 minigame <- Ware_MinigameData
 ({
 	name           = "Eat the Plate"
 	author         = ["TonyBaretta", "ficool2"]
-	description    = format("Eat the %s!", chosen_item[2])
+	description    = GetElementsColumn(items, 2)
 	duration       = 9.0
 	music          = "catchme"
 	location       = "beach"
-	custom_overlay = chosen_item[1]
+	custom_overlay = GetElementsColumn(items, 1)
 	thirdperson    = true
 	max_scale      = 1.5
 })
@@ -42,7 +41,7 @@ function OnTeleport(players)
 	Ware_TeleportPlayersRow(players,
 		Ware_MinigameLocation.center + Vector(500, 0.0, 0),
 		QAngle(0, -180, 0),
-		1300.0,
+		1200.0,
 		65.0, 65.0)
 }
 
@@ -56,7 +55,7 @@ function OnStart()
 	pos.z -= 10.0
 	
 	local plates = Shuffle(clone(items))
-	foreach (item in plates)
+	foreach (i, item in plates)
 	{
 		local prop = Ware_SpawnEntity("prop_dynamic",
 		{
@@ -66,18 +65,22 @@ function OnStart()
 		})
 		local trigger = Ware_SpawnEntity("trigger_multiple",
 		{
-			origin     = pos,
-			spawnflags = SF_TRIGGER_ALLOW_CLIENTS,
+			origin     = pos
+			spawnflags = SF_TRIGGER_ALLOW_CLIENTS
 		})
 		trigger.SetSolid(SOLID_BBOX)
 		trigger.SetSize(prop.GetBoundingMins() * 0.7, prop.GetBoundingMaxs() * 0.7)
 		trigger.ValidateScriptScope()
 		trigger.GetScriptScope().item <- item
+		trigger.GetScriptScope().item_idx <- items.find(item)
 		trigger.GetScriptScope().OnStartTouch <- OnTouchPlate
 		trigger.ConnectOutput("OnStartTouch", "OnStartTouch")
 		
 		pos.y += offset
 	}
+	
+	foreach (player in Ware_MinigamePlayers)
+		Ware_SetPlayerMission(player, RandomIndex(items))
 }
 
 function OnTouchPlate()
@@ -87,7 +90,8 @@ function OnTouchPlate()
 		local minidata = Ware_GetPlayerMiniData(activator)
 		if (!("item" in minidata))
 		{
-			if (item == Ware_MinigameScope.chosen_item)
+			printf("%d == %d\n", item_idx, Ware_GetPlayerMission(activator))
+			if (item_idx == Ware_GetPlayerMission(activator))
 			{		
 				Ware_PlaySoundOnClient(activator, Ware_MinigameScope.pickup_sound)
 				minidata.item <- Ware_GivePlayerWeapon(activator, item[0])
