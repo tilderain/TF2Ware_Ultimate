@@ -8,7 +8,7 @@ minigame <- Ware_MinigameData
 	music         = "actfast"
 	min_players   = 2
 	max_players   = 40
-	start_freeze  = true
+	start_freeze  = 0.5
 	collisions    = true
 	convars       = 
 	{

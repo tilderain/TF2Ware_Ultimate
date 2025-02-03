@@ -12,7 +12,7 @@ class Ware_MinigameData
 		allow_damage    = false
 		allow_suicide   = false
 		force_backstab  = false
-		start_freeze    = false
+		start_freeze    = 0.0
 		fail_on_death   = false
 		suicide_on_end  = false
 		collisions 	    = false
@@ -69,7 +69,7 @@ class Ware_MinigameData
 	allow_suicide   = null	
 	// Allow backstabs with any weapon
 	force_backstab  = null
-	// Freeze players when minigame starts for 0.5 seconds, default is false
+	// Freeze players when minigame starts, default is 0 seconds (don't freeze)
 	// Useful to allow some reaction time to not fall off a ledge etc
 	start_freeze    = null
 	// Whether players should be automatically failed when they die, default is false

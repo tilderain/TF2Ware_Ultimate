@@ -1511,7 +1511,7 @@ function Ware_StartMinigameInternal(is_boss)
 	else
 		location = Ware_Location[Ware_Minigame.location]
 		
-	if (Ware_Minigame.start_freeze)
+	if (Ware_Minigame.start_freeze > 0.0)
 	{
 		foreach (player in valid_players)
 			player.AddFlag(FL_FROZEN)
@@ -1520,7 +1520,7 @@ function Ware_StartMinigameInternal(is_boss)
 		{
 			foreach (player in Ware_MinigamePlayers) 
 				player.RemoveFlag(FL_FROZEN)
-		}, 0.5)
+		}, Ware_Minigame.start_freeze)
 	}
 	
 	local custom_teleport = "OnTeleport" in Ware_MinigameScope

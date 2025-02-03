@@ -15,7 +15,7 @@ minigame <- Ware_MinigameData
 	location       = RandomElement(arenas)
 	music          = "beepblockskyway"
 	fail_on_death  = true
-	start_freeze   = true
+	start_freeze   = 0.5
 	convars =
 	{
 		tf_avoidteammates = 0

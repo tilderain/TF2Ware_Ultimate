@@ -8,7 +8,7 @@ minigame <- Ware_MinigameData
 	location       = "obstaclecourse"
 	music          = "steadynow"
 	start_pass     = false
-	start_freeze   = true
+	start_freeze   = 0.5
 	custom_overlay = "get_end"
 	convars = 
 	{

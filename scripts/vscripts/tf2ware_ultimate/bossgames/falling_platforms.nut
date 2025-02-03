@@ -10,7 +10,7 @@ minigame <- Ware_MinigameData
 	custom_overlay = "push_enemy"
 	min_players    = 2	
 	start_pass     = true
-	start_freeze   = true
+	start_freeze   = 0.5
 	fail_on_death  = true
 	allow_damage   = true
 	collisions     = true

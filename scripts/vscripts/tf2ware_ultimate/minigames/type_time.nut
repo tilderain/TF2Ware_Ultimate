@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 	duration       = 7.0
 	location       = "dirtsquare"
 	music          = "countdown"
-	start_freeze   = true
+	start_freeze   = 0.5
 })
 
 clock_model <- "models/tf2ware_ultimate/clock.mdl"

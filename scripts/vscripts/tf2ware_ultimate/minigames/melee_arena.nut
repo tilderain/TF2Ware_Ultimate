@@ -14,7 +14,7 @@ minigame <- Ware_MinigameData
 	// small players fly into the air and i have no idea why - pokepasta
 	max_scale      = 1.0
 	start_pass     = true
-	start_freeze   = true
+	start_freeze   = 0.5
 	allow_damage   = true
 	fail_on_death  = true
 	collisions     = Ware_Players.len() <= 40
