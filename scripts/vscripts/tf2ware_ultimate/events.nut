@@ -152,7 +152,11 @@ function OnGameEvent_teamplay_round_start(params)
 		data.score = 0
 		data.bonus = 0
 		if (data.start_sound)
+		{
 			Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
+			Ware_PlayGameSound(player, "lets_get_started_alt", SND_STOP)
+		}
+
 		player.SetScriptOverlayMaterial("")
 		cmd.AcceptInput("Command", "r_screenoverlay off", player, null)
 		cmd.AcceptInput("Command", "r_cleardecals", player, null)
@@ -295,6 +299,7 @@ function OnGameEvent_scorestats_accumulated_update(params)
 	{
 		Ware_EndSpecialRound()
 		Ware_PlayGameSound(null, "special_round", SND_STOP)
+		Ware_PlayGameSound(null, "special_round_alt", SND_STOP)
 	}
 }
 

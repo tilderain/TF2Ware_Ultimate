@@ -794,7 +794,9 @@ function Ware_PlayStartSound()
 	
 	if (IsInWaitingForPlayers())
 	{
-		Ware_PlayGameSound(self, "lets_get_started")
+		local sound = RandomInt(0, 1) == 0 ? "lets_get_started" : "lets_get_started_alt"
+
+		Ware_PlayGameSound(self, sound)
 		Ware_ShowScreenOverlay(self, "hud/tf2ware_ultimate/waiting_players")
 	}
 }
@@ -994,13 +996,15 @@ function Ware_BeginSpecialRoundInternal()
 	Ware_SpecialRoundPrevious = true
 	
 	// ingame sequence
-	Ware_PlayGameSound(null, "special_round")
+	local sound = RandomInt(0, 1) == 0 ? "special_round" : "special_round_alt"
+
+	Ware_PlayGameSound(null, sound)
 	
 	foreach (player in Ware_Players)
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/special_round")
 	
 	local start_time = Time()
-	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
+	local duration = Ware_GetThemeSoundDuration(sound) * 0.99 // finish slightly faster to set special round before intermission begins
 	local reveal_duration = duration * 0.6
 	local start_interval = 0.5, end_interval = 0.05
 	local end_duration = duration - reveal_duration
