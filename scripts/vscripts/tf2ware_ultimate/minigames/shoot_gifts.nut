@@ -121,7 +121,7 @@ function OnPlayerAttack(player)
 		{
 			if (GetPropInt(gift.self, "m_nModelIndex") == bomb_modelindex)
 			{
-				Ware_PlaySoundOnClient(player, bomb_sound)
+				player.EmitSound(bomb_sound)
 				player.TakeDamage(1000.0, DMG_BLAST, gift.self)
 			}
 			else
