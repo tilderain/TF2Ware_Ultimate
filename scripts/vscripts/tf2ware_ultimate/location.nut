@@ -215,7 +215,7 @@ Ware_Location.pinball <-
 {
 	center        = Vector(-3840, -1280, -6792)
 	center_top    = Vector(-3840, -5344, -5679)
-	center_bottom = Vector(-3840, 1984, -7599)
+	center_bottom = Vector(-3840, 1884, -7599)
 	cameras       = ["pinball_camera"]
 }
 
