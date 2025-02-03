@@ -20,6 +20,7 @@ cash_amounts <-
 	50
 	100
 ]
+cash_multiplier <- 1
 
 bomb_model <- "models/props_lakeside_event/bomb_temp.mdl"
 touch_sound <- "MVM.MoneyPickup"
@@ -48,6 +49,9 @@ function OnStart()
 		
 	// show money counter
 	ForceEnableUpgrades(2)
+	
+	if (Ware_MinigamePlayers.len() > 64)
+		cash_multiplier = 2
 	
 	Ware_CreateTimer(@() CreateMoney(), 0.5)
 }
@@ -80,7 +84,7 @@ function CreateMoney()
 		}
 		else
 		{
-			SetPropInt(cash, "m_iHammerID", cash_amounts[idx])
+			SetPropInt(cash, "m_iHammerID", cash_amounts[idx] * cash_multiplier)
 			cash_spawned++
 		}
 	}
