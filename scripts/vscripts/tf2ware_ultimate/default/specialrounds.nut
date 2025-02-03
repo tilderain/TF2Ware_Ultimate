@@ -1,6 +1,7 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
 buffer<-@"adrenaline_shot
 all_in
+barrels
 bonk
 bonus_points
 boss_rush
