@@ -18,7 +18,7 @@ function OnUpdate()
 {
 	if(barrels.len() < 64)
 	{	
-		if (RandomInt(0, 32) == 0)
+		if (RandomInt(0, 48) == 0)
 			{ 
 				local plyOrigin = RandomElement(Ware_Players).GetOrigin()
 			
@@ -44,4 +44,14 @@ function OnUpdate()
 		barrels.remove(0)
 	}
 
+}
+
+function OnTakeDamage(params)
+{
+	//Barrels won't do non-self inflicted damage otherwise
+	local victim = params.const_entity
+	if(victim.GetClassname() == "prop_physics_multiplayer")
+	{
+		params.attacker = victim
+	}
 }
