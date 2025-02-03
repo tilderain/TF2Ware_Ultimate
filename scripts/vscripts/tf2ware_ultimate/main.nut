@@ -1442,10 +1442,12 @@ function Ware_StartMinigameInternal(is_boss)
 		Ware_Error("No valid %s found to pick. There may not be enough minimum players", is_boss ? "bossgame" : "minigame")
 		return false
 	}
+	
+	local time = Time()
 
 	Ware_MinigameEnded = false
 	Ware_Minigame = Ware_MinigameScope.minigame
-	Ware_MinigameStartTime = Time()
+	Ware_MinigameStartTime = time
 	
 	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
 	
@@ -1497,6 +1499,7 @@ function Ware_StartMinigameInternal(is_boss)
 		data.passed_effects = false
 		data.mission = 0
 		data.suicided = false
+		data.horn_timer = time + 0.7
 				
 		minigame_players.append(player)
 		minigame_playersdata.append(data)
