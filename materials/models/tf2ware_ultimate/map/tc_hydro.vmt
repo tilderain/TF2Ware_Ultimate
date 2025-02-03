@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	$basetexture vgui/maps/menu_photos_tc_hydro
+	$halflambert 1
+	$translucent 1
+}

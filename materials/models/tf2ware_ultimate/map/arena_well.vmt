@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	$basetexture vgui/maps/menu_photos_arena_well
+	$halflambert 1
+	$translucent 1
+}

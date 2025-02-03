@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	$basetexture vgui/maps/menu_photos_ctf_doublecross
+	$halflambert 1
+	$translucent 1
+}

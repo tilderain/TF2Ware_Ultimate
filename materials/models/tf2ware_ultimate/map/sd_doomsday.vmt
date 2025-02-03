@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	$basetexture vgui/maps/menu_photos_sd_doomsday
+	$halflambert 1
+	$translucent 1
+}

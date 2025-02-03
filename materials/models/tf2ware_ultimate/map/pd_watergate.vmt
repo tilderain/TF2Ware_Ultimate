@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	$basetexture vgui/maps/menu_photos_pd_watergate
+	$halflambert 1
+	$translucent 1
+}
