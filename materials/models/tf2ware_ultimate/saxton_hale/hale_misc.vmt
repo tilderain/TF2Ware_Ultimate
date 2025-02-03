@@ -1,18 +1,18 @@
 "VertexLitGeneric"
 {
-	"$basetexture" "models\player\saxton_hale\hale_body"
+	"$basetexture" "models/tf2ware_ultimate/saxton_hale\hale_misc"
 
-	"$bumpmap"     "models/player/saxton_hale/hale_body_normal"
+	"$bumpmap"     "models/tf2ware_ultimate/saxton_hale/hale_misc_normal"
 	"$detail" "effects/tiledfire/fireLayeredSlowTiled512.vtf"	
-	"$detailscale" "1"
+	"$detailscale" "5"
 	"$detailblendfactor" .01
 	"$detailblendmode" 6
-	
+
 	"$yellow" "0"
 	"$one" "1"
 
 	"$phong" "1"
-	"$phongexponent" "10"
+	"$phongexponent" "27"
 	"$phongboost" ".1"	
 	"$lightwarptexture" "models/player/pyro/pyro_lightwarp"
 	"$phongfresnelranges"	"[.3 1 8]"
@@ -20,8 +20,12 @@
 
 	// Rim lighting parameters
 	"$rimlight" "1"												// To enable rim lighting (requires phong)
-	"$rimlightexponent" "4"										// Exponent for phong component of rim lighting	
-	"$rimlightboost" "2"										// Boost for ambient cube component of rim lighting
+	"$rimlightexponent" "10"										// Exponent for phong component of rim lighting	
+	"$rimlightboost" "1"										// Boost for ambient cube component of rim lighting
+
+	// Cloaking
+
+	"360?$color2" "[ 0.8 0.8 0.8 ]"
 
 	"Proxies"
 	{
@@ -47,5 +51,6 @@
 			"srcVar1"  "$yellow"
 			"resultVar" "$color2"
 		}
+
 	}
 }

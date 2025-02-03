@@ -1,19 +1,19 @@
 "VertexLitGeneric"
 {
-	"$basetexture" "models/player/saxton_hale/hale_head"
-	// $bumpmap is a shared 16x16 flat normal map, and is needed or lightwarp won't shade correctly.
-	"$bumpmap"     "models/player/saxton_hale/hale_body_normal"
+	"$basetexture" "models/tf2ware_ultimate/saxton_hale/hale_body"
+
+	"$bumpmap"     "models/tf2ware_ultimate/saxton_hale/hale_body_normal"
 	"$detail" "effects/tiledfire/fireLayeredSlowTiled512.vtf"	
 	"$detailscale" "1"
 	"$detailblendfactor" .01
 	"$detailblendmode" 6
-
+	
 	"$yellow" "0"
 	"$one" "1"
 
 	"$phong" "1"
-	"$phongexponent" "20"
-	"$phongboost" ".3"	
+	"$phongexponent" "10"
+	"$phongboost" ".1"	
 	"$lightwarptexture" "models/player/pyro/pyro_lightwarp"
 	"$phongfresnelranges"	"[.3 1 8]"
 	"$halflambert" "0"
@@ -47,6 +47,5 @@
 			"srcVar1"  "$yellow"
 			"resultVar" "$color2"
 		}
-
 	}
 }
