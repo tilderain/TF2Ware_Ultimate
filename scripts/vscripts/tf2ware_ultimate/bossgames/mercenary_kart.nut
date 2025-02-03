@@ -299,7 +299,10 @@ function OnTeleport(players)
 	players = Ware_GetSortedScorePlayers(true)
 	
 	local start = Ware_MinigameLocation.start_position * 1.0
-	Ware_TeleportPlayersRow(players, start, QAngle(0, 180, 0), 500.0, 200.0, 150.0)
+	local spacing_x = 200.0
+	if (players.len() > 50)
+		spacing_x *= 0.5
+	Ware_TeleportPlayersRow(players, start, QAngle(0, 180, 0), 500.0, spacing_x, 150.0)
 	
 	foreach (player in players)
 	{
