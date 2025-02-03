@@ -790,6 +790,7 @@ function Ware_SetPlayerTeamInternal(player, team)
 function Ware_ShowPassEffects(player)
 {
 	player.EmitSound(SFX_WARE_PASS)
+	Ware_PlaySoundOnClient(player, SFX_WARE_PASSME)
 	Ware_SpawnParticle(player, player.GetTeam() == TF_TEAM_RED ? PFX_WARE_PASS_RED : PFX_WARE_PASS_BLUE)
 }
 
