@@ -12,10 +12,6 @@ function OnMinigameStart()
 {
 	Ware_Minigame.allow_damage = true
 	Ware_Minigame.friendly_fire = true
-}
-
-function OnUpdate()
-{
 	foreach (player in Ware_MinigamePlayers)
 		player.RemoveSolidFlags(FSOLID_NOT_SOLID)
 }
