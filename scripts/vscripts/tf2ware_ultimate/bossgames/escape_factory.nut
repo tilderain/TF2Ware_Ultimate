@@ -58,7 +58,12 @@ function OnEndzoneTouch()
 		}
 		
 		Ware_PassPlayer(player, true)
-		Ware_CreateTimer(@() Ware_ShowScreenOverlay(player, null), 0.02)
+		
+		local weapon = player.GetActiveWeapon()
+		if (weapon)
+			weapon.RemoveAttribute("active health degen")
+		
+		Ware_CreateTimer(@() Ware_ShowScreenOverlay(player, null), 0.02)	
 	}
 }
 
