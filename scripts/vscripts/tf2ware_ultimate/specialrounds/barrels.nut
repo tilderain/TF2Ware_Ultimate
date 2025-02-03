@@ -16,9 +16,9 @@ function OnPrecache()
 
 function OnUpdate()
 {
-	if(barrels.len() < 30)
+	if(barrels.len() < 64)
 	{	
-		if (RandomInt(0, 150) == 0)
+		if (RandomInt(0, 32) == 0)
 			{ 
 				local plyOrigin = RandomElement(Ware_Players).GetOrigin()
 			
