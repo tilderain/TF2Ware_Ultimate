@@ -11,7 +11,21 @@ local barrels = []
 
 function OnPrecache()
 {
-	PrecacheModel("models/props_c17/oildrum001_explosive.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_explosive.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib01.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib02.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib03.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib04.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib05.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib06.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib07.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib08.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib09.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib10.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib11.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib12.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib13.mdl")
+	PrecacheModel("models/props_frontline/splosivebarrel_jib14.mdl")
 }
 
 function OnUpdate()
@@ -29,19 +43,20 @@ function OnUpdate()
 								Vector(RandomFloat(-250.0, 250.0), 
 									   RandomFloat(-250.0, 250.0),
 									   RandomFloat(250.0, 1000.0))
-					model	  = "models/props_c17/oildrum001_explosive.mdl"
+					model	  = "models/props_frontline/splosivebarrel_explosive.mdl"
+					targetname = "explosive_barrel"
 				})
 			barrels.append(barrel)
 		}
 	}
 	else
 	{
-		if(barrels[0].IsValid())
+		local barrel = barrels.remove(0)
+	
+		if(barrel.IsValid())
 		{
-			barrels[0].TerminateScriptScope()
-			barrels[0].Kill()
+			barrel.Kill()
 		}
-		barrels.remove(0)
 	}
 
 }
@@ -50,7 +65,7 @@ function OnTakeDamage(params)
 {
 	//Barrels won't do non-self inflicted damage otherwise
 	local victim = params.const_entity
-	if(victim.GetClassname() == "prop_physics_multiplayer")
+	if(victim.GetName() == "explosive_barrel")
 	{
 		params.attacker = victim
 	}
