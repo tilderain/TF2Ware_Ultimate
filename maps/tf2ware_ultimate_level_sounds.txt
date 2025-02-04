@@ -113,19 +113,19 @@ Game.PenetrationKill
 
 TF2Ware_Ultimate.Pass
 {
-	channel			CHAN_STATIC
+	channel			-1 // CHAN_REPLACE
 	volume			VOL_NORM
 	pitch			PITCH_NORM
-	soundlevel		SNDLVL_60dB
+	soundlevel		SNDLVL_70dB
 	wave			tf2ware_ultimate/pass.mp3
 }
 
 TF2Ware_Ultimate.PassMe
 {
-	channel			CHAN_STATIC
+	channel			-1 // CHAN_REPLACE
 	volume			VOL_NORM
 	pitch			PITCH_NORM
-	soundlevel		SNDLVL_60dB
+	soundlevel		SNDLVL_NONE
 	wave			tf2ware_ultimate/pass_me.mp3
 }
 
