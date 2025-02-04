@@ -27,6 +27,7 @@ simon
 size_matters
 skull
 slow_mo
+squid_game
 sudden_death
 team_battles
 thirdperson

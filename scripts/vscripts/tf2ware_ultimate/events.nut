@@ -58,7 +58,8 @@ function OnScriptHook_OnTakeDamage(params)
 		// handle the case where truce is disabled but don't want damage between players
 		if (victim.IsPlayer() && attacker.IsPlayer())
 		{
-			if (!Ware_Finished && Ware_Started && (Ware_Minigame == null || !Ware_Minigame.allow_damage))
+			if (!Ware_Finished && Ware_Started && (Ware_Minigame == null || !Ware_Minigame.allow_damage)
+				&& (!Ware_SpecialRound || !Ware_SpecialRound.allow_damage))
 			{
 				params.damage = 0
 				params.early_out = true	
