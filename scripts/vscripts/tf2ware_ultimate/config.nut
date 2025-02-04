@@ -159,12 +159,9 @@ function Ware_LoadConfigSpecialRounds()
 	})
 }
 
-function Ware_LoadConfigThemes()
+function Ware_ExtractVersion(file, end_callback)
 {
-	local file = Ware_LoadConfigFile("themes")
-	
 	local version = 0
-	local latest_version = WARE_THEME_VERSION
 	if (startswith(file, "VERSION "))
 	{
 		// extracting the digits and consuming the newline
@@ -176,14 +173,29 @@ function Ware_LoadConfigThemes()
 		if (file[line_end] == '\r')
 			line_end++
 		version = file.slice(start, end).tointeger()
-		file = file.slice(line_end)
-	}
+		
+		// optimization to avoid copying the huge string around
+		end_callback(line_end)
+	}	
+	return version
+}
+
+function Ware_LoadConfigThemes()
+{
+	local file = Ware_LoadConfigFile("themes")
+	
+	local latest_version = WARE_THEME_VERSION
+	local version = Ware_ExtractVersion(file, function(line_end) { file = file.slice(line_end) })
 	
 	compilestring(format("Ware_Themes<-[\n%s]", file))()
 
 	if (version < latest_version)
 	{
 		local file_default = Ware_LoadConfigFile("themes", false)
+		
+		// skip past version header
+		Ware_ExtractVersion(file_default, function(line_end) { file_default = file_default.slice(line_end) })
+
 		compilestring(format("Ware_ThemesDefault<-[\n%s]", file_default))()
 		
 		local header = "VERSION " + WARE_THEME_VERSION + "\n"
