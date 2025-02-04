@@ -83,7 +83,7 @@ function OnStart()
 	})
 	SetPropBool(clock, "m_bClientSideAnimation", false)
 	clock.SetPoseParameter(clock.LookupPoseParameter("minutes"), minute / 60.0)
-	clock.SetPoseParameter(clock.LookupPoseParameter("hours"), hour / 12.0)
+	clock.SetPoseParameter(clock.LookupPoseParameter("hours"), hour / 12.0 + ((1.0 / 12.0) * minute / 60.0))
 	clock.StudioFrameAdvance()
 }
 
