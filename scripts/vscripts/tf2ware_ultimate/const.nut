@@ -135,6 +135,7 @@ const CHANNEL_MISC         = 2
 
 const SFX_WARE_FIREWORKS = "Summer.Fireworks"
 const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
+const SFX_WARE_PASSME    = "TF2Ware_Ultimate.PassMe"
 const SFX_WARE_KART_HORN = "TF2Ware_Ultimate.KartHorn"
 const SFX_WARE_ERROR     = "TF2Ware_Ultimate.Error"
 
@@ -186,6 +187,7 @@ SAXXY_CLASSNAME_MAP <-
 
 PrecacheScriptSound(SFX_WARE_FIREWORKS)
 PrecacheScriptSound(SFX_WARE_PASS)
+PrecacheScriptSound(SFX_WARE_PASSME)
 PrecacheScriptSound(SFX_WARE_KART_HORN)
 PrecacheScriptSound(SFX_WARE_ERROR)
 
