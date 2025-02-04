@@ -43,7 +43,7 @@ camera_base_offset  <- Vector(-140.0, 0.0, 70.0)
 camera_base_rotaton <- QAngle(10, 0, 0)
 
 race_start_time     <- 0.0
-race_max_laps       <- 3
+race_max_laps       <- 2
 race_sequence       <- 0
 race_results        <- []
 race_finish_timer   <- null
