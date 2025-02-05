@@ -89,7 +89,11 @@ function OnTeleport(players)
 	local size = 112.0
 	local speed = 300.0
 
-	local SpawnHex = function(q, r)
+	local shape = RandomInt(0, 3)
+	local len = players.len()
+	local dim = Max(ceil(sqrt(len)).tointeger() + 1, 4)
+	
+	local function SpawnHex(q, r)
 	{
 		local hex = Hex(q, r)
 		local pos = center * 1.0
@@ -98,9 +102,14 @@ function OnTeleport(players)
 		hexes.append(hex)
 	}
 	
-	local shape = RandomInt(0, 3)
-	local len = players.len()
-	local dim = Max(ceil(sqrt(len)).tointeger() + 1, 4)
+	// HACK
+	if (shape == 0)	
+		center -= Vector(1400, 1400, 0)	
+	else if (shape == 1)	
+		center -= Vector(1200, 1200, 0)	
+	else if (shape == 3)
+		center -= Vector(1000, 1000, 0)
+	
 	if (shape == 0) // parallelogram
 	{
 		for (local q = 0; q < dim; q++)
