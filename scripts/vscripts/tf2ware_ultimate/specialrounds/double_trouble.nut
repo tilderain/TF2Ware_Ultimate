@@ -239,6 +239,8 @@ delegated_callbacks <-
 		local ret = DelegatedCall(scope_a, "OnCalculateScore", data)
 		if (call_failed || ret == false)
 			ret = DelegatedCall(scope_b, "OnCalculateScore", data)	
+		if (call_failed)
+			ret = false
 		return ret
 	}
 
