@@ -778,6 +778,11 @@ function Ware_UpdatePlayerVoicePitch(player)
 		player.AddCustomAttribute("voice pitch scale", Ware_GetPitchFactor(), -1)
 }
 
+function Ware_CanPlayerRespawn(player)
+{
+	return !Ware_SpecialRound || Ware_SpecialRound.cb_can_player_respawn(player) != false
+}
+
 function Ware_FixupPlayerWeaponSwitch()
 {
 	if (activator)
@@ -1386,11 +1391,35 @@ function Ware_GetMinigameRotation(is_boss, player_count)
 function Ware_StartMinigameInternal(is_boss)
 {
 	Ware_CriticalZone = true
+	
+	local valid_players = []
+	foreach (player in Ware_Players)
+	{
+		if (player.GetTeam() & TF_TEAM_MASK)
+		{
+			if (!player.IsAlive())
+			{
+				// only respawn everyone before the boss
+				// for minigames intentionally not respawning people
+				// as punishment for dying in certain special rounds (like Skull)
+				if (is_boss && Ware_CanPlayerRespawn(player))
+				{
+					player.ForceRespawn()
+					// safety check
+					if (player.IsAlive())
+						valid_players.append(player)	
+				}
+			}
+			else
+			{
+				valid_players.append(player)
+			}
+		}
+	}
 
 	Ware_MinigameScope.clear()
-	local valid_players = Ware_GetValidPlayers()
-	local player_count = valid_players.len()
 	
+	local player_count = valid_players.len()
 	local try_debug = true, try_specialround = true
 	local prev_is_boss = is_boss
 	local attempts = 0
@@ -1770,7 +1799,7 @@ function Ware_FinishMinigameInternal()
 			SetPropInt(player, "m_nImpulse", 101) // refill ammo						
 			Ware_StripPlayer(player, true)
 		}
-		else if (!Ware_SpecialRound || Ware_SpecialRound.cb_can_player_respawn(player) != false)
+		else if (Ware_CanPlayerRespawn(player))
 		{	
 			player_count++
 			respawn_players.append(player)
