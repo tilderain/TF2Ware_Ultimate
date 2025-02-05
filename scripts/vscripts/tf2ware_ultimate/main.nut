@@ -1971,6 +1971,8 @@ function Ware_GameOverInternal()
 		player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
 		Ware_PlayGameSound(player, "gameclear")
 		player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_victory")
+		player.AcceptInput("SpeakResponseConcept", "TLK_PLAYER_BATTLECRY randomnum:100", null, null)
+		
 		// TODO: Allow class changing for winners
 		// TODO: Fix some weapons being weird in gameover (flamethrower doesn't damage, frontier justice removes crits, etc. Needs more testing)	
 	}
