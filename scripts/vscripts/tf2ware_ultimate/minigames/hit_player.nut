@@ -36,7 +36,7 @@ function OnPrecache()
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(player_class, loadouts[player_class])
+	Ware_SetGlobalLoadout(player_class, loadouts[player_class], { "deploy time increased" : 2.0 })
 }
 
 function OnUpdate()
