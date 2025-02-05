@@ -1,14 +1,13 @@
 minigame <- Ware_MinigameData
 ({
 	name          = "Explosive Barrels"
-	author		  = ["sasch", "ficool2", "tilderain"]
+	author		  = ["ficool2", "tilderain"]
 	description   = "Don't get exploded!"
 	duration      = 6
 	music         = "actfast"
 	start_pass    = true
 	allow_damage  = true
 	fail_on_death = true
-	min_players    = 2
 })
 
 
@@ -37,7 +36,8 @@ function OnStart()
 	{
 		local origin = player.GetOrigin()
 		SpawnBarrel(origin)
-		SpawnBarrel(origin)
+		if(Ware_MinigamePlayers.len() <= 32)
+			SpawnBarrel(origin)
 	}
 }
 
