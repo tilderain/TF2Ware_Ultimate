@@ -534,20 +534,45 @@ function Ware_SetTheme(requested_theme)
 
 function Ware_SetupThemeSounds()
 {
-	Ware_CurrentThemeSounds = {}
+	Ware_CurrentThemeSounds.clear()
 	
+	local default_theme = Ware_Themes[0]
 	local parent_theme = Ware_GetParentTheme(Ware_Theme)
 	
-	foreach(key, value in Ware_Themes[0].sounds)
+	local function GetThemeForSound(sound_name)
 	{
-		local sound_name = key
-		
 		if (sound_name in Ware_Theme.sounds) // If the given sound exists in the requested theme then set that sound
-			Ware_CurrentThemeSounds[sound_name] <- [Ware_Theme.theme_name, Ware_Theme.sounds[sound_name]]
+			return Ware_Theme
 		else if (parent_theme != null && sound_name in parent_theme.sounds) // Otherwise, check for a parent theme. If it exists and that theme has the requested sound, set it.
-			Ware_CurrentThemeSounds[sound_name] <- [parent_theme.theme_name, parent_theme.sounds[sound_name]]
-		else // Otherwise, set the requested sound to the default theme's sound (which by definition always exists).
-			Ware_CurrentThemeSounds[sound_name] <- [Ware_Themes[0].theme_name, Ware_Themes[0].sounds[sound_name]]
+			return parent_theme
+		else
+			return default_theme
+	}
+	
+	foreach (sound_name, _ in default_theme.sounds)
+	{
+		local theme = GetThemeForSound(sound_name)
+		
+		// special case as this is a late change and I don't want to update every theme
+		// if no failure_all is defined then fallback to failure
+		local search_name = sound_name
+		if (sound_name == "failure_all" && Ware_Theme != default_theme && theme == default_theme)
+		{
+			local fallback_theme = GetThemeForSound("failure")
+			// only fallback if the failure sound is overriden
+			if (fallback_theme != default_theme)
+			{
+				theme = fallback_theme
+				search_name = "failure"
+			}
+		}
+			
+		Ware_CurrentThemeSounds[sound_name] <- 
+		{ 
+			sound_name = search_name
+			theme_name = theme.theme_name
+			duration   = theme.sounds[search_name]
+		}
 	}
 }
 

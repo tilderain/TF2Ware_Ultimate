@@ -29,9 +29,14 @@ function Ware_PlayGameSound(player, name, flags = 0, volume = 1.0)
 	local path
 	
 	if (name in Ware_CurrentThemeSounds)
-		path = format("%s/%s", Ware_CurrentThemeSounds[name][0], name)
+	{
+		local theme_sound = Ware_CurrentThemeSounds[name]
+		path = format("%s/%s", theme_sound.theme_name, theme_sound.sound_name)
+	}
 	else
+	{
 		path = format("%s/%s", Ware_Themes[0].theme_name, name)
+	}
 	
 	if (player)
 		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSIC_VERSION, path), volume, 100, flags)
@@ -56,7 +61,7 @@ function Ware_PlayMinigameMusic(player, name, flags = 0, volume = 1.0)
 function Ware_GetThemeSoundDuration(sound)
 {
 	if (sound in Ware_CurrentThemeSounds)
-		return Ware_CurrentThemeSounds[sound][1] * Ware_GetPitchFactor()
+		return Ware_CurrentThemeSounds[sound].duration * Ware_GetPitchFactor()
 	else
 		return Ware_Themes[0].sounds[sound] * Ware_GetPitchFactor()
 }
