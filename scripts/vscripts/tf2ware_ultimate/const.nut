@@ -138,6 +138,7 @@ const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
 const SFX_WARE_PASSME    = "TF2Ware_Ultimate.PassMe"
 const SFX_WARE_KART_HORN = "TF2Ware_Ultimate.KartHorn"
 const SFX_WARE_ERROR     = "TF2Ware_Ultimate.Error"
+const SFX_WARE_FAIL      = "TF2Ware_Ultimate.Fail"
 
 const PFX_WARE_FIREWORKS = "mvm_pow_gold_seq_firework_mid"
 const PFX_WARE_PASS_RED  = "teleportedin_red"
@@ -190,6 +191,7 @@ PrecacheScriptSound(SFX_WARE_PASS)
 PrecacheScriptSound(SFX_WARE_PASSME)
 PrecacheScriptSound(SFX_WARE_KART_HORN)
 PrecacheScriptSound(SFX_WARE_ERROR)
+PrecacheScriptSound(SFX_WARE_FAIL)
 
 PrecacheModel("models/player/items/taunts/bumpercar/parts/bumpercar.mdl")
 PrecacheModel("models/props_halloween/bumpercar_cage.mdl")

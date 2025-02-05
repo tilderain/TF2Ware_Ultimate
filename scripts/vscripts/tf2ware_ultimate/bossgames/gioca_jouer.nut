@@ -39,6 +39,7 @@ minigame <- Ware_MinigameData
 })
 
 pass_sound <- "Halloween.PumpkinDrop"
+fail_sound <- "TF2Ware_Ultimate.Fail"
 
 microgame_info <-
 [
@@ -358,6 +359,10 @@ function OnMicroEnd()
 			// For microgames that start true, keep it here in OnEnd()
 			// also lower the volume
 			EmitSoundOnClient(pass_sound, player)
+		}
+		else
+		{
+			EmitSoundOnClient(fail_sound, player)
 		}
 	}
 }

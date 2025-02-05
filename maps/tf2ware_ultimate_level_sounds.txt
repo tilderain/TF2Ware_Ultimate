@@ -322,6 +322,15 @@ TF2Ware_Ultimate.WitchShriek
 	}
 }
 
+TF2Ware_Ultimate.Fail
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			buttons/button10.wav
+}
+
 TF2Ware_Ultimate.Error
 {
 	channel			CHAN_AUTO
