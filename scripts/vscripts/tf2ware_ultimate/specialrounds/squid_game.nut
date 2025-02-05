@@ -6,6 +6,7 @@ special_round <- Ware_SpecialRoundData
 	category = ""
 	friendly_fire = true
 	allow_damage = true
+	force_pvp_damage = true
 })
 
 function OnMinigameStart()

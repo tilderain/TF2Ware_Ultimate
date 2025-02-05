@@ -86,6 +86,7 @@ function OnPick()
 	data.force_collisions  = data_a.force_collisions || data_b.force_collisions
 	data.opposite_win      = data_a.opposite_win || data_b.opposite_win
 	data.friendly_fire     = data_a.friendly_fire && data_b.friendly_fire
+	data.force_pvp_damage  = data_a.force_pvp_damage || data_b.force_pvp_damage
 	data.bonus_points      = data_a.bonus_points || data_b.bonus_points
 	// choose whichever one has non-default value
 	data.boss_count        = data_a.boss_threshold != data.boss_count ? data_a.boss_count : data_b.boss_count

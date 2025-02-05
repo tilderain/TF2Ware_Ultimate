@@ -13,6 +13,7 @@ class Ware_SpecialRoundData
 		force_collisions  = false
 		opposite_win      = false
 		friendly_fire     = true
+		force_pvp_damage  = false
 		bonus_points      = false
 		boss_count        = 1
 		boss_threshold    = Ware_BossThreshold
@@ -58,6 +59,8 @@ class Ware_SpecialRoundData
 	opposite_win			 = null
 	// Friendly fire allowed on minigames? Default is true
 	friendly_fire            = null
+	// Always allow player to always damage each other. Default is false
+	force_pvp_damage         = null
 	// Award bonus points? Default is false
 	bonus_points             = null
 	// Amount of bosses to play, default is 1

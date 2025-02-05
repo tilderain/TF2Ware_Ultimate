@@ -9,10 +9,18 @@ function OnScriptHook_OnTakeDamage(params)
 		// always allow skull damage
 		return
 	}
+	
+	local victim = params.const_entity
+	local attacker = params.attacker
+	local force_pvp = false
 		
 	if (Ware_SpecialRound)
 	{
-		if (Ware_SpecialRound.cb_on_take_damage(params) == false)
+		if (Ware_SpecialRound.force_pvp_damage)
+			force_pvp = victim.IsPlayer() && attacker && attacker.IsPlayer()
+		
+		if (Ware_SpecialRound.cb_on_take_damage(params) == false
+			&& !force_pvp)
 		{
 			params.damage = 0
 			params.early_out = true
@@ -22,11 +30,13 @@ function OnScriptHook_OnTakeDamage(params)
 	
 	if (Ware_Finished)
 	{
-		if (Ware_MinigameTopScorers.find(params.const_entity) != null &&
-			Ware_MinigameTopScorers.find(params.inflictor) != null &&
-			params.inflictor != params.const_entity)
+		if (!force_pvp 
+			&& params.inflictor != params.const_entity
+			&& Ware_MinigameTopScorers.find(params.const_entity) != null 
+			&& Ware_MinigameTopScorers.find(params.inflictor) != null)
 		{
 			params.damage = 0.0
+			params.early_out = true
 			return
 		}
 	}
@@ -40,9 +50,6 @@ function OnScriptHook_OnTakeDamage(params)
 			return
 		}
 	}
-	
-	local victim = params.const_entity
-	local attacker = params.attacker
 	
 	if (victim == attacker)
 	{
@@ -58,7 +65,8 @@ function OnScriptHook_OnTakeDamage(params)
 		// handle the case where truce is disabled but don't want damage between players
 		if (victim.IsPlayer() && attacker.IsPlayer())
 		{
-			if (!Ware_Finished && Ware_Started && (Ware_Minigame == null || !Ware_Minigame.allow_damage)
+			if (!force_pvp && !Ware_Finished && Ware_Started
+				&& (!Ware_Minigame || !Ware_Minigame.allow_damage)
 				&& (!Ware_SpecialRound || !Ware_SpecialRound.allow_damage))
 			{
 				params.damage = 0
@@ -78,7 +86,8 @@ function OnScriptHook_OnTakeDamage(params)
 		same_team = true
 	}
 
-	local can_friendly_fire = (!Ware_Minigame || Ware_Minigame.friendly_fire) && (!Ware_SpecialRound || Ware_SpecialRound.friendly_fire)
+	local can_friendly_fire = (!Ware_Minigame || Ware_Minigame.friendly_fire) 
+							&& (!Ware_SpecialRound || Ware_SpecialRound.friendly_fire)
 	if (can_friendly_fire)
 	{
 		params.force_friendly_fire = true
@@ -128,7 +137,8 @@ function OnScriptHook_OnTakeDamage(params)
 	}
 	
 	if (Ware_Minigame != null 
-		&& Ware_Minigame.cb_on_take_damage(params) == false)
+		&& Ware_Minigame.cb_on_take_damage(params) == false
+		&& !force_pvp)
 	{
 		params.damage = 0
 		params.early_out = true
