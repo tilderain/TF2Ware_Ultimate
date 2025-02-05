@@ -12,7 +12,7 @@ minigame <- Ware_MinigameData
 	location      = "factoryplatform"
 	music         = mode == 0 ? "sweetdays" : "surfin"
 	max_scale     = 1.0
-	start_freeze  = 0.2
+	start_freeze  = 0.4
 })
 
 function OnPrecache()
