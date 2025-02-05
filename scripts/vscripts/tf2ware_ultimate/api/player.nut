@@ -110,7 +110,7 @@ function Ware_PassPlayer(player, pass)
 	local data = player.GetScriptScope().ware_data
 	if (data.passed == pass)
 		return false
-	if (data.suicided && !Ware_Minigame.allow_suicide)
+	if (data.suicided && Ware_Minigame && !Ware_Minigame.allow_suicide)
 		return false
 	
 	if (!Ware_BlockPassEffects)
