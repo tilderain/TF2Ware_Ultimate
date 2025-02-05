@@ -2401,7 +2401,7 @@ kart_routines <-
 		}
 		else if (other.m_mega_timer > 0.0)
 		{
-			if (Squish(5.0))
+			if (m_star_timer == 0.0 && m_mega_timer == 0.0 && Squish(5.0))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "rocketpack_stomp")
 			}
