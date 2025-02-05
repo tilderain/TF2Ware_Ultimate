@@ -488,6 +488,12 @@ function MarkForPurge(entity)
 	SetPropBool(entity, "m_bForcePurgeFixedupStrings", true)
 }
 
+// Precache a model including gibs
+function PrecacheModelGibs(model)
+{
+	PrecacheEntityFromTable({ classname = "tf_generic_bomb", model = model })
+}
+
 // Precache a material
 function PrecacheMaterial(material)
 {
