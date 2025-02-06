@@ -78,6 +78,7 @@ trivia
 type_color
 type_time
 type_word
+vacc
 watch_fall
 water_war
 witch"
