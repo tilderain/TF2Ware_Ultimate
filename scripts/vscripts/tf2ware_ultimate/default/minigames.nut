@@ -42,6 +42,7 @@ land_platform
 laugh
 limbo
 math
+medic
 melee_arena
 merasmus
 most_bombs
