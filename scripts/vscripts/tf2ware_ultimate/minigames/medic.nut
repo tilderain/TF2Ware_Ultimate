@@ -8,7 +8,6 @@ minigame <- Ware_MinigameData
 		"Kill a medic!"
 	]
 	duration       = 7
-	end_delay      = 0.5
 	music          = "farm"
 	custom_overlay = 
 	[
@@ -65,7 +64,10 @@ function OnEnd()
 	local alive_medics = medics.filter(@(i, player) player.IsValid() && player.IsAlive())
 	
 	foreach (player in alive_medics)
+	{
+		player.RemoveCond(TF_COND_INVULNERABLE)
 		Ware_PassPlayer(player, true)
+	}
 	
 }
 
