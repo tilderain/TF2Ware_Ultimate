@@ -10,7 +10,7 @@ minigame <- Ware_MinigameData
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Grappling Hook")
+	Ware_SetGlobalLoadout(TF_CLASS_UNDEFINED, "Grappling Hook")
 }
 
 function OnUpdate()

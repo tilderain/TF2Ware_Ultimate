@@ -215,13 +215,15 @@ function Ware_GetPlayerMission(player)
 
 // Sets a player loadout, i.e. their class and their items
 // This removes all items/weapons they currently have, including their melee (unless "keep_melee" is true)
+// If class is TF_CLASS_UNDEFINED, the class is not changed
 // Items is an optional item name, or array of item names to give to the player
 // For a list of item names, see items.nut
 // If items is null, the player is switched to their default melee
 // Item attributes is a list of attributes to apply to the given item, or default melee
 function Ware_SetPlayerLoadout(player, player_class, items = null, item_attributes = {}, keep_melee = false, switch_weapon = true)
 {
-	Ware_SetPlayerClass(player, player_class, false)
+	if (player_class != TF_CLASS_UNDEFINED)
+		Ware_SetPlayerClass(player, player_class, false)
 	
 	if (items)
 	{
