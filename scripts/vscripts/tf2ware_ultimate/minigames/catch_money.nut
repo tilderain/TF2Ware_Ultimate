@@ -22,6 +22,8 @@ cash_amounts <-
 ]
 cash_multiplier <- 1
 
+required_amount <- 400
+
 bomb_model <- "models/props_lakeside_event/bomb_temp.mdl"
 touch_sound <- "MVM.MoneyPickup"
 explode_sound <- "Weapon_LooseCannon.Explode"
@@ -120,7 +122,7 @@ function OnTakeDamage(params)
 									
 					victim.EmitSound(touch_sound)
 					victim.AddCurrency(GetPropInt(attacker, "m_iHammerID"))
-					if (victim.GetCurrency() >= 400)
+					if (victim.GetCurrency() >= required_amount)
 						Ware_PassPlayer(victim, true)
 				}
 			}
@@ -132,7 +134,7 @@ function OnTakeDamage(params)
 
 function OnEnd()
 {
-	local highest_amount = 0
+	local highest_amount = required_amount - 1
 	local highest_player
 	
 	foreach (player in Ware_MinigamePlayers)
