@@ -1043,17 +1043,17 @@ function KillWeapon(weapon)
 	if (wearable)
 	{
 		MarkForPurge(wearable)
-		wearable.Kill()
+		wearable.Destroy()
 	}
 	
 	wearable = GetPropEntity(weapon, "m_hExtraWearableViewModel")
 	if (wearable)
 	{
 		MarkForPurge(wearable)
-		wearable.Kill()
+		wearable.Destroy()
 	}
 	
-	weapon.Kill()
+	weapon.Destroy()
 }
 
 // Internal use only
