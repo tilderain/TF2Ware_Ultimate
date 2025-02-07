@@ -38,6 +38,13 @@ function Ware_SDRUpdate()
 			else
 				SendToConsole("sv_tags ware")
 		}
+		
+		if (!Ware_Plugin)
+		{
+			// leaving the server open without the plugin is dangerous
+			// hiding it from a server browser is a good compromise
+			SendToConsole("hide_server 1")
+		}
 	}
 }
 
