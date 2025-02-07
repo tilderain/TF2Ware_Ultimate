@@ -118,11 +118,11 @@ function Ware_LoadConfigMinigames()
 			switch (v)
 			{
 				case 2:
-					AppendElementIfUnique("destroy_barrels")
-					AppendElementIfUnique("heavy_medic")
-					AppendElementIfUnique("vacc")
+					AppendElementIfUnique(lines, "destroy_barrels")
+					AppendElementIfUnique(lines, "heavy_medic")
+					AppendElementIfUnique(lines, "vacc")
 					// this was supposed to be under v1 but forgot to add it in default config
-					AppendElementIfUnique("type_map")
+					AppendElementIfUnique(lines, "type_map")
 					break
 			}
 		}
@@ -153,10 +153,10 @@ function Ware_LoadConfigSpecialRounds()
 			switch (v)
 			{
 				case 1:
-					AppendElementIfUnique("hale")
+					AppendElementIfUnique(lines, "hale")
 					break
 				case 2:
-					AppendElementIfUnique("squid_game")
+					AppendElementIfUnique(lines, "squid_game")
 					// v1 had a bug where it didn't write the newline
 					// and this entry got killed off
 					local idx = lines.find("adrenaline_shot")

@@ -2,7 +2,7 @@ minigame <- Ware_MinigameData
 ({
 	name          = "Explosive Barrels"
 	author		  = ["ficool2", "tilderain"]
-	description   = "Carefully destroy every Barrel!"
+	description   = "Carefully destroy every explosive barrel!"
 	duration      = 6.0
 	music         = "hardsteer"
 	allow_damage  = true
