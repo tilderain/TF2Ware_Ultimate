@@ -15,7 +15,7 @@ minigame <- Ware_MinigameData
 		"kill_medic"
 	]
 	min_players   = 4
-	fail_on_death    = true
+	fail_on_death = true
 	allow_damage  = true
 	friendly_fire = false
 })
@@ -37,7 +37,7 @@ function OnStart()
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS)
 			Ware_StripPlayer(player, false)
 			Ware_SetPlayerTeam(player, TF_TEAM_RED)
-			Ware_GivePlayerWeapon(player, "Minigun", {})
+			Ware_GivePlayerWeapon(player, "Minigun", { "deploy time increased" : 2.0 })
 		}
 		else
 		{
@@ -45,7 +45,7 @@ function OnStart()
 			Ware_SetPlayerClass(player, TF_CLASS_MEDIC)
 			Ware_StripPlayer(player, false)
 			Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
-			Ware_GivePlayerWeapon(player, "Medi Gun", {"heal rate bonus": 5.5, "ubercharge rate bonus" : 15})
+			Ware_GivePlayerWeapon(player, "Medi Gun", {"heal rate bonus" : 5.5, "ubercharge rate bonus" : 25})
 			medics.append(player)
 		}
 	}
