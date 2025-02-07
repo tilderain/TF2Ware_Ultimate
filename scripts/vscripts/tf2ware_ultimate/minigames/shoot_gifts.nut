@@ -3,7 +3,8 @@ minigame <- Ware_MinigameData
 	name           = "Shoot 10 Gifts"
 	author         = ["Mecha the Slag", "ficool2"]
 	description    = "Shoot the Gift 10 times!"
-	duration       = 29.9
+	duration       = 29.4
+	end_delay      = 0.5
 	music          = "pumpit"
 	location       = "targetrange"
 	custom_overlay = "shoot_gift_10"
@@ -146,4 +147,9 @@ function OnUpdate()
 		if (Ware_GetPlayerAmmo(player, TF_AMMO_PRIMARY) == 0)
 			SetPropInt(player, "m_nImpulse", 101)
 	}
+}
+
+function OnCheckEnd()
+{
+	return Ware_GetAlivePlayers().len() == 0
 }
