@@ -337,8 +337,8 @@ function OnCalculateScore(data)
 	}
 	else
 	{
-		local rage = special.hale_rage + 20
-		special.hale_rage = Min(rage, 100)
+		local amount = Ware_Minigame.boss ? 50 : 20
+		special.hale_rage = Min(special.hale_rage + amount, 100)
 		special.hale_rambletime = Time() + 3.0
 
 		Ware_PlaySoundOnClient(player, hale_death_sound, 1.0, 100, SND_CHANGE_PITCH)
