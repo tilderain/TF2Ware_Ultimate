@@ -84,7 +84,7 @@ function SpawnTrain(pos)
 		local y = RandomFloat(offset_y, offset_y + 150.0)
 		train_pos = pos + Vector(x * axis[0], y * axis[1], 0)
 		train_ang = QAngle(0, -atan2(axis[1], -axis[0]) * RAD2DEG, 0)
-		train_vel = Vector(RandomFloat(-800, -1000) * axis[0], RandomFloat(-800, -1000) * axis[1], 0)
+		train_vel = Vector(RandomFloat(-1200, -1300) * axis[0], RandomFloat(-1200, -1300) * axis[1], 0)
 	}
 	
 	local train = Ware_SpawnEntity("prop_dynamic",
