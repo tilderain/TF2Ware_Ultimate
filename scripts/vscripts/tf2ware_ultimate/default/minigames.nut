@@ -31,6 +31,7 @@ grapple_cutout
 grapple_player
 halloween_fight
 headshot
+heavy_medic
 hit_balls
 hit_player
 hoop
@@ -42,7 +43,6 @@ land_platform
 laugh
 limbo
 math
-medic
 melee_arena
 merasmus
 most_bombs
