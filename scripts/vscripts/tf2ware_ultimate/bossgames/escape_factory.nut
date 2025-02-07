@@ -67,6 +67,22 @@ function OnEndzoneTouch()
 	}
 }
 
+function OnTakeDamage(params)
+{
+	local victim = params.const_entity
+	if (victim.IsPlayer())
+	{
+		local inflictor = params.inflictor
+		if (inflictor && inflictor.GetClassname() == "env_laser")
+		{
+			// fix weapons being dissolved after respawn
+			params.damage_type = params.damage_type & ~(DMG_DISSOLVE)	
+			params.damage_stats = TF_DMG_CUSTOM_PLASMA
+			params.damage *= 2.0
+		}
+	}
+}
+
 function OnEnd()
 {
 	endzone.DisconnectOutput("OnStartTouch", "OnStartTouch")

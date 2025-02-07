@@ -32,6 +32,8 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SPY)
 	Ware_CreateTimer(@() Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit"), 0.1)
 	
+	Ware_ChatPrint(null, "Look up and crouch to limbo!")
+	
 	local highest_scale = 1.0
 	foreach(player in Ware_MinigamePlayers)
 		if (player.GetModelScale() > highest_scale)
@@ -90,10 +92,5 @@ function OnBeamTouch()
 function OnEnd()
 {
 	foreach (player in Ware_MinigamePlayers)
-	{
-		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
-			Ware_ChatPrint(player, "Spycrabs must look up and crouch!")
-		
 		player.RemoveFlag(FL_ATCONTROLS)
-	}
 }

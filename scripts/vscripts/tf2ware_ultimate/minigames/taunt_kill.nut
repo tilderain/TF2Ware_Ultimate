@@ -22,6 +22,24 @@ function OnPick()
 	return Ware_ArePlayersOnBothTeams()
 }
 
+function OnTeleport(players)
+{
+	local center = Ware_MinigameLocation.center
+	local radius = Ware_MinigameLocation.radius
+	if (players.len() > 50)
+	{
+		local end = players.len() / 2
+		local players1 = players.slice(0, end)
+		local players2 = players.slice(end)
+		Ware_TeleportPlayersCircle(players1, center, radius)
+		Ware_TeleportPlayersCircle(players2, center, radius + 256.0)
+	}
+	else
+	{
+		Ware_TeleportPlayersCircle(players, center, radius)
+	}
+}
+
 function OnStart()
 {
 	local loadouts =

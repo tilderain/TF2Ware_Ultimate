@@ -234,6 +234,8 @@ function EndWords()
 	
 	Ware_ShowScreenOverlay(Ware_Players, overlay_announcement)
 	Ware_PlayMinigameMusic(null, current_music, SND_STOP)
+	Ware_ShowText(Ware_Players, CHANNEL_BACKUP, "", 1.0)
+			
 	EntFire("DRBoss_OverviewSequence_Start", "Trigger")
 	SetCamera("DRBoss_DescentCamera_Point")
 	
@@ -263,7 +265,7 @@ function EndWords()
 	Ware_PlaySoundOnAllClients(sound_overview_start)
 	
 	scores.sort(@(a, b) b <=> a)
-	median_score = Median(scores)
+	median_score = Max(Median(scores), 1)
 	
 	local failed = 0, max_display = 6
 	local failed_players = []
@@ -293,7 +295,7 @@ function EndWords()
 		text += "no one!\n\nEveryone survives to the next level!"
 	}
 	
-	Ware_ShowMinigameText(null, text)
+	Ware_ShowMinigameText(Ware_Players, text)
 	
 	CreateTimer(function()
 	{
@@ -337,13 +339,13 @@ function CheckGameOver()
 				local text = "The winners are...\n"
 				foreach (player in players)
 					text +=  GetPlayerName(player) + "\n"
-				Ware_ShowMinigameText(null, text)
+				Ware_ShowMinigameText(Ware_Players, text)
 			}
 			else
 			{
 				local player = players[0]
 				local average_word_count = Ware_GetPlayerMiniData(player).word_count_total / (level + 1).tofloat()
-				Ware_ShowMinigameText(null, format("The winner is...\n%s!", GetPlayerName(player)))
+				Ware_ShowMinigameText(Ware_Players, format("The winner is...\n%s!", GetPlayerName(player)))
 				
 				if (mode == 0)
 				{
@@ -358,14 +360,15 @@ function CheckGameOver()
 		else
 		{
 			Ware_PlaySoundOnAllClients(sound_bad_end)
-			Ware_ShowMinigameText(null, "Nobody is the winner...")
+			Ware_ShowMinigameText(Ware_Players, "Nobody is the winner...")
 		}
 	}
 	else
 	{
 		level++
 		
-		Ware_ShowMinigameText(null, "")
+		Ware_ShowMinigameText(Ware_Players, "")
+
 		Ware_PlaySoundOnAllClients(sound_level_up)
 		CreateTimer(Descent, 3.0)
 		
@@ -408,17 +411,23 @@ function SetCamera(name)
 
 function ShowWord(player, score)
 {
-	local color = "255 255 40"
 	local word = word_rotation[score]
 	local next_word = word_rotation[score + 1]
+	
+	local text, text2
 	if (mode != 0)
 	{
-		Ware_ShowMinigameText(player, format("%s = ?\n\nNext question:\n%s\n", word.expression, next_word.expression), color)	
+		text = word.expression + " = ?"
+		text2 = "Next question:\n" + next_word.expression
 	}
 	else
 	{
-		Ware_ShowMinigameText(player, format("%s\n\nNext word:\n%s\n", word, next_word), color)	
+		text = word
+		text2 = "Next word:\n" + next_word
 	}
+		
+	Ware_ShowText(player, CHANNEL_MINIGAME, text, word_type_duration, "255 255 40")
+	Ware_ShowText(player, CHANNEL_BACKUP, text2, word_type_duration, "255 255 255", -1.0, 0.4)
 }
 
 function OnPlayerSay(player, text)

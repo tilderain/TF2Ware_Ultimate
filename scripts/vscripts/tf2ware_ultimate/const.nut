@@ -132,6 +132,7 @@ const TF_COLOR_SPEC    = "CCCCCC"
 const CHANNEL_MINIGAME     = 3
 const CHANNEL_SPECIALROUND = 4
 const CHANNEL_MISC         = 2
+const CHANNEL_BACKUP       = 1 // not reliable as plugins may use it
 
 const SFX_WARE_FIREWORKS = "Summer.Fireworks"
 const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"

@@ -1,7 +1,6 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 1
+buffer<-@"VERSION 2
 airblast
-avoid_barrels
 avoid_props
 avoid_trains
 backstab
@@ -18,6 +17,7 @@ catch_cubes
 catch_money
 change_class
 count_bombs
+destroy_barrels
 disguise
 dodge_laser
 dont_touch
@@ -31,6 +31,7 @@ grapple_cutout
 grapple_player
 halloween_fight
 headshot
+heavy_medic
 hit_balls
 hit_player
 hoop
@@ -75,8 +76,10 @@ touch_sky
 treasure_hunt
 trivia
 type_color
+type_map
 type_time
 type_word
+vacc
 watch_fall
 water_war
 witch"

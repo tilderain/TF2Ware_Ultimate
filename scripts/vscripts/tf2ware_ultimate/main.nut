@@ -789,10 +789,10 @@ function Ware_FixupPlayerWeaponSwitch()
 		self.Weapon_Switch(activator)
 }
 
-// failsafe: if a player entity gets deleted without disconnecting (such as via external plugins)
-// it will almost certainly cause critical errors. this allows it to atleast try recover after restarting
-function Ware_CheckPlayerArrayIntegrity()
+function Ware_CheckPlayerArray()
 {
+	// failsafe: if a player entity gets deleted without disconnecting (such as via external plugins)
+	// it will almost certainly cause critical errors. this allows it to atleast try recover after restarting
 	for (local i = Ware_Players.len() - 1; i >=  0; i--)
 	{
 		local player = Ware_Players[i]
@@ -810,7 +810,13 @@ function Ware_CheckPlayerArrayIntegrity()
 			Ware_MinigamePlayers.remove(i)
 			Ware_MinigamePlayersData.remove(i)
 		}	
-	}	
+	}
+	
+	// randomize the array to make spawns unpredictable
+	Shuffle(Ware_Players)
+	Ware_PlayersData.clear()
+	foreach (player in Ware_Players)
+		Ware_PlayersData.append(player.GetScriptScope().ware_data)
 }
 
 function Ware_SetPlayerTeamInternal(player, team)
@@ -2365,4 +2371,4 @@ IncludeScript("tf2ware_ultimate/api/specialround", ROOT)
 Ware_SetupMap()
 Ware_SetupLocations()
 Ware_PrecacheEverything()
-Ware_CheckPlayerArrayIntegrity()
+Ware_CheckPlayerArray()
