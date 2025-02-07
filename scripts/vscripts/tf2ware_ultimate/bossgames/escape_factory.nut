@@ -67,6 +67,19 @@ function OnEndzoneTouch()
 	}
 }
 
+function OnTakeDamage(params)
+{
+	local victim = params.const_entity
+	if (victim.IsPlayer())
+	{
+		local inflictor = params.inflictor
+		if (inflictor && inflictor.GetClassname() == "env_laser")
+		{
+			params.damage_stats = TF_DMG_CUSTOM_PLASMA
+		}
+	}
+}
+
 function OnEnd()
 {
 	endzone.DisconnectOutput("OnStartTouch", "OnStartTouch")
