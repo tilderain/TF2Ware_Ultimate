@@ -234,6 +234,8 @@ function EndWords()
 	
 	Ware_ShowScreenOverlay(Ware_Players, overlay_announcement)
 	Ware_PlayMinigameMusic(null, current_music, SND_STOP)
+	Ware_ShowText(Ware_Players, CHANNEL_BACKUP, "", 1.0)
+			
 	EntFire("DRBoss_OverviewSequence_Start", "Trigger")
 	SetCamera("DRBoss_DescentCamera_Point")
 	
@@ -366,6 +368,7 @@ function CheckGameOver()
 		level++
 		
 		Ware_ShowMinigameText(Ware_Players, "")
+
 		Ware_PlaySoundOnAllClients(sound_level_up)
 		CreateTimer(Descent, 3.0)
 		
@@ -408,17 +411,23 @@ function SetCamera(name)
 
 function ShowWord(player, score)
 {
-	local color = "255 255 40"
 	local word = word_rotation[score]
 	local next_word = word_rotation[score + 1]
+	
+	local text, text2
 	if (mode != 0)
 	{
-		Ware_ShowMinigameText(player, format("%s = ?\n\nNext question:\n%s\n", word.expression, next_word.expression), color)	
+		text = word.expression + " = ?"
+		text2 = "Next question:\n" + next_word.expression
 	}
 	else
 	{
-		Ware_ShowMinigameText(player, format("%s\n\nNext word:\n%s\n", word, next_word), color)	
+		text = word
+		text2 = "Next word:\n" + next_word
 	}
+		
+	Ware_ShowText(player, CHANNEL_MINIGAME, text, word_type_duration, "255 255 40")
+	Ware_ShowText(player, CHANNEL_BACKUP, text2, word_type_duration, "255 255 255", -1.0, 0.4)
 }
 
 function OnPlayerSay(player, text)
