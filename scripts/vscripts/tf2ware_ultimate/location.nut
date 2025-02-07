@@ -178,13 +178,13 @@ Ware_Location.boxarena <-
 	center   = Vector(-1792, 8192, -7135)
 	mins     = Vector(-2736, 7248, -7135)
 	maxs     = Vector(-832, 9152, -5552)
-	radius   = 512.0
+	radius   = 600.0
 	cameras  = ["boxarena_camera"]
 	Teleport = function(players) 
 	{ 
 		local r = radius
 		if (players.len() > 40.0)
-			r += 288.0
+			r += 200.0
 		Ware_TeleportPlayersCircle(players, center, r)
 	}
 }
