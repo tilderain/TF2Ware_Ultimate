@@ -263,7 +263,7 @@ function EndWords()
 	Ware_PlaySoundOnAllClients(sound_overview_start)
 	
 	scores.sort(@(a, b) b <=> a)
-	median_score = Median(scores)
+	median_score = Max(Median(scores), 1)
 	
 	local failed = 0, max_display = 6
 	local failed_players = []
@@ -293,7 +293,7 @@ function EndWords()
 		text += "no one!\n\nEveryone survives to the next level!"
 	}
 	
-	Ware_ShowMinigameText(null, text)
+	Ware_ShowMinigameText(Ware_Players, text)
 	
 	CreateTimer(function()
 	{
@@ -337,13 +337,13 @@ function CheckGameOver()
 				local text = "The winners are...\n"
 				foreach (player in players)
 					text +=  GetPlayerName(player) + "\n"
-				Ware_ShowMinigameText(null, text)
+				Ware_ShowMinigameText(Ware_Players, text)
 			}
 			else
 			{
 				local player = players[0]
 				local average_word_count = Ware_GetPlayerMiniData(player).word_count_total / (level + 1).tofloat()
-				Ware_ShowMinigameText(null, format("The winner is...\n%s!", GetPlayerName(player)))
+				Ware_ShowMinigameText(Ware_Players, format("The winner is...\n%s!", GetPlayerName(player)))
 				
 				if (mode == 0)
 				{
@@ -358,14 +358,14 @@ function CheckGameOver()
 		else
 		{
 			Ware_PlaySoundOnAllClients(sound_bad_end)
-			Ware_ShowMinigameText(null, "Nobody is the winner...")
+			Ware_ShowMinigameText(Ware_Players, "Nobody is the winner...")
 		}
 	}
 	else
 	{
 		level++
 		
-		Ware_ShowMinigameText(null, "")
+		Ware_ShowMinigameText(Ware_Players, "")
 		Ware_PlaySoundOnAllClients(sound_level_up)
 		CreateTimer(Descent, 3.0)
 		
