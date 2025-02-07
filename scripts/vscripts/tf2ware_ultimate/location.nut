@@ -124,11 +124,13 @@ Ware_Location.sawrun_micro <-
 
 Ware_Location.targetrange <-
 {
-	center   = Vector(2264, -3896, -3968)
-	left     = Vector(2303, -5380, -3999)
-	right    = Vector(2303, -2410, -3999)
-	cameras  = ["targetrange_camera1", "targetrange_camera2"]
-	lines	 = 
+	center    = Vector(2264, -3896, -3968)
+	left      = Vector(2303, -5380, -3999)
+	right     = Vector(2303, -2410, -3999)
+	left_mid  = Vector(2240, -4670, -3999)
+	right_mid = Vector(2303, -3135, -3999)
+	cameras   = ["targetrange_camera1", "targetrange_camera2"]
+	lines	  = 
 	[
 		[Vector(2400, -4056, -3999), Vector(2944, -4056, -3999)],
 		[Vector(1536, -4056, -3999), Vector(2080, -4056, -3999)],
@@ -138,18 +140,21 @@ Ware_Location.targetrange <-
 	]
 	Teleport = function(players)
 	{
+		TeleportTeamsToSides(players, left, right)
+	}
+	TeleportTeamsToSides = function(players, pos_left, pos_right)
+	{
 		local red_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED)
 		local blue_players = players.filter(@(i, player) player.GetTeam() == TF_TEAM_BLUE)	
-		local left_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
-		
+		local left_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)		
 		if (left_team == TF_TEAM_RED)
-			TeleportSides(red_players, blue_players)
+			TeleportSide(red_players, blue_players, pos_left, pos_right)
 		else
-			TeleportSides(blue_players, red_players)
+			TeleportSide(blue_players, red_players, pos_left, pos_right)	
 	}
-	TeleportSides = function(players_left, players_right)
+	TeleportSide = function(players_left, players_right, pos_left, pos_right)
 	{
-		local PlaceSide = function(players, origin, angles, y_offset)
+		local function PlaceSide(players, origin, angles, y_offset)
 		{
 			local x_offset = 80.0
 			local pos = origin * 1.0
@@ -165,11 +170,9 @@ Ware_Location.targetrange <-
 				pos.x = origin.x + (x / 2) * ((x & 1) ? x_offset : -x_offset)
 				Ware_TeleportPlayer(player, pos, angles, vec3_zero)
 			}		
-		}
-		
-		
-		PlaceSide(players_left, left, QAngle(0, 90, 0), 80.0)
-		PlaceSide(players_right, right, QAngle(0, 270, 0), -80.0)	
+		}	
+		PlaceSide(players_left, pos_left, QAngle(0, 90, 0), 80.0)
+		PlaceSide(players_right, pos_right, QAngle(0, 270, 0), -80.0)	
 	}
 }
 

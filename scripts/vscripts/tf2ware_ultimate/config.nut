@@ -118,6 +118,7 @@ function Ware_LoadConfigMinigames()
 			switch (v)
 			{
 				case 2:
+					AppendElementIfUnique(lines, "airshot")
 					AppendElementIfUnique(lines, "destroy_barrels")
 					AppendElementIfUnique(lines, "heavy_medic")
 					AppendElementIfUnique(lines, "vacc")

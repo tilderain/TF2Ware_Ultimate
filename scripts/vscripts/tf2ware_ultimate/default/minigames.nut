@@ -1,6 +1,7 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
 buffer<-@"VERSION 2
 airblast
+airshot
 avoid_props
 avoid_trains
 backstab

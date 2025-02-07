@@ -109,6 +109,155 @@ Game.PenetrationKill
 	wave  			common/null.wav
 }
 
+// - copy pasted from game_sounds_vo_mvm
+
+// note: channels replaced from CHAN_VOICE so it doesn't override player voicelines
+
+Demoman.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/demoman_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/demoman_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/demoman_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/demoman_mvm_PainSevere04.mp3
+	}
+}
+
+Engineer.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_95dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/engineer_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere05.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere06.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere07.mp3
+	}
+}
+
+Heavy.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/heavy_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/heavy_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/heavy_mvm_PainSevere03.mp3
+	}
+}
+
+Medic.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/medic_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/medic_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/medic_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/medic_mvm_PainSevere04.mp3
+	}
+}
+
+Pyro.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/pyro_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere05.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere06.mp3
+	}
+}
+
+Scout.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/scout_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere05.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere06.mp3
+	}
+}
+
+Sniper.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/sniper_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/sniper_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/sniper_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/sniper_mvm_PainSevere04.mp3
+	}
+}
+
+Spy.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/spy_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/spy_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/spy_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/spy_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/spy_mvm_PainSevere05.mp3
+	}
+}
+
+
+Soldier.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/soldier_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere05.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere06.mp3
+	}
+}
+
 // - custom
 
 TF2Ware_Ultimate.Pass
