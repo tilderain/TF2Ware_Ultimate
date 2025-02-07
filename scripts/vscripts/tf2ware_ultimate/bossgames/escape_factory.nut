@@ -75,7 +75,10 @@ function OnTakeDamage(params)
 		local inflictor = params.inflictor
 		if (inflictor && inflictor.GetClassname() == "env_laser")
 		{
+			// fix weapons being dissolved after respawn
+			params.damage_type = params.damage_type & ~(DMG_DISSOLVE)	
 			params.damage_stats = TF_DMG_CUSTOM_PLASMA
+			params.damage *= 2.0
 		}
 	}
 }
