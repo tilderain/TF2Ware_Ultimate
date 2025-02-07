@@ -3,9 +3,9 @@ minigame <- Ware_MinigameData
 	name           = "Pop the Vacc"
 	author         = ["tilderain"]
 	description    = "Vaccinate!"
-	duration       = 4
+	duration       = 5.0
 	music          = "falling"
-	fail_on_death    = true
+	fail_on_death  = true
 	start_pass     = true
 })
 
@@ -21,6 +21,7 @@ class_idx <- RandomInt(0,2)
 team_idx <- RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 
 prop <- null
+killicon_dummy <- null
 
 minigun_particle <- "muzzle_minigun_constant_core"
 flamethrower_particle <- "flamethrower"
@@ -49,6 +50,8 @@ function OnStart()
 		modelscale  = 2
 		defaultanim = RandomBool() ? "taunt_aerobic_A" : "taunt_aerobic_B"
 	})
+	
+	killicon_dummy = Ware_CreateEntity("handle_dummy")
 
 	Ware_ShowAnnotation(pos + Vector(0, 0, 150), "WATCH OUT!")
 
@@ -61,14 +64,14 @@ function OnStart()
 
 	if(class_idx == CLASS_SOLDIER)
 	{
-		Ware_CreateTimer(@() SpawnRockets(), 0.8)
-		Ware_CreateTimer(@() SpawnHurt(DMG_BLAST), 2.5)
+		Ware_CreateTimer(@() SpawnRockets(), 1.8)
+		Ware_CreateTimer(@() SpawnHurt(DMG_BLAST, "tf_projectile_rocket"), 3.5)
 	}
 
 	else if(class_idx == CLASS_PYRO)
-		Ware_CreateTimer(@() SpawnFires(), 2.5)
+		Ware_CreateTimer(@() SpawnFires(), 3.5)
 	else
-		Ware_CreateTimer(@() SpawnGuns(), 2.5)
+		Ware_CreateTimer(@() SpawnGuns(), 3.5)
 }
 
 function OnPrecache()
@@ -77,10 +80,11 @@ function OnPrecache()
 	PrecacheParticle(minigun_particle)
 }
 
-function SpawnHurt(type)
+function SpawnHurt(type, kill_icon)
 {
 	local hurt = Ware_SpawnEntity("trigger_hurt",
 	{
+		classname  = kill_icon
 		origin     = Ware_MinigameLocation.center
 		damage     = 150
 		damagetype = type
@@ -134,7 +138,7 @@ function SpawnParticle(particle)
 		origin       = Ware_MinigameLocation.center + Vector(0,0,50)
 		angles       = QAngle(1, 0, 0)
 		effect_name  = particle
-		start_active = true // set to false if you don't want particle to start initially
+		start_active = true
 	})
 }
 
@@ -143,7 +147,7 @@ function SpawnFires()
 	SpawnParticle(flamethrower_particle)
 
 	prop.EmitSound("Weapon_FlameThrower.FireStart")
-	SpawnHurt(DMG_BURN)
+	SpawnHurt(DMG_BURN, "flamethrower")
 }
 
 function SpawnGuns()
@@ -152,7 +156,7 @@ function SpawnGuns()
 
 	prop.EmitSound("Weapon_Minigun.FireCrit")
 
-	SpawnHurt(DMG_BULLET)
+	SpawnHurt(DMG_BULLET, "minigun")
 }
 
 function OnEnd()
@@ -166,12 +170,20 @@ function OnTakeDamage(params)
 {
 	if (params.const_entity.IsPlayer())
 	{
-		params.weapon = null
-		params.attacker = World
-		
+		local attacker = params.attacker
 		local inflictor = params.inflictor
-		if (inflictor != null && inflictor.GetClassname() == "ware_projectile")
+		
+		if (attacker && !attacker.IsPlayer())
 		{
+			// trigger_hurt overrides the kill icon, so using a dummy entity as a workaround
+			killicon_dummy.KeyValueFromString("classname", attacker.GetClassname())
+			params.inflictor = killicon_dummy	
+			params.attacker = killicon_dummy
+		}
+		
+		if (inflictor && inflictor.GetClassname() == "ware_projectile")
+		{
+			params.weapon = null
 			// prevents server crash because of attacker not being a player
 			SetPropEntity(inflictor, "m_hLauncher", null)
 		}
