@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 1
+buffer<-@"VERSION 2
 airblast
 avoid_props
 avoid_trains
@@ -76,6 +76,7 @@ touch_sky
 treasure_hunt
 trivia
 type_color
+type_map
 type_time
 type_word
 vacc

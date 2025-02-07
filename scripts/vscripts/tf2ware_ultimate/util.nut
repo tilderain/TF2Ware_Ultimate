@@ -350,10 +350,17 @@ function RandomElement(arr)
 	return arr[RandomIndex(arr)]
 }
 
-// Remove and return a random element frm the array
+// Remove and return a random element from the array
 function RemoveRandomElement(arr)
 {
 	return arr.remove(RandomIndex(arr))
+}
+
+// Appends element to the array if not already present
+function AppendElementIfUnique(arr, element)
+{
+	if (arr.find(element) == null)
+		arr.append(element)
 }
 
 // Returns the given column from a 2D array
