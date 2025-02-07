@@ -852,6 +852,21 @@ function OnPlayerDeath(player, attacker, params)
 	}
 }
 
+// saxton hale rage support
+function OnGameEvent_player_stunned(params)
+{
+	local victim = GetPlayerFromUserID(params.victim)
+	if (victim)
+	{
+		local kart = GetKart(victim)
+		if (kart && kart.CanSpinout())
+		{
+			kart.Spinout(SPINOUT_SPIN)
+			kart.DropItems()
+		}
+	}
+}
+
 function OnPlayerDisconnect(player)
 {
 	local kart = GetKart(player)
@@ -2164,6 +2179,14 @@ kart_routines <-
 		}
 	}
 	
+	CanSpinout = function()
+	{
+		return m_star_timer == 0.0 && 
+				m_bullet_timer == 0.0 &&
+				m_mega_timer == 0.0 &&
+				m_cannon_end_pos == null
+	}
+	
 	Spinout = function(type)
 	{
 		if (m_spin_out_type != SPINOUT_NONE && type <= m_spin_out_type)
@@ -3276,15 +3299,9 @@ local function ItemCreate(classname, model, owner_kart, type)
 		{
 			case ITEM_TYPE_BANANA:
 			{
-				if (kart.m_star_timer == 0.0 && 
-					kart.m_bullet_timer == 0.0 &&
-					kart.m_mega_timer == 0.0 &&
-					kart.m_cannon_end_pos == null)
+				if (kart.CanSpinout() && kart.Spinout(SPINOUT_SPIN))
 				{
-					if (kart.Spinout(SPINOUT_SPIN))
-					{
-						AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
-					}
+					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
 				}
 				
 				Destroy()			
@@ -3292,16 +3309,10 @@ local function ItemCreate(classname, model, owner_kart, type)
 			}
 			case ITEM_TYPE_FIB:
 			{
-				if (kart.m_star_timer == 0.0 && 
-					kart.m_bullet_timer == 0.0 &&
-					kart.m_mega_timer == 0.0 &&
-					kart.m_cannon_end_pos == null)
+				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
-					if (kart.Spinout(SPINOUT_TUMBLE_FORWARD))
-					{
-						AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
-					}
-				}		
+					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
+				}
 				
 				DispatchParticleEffect("drg_cow_explosion_sparkles", self.GetOrigin(), vec3_zero)
 				kart.m_prop.EmitSound("MK_Itembox_Hit")
@@ -3340,17 +3351,12 @@ local function ItemCreate(classname, model, owner_kart, type)
 			case ITEM_TYPE_SHELL_GREEN:
 			case ITEM_TYPE_SHELL_RED:
 			{
-				if (kart.m_star_timer == 0.0 && 
-					kart.m_bullet_timer == 0.0 &&
-					kart.m_mega_timer == 0.0 &&
-					kart.m_cannon_end_pos == null)
+				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
-					if (kart.Spinout(SPINOUT_TUMBLE_FORWARD))
-					{
-						AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
-							m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
-					}
+					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
+						m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
 				}
+
 				Destroy()
 				break
 			}
