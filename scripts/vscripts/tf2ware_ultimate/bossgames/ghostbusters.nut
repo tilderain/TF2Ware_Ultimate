@@ -384,8 +384,9 @@ function OnEnd()
 	}
 	else
 	{
+		local verb = alive_spies.len() > 1 ? "are" : "is"
 		local word = alive_spies.len() > 1 ? "ghosts" : "ghost"
-		Ware_ChatPrint(null, "There is {int} {str} left standing... The Undead win!", alive_spies.len(), word)
+		Ware_ChatPrint(null, "There {str} {int} {str} left standing... The Undead win!", verb, alive_spies.len(), word)
 	}
 }
 
