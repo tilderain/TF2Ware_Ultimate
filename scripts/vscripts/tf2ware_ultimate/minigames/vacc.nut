@@ -53,8 +53,9 @@ function OnStart()
 	
 	killicon_dummy = Ware_CreateEntity("handle_dummy")
 
-	Ware_ShowAnnotation(pos + Vector(0, 0, 150), "WATCH OUT!")
-
+	Ware_ShowAnnotation(pos + Vector(0, 0, 150), "Resist Me!")
+	Ware_ChatPrint(null, "{color}HINT:{color} Press R to swap resistance type", COLOR_GREEN, TF_COLOR_DEFAULT)
+	
 	local name = class_names[class_idx] + format(".Taunts%02d", RandomInt(1,19))
 
 	if(class_idx == CLASS_PYRO )

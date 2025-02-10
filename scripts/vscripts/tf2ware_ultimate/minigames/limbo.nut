@@ -32,7 +32,7 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SPY)
 	Ware_CreateTimer(@() Ware_SetGlobalLoadout(TF_CLASS_SPY, "Disguise Kit"), 0.1)
 	
-	Ware_ChatPrint(null, "Look up and crouch to limbo!")
+	Ware_ChatPrint(null, "{color}HINT:{color} Look up and crouch to limbo!", COLOR_GREEN, TF_COLOR_DEFAULT)
 	
 	local highest_scale = 1.0
 	foreach(player in Ware_MinigamePlayers)
