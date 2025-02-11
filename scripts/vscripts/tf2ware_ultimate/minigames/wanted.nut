@@ -8,13 +8,11 @@ local charactersConst = [
     "pyro",     // 7
     "spy",      // 8
     "engineer"  // 9
-];
-characters <- [];
+]
+characters <- []
 foreach ( character in charactersConst)
     characters.append(character)
-character_selected <- ""
-character_selected = characters[RandomInt(0, characters.len()-1)];
-characters.remove(characters.find(character_selected));
+character_selected <- RemoveRandomElement(characters)
 
 minigame <- Ware_MinigameData
 ({
@@ -33,17 +31,15 @@ character_queue <- []
 props <- []
 
 first <- true
-xRange <- [-750, 750];
-zRange <- [250, 1250];
+xRange <- [-750, 750]
+zRange <- [250, 1250]
 yPos <- 0
 boxSize <- 8
 
 prop_model  <- "models/mariokart/head.mdl"
-character_sprite <- "sprites/wanted/%s.vmt"
 
 function OnPrecache()
 {
-    Ware_PrecacheMinigameMusic("wanted", false)
 	PrecacheModel(prop_model)
     PrecacheOverlay("hud/tf2ware_ultimate/minigames/wanted_" + character_selected)
 }
@@ -60,21 +56,21 @@ function OnTeleport(players)
 function CreateCharacter()
 {
 	if (character_queue.len() == 0)
-		return CreateLastCharacter();
+		return CreateLastCharacter()
 
-	return CreateGenericCharacter(character_queue.remove(0), false);
+	return CreateGenericCharacter(character_queue.remove(0), false)
 }
 
 function CreateLastCharacter()
 {
-	return CreateGenericCharacter(character_selected, true);
+	return CreateGenericCharacter(character_selected, true)
 }
 
 function CreateGenericCharacter(name, isLast)
 {
     yPos+=0.1
-	local pos = Ware_MinigameLocation.center;
-    pos += Vector(RandomFloat(xRange[0], xRange[1]), 1250+yPos, RandomFloat(zRange[0], zRange[1]));
+	local pos = Ware_MinigameLocation.center
+    pos += Vector(RandomFloat(xRange[0], xRange[1]), 1250+yPos, RandomFloat(zRange[0], zRange[1]))
 
 	local prop = Ware_SpawnEntity("prop_physics_override",
 	{
@@ -85,24 +81,24 @@ function CreateGenericCharacter(name, isLast)
 		massscale      = 0.0001,
         modelscale = 7
 		disableshadows = true
-	});
-    prop.SetBodygroup(0, charactersConst.find(name));
-	prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT);
-	prop.SetMoveType(MOVETYPE_FLY, MOVECOLLIDE_FLY_BOUNCE);
+	})
+    prop.SetBodygroup(0, charactersConst.find(name))
+	prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT)
+	prop.SetMoveType(MOVETYPE_FLY, MOVECOLLIDE_FLY_BOUNCE)
 
-	Ware_SlapEntity(prop, RandomFloat(50, 300));
-	local vel = prop.GetAbsVelocity();
-	vel = Vector(vel.x * 1, vel.y * 0, vel.z * 1);
-	prop.SetAbsVelocity(vel);
+	Ware_SlapEntity(prop, RandomFloat(50, 300))
+	local vel = prop.GetAbsVelocity()
+	vel = Vector(vel.x * 1, vel.y * 0, vel.z * 1)
+	prop.SetAbsVelocity(vel)
 
-	props.append(prop);
+	props.append(prop)
     if (!isLast) {
-        prop.SetSolid(SOLID_NONE);
-        return 0.01;
+        prop.SetSolid(SOLID_NONE)
+        return 0.01
     }
     prop.SetSolid(SOLID_BBOX)
     prop.SetSize(Vector(-boxSize, -boxSize, -boxSize), Vector(boxSize, boxSize, boxSize))
-    return;
+    return
 }
 
 
@@ -114,7 +110,7 @@ function OnStart()
 
     foreach (i, character in character_counts)
     {
-        character_counts[i] = RandomInt(5, 10);
+        character_counts[i] = RandomInt(5, 10)
     }
 
     foreach (i, character in characters)
@@ -128,30 +124,30 @@ function OnStart()
 	Ware_CreateTimer(@() CreateCharacter(), 0.0)
 }
 function OnUpdate() {
-    local minigameLocation = Ware_MinigameLocation.center;
-    local margin = 0.1;
+    local minigameLocation = Ware_MinigameLocation.center
+    local margin = 0.1
 
     foreach (prop in props) {
-        local vel = prop.GetAbsVelocity();
-        local pos = prop.GetOrigin();
+        local vel = prop.GetAbsVelocity()
+        local pos = prop.GetOrigin()
 
         if (pos.x - minigameLocation.x > xRange[1]) {
-            vel.x = -abs(vel.x);
-            prop.SetOrigin(Vector(minigameLocation.x + xRange[1] - margin, pos.y, pos.z));
+            vel.x = -abs(vel.x)
+            prop.SetOrigin(Vector(minigameLocation.x + xRange[1] - margin, pos.y, pos.z))
         } else if (pos.x - minigameLocation.x < xRange[0]) {
-            vel.x = abs(vel.x);
-            prop.SetOrigin(Vector(minigameLocation.x + xRange[0] + margin, pos.y, pos.z));
+            vel.x = abs(vel.x)
+            prop.SetOrigin(Vector(minigameLocation.x + xRange[0] + margin, pos.y, pos.z))
         }
 
         if (pos.z - minigameLocation.z > zRange[1]) {
-            vel.z = -abs(vel.z);
-            prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[1] - margin));
+            vel.z = -abs(vel.z)
+            prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[1] - margin))
         } else if (pos.z - minigameLocation.z < zRange[0]) {
-            vel.z = abs(vel.z);
-            prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[0] + margin));
+            vel.z = abs(vel.z)
+            prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[0] + margin))
         }
 
-        prop.SetAbsVelocity(vel);
+        prop.SetAbsVelocity(vel)
     }
 }
 
@@ -170,7 +166,7 @@ function OnTakeDamage(params)
 			Ware_PassPlayer(attacker, true)
             if (first)
             {
-                Ware_ChatPrint(null, "{player} {color}was the first to find " + character_selected + "!", attacker, TF_COLOR_DEFAULT)
+                Ware_ChatPrint(null, "{player} {color}was the first to find " + character_selected.toupper() + "!", attacker, TF_COLOR_DEFAULT)
                 Ware_GiveBonusPoints(attacker)
                 first = false
             }
