@@ -2145,6 +2145,8 @@ kart_routines <-
 		m_rescue_plane = m_map_next_plane
 
 		EntityEntFire(m_entity, "CallScriptFunction", "RescueStart", 1.0)
+
+		MakePlayerComplain(m_driver)
 	}
 
 	RescueStart = function()
