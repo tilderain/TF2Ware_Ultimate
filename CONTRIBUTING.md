@@ -6,7 +6,7 @@ Please follow the codebase's style when making contributions:
 * No semicolons in VScript. Semicolons are optional in Squirrel and TF2Ware Ultimate does *not* use them.
 * Do not define constants or global variables within a minigame/bossgame/specialround scope.
 * Please use CRLF for line breaks.
-* Indents should be 4 spaces
+* Indents should be 4 spaces.
 
 If in doubt, there are plenty of examples for each type of contribution - try to match how they are laid out.
 
@@ -62,7 +62,7 @@ Special Rounds have some unique parameters and callbacks that minigames don't ha
 
 Once you are done, add the file's name to the `minigames.cfg`/`bossgames.cfg`/`specialrounds.cfg` in the `tf/scriptdata/tf2ware_ultimate` folder. 
 
-Note that minigames, bossgames and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one (type `!ware_help` in chat). Note that `!ware_nextspecial` needs a restart before it loads.
+Note that minigames, bossgames and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one (type `!ware_help` in chat). In addition, `!ware_nextspecial` needs a restart (`!ware_restart`) before it loads.
 
 ## Themes
 Theme contributions are very welcome, but work a bit differently to everything else. A "Theme" is basically a set of sounds related to a specific character or mode from a WarioWare game. A list of replaceable sounds is given in the `_default` entry under `sounds` in the [theme configuration file](cfg/tf2ware_ultimate/themes.cfg). To create a theme, make a new entry in this file following the formatting of other themes. If you're not familiar with Squirrel syntax, each of these entries is an element of an [array](http://squirrel-lang.org/squirreldoc/reference/language/arrays.html), with each entry itself being a [table](http://squirrel-lang.org/squirreldoc/reference/language/tables.html).
