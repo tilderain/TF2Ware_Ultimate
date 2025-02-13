@@ -64,4 +64,9 @@ Pull requests to add new minigames, bossgames, special rounds or themes are welc
 Getting started with contributing is easy - see [here](CONTRIBUTING.md) for more information.
 
 ## Credits
-Type `!ware_credits` in chat for a list of contributors in console.
+
+* ficool2 - Lead programmer and map porting
+* pokemonPasta - Programmer, themes, map porting, trailer
+* OctatonicSunrise - Logo, trailer renders
+
+Type `!ware_credits` in chat for a full list of contributors in console.
