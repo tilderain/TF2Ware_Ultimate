@@ -62,9 +62,10 @@ Special Rounds have some unique parameters and callbacks that minigames don't ha
 
 Once you are done, add the file's name to the `minigames.cfg`/`bossgames.cfg`/`specialrounds.cfg` in the `tf/scriptdata/tf2ware_ultimate` folder. 
 
-Note that minigames, bossgames and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one (type `!ware_help` in chat).
+Note that minigames, bossgames and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one (type `!ware_help` in chat). Note that `!ware_nextspecial` needs a restart before it loads.
 
 ## Themes
+
 
 ### Contributing Audio
 
