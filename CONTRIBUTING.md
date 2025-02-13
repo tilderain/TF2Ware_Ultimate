@@ -65,7 +65,23 @@ Once you are done, add the file's name to the `minigames.cfg`/`bossgames.cfg`/`s
 Note that minigames, bossgames and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one (type `!ware_help` in chat). Note that `!ware_nextspecial` needs a restart before it loads.
 
 ## Themes
+Theme contributions are very welcome, but work a bit differently to everything else. A "Theme" is basically a set of sounds related to a specific character or mode from a WarioWare game. A list of replaceable sounds is given in the `_default` entry under `sounds` in the [theme configuration file](cfg/tf2ware_ultimate/themes.cfg). To create a theme, make a new entry in this file following the formatting of other themes. If you're not familiar with Squirrel syntax, each of these entries is an element of an [array](http://squirrel-lang.org/squirreldoc/reference/language/arrays.html), with each entry itself being a [table](http://squirrel-lang.org/squirreldoc/reference/language/tables.html).
 
+Each table has the following slots:
+* `theme_name` is the internal theme name. Note this follows a specific structure of `<platform>_<game (if multiple)>_<character/mode>`. For example, the Wii only has one WarioWare game so the theme is `wii_mona`, but the DS has two so we do `ds_diy_orbulon` or `ds_touched_warioman`. This naming system is mandatory, as TF2Ware uses this to find a parent theme.
+* `visual_name` is the name displayed to players, this follows the format `<Char/Mode> (<Plat> - <Game>)`, again omitting the game if only one exists.
+* `internal` (optional) tells the config if the theme is [internal](#internal-themes). Set to 1 if it is, otherwise you can omit it.
+* `author` is your username to be placed in the credits - please format your username the same across all contributions of any type.
+* `sounds` is itself a table with each key being a sound name found in `_default`, and each value being that sound's duration. Only include sounds in this table that you are replacing. Any sound with a value of `0.0` in default (e.g. `results`) doesn't need a duration in other themes either as the sound is manually stopped by TF2Ware.
+
+### Internal Themes
+Many themes will have some shared sounds due to being from the same game. To prevent having duplicate audio files across such themes, we instead use "Internal Themes" to store shared theme sounds. Each internal theme is for a specific game, and is considered a "parent theme" to all themes from that game.
+
+Once again if only one game exists for a platform we omit the game name from the theme_name; e.g. `3ds` vs `ds_touched`.
+
+When TF2Ware is setting up the internal list of theme sounds it's going to actually play (`Ware_CurrentThemeSounds`), it first checks the theme itself for sounds, then its parent (if it exists), then finally the default theme. Therefore, if there are any conflicting sounds between a theme and its parent, it will prioritise the child theme, and any missing sounds will be easily replaced.
+
+Note that no `wii` internal theme exists, as the default sounds used by TF2Ware *are* the sounds from Smooth Moves.
 
 ### Contributing Audio
 
