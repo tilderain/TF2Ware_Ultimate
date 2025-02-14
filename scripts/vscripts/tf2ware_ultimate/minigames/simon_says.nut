@@ -1,6 +1,6 @@
 simon    <- RandomInt(0, 1)
-mode     <- RandomInt(0, 7)
-suffixes <- ["Taunt", "Jump", "Crouch", "Medic", "Eat", "Drink", "Inspect", "Horn"]
+mode     <- RandomInt(0, 8)
+suffixes <- ["Taunt", "Jump", "Crouch", "Medic", "Eat", "Drink", "Inspect", "Horn", "Type"]
 
 minigame <- Ware_MinigameData
 ({
@@ -84,6 +84,14 @@ if (mode == 3 || mode == 4 || mode == 5)
 else if (mode == 7)
 {
 	function OnPlayerHorn(player)
+	{
+		local pass = simon == 0
+		PassOrFailPlayer(player, !pass)
+	}
+}
+else if(mode == 8)
+{
+	function OnPlayerSay(player, text)
 	{
 		local pass = simon == 0
 		PassOrFailPlayer(player, !pass)
