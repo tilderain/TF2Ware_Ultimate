@@ -36,6 +36,8 @@ function OnTeleport(players)
 			red_players.append(player)
 		else if (team == TF_TEAM_BLUE)
 			blue_players.append(player)
+			
+		ForceRemovePlayerTaunt(player)
 	}
 	
 	Ware_TeleportPlayersRow(red_players,
