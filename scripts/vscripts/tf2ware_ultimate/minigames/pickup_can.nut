@@ -60,7 +60,7 @@ function OnUpdate()
 		local newButtons = buttons & ~minidata.LastButtons
 		local usingActionKey = player.IsUsingActionSlot()
 		
-		if ((newButtons & (IN_ATTACK2|IN_RELOAD|IN_USE)) || usingActionKey)
+		if ((newButtons & (IN_ATTACK2|IN_RELOAD|IN_USE)) || (usingActionKey && !minidata.LastActionKey))
 		{
 			if (minidata.PickedProp != player && minidata.PickedProp.IsValid())
 			{
