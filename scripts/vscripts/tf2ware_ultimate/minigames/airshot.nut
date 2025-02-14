@@ -1,11 +1,12 @@
 minigame <- Ware_MinigameData
 ({
-    name        = "Airshot"
-	description = "Shoot the Bot!"
-    author      = ["Black_Knight", "ficool2"]
-    location    = "targetrange"
-    duration    = 5.5
-	music		= "urgent"
+    name         = "Airshot"
+	description  = "Shoot the Bot!"
+    author       = ["Black_Knight", "ficool2"]
+    location     = "targetrange"
+    duration     = 5.5
+	start_freeze = 0.25
+	music		 = "urgent"
 })
 
 lines <- []
@@ -38,7 +39,7 @@ function OnStart()
     Ware_CreateTimer(@() SpawnBot( QAngle(0, -90, 0)), 1.8)
 	Ware_CreateTimer(@() SpawnBot(QAngle(0, 90, 0)), 2.0)
 	Ware_CreateTimer(@() SpawnBot(QAngle(0, RandomBool() ? -90 : 90, 0)), 2.7)
-    Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Direct Hit")
+    Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Direct Hit", { "deploy time increased" : 2.5 })
 }
 
 function OnTeleport(players)
