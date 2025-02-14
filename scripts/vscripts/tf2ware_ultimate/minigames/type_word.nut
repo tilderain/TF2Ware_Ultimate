@@ -108,7 +108,7 @@ words <-
 	"Claidheamh Mor"
 ]
 
-first <- false
+first <- true
 word <- null
 
 function OnStart()
