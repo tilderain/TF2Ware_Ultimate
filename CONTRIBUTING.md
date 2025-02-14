@@ -84,7 +84,13 @@ When TF2Ware is setting up the internal list of theme sounds it's going to actua
 Note that no `wii` internal theme exists, as the default sounds used by TF2Ware *are* the sounds from Smooth Moves.
 
 ### Contributing Audio
+When adding audio to the repo, a certain level of quality is expected. Audio should be sourced from a high-quality archive such as [KHInsider](https://downloads.khinsider.com/) or [Zophar's Domain](https://www.zophar.net/), ideally first as a FLAC or WAV.
 
+Any required cuts should be made, with at most a small gap at the start. This should then be loudness normalised to -9 LUFS; this can easily be done in Audacity. Finally this should be exported as a 44.1kHz MP3 using the Standard Audacity preset for bitrate.
+
+For longer music that goes beyond the duration of a minigame/bossgame, the cut should be a few seconds longer than the minigame with a short fade at the end.
+
+Note: If you are editing existing audio within the versioned folder in [`sound/tf2ware_ultimate`](sound/tf2ware_ultimate/), you MUST bump the version number in the directory name, as well as WARE_MUSICVERSION in [`config.nut`](scripts/vscripts/tf2ware_ultimate/config.nut). This is due to audio with identical paths not being updated if it's already cached.
 ## Mapping
 
 Mapping changes are welcome, however vmf changes are more involved to merge (especially if the map has been changed in the meantime). To help with this, please be descriptive about changes made, and test your compile before submitting a PR.
