@@ -9,9 +9,7 @@ local charactersConst = [
     "spy",      // 8
     "engineer"  // 9
 ]
-characters <- []
-foreach ( character in charactersConst)
-    characters.append(character)
+characters <- clone(charactersConst)
 character_selected <- RemoveRandomElement(characters)
 
 minigame <- Ware_MinigameData
@@ -22,7 +20,7 @@ minigame <- Ware_MinigameData
 	duration       = 10.0
     location       = "dirtsquare"
     custom_overlay = "wanted_"+character_selected
-    music = "wanted"
+    music          = "wanted"
 })
 
 character <- -1
@@ -41,7 +39,8 @@ prop_model  <- "models/mariokart/head.mdl"
 function OnPrecache()
 {
 	PrecacheModel(prop_model)
-    PrecacheOverlay("hud/tf2ware_ultimate/minigames/wanted_" + character_selected)
+	foreach (character in charactersConst)
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/wanted_" + character)
 }
 
 function OnTeleport(players)
@@ -68,18 +67,18 @@ function CreateLastCharacter()
 
 function CreateGenericCharacter(name, isLast)
 {
-    yPos+=0.1
-	local pos = Ware_MinigameLocation.center
+    yPos += 0.1
+	local pos = Ware_MinigameLocation.center * 1.0
     pos += Vector(RandomFloat(xRange[0], xRange[1]), 1250+yPos, RandomFloat(zRange[0], zRange[1]))
 
-	local prop = Ware_SpawnEntity("prop_physics_override",
+	local prop = Ware_SpawnEntity("prop_dynamic_override",
 	{
-		targetname     = "character",
-		model          = prop_model,
-		origin         = pos,
-        angles      = QAngle(0, 90, 360),
-		massscale      = 0.0001,
-        modelscale = 7
+		targetname     = "character"
+		model          = prop_model
+		origin         = pos
+        angles         = QAngle(0, 90, 360)
+		massscale      = 0.0001
+        modelscale     = 7
 		disableshadows = true
 	})
     prop.SetBodygroup(0, charactersConst.find(name))
@@ -92,13 +91,14 @@ function CreateGenericCharacter(name, isLast)
 	prop.SetAbsVelocity(vel)
 
 	props.append(prop)
-    if (!isLast) {
+    if (!isLast) 
+	{
         prop.SetSolid(SOLID_NONE)
         return 0.01
     }
     prop.SetSolid(SOLID_BBOX)
     prop.SetSize(Vector(-boxSize, -boxSize, -boxSize), Vector(boxSize, boxSize, boxSize))
-    return
+    return null
 }
 
 
@@ -107,15 +107,13 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Festive Sniper Rifle")
 
     local character_counts = array(characters.len())
-
     foreach (i, character in character_counts)
-    {
         character_counts[i] = RandomInt(5, 10)
-    }
 
     foreach (i, character in characters)
 	{
-		for (local j = 0; j < character_counts[i]; j++)
+		local count = character_counts[i]
+		for (local j = 0; j < count; j++)
 		{
 			character_queue.append(character)
 		}
@@ -123,26 +121,35 @@ function OnStart()
 
 	Ware_CreateTimer(@() CreateCharacter(), 0.0)
 }
-function OnUpdate() {
+
+function OnUpdate() 
+{
     local minigameLocation = Ware_MinigameLocation.center
     local margin = 0.1
 
-    foreach (prop in props) {
+    foreach (prop in props) 
+	{
         local vel = prop.GetAbsVelocity()
         local pos = prop.GetOrigin()
 
-        if (pos.x - minigameLocation.x > xRange[1]) {
+        if (pos.x - minigameLocation.x > xRange[1]) 
+		{
             vel.x = -abs(vel.x)
             prop.SetOrigin(Vector(minigameLocation.x + xRange[1] - margin, pos.y, pos.z))
-        } else if (pos.x - minigameLocation.x < xRange[0]) {
+        }
+		else if (pos.x - minigameLocation.x < xRange[0]) 
+		{
             vel.x = abs(vel.x)
             prop.SetOrigin(Vector(minigameLocation.x + xRange[0] + margin, pos.y, pos.z))
         }
 
-        if (pos.z - minigameLocation.z > zRange[1]) {
+        if (pos.z - minigameLocation.z > zRange[1]) 
+		{
             vel.z = -abs(vel.z)
             prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[1] - margin))
-        } else if (pos.z - minigameLocation.z < zRange[0]) {
+        }
+		else if (pos.z - minigameLocation.z < zRange[0]) 
+		{
             vel.z = abs(vel.z)
             prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[0] + margin))
         }
