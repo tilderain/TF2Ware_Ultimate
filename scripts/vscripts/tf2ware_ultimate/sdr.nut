@@ -26,8 +26,13 @@ function Ware_SDRUpdate()
 		
 	Ware_HostPresent = true
 	if (!IsDedicatedServer())
-	{
-		Ware_SDRCheck()
+	{	
+		if (!Ware_Plugin && Convars.GetStr("sv_password").len() == 0)
+		{
+			// leaving the server open without the plugin is dangerous
+			// this will generate a random password
+			SendToConsole("sv_password " + GenerateHash(8))
+		}
 		
 		// TODO add these tags on dedicated
 		local tags = Convars.GetStr("sv_tags")
@@ -39,12 +44,7 @@ function Ware_SDRUpdate()
 				SendToConsole("sv_tags ware")
 		}
 		
-		if (!Ware_Plugin && Convars.GetStr("sv_password").len() == 0)
-		{
-			// leaving the server open without the plugin is dangerous
-			// this will generate a random password
-			SendToConsole("sv_password " + GenerateHash(8))
-		}
+		Ware_SDRCheck()
 	}
 }
 
