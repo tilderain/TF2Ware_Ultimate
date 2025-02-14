@@ -202,7 +202,7 @@ function StartWords()
 		if (Ware_MinigamePlayers.find(player) != null)
 		{
 			local minidata = Ware_GetPlayerMiniData(player)
-			minidata.score <- 0
+			minidata.score <- player.IsFakeClient() ? RandomInt(0, 5) : 0 // debug
 			minidata.word_count <- 0
 			if (!("word_count_total" in minidata))
 				minidata.word_count_total <- 0
@@ -287,7 +287,7 @@ function EndWords()
 			}
 		}
 		
-		if (failed >= max_display)
+		if (failed > max_display)
 			text += format("\n\nand %d more...", failed - max_display)
 	}
 	else
@@ -367,7 +367,21 @@ function CheckGameOver()
 	{
 		level++
 		
-		Ware_ShowMinigameText(Ware_Players, "")
+		local text = "The remaining players are...\n\n"
+		
+		local max_display = 6
+		local count = max_display
+		foreach (player in players)
+		{
+			text += GetPlayerName(player) + "\n"
+			if (--count <= 0)
+				break
+		}
+		
+		if (players.len() > max_display)
+			text += format("\n\nand %d more...", players.len() - max_display)
+		
+		Ware_ShowMinigameText(Ware_Players, text)
 
 		Ware_PlaySoundOnAllClients(sound_level_up)
 		CreateTimer(Descent, 3.0)
