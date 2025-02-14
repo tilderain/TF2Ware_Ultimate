@@ -40,8 +40,8 @@ function OnPrecache()
 function OnStart()
 {
 	local targets = Shuffle(clone(Ware_MinigamePlayers))
-	if (targets.len() > 32)
-		targets.resize(32)
+	if (targets.len() > 50)
+		targets.resize(50)
 	
 	foreach (player in targets)
 	{
