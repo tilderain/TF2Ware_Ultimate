@@ -45,8 +45,8 @@ function OnStart()
 	{
 		foreach (x, cell in row)
 		{
-			//print(cell + " ")	
-			if (cell == "#")
+			//print(cell.tochar() + " ")	
+			if (cell == '#')
 			{
 				local block_pos = maze_origin * 1.0
 				block_pos.x += block_size * x
@@ -75,7 +75,7 @@ function GenerateMaze(width, height, start_y, end_y)
 	
 	local maze = array(height)
 	for (local y = 0; y < height; y++) 
-		maze[y] = array(width, "#")
+		maze[y] = array(width, '#')
 
 	local directions = 
 	[
@@ -85,8 +85,8 @@ function GenerateMaze(width, height, start_y, end_y)
 		{x = 1,	 y =  0}  // right
 	]
 
-	local startX = width - 1
-	maze[start_y][startX] = "."
+	local start_x = width - 1
+	maze[start_y][start_x] = '.'
 	
 	// all possible 2x2 cells
 	local unvisited = []
@@ -94,7 +94,7 @@ function GenerateMaze(width, height, start_y, end_y)
 	{
 		for (local x = 0; x < width; x += 2) 
 		{
-			if (!(x == startX && y == start_y)) 
+			if (!(x == start_x && y == start_y)) 
 				unvisited.append({x = x, y = y})
 		}
 	}
@@ -104,7 +104,7 @@ function GenerateMaze(width, height, start_y, end_y)
 	{
 		local current = unvisited[0]
 		local path = [{x = current.x, y = current.y}]
-		while (maze[current.y][current.x] != ".") 
+		while (maze[current.y][current.x] != '.') 
 		{
 			local dir = directions[RandomInt(0, 3)]
 			local nx = current.x + dir.x * 2
@@ -140,9 +140,9 @@ function GenerateMaze(width, height, start_y, end_y)
 			local nx = path[i + 1].x
 			local ny = path[i + 1].y
 			
-			maze[y][x] = "."
-			maze[ny][nx] = "."
-			maze[y + (ny - y) / 2][x + (nx - x) / 2] = "."
+			maze[y][x] = '.'
+			maze[ny][nx] = '.'
+			maze[y + (ny - y) / 2][x + (nx - x) / 2] = '.'
 			
 			foreach (j, u in unvisited)
 			{
@@ -156,8 +156,8 @@ function GenerateMaze(width, height, start_y, end_y)
 	}
 
 	// mark start/end points
-	maze[start_y][startX] = "S"
-	maze[end_y][0] = "E"
+	maze[start_y][start_x] = 'S'
+	maze[end_y][0] = 'E'
 	
 	return maze
 }
