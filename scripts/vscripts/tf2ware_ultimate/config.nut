@@ -127,6 +127,7 @@ function Ware_LoadConfigMinigames()
 					break
 				case 3:
 					AppendElementIfUnique(lines, "wanted")
+					AppendElementIfUnique(lines, "pickup_can")
 					break
 			}
 		}
