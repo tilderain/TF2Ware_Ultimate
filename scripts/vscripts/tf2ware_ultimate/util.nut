@@ -448,6 +448,35 @@ function FloatToTimeFormat(time)
 	return format("%02d:%02d:%03d", minutes, seconds, milliseconds)
 }
 
+// Generates an alphanumeric hash of the specified time
+// This is seeded by both the game's RNG routine and current system time
+function GenerateHash(length) 
+{
+    local radix = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    local radix_len = radix.len()
+	
+	local tm = {}
+    local combined = RandomInt(1, INT_MAX)
+	LocalTime(tm)
+    combined = (combined * 1 + tm.second) % INT_MAX
+    combined = (combined * 10 + tm.minute) % INT_MAX
+    combined = (combined * 100 + tm.hour) % INT_MAX
+    combined = (combined * 1000 + tm.day) % INT_MAX
+   
+	local hash = ""  
+    for (local i = 0; i < length; i++) 
+	{
+		local position = i + 1
+		local value = combined
+		value = value * position + i * 31
+		value = value * 17 + 23
+		combined = (combined * 31 + value) % INT_MAX
+		hash += radix[value % radix_len].tochar()
+    }
+    
+    return hash
+}
+
 function CollectGameEventsInScope(scope)
 {
 	local events = []

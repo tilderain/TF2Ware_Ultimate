@@ -39,11 +39,11 @@ function Ware_SDRUpdate()
 				SendToConsole("sv_tags ware")
 		}
 		
-		if (!Ware_Plugin)
+		if (!Ware_Plugin && Convars.GetStr("sv_password").len() == 0)
 		{
 			// leaving the server open without the plugin is dangerous
-			// hiding it from a server browser is a good compromise
-			SendToConsole("hide_server 1")
+			// this will generate a random password
+			SendToConsole("sv_password " + GenerateHash(8))
 		}
 	}
 }
