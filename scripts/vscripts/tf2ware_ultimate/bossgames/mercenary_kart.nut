@@ -2432,6 +2432,7 @@ kart_routines <-
 		else if (other.m_star_timer > 0.0)
 		{
 			if (m_bullet_timer == 0.0
+				&& m_star_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "wrench_golden")
