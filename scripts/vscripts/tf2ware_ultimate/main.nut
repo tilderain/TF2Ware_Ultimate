@@ -81,14 +81,6 @@ function Ware_ErrorHandler(e)
 	}
 }
 
-function Ware_HandleError(e)
-{
-	local critical = Ware_CriticalZone
-	Ware_CriticalZone = false
-	Ware_ErrorHandler(e)
-	Ware_CriticalZone = critical
-}
-
 seterrorhandler(Ware_ErrorHandler)
 
 SetConvarValue("sv_gravity", 800.00006) // hide the sv_tags message
@@ -408,7 +400,7 @@ function Ware_PrecacheNext()
 		}
 		catch (e)
 		{
-			Ware_HandleError(format("Failed to precache '%s.nut'. Missing from disk or syntax error", path))
+			Ware_Error("Failed to precache '%s.nut'. Missing from disk or syntax error", path)
 		}
 		
 		return true
@@ -974,7 +966,7 @@ function Ware_LoadSpecialRound(file_name, player_count, is_forced)
 	}
 	catch (e)
 	{
-		Ware_HandleError(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
+		Ware_Error("Failed to load '%s.nut'. Missing from disk or syntax error", path)
 		return null
 	}
 	
@@ -1286,7 +1278,7 @@ function Ware_LoadMinigame(file_name, player_count, is_boss, is_forced)
 	}
 	catch (e)
 	{
-		Ware_HandleError(format("Failed to load '%s.nut'. Missing from disk or syntax error", path))
+		Ware_Error("Failed to load '%s.nut'. Missing from disk or syntax error", path)
 		return null
 	}
 	
