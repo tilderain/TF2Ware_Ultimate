@@ -1597,7 +1597,12 @@ function Ware_StartMinigameInternal(is_boss)
 	
 	// late precache if new minigames are added at runtime
 	if (developer() > 0 && "OnPrecache" in Ware_MinigameScope)
+	{
+		if (Ware_Minigame.music)
+			Ware_PrecacheMinigameMusic(Ware_Minigame.music, is_boss)
+	
 		Ware_MinigameScope.OnPrecache()
+	}
 	
 	if (custom_teleport)
 		Ware_MinigameScope.OnTeleport(clone(valid_players))
