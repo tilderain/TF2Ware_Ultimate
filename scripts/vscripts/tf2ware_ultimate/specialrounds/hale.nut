@@ -135,7 +135,7 @@ function OnUpdate()
 				
 				if (teleported || (player.GetFlags() & FL_ONGROUND))
 				{
-					Ware_RemovePlayerAttribute(player, "cancel falling damage")
+					player.RemoveCustomAttribute("cancel falling damage")
 
 					if (special.hale_injump == 2)
 					{
@@ -231,7 +231,7 @@ function OnUpdate()
 					special.hale_jumptime = -(time + 5.0)
 					special.hale_injump = 1
 
-					Ware_AddPlayerAttribute(player, "cancel falling damage", 1.0, -1)
+					player.AddCustomAttribute("cancel falling damage", 1.0, -1)
 				}
 				else
 				{
@@ -356,7 +356,7 @@ function OnEnd()
 		Ware_TogglePlayerWearables(player, true)
 		Ware_UpdatePlayerVoicePitch(player)
 
-		Ware_RemovePlayerAttribute(player, "cancel falling damage")
+		player.RemoveCustomAttribute("cancel falling damage")
 		player.SetGravity(1.0)
 
 		Ware_DestroySpecialMelee(player)
