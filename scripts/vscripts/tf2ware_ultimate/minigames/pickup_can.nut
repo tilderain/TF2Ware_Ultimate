@@ -19,7 +19,6 @@ local canOffset = 100.0 // X and Y Offset for spawning cans
 local canHeightOffset = 300.0   // Z Offset for spawning cans
 local propFaceSameDirection = false // If true, makes the prop face the same direction as the player (similar to Half-Life 2)
 local canName = "can_minigame"  // Can targetname
-local pickableObjects = [canName]    // List of targetnames that can be picked up
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +36,6 @@ function OnStart()
         minidata.LastButtons <- 0
 		minidata.LastActionKey <- false
         minidata.PickedProp <- player
-        minidata.PickableProp <- PickableProp
 	}
     SpawnTriggerPush()
     Ware_CreateTimer(@() SpawnTrashcan(), 0.3)
@@ -51,6 +49,7 @@ function OnStart()
 // Inspired by Prop Kill (https://github.com/Batfoxkid/TF2-Prop-Kill)
 function OnUpdate()
 {
+	local time = Time()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		if (!player.IsAlive())
@@ -78,11 +77,18 @@ function OnUpdate()
 
 				TraceLineEx(trace)
 
-				if (trace.hit && minidata.PickableProp(trace.enthit))
+				if (trace.hit)
 				{
-					minidata.PickedProp = trace.enthit
-					trace.enthit.SetOwner(player)
-					trace.enthit.GetScriptScope().LastHolder <- player
+					local ent = trace.enthit
+					if (ent.GetName() == canName
+						&& ent.GetOwner() == null
+						&& ent.GetScriptScope().GraceHolderTime < time)
+					{				
+						minidata.PickedProp = ent
+						ent.SetOwner(player)
+						ent.GetScriptScope().LastHolder <- player
+						ent.GetScriptScope().GraceHolderTime <- time + 0.25			
+					}
 				}
 			}
 		}
@@ -99,6 +105,7 @@ function OnUpdate()
 				prop_angles = eye_angles
 			minidata.PickedProp.Teleport(false, prop_origin, true, prop_angles, true, velocity)
 			minidata.PickedProp.SetPhysAngularVelocity(Vector(0.0, 0.0, 0.0))
+			minidata.PickedProp.GetScriptScope().GraceHolderTime = time + 0.25
 		}
 
 		minidata.LastButtons = buttons
@@ -109,8 +116,8 @@ function OnUpdate()
 function OnPlayerDeath(player, attacker, params)
 {
 	local minidata = Ware_GetPlayerMiniData(player)
-    minidata.PickedProp = player
-    minidata.PickedProp.SetOwner(null)
+    if (minidata.PickedProp && minidata.PickedProp.IsValid())
+		minidata.PickedProp.SetOwner(null)
 }
 
 function SpawnTrashcan() 
@@ -154,6 +161,7 @@ function SpawnCans()
         can.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
         can.ValidateScriptScope()
         can.GetScriptScope().LastHolder <- null
+		can.GetScriptScope().GraceHolderTime <- 0.0
 
         if (outline)
         {
@@ -199,7 +207,7 @@ function SpawnTriggerPush()
 
 function OnTriggerTouch()
 {
-    if (pickableObjects.find(activator.GetName()) != null)
+    if (activator.GetName() == canName)
     {
         local player = activator.GetScriptScope().LastHolder
         if (player)
@@ -207,18 +215,4 @@ function OnTriggerTouch()
 
         activator.Destroy() // If the cans are not removed, they will lag the server due to physics calculations.
     }
-}
-
-function PickableProp(entity)
-{
-    if (pickableObjects.find(entity.GetName()) != null)
-    {
-        foreach (player in Ware_MinigamePlayers)
-        {
-            if (Ware_GetPlayerMiniData(player).PickedProp == entity)
-                return false
-        }
-        return true
-    }
-    return false
 }
