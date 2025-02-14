@@ -10,6 +10,7 @@ UnlitGeneric
 	$nofog 1
 	$model 1
 	
+	$frame 0
 	$offset 1
 	$firsty 0.03125
 	$lasty 0.625 // (1 / 32) * (19 + 1)
@@ -24,11 +25,18 @@ UnlitGeneric
 	
 	Proxies
 	{
-		ToggleTexture
+		TeamTexture
 		{
-			toggleTextureVar $envmapmask
-			toggleTextureFrameNumVar $offset
-			toggleShouldWrap 0
+		}
+		Equals
+		{
+			srcVar1 $frame
+			resultVar $offset
+		}		
+		Equals
+		{
+			srcVar1 $zero
+			resultVar $frame
 		}
 		LinearRamp
 		{

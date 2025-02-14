@@ -1051,6 +1051,9 @@ function CreateKart(origin, angles)
 		disableshadows = true
 	})
 	kart_prop.SetOwner(kart_entity)
+						
+	foreach (name, func in kart_routines)
+		kart[name] <- func.bindenv(kart)
 	
 	kart.m_id                 <- kart_id++
 	kart.m_driver             <- null	
@@ -1157,9 +1160,10 @@ function CreateKart(origin, angles)
 	kart.m_head_offset        <- Vector()
 
 	kart.m_pinball_score      <- true
-								
-	foreach (name, func in kart_routines)
-		kart[name] <- func.bindenv(kart)
+	
+	kart.HudUpdateLap()
+	kart.HudUpdatePosition()
+	kart.HudUpdateItem(kart.m_item_idx)
 
 	return kart
 }
@@ -1213,10 +1217,6 @@ function CreateHud(kart)
 	SetPropInt(hud, "m_fObjectFlags", 2)
 	SetPropInt(hud, "m_fEffects", EF_NOSHADOW)
 	SetEntityParent(hud, camera)
-	
-	SetPropInt(hud, "m_iTeamNum", kart.m_lap_idx + 4)
-	SetPropInt(hud, "m_clrRender", (kart.m_position_idx << 24) | 0x00FFFFFF)
-	SetPropInt(hud, "m_iTextureFrameIndex", kart.m_item_idx)
 	return hud
 }
 
@@ -2340,6 +2340,21 @@ kart_routines <-
 		m_hud.SetBodygroup(1, 0)
 	}
 	
+	HudUpdateLap = function()
+	{
+		SetPropInt(m_hud, "m_clrRender", (Max(m_lap_idx + 1, 1) << 24) | 0x00FFFFFF)
+	}
+	
+	HudUpdatePosition = function()
+	{
+		SetPropInt(m_hud, "m_iTextureFrameIndex", m_position_idx)
+	}
+	
+	HudUpdateItem = function(idx)
+	{
+		SetPropInt(m_hud, "m_iTeamNum", idx + 2)
+	}
+	
 	UpdateHead = function(tick)
 	{
 		if ((m_id & 1) == (tick & 1))
@@ -2585,7 +2600,7 @@ kart_routines <-
 		local idx = PickItem(m_position_idx)
 
 		m_item_idx = -idx
-		SetPropInt(m_hud, "m_iTextureFrameIndex", ITEM_LAST + 1)
+		HudUpdateItem(ITEM_LAST + 1)
 			
 		EmitSoundOnClient("MK_Item_Roulette", m_driver)
 		EntityEntFire(m_entity, "CallScriptFunction", "SelectItem", 4.0)
@@ -2610,7 +2625,7 @@ kart_routines <-
 		
 		m_item_idx = idx
 		m_item_scope = item_map[idx]
-		SetPropInt(m_hud, "m_iTextureFrameIndex", idx)
+		HudUpdateItem(idx)
 	}
 	
 	SetHeldItems = function(idx, entities)
@@ -2972,7 +2987,7 @@ kart_routines <-
 				EmitSoundOnClient("MK_Lap", m_driver)	
 				EntityEntFire(m_entity, "CallScriptFunction", "RestoreMusic", 2.5)				
 			}
-			SetPropInt(m_hud, "m_iTeamNum", m_lap_idx + 3)
+			HudUpdateLap()
 		}
 	}
 
@@ -3010,8 +3025,8 @@ kart_routines <-
 			m_position_timer = time + 0.5
 		}
 	
-		SetPropInt(m_hud, "m_clrRender", (idx << 24) | 0x00FFFFFF)
 		m_position_idx = idx
+		HudUpdatePosition()
 	}	
 	
 	Finish = function()
