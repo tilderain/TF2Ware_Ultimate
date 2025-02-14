@@ -3,7 +3,7 @@ We welcome any contributions to minigames, bossgames, special rounds, themes, or
 
 ## Style
 Please follow the codebase's style when making contributions:
-* No semicolons in VScript. Semicolons are optional in Squirrel and TF2Ware Ultimate does *not* use them.
+* No semicolons in VScript contributions. Semicolons are optional in Squirrel and TF2Ware Ultimate does *not* use them.
 * Do not define constants or global variables within a minigame/bossgame/specialround scope.
 * Please use CRLF for line breaks.
 * Indents should be 4 spaces.
@@ -23,7 +23,7 @@ Create a new .nut file there.
 
 Next, create a `Ware_MinigameData` definition. Look at the other scripts in the same folder for plenty of examples.
 
-Most of the documentation is in the .nut files themselves. All the settings and functions allowed for usage are documented in the [`api`](scripts/vscripts/tf2ware_ultimate/api/) folder. Note that many common minigame features such as thirdperson (`thirdperson`), starting all players passed (`start_pass`), min/max players (`min_players`/`max_players`), etc. are available as parameters in `Ware_MinigameData`. Common callbacks are also documented in this class, see [the minigame API](scripts/vscripts/tf2ware_ultimate/api/minigame.nut) for full documentation.
+All the settings and functions allowed for usage are documented in the [`api`](scripts/vscripts/tf2ware_ultimate/api/) folder. Note that many common minigame features such as thirdperson (`thirdperson`), starting all players passed (`start_pass`), min/max players (`min_players`/`max_players`), etc. are available as parameters in `Ware_MinigameData`. Common callbacks are also documented in this class, see [the minigame API](scripts/vscripts/tf2ware_ultimate/api/minigame.nut) for full documentation.
 
 ### Overlays
 The text overlays for minigames and bossgames are static images. To generate one, run the `generate_text` Python script in the `tools` folder. If you are on Linux you must have `wine` installed as this script runs a `.exe` file.
@@ -36,7 +36,7 @@ For longer overlays or those using multiple colours, manual editing is required 
 
 The processed files can then be converted using VTFEdit and manually imported into the repo. One of the generated `.png`s is a reversed text version which must be added to the VTF as a separate frame by importing both into VTFEdit simultaneously.
 
-A list of commonly used overlays can be seen below. The intention for these is to avoid any duplicate overlays with identical text. These can be used by simply setting the minigame parameter `custom_overlay = "<overlay_name>"`.
+A list of commonly used overlays can be seen below. The intention for these is to avoid any duplicate overlays with identical text. These can be used by simply setting the minigame data parameter `custom_overlay = "<overlay_name>"`.
 
 | Overlay Name | Overlay Text |
 | --- | --- |
@@ -49,7 +49,7 @@ A list of commonly used overlays can be seen below. The intention for these is t
 ### Music
 All minigames and bossgames require minigame music. This music must be at least the same duration as the minigame, though it can be longer - if so it will be stopped manually. It's not uncommon for minigame duration to be based on the music's duration, though gameplay should still be the main consideration.
 
-For minigames, you are welcome to use existing minigame music, but for bossgames new music is typically required. See [here](#contributing-audio) for guidelines on contributing audio.
+For minigames, you are welcome to use existing minigame music, but for bossgames new music is typically expected. See [here](#contributing-audio) for guidelines on contributing audio.
 
 ## Special Rounds
 The process is similar for Special Rounds, though with some small differences. To get started, create a .nut file in [`scripts/vscripts/tf2ware_ultimate/specialrounds`](scripts/vscripts/tf2ware_ultimate/specialrounds/)
@@ -58,21 +58,23 @@ Special Rounds use a distinct `Ware_SpecialRoundData` class, make a definition f
 
 Special Rounds have some unique parameters and callbacks that minigames don't have (such as `OnMinigameStart()` and `OnMinigameEnd()`) which may be useful too.
 
+Unlike minigames, special rounds do *not* require music or overlays and neither are expected in the code, though you may still choose to use them.
+
 ## Testing
 
 Once you are done, add the file's name to the `minigames.cfg`/`bossgames.cfg`/`specialrounds.cfg` in the `tf/scriptdata/tf2ware_ultimate` folder. 
 
-Note that minigames, bossgames and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one (type `!ware_help` in chat). In addition, `!ware_nextspecial` needs a restart (`!ware_restart`) before it loads.
+Minigames, bossgames and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one. `!ware_nextspecial` needs a restart (`!ware_restart`) before it loads. Type `!ware_help` in chat for a full list of commands.
 
 ## Themes
-Theme contributions are very welcome, but work a bit differently to everything else. A "Theme" is basically a set of sounds related to a specific character or mode from a WarioWare game. A list of replaceable sounds is given in the `_default` entry under `sounds` in the [theme configuration file](cfg/tf2ware_ultimate/themes.cfg). To create a theme, make a new entry in this file following the formatting of other themes. If you're not familiar with Squirrel syntax, each of these entries is an element of an [array](http://squirrel-lang.org/squirreldoc/reference/language/arrays.html), with each entry itself being a [table](http://squirrel-lang.org/squirreldoc/reference/language/tables.html).
+Theme contributions are very welcome, but work a bit differently to everything else. A "Theme" is a set of sounds related to a specific character or mode from a WarioWare game. A list of replaceable sounds is given in the `_default` entry under `sounds` in the [theme configuration file](cfg/tf2ware_ultimate/themes.cfg). To create a theme, make a new entry in this file following the formatting of other themes. If you're not familiar with Squirrel syntax, each of these entries is an element of an [array](http://squirrel-lang.org/squirreldoc/reference/language/arrays.html), with each entry itself being a [table](http://squirrel-lang.org/squirreldoc/reference/language/tables.html).
 
 Each table has the following slots:
-* `theme_name` is the internal theme name. Note this follows a specific structure of `<platform>_<game (if multiple)>_<character/mode>`. For example, the Wii only has one WarioWare game so the theme is `wii_mona`, but the DS has two so we do `ds_diy_orbulon` or `ds_touched_warioman`. This naming system is mandatory, as TF2Ware uses this to find a parent theme.
+* `theme_name` is the internal theme name. Note this follows a specific structure of `<plat>_<game>_<character/mode>`, with the game being omitted if there's only one game on that platform. For example, the Wii only has one WarioWare game so the theme is `wii_mona`, but the DS has two so we do `ds_diy_orbulon` or `ds_touched_warioman`. This naming system is mandatory, as TF2Ware uses this to set themes up correctly.
 * `visual_name` is the name displayed to players, this follows the format `<Char/Mode> (<Plat> - <Game>)`, again omitting the game if only one exists.
 * `internal` (optional) tells the config if the theme is [internal](#internal-themes). Set to 1 if it is, otherwise you can omit it.
 * `author` is your username to be placed in the credits - please format your username the same across all contributions of any type.
-* `sounds` is itself a table with each key being a sound name found in `_default`, and each value being that sound's duration. Only include sounds in this table that you are replacing. Any sound with a value of `0.0` in default (e.g. `results`) doesn't need a duration in other themes either as the sound is manually stopped by TF2Ware.
+* `sounds` is itself a table with each key being a sound name found in `_default`, and each value being that sound's duration. Only include sounds in this table that you are replacing. Any sound with a value of `0.0` in `_default` (e.g. `results`) doesn't need a duration in other themes either as the sound is manually stopped by TF2Ware.
 
 ### Internal Themes
 Many themes will have some shared sounds due to being from the same game. To prevent having duplicate audio files across such themes, we instead use "Internal Themes" to store shared theme sounds. Each internal theme is for a specific game, and is considered a "parent theme" to all themes from that game.
@@ -93,6 +95,6 @@ For longer music that goes beyond the duration of a minigame/bossgame, the cut s
 Note: If you are editing existing audio within the versioned folder in [`sound/tf2ware_ultimate`](sound/tf2ware_ultimate/), you MUST bump the version number in the directory name, as well as WARE_MUSICVERSION in [`config.nut`](scripts/vscripts/tf2ware_ultimate/config.nut). This is due to audio with identical paths not being updated if it's already cached.
 ## Mapping
 
-Mapping changes are welcome, however vmf changes are more involved to merge (especially if the map has been changed in the meantime). To help with this, please be descriptive about changes made, and test your compile before submitting a PR.
+Mapping changes are welcome, however VMF changes are more involved to merge (especially if the map has been changed in the meantime). To help with this, please be descriptive about changes made, and test your compile before submitting a PR.
 
 Note when compiling, add the following parameters to VRAD: `-noskyboxrecurse -staticproppolys -textureshadows`. If using the Hammer/Hammer++ compiler, this is in Expert under $light.exe. If using CompilePal, you can add these parameters inidividually under VRAD.
