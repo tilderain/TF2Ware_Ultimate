@@ -169,6 +169,7 @@ function Ware_LoadConfigSpecialRounds()
 				case 3:
 					AppendElementIfUnique(lines, "speedrun")
 					AppendElementIfUnique(lines, "wheelchair")
+					AppendElementIfUnique(lines, "barrels")
 					break
 			}
 		}
