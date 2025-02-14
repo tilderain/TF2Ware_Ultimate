@@ -82,15 +82,16 @@ function OnTakeDamage(params)
 	local victim = params.const_entity
 	if (victim.IsPlayer())
 	{
-		if (params.damage_type & DMG_CLUB)
+		local attacker = params.attacker	
+		if (attacker && attacker.IsPlayer())
 		{
-			local attacker = params.attacker
-			if (victim.IsPlayer() && attacker && attacker.IsPlayer())
+			if (params.damage_type & DMG_CLUB)
 			{
 				victim.SetAbsVelocity(victim.GetAbsVelocity() + Vector(0, 0, 300))
 				Ware_PushPlayerFromOther(victim, attacker, 250.0)
-				return false
 			}
+			
+			return false
 		}
 	}
 	else if (victim.GetName() == "explosive_barrel")
