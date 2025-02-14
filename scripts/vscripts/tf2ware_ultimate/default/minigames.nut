@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 2
+buffer<-@"VERSION 3
 airblast
 airshot
 avoid_props
@@ -23,6 +23,7 @@ disguise
 dodge_laser
 dont_touch
 double_jump
+eat_plate
 extinguish
 flipper_ball
 flood
@@ -49,7 +50,7 @@ merasmus
 most_bombs
 move
 parachute
-eat_plate
+pickup_can
 piggyback
 pirate
 pop_jack
@@ -84,4 +85,5 @@ vacc
 wanted
 watch_fall
 water_war
-witch"
+witch
+"

@@ -1,7 +1,7 @@
 // whenever new entries are added, these should be incremented so it's automatically added to server configs
-const WARE_MINIGAME_VERSION     = 2
+const WARE_MINIGAME_VERSION     = 3
 const WARE_BOSSGAME_VERSION     = 0
-const WARE_SPECIALROUND_VERSION = 2
+const WARE_SPECIALROUND_VERSION = 3
 const WARE_THEME_VERSION        = 1
 
 // everytime music is changed AND the map is *publicly* updated
@@ -125,6 +125,9 @@ function Ware_LoadConfigMinigames()
 					// this was supposed to be under v1 but forgot to add it in default config
 					AppendElementIfUnique(lines, "type_map")
 					break
+				case 3:
+					AppendElementIfUnique(lines, "wanted")
+					break
 			}
 		}
 	})
@@ -162,6 +165,9 @@ function Ware_LoadConfigSpecialRounds()
 					// and this entry got killed off
 					local idx = lines.find("adrenaline_shot")
 					if (idx == null) lines.insert(0, "adrenaline_shot")
+					break
+				case 3:
+					AppendElementIfUnique(lines, "speedrun")
 					break
 			}
 		}

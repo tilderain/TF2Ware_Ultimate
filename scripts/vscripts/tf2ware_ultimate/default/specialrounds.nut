@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 2
+buffer<-@"VERSION 3
 adrenaline_shot
 all_in
 barrels
@@ -28,6 +28,7 @@ simon
 size_matters
 skull
 slow_mo
+speed_run
 squid_game
 sudden_death
 team_battles
@@ -35,4 +36,5 @@ thirdperson
 time_attack
 two_bosses
 up_down
+wheelchair
 //wipeout 	TODO need to complete the missing stuff first"
