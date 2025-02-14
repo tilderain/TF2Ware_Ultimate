@@ -251,7 +251,10 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 		else
 			melee = data.melee
 
-		if (melee && melee.IsValid())
+		if (melee && !melee.IsValid())
+			melee = null
+			
+		if (melee)
 		{
 			if (item_attributes.len() > 0)
 			{
@@ -259,9 +262,10 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 					melee.AddAttribute(attribute, value, -1.0)
 				data.melee_attributes = clone(item_attributes)
 			}
-			
-			player.Weapon_Switch(melee)
 		}
+		
+		melee = Ware_ForceSwitchPlayerMelee(player, melee)
+		
 	}
 		
 	SetPropEntity(player, "m_hLastWeapon", null)	
@@ -346,7 +350,7 @@ function Ware_StripPlayer(player, give_default_melee)
 					}
 				}
 				
-				player.Weapon_Switch(use_melee)
+				use_melee = Ware_ForceSwitchPlayerMelee(player, use_melee)
 			}
 		}
 	}
@@ -467,6 +471,36 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	return weapon
 }
 
+// Force switch to the player melee
+// If melee is null, or the switch failed, gives default melee
+function Ware_ForceSwitchPlayerMelee(player, melee)
+{
+	if (melee)
+	{
+		player.Weapon_Switch(melee)
+		if (player.GetActiveWeapon() == melee)
+			return melee
+		// HACK: failsafe for unknown rare bug where the player has no melee
+		// Unsure whether this is caused by a switch failure or melee not being physically present
+	}
+	
+	local weapon = Ware_GivePlayerWeapon(player, STOCK_MELEE_MAP[player.GetPlayerClass()])
+	if (player.GetActiveWeapon() == weapon)
+	{
+		local data = player.GetScriptScope().ware_data
+		if (data.melee && data.melee.IsValid())
+			KillWeapon(data.melee)
+		data.melee = weapon
+		return weapon
+	}
+	else
+	{
+		// if switch still failed we are screwed at this point!!
+		weapon.Destroy()
+		return null
+	}
+}
+
 // Equips a melee that should override the default one, if the player doesn't have one already
 // This melee will only be used if the minigame doesn't strip out melees
 // A viewmodel entity can also be equipped, intended to complement the special weapon
@@ -581,12 +615,13 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	{
 		// not sure why this is needed
 		melee.SetModel(TF_CLASS_ARMS[player_class])
+	}
 	
-		if (switch_melee)
-		{
-			player.Weapon_Switch(melee)
+	if (switch_melee)
+	{
+		melee = Ware_ForceSwitchPlayerMelee(player, melee)
+		if (melee)
 			melee.EnableDraw()
-		}
 	}
 }
 

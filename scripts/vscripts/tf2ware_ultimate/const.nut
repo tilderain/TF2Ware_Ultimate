@@ -174,6 +174,19 @@ ITEM_PROJECTILE_MAP <-
 	[1152] = "tf_projectile_grapplinghook",
 }
 
+STOCK_MELEE_MAP <- 
+{
+	[TF_CLASS_SCOUT]        = "Bat",
+	[TF_CLASS_SOLDIER]      = "Shovel",
+	[TF_CLASS_PYRO]         = "Fire Axe",
+	[TF_CLASS_DEMOMAN]      = "Bottle",
+	[TF_CLASS_HEAVYWEAPONS] = "Fists",
+	[TF_CLASS_ENGINEER]     = "Wrench",
+	[TF_CLASS_MEDIC]        = "Bonesaw",
+	[TF_CLASS_SNIPER]       = "Kukri",
+	[TF_CLASS_SPY]          = "Knife",
+}
+
 SAXXY_CLASSNAME_MAP <-
 {
 	[TF_CLASS_SCOUT]        = "tf_weapon_bat",

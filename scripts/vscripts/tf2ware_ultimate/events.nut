@@ -353,17 +353,28 @@ function OnGameEvent_recalculate_truce(params)
 	if (melee == null)
 		melee = ware_data.melee
 	
+	if (melee && !melee.IsValid())
+		melee = null
+	
 	if (melee != null)
 	{
 		// TODO: is this code even needed now that loadout cacher is removed?
 		// not sure why this is needed
-		melee.SetModel(TF_CLASS_ARMS[self.GetPlayerClass()])		
-		self.Weapon_Switch(melee)
-		melee.EnableDraw()
+		melee.SetModel(TF_CLASS_ARMS[self.GetPlayerClass()])	
 		
-		// hack: something is not clearing the render color
-		// last minute for the playtest
-		SetPropInt(melee, "m_clrRender", 0xFFFFFFFF)
+		melee = Ware_ForceSwitchPlayerMelee(self, melee)
+		if (melee)
+		{
+			melee.EnableDraw()
+			
+			// hack: something is not clearing the render color
+			// last minute for the playtest
+			SetPropInt(melee, "m_clrRender", 0xFFFFFFFF)
+		}
+	}
+	else
+	{
+		melee = Ware_ForceSwitchPlayerMelee(self, null)
 	}
 	
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_postspawn.IsValid())
