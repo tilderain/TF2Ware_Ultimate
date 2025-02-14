@@ -1714,12 +1714,16 @@ function Ware_FinishMinigameInternal()
 		player_indices_valid += index_char
 		if (data.passed == pass_flag)
 		{
-			all_failed = false
-			player_indices_passed += index_char
 			if (data.suicided && !can_suicide)
 			{
+				all_passed = false
 				data.passed = !pass_flag
 				Ware_ChatPrint(data.player, "{color}You were not given points for suiciding.", TF_COLOR_DEFAULT)
+			}
+			else
+			{
+				all_failed = false
+				player_indices_passed += index_char
 			}
 		}	
 		else
