@@ -72,6 +72,7 @@ function OnPrecache()
 	PrecacheScriptSound(sound_bad_end)
 	PrecacheScriptSound(sound_good_end)
 	PrecacheScriptSound(sound_level_up)
+	PrecacheScriptSound(sound_difficulty_up)
 	PrecacheScriptSound(sound_overview_start)
 	PrecacheScriptSound(sound_word_start)
 	PrecacheScriptSound(sound_word_fail)
@@ -116,6 +117,7 @@ function Descent()
 	SetCamera("DRBoss_DescentCamera_Point")
 	Ware_PlaySoundOnAllClients(sound_descent_begin)
 	Ware_ShowScreenOverlay(Ware_Players, null)
+	Ware_ShowMinigameText(Ware_Players, "")
 	current_music = "typing-" + RemoveRandomElement(music_choices)
 	Ware_PlayMinigameMusic(null, current_music)
 	CreateTimer(Prepare, 3.5)
@@ -197,7 +199,7 @@ function StartWords()
 
 	foreach (player in Ware_Players)
 	{
-		Ware_ShowScreenOverlay(player, overlay_type)
+		Ware_ShowScreenOverlay(player, player.IsAlive() ? overlay_type : null)
 			
 		if (Ware_MinigamePlayers.find(player) != null)
 		{
@@ -442,6 +444,22 @@ function ShowWord(player, score)
 		
 	Ware_ShowText(player, CHANNEL_MINIGAME, text, word_type_duration, "255 255 40")
 	Ware_ShowText(player, CHANNEL_BACKUP, text2, word_type_duration, "255 255 255", -1.0, 0.4)
+	
+	local spec_text
+	foreach (spectator in Ware_Players)
+	{
+		if (!spectator.IsAlive() && GetPropEntity(spectator, "m_hObserverTarget") == player)
+		{
+			if (spec_text == null)
+			{
+				if (mode != 0)
+					spec_text = format("%s's current question is:\n%s", GetPlayerName(player), word.expression)
+				else
+					spec_text = format("%s's current word is:\n%s", GetPlayerName(player), word)
+			}
+			Ware_ShowText(spectator, CHANNEL_MINIGAME, spec_text, word_type_duration, "255 255 255")
+		}
+	}
 }
 
 function OnPlayerSay(player, text)
