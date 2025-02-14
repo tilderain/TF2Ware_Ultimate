@@ -4,7 +4,7 @@
 function Ware_GetPitchFactor()
 {
 	// TODO change to 0.5 factor but use 0.4 for themes
-	return 1.0 + (Ware_TimeScale - 1.0) * 0.4
+	return 1.0 + (Ware_PitchScale - 1.0) * 0.4
 }
 
 // Plays a sound on a specific client, with pitch scaling from timescale included

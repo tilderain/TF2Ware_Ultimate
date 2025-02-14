@@ -156,6 +156,7 @@ class Ware_Callback
 Ware_Started			  <- false
 Ware_Finished             <- false
 Ware_TimeScale			  <- 1.0
+Ware_PitchScale           <- 1.0
 
 if (!("Ware_DebugStop" in this))
 {
@@ -1225,6 +1226,8 @@ function Ware_SetTimeScaleInternal(timescale)
 		SendToConsole(format("host_timescale %g", timescale))
 	
 	Ware_TimeScale = timescale
+	// audio fails at very high timescales
+	Ware_PitchScale = Clamp(timescale, 0.1, 3.5)
 	
 	foreach (player in Ware_MinigamePlayers)
 		Ware_UpdatePlayerVoicePitch(player)
