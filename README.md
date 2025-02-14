@@ -61,29 +61,12 @@ The unused event `player_rematch_change` is repurposed to allow VScript -> Sourc
 ## Contributing
 
 Pull requests to add new minigames, bossgames, special rounds or themes are welcome.
-Getting started with creating a new one is easy.
-
-### Getting started
-To get started, you will need to load the unpacked map of TF2Ware Ultimate, so you can modify assets and scripts easily.
-
-First, download this repository into your TF2's `custom` folder. 
-
-The repo comes with a built BSP without packed content. Type `map tf2ware_ultimate` in console to load this.
-
-Now, go into `scripts/vscripts/tf2ware_ultimate` and then pick either `minigames`, `bossgames` or `specialrounds`.
-Create a new .nut file there.
-
-Next, for a minigame/bossgame (note that TF2Ware stores them in the same way), create a `Ware_MinigameData` definition. If making a special round, create a `Ware_SpecialRoundData` definition instead. Look at the other scripts in the same folder for plenty of examples.
-
-Most of the documentation is in the .nut files themselves. All the settings and functions allowed for usage are documented in the `api` folder.
-
-Once you are done, add the file's name to the `minigames.cfg`/`bossgames.cfg`/`specialrounds.cfg` in the `tf/scriptdata/tf2ware_ultimate` folder. 
-
-Note that minigames, bossgames  and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one (type `!ware_help` in chat).
-
-The text overlays for minigames and bossgames are static images. To generate one, run the `generate_text` Python script in the `tools` folder. This will automatically place all the materials and textures in the correct folder. Note if you are not using custom_overlay, the overlay must have the same file name as the minigame/bossgame .nut. There are also some common overlays in materials/hud/tf2ware_ultimate (such as get_end for any "course" minigames).
-
-Mapping changes are also welcome, but please be descriptive about changes made, and test your compile before submitting a PR. Note when compiling, please add the following parameters to VRAD: `-noskyboxrecurse -staticproppolys -textureshadows`. If using the Hammer/Hammer++ compiler, this is in Expert under $light.exe. If using CompilePal, you can add these parameters inidividually under VRAD.
+Getting started with contributing is easy - see [here](CONTRIBUTING.md) for more information.
 
 ## Credits
-Type `!ware_credits` in chat for a list of contributors in console.
+
+* ficool2 - Lead programmer and map porting
+* pokemonPasta - Programmer, themes, map porting, trailer
+* OctatonicSunrise - Logo, trailer renders
+
+Type `!ware_credits` in chat for a full list of contributors in console.
