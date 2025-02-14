@@ -4,7 +4,7 @@ minigame <- Ware_MinigameData
 	description = "Shoot the Bot!"
     author      = ["Black_Knight", "ficool2"]
     location    = "targetrange"
-    duration    = 5.0
+    duration    = 5.5
 	music		= "urgent"
 })
 
@@ -35,9 +35,9 @@ function OnPrecache()
 function OnStart()
 {   
 	lines = clone(Ware_MinigameLocation.lines)
-    Ware_CreateTimer(@() SpawnBot( QAngle(0, -90, 0)), 1.3)
-	Ware_CreateTimer(@() SpawnBot(QAngle(0, 90, 0)), 1.5)
-	Ware_CreateTimer(@() SpawnBot(QAngle(0, RandomBool() ? -90 : 90, 0)), 2.2)
+    Ware_CreateTimer(@() SpawnBot( QAngle(0, -90, 0)), 1.8)
+	Ware_CreateTimer(@() SpawnBot(QAngle(0, 90, 0)), 2.0)
+	Ware_CreateTimer(@() SpawnBot(QAngle(0, RandomBool() ? -90 : 90, 0)), 2.7)
     Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Direct Hit")
 }
 
@@ -74,7 +74,16 @@ function SpawnBot(angles)
 	bot.SetAngularVelocity(0.0, 135.0, 0.0)
 	bot.ValidateScriptScope()
 	bot.GetScriptScope().hit_sound <- bot_data[class_idx][1]
+	
+	local glow = Ware_SpawnEntity("tf_glow",
+	{
+		target    = "bignet" // don't get deleted
+		GlowColor = "255 255 255 255"
+	})
+	SetPropEntity(glow, "m_hTarget", bot)
+				
 	bots.append(bot)
+
 }
 
 function OnUpdate()
