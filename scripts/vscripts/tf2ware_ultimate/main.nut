@@ -1579,12 +1579,12 @@ function Ware_StartMinigameInternal(is_boss)
 	if (Ware_Minigame.start_freeze > 0.0)
 	{
 		foreach (player in valid_players)
-			player.AddFlag(FL_FROZEN)
+			player.AddFlag(FL_ATCONTROLS)
 		
 		Ware_CreateTimer(function() 
 		{
 			foreach (player in Ware_MinigamePlayers) 
-				player.RemoveFlag(FL_FROZEN)
+				player.RemoveFlag(FL_ATCONTROLS)
 		}, Ware_Minigame.start_freeze)
 	}
 	
