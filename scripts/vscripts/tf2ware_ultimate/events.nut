@@ -365,6 +365,9 @@ function OnGameEvent_recalculate_truce(params)
 		// last minute for the playtest
 		SetPropInt(melee, "m_clrRender", 0xFFFFFFFF)
 	}
+	
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_postspawn.IsValid())
+		Ware_SpecialRound.cb_on_player_postspawn(self)
 }
 
 function OnGameEvent_player_spawn(params)

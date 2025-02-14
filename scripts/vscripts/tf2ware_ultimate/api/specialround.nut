@@ -147,6 +147,9 @@ class Ware_SpecialRoundData
 	cb_on_player_disconnect	   = null
 	// OnPlayerSpawn(player)      - Called by OnGameEvent_player_spawn and passes the player that spawned.
 	cb_on_player_spawn         = null
+	// OnPlayerPostSpawn(player)  - Called at the end of the frame by OnGameEvent_player_spawn
+	//                            - Useful to apply attributes as those won't apply in OnPlayerSpawn
+	cb_on_player_postspawn     = null
 	// OnPlayerInventory(player)  - Called by OnGameEvent_post_inventory_application. 
 	//                            - This happens when a player spawns, but is intended for manipulating loadouts.
 	cb_on_player_inventory     = null
