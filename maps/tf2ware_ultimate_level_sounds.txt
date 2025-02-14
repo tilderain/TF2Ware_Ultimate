@@ -36,6 +36,15 @@ BaseCombatCharacter.AmmoPickup
 	wave			common/null.wav
 }
 
+TFPlayer.MedicChargedDeath
+{
+	channel		CHAN_STATIC
+	volume		0.6
+	soundlevel	SNDLVL_60dB
+	pitch		PITCH_NORM
+	wave		player/medic_charged_death.wav
+}
+
 Weapon_RocketPack.BoostersExtend
 {
 	channel			CHAN_WEAPON
