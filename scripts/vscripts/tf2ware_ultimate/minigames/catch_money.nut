@@ -52,8 +52,10 @@ function OnStart()
 	// show money counter
 	ForceEnableUpgrades(2)
 	
-	if (Ware_MinigamePlayers.len() > 64)
+	if (Ware_MinigamePlayers.len() >= 32)
 		cash_multiplier = 2
+	else if (Ware_MinigamePlayers >= 64)
+		cash_multiplier = 3
 	
 	Ware_CreateTimer(@() CreateMoney(), 0.5)
 }
