@@ -173,7 +173,7 @@ function OnTakeDamage(params)
 			Ware_PassPlayer(attacker, true)
             if (first)
             {
-                Ware_ChatPrint(null, "{player} {color}was the first to find " + character_selected.toupper() + "!", attacker, TF_COLOR_DEFAULT)
+                Ware_ChatPrint(null, "{player} {color}was the first to find the {color}{str}{color}!", attacker, TF_COLOR_DEFAULT, COLOR_GREEN, character_selected.toupper(), TF_COLOR_DEFAULT)
                 Ware_GiveBonusPoints(attacker)
                 first = false
             }
