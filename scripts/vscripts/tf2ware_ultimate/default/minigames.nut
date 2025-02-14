@@ -81,6 +81,7 @@ type_map
 type_time
 type_word
 vacc
+wanted
 watch_fall
 water_war
 witch"
