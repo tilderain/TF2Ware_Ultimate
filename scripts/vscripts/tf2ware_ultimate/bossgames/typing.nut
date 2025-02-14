@@ -438,7 +438,8 @@ function ShowWord(player, score)
 	}
 	else
 	{
-		text = word
+		// these spaces are needed to avoid localization kicking in!!
+		text = format(" %s ", word)
 		text2 = "Next word:\n" + next_word
 	}
 		
