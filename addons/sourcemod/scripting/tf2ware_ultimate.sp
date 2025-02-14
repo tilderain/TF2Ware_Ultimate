@@ -169,6 +169,11 @@ public void OnCheatsChanged(ConVar convar, const char[] oldValue, const char[] n
 	sv_cheats.SetInt(1, true, false);
 }
 
+public Action HookVoiceCommand(UserMsg msg_id, BfRead bf, const int[] players, int playersNum, bool reliable, bool init)
+{
+	return Plugin_Handled;
+}
+
 void Enable()
 {
 	if (g_Enabled || !ShouldEnable())
@@ -213,6 +218,8 @@ void Enable()
 	
 	// unused event repurposed for vscript <-> sourcemod communication
 	HookEvent(PROXY_EVENT, ListenerVScript, EventHookMode_Pre);
+	
+	HookUserMessage(GetUserMessageId("VoiceSubtitle"), HookVoiceCommand, true);
 
 	char name[64];
 	char description[128];
@@ -273,6 +280,8 @@ void Disable(bool map_unload)
 	UnhookConVarChange(sv_cheats, OnCheatsChanged);
 	
 	UnhookEvent(PROXY_EVENT, ListenerVScript, EventHookMode_Pre);
+	
+	UnhookUserMessage(GetUserMessageId("VoiceSubtitle"), HookVoiceCommand, true);
 	
 	// OnPluginEnd will clear these automatically
 	if (map_unload)
