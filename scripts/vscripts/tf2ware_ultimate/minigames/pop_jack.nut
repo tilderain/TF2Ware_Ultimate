@@ -68,7 +68,7 @@ function OnTakeDamage(params)
 		if (attacker && attacker.IsPlayer())
 		{
 			local scale = victim.GetModelScale() + 0.5
-			if (scale > 2.5)
+			if (scale > 2.0)
 			{
 				Ware_PassPlayer(attacker, true)
 				EmitSoundOnClient(pop_sound, attacker)
