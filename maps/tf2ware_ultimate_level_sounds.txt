@@ -72,6 +72,22 @@ DisciplineDevice.PowerDown
 	wave		common/null.wav
 }
 
+WeaponMedigun_Vaccinator.Charged_tier_01
+{
+	channel		CHAN_STATIC
+	soundlevel	SNDLVL_60dB
+	volume		0.5
+	wave		)weapons/vaccinator_charge_tier_01.wav
+}
+
+WeaponMedigun_Vaccinator.InvulnerableOn
+{
+	channel		CHAN_WEAPON
+	volume		0.6
+	soundlevel 	SNDLVL_60dB
+	wave		)player/invuln_on_vaccinator.wav
+}
+
 Game.Revenge
 {
 	channel 	    CHAN_STATIC
