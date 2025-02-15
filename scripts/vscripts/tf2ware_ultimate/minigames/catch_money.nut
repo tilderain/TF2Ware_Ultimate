@@ -33,7 +33,7 @@ spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 16.0, 0
 
 cash_spawned <- 0
 
-collision_group <- (Ware_SpecialRound && Ware_SpecialRound.file_name == "collisions") ? COLLISION_GROUP_NONE : COLLISION_GROUP_DEBRIS
+collision_group <- Ware_IsSpecialRoundSet("collisions") ? COLLISION_GROUP_NONE : COLLISION_GROUP_DEBRIS
 
 function OnPrecache()
 {
