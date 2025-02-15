@@ -198,6 +198,18 @@ buffer<-@"VERSION 1
 		""victory"": 2.078
 	}
 },
+{
+	theme_name = ""wii_tinywario""
+	visual_name = ""Tiny Wario (Wii)""
+	author = ""Infomaniac""
+	sounds = 
+	{
+		""failure"": 2.039
+		""intro"":   4.167
+		""results"": 0.0
+		""victory"": 1.990
+	}
+},
 // these aren't rolled and should never be set as Ware_Theme, but rather Ware_SetupThemeSounds() checks for them
 // they still get a visual name just in case
 {
