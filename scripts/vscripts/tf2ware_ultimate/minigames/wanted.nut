@@ -85,7 +85,7 @@ function CreateGenericCharacter(name, isLast)
 	prop.SetCollisionGroup(TFCOLLISION_GROUP_COMBATOBJECT)
 	prop.SetMoveType(MOVETYPE_FLY, MOVECOLLIDE_FLY_BOUNCE)
 
-	Ware_SlapEntity(prop, RandomFloat(50, 300))
+	Ware_SlapEntity(prop, RandomFloat(20, 150))
 	local vel = prop.GetAbsVelocity()
 	vel = Vector(vel.x * 1, vel.y * 0, vel.z * 1)
 	prop.SetAbsVelocity(vel)
