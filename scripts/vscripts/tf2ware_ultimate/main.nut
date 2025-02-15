@@ -1075,7 +1075,7 @@ function Ware_BeginSpecialRoundInternal()
 		local finished = time - start_time > reveal_duration
 		local text_duration = interval
 		if (!finished)
-			text_duration *= 2.0
+			text_duration *= 3.0
 		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds).toupper(), text_duration)
 		
 		if (finished)

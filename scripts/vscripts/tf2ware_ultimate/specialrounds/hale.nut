@@ -260,7 +260,7 @@ function OnUpdate()
 				text += "\nSuper Jump will be ready again in: " + (-jump).tointeger().tostring()
 			}
 
-			Ware_ShowText(player, CHANNEL_MISC, text, 0.2, rage >= 100 ? "255 0 0" : "255 255 255", -1.0, 0.83)
+			Ware_ShowText(player, CHANNEL_MISC, text, 0.3, rage >= 100 ? "255 0 0" : "255 255 255", -1.0, 0.83)
 		}
 	}
 }
