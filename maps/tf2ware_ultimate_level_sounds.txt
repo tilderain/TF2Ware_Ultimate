@@ -97,6 +97,23 @@ WeaponMedigun_Vaccinator.InvulnerableOn
 	wave		)player/invuln_on_vaccinator.wav
 }
 
+WeaponGrapplingHook.ImpactDefault
+{
+	channel		CHAN_STATIC
+	soundlevel	SNDLVL_70dB
+	volume		0.7
+	pitch		PITCH_NORM
+	wave		weapons/grappling_hook_impact_default.wav
+}
+
+WeaponGrapplingHook.ImpactFlesh
+{
+	channel		CHAN_STATIC
+	soundlevel	SNDLVL_70dB
+	volume		0.7
+	wave		)weapons/grappling_hook_impact_flesh.wav
+}
+
 Game.Revenge
 {
 	channel 	    CHAN_STATIC
