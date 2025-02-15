@@ -321,6 +321,12 @@ function OnTakeDamage(params)
 	}
 }
 
+function OnPlayerDeath(player, attacker, params)
+{
+	if (attacker && attacker.IsPlayer())
+		attacker.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)
+}
+
 function OnUpdate()
 {
 	local time = Time()
