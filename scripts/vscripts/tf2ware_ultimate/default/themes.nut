@@ -70,7 +70,7 @@ buffer<-@"VERSION 1
 },
 {
 	theme_name = ""ds_diy_shuffle""
-	visual_name = ""Shuffle (WiiWare - D.I.Y. Showcase)""
+	visual_name = ""Shuffle (DS - D.I.Y.)""
 	sounds = 
 	{
 		""boss"":     4.008
@@ -84,7 +84,7 @@ buffer<-@"VERSION 1
 },
 {
 	theme_name = ""ds_diy_warioman"" // from DIY showcase, should that be counted separately?
-	visual_name = ""Wario-Man (WiiWare - D.I.Y. Showcase)"" // another of the classic tf2ware themes, this is one of the ones used in tonyware
+	visual_name = ""Wario-Man (DS - D.I.Y.)"" // another of the classic tf2ware themes, this is one of the ones used in tonyware
 	sounds = 
 	{
 		""boss"":     4.004
@@ -196,22 +196,6 @@ buffer<-@"VERSION 1
 		""intro"":   4.115
 		""results"": 0.0
 		""victory"": 2.078
-	}
-},
-{
-	theme_name = ""switch_moveit_wario""
-	visual_name = ""Wario (Switch - Move It!)""
-	author = ""GeeNoVoid""
-	sounds = 
-	{
-		""boss"":     4.005
-		""failure"":  1.997
-		""gameclear"": 4.554
-		""gameover"": 3.36
-		""intro"":    4.146
-		""results"":  0.0
-		""speedup"":  4.016
-		""victory"":  2.03
 	}
 },
 // these aren't rolled and should never be set as Ware_Theme, but rather Ware_SetupThemeSounds() checks for them
