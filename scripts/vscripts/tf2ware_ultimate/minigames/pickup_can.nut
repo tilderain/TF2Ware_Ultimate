@@ -12,8 +12,8 @@ can_model <- "models/props_junk/popcan01a.mdl"
 
 ////////////////////////// --- Settings --- ///////////////////////////////////////////
 
-local pickupDistance = 100.0 // Distance the player can pick up the prop from
-local distance = 60.0   // Distance from player to the picked up prop
+local pickupDistance = 128.0 // Distance the player can pick up the prop from
+local distance = 50.0   // Distance from player to the picked up prop
 local outline = true    // Outline props?
 local canOffset = 100.0 // X and Y Offset for spawning cans
 local canHeightOffset = 300.0   // Z Offset for spawning cans
@@ -42,7 +42,7 @@ function OnStart()
     SpawnTriggerMultiple()
 	SpawnCans()
 
-	Ware_ChatPrint(null, "{color}TIP{color}: Pick up cans with right click, reload or action key!", 
+	Ware_ChatPrint(null, "{color}TIP{color}: Pick up cans with mouse click, reload or action key!", 
 		COLOR_GREEN, TF_COLOR_DEFAULT)
 }
 
@@ -59,7 +59,7 @@ function OnUpdate()
 		local newButtons = buttons & ~minidata.LastButtons
 		local usingActionKey = player.IsUsingActionSlot()
 		
-		if ((newButtons & (IN_ATTACK2|IN_RELOAD|IN_USE)) || (usingActionKey && !minidata.LastActionKey))
+		if ((newButtons & (IN_ATTACK|IN_ATTACK2|IN_RELOAD|IN_USE)) || (usingActionKey && !minidata.LastActionKey))
 		{
 			if (minidata.PickedProp != player && minidata.PickedProp.IsValid())
 			{
