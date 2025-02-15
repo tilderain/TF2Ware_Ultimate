@@ -277,6 +277,12 @@ delegated_callbacks <-
 		DelegatedCall(scope_a, "OnPlayerSpawn", player)
 		DelegatedCall(scope_b, "OnPlayerSpawn", player)
 	}
+	
+	function OnPlayerPostSpawn(player)
+	{
+		DelegatedCall(scope_a, "OnPlayerPostSpawn", player)
+		DelegatedCall(scope_b, "OnPlayerPostSpawn", player)
+	}
 
 	function OnPlayerInventory(player)
 	{
