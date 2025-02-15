@@ -10,3 +10,9 @@ function OnStart()
 {
 	Ware_SetTimeScale(3.0)
 }
+
+function OnBeginIntermission(is_boss)
+{
+	if (is_boss)
+		Ware_SetTimeScale(3.0)
+}
