@@ -33,6 +33,8 @@ spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 16.0, 0
 
 cash_spawned <- 0
 
+collision_group <- (Ware_SpecialRound && Ware_SpecialRound.file_name == "collisions") ? COLLISION_GROUP_NONE : COLLISION_GROUP_DEBRIS
+
 function OnPrecache()
 {
 	foreach (model in cash_models) 
@@ -79,7 +81,7 @@ function CreateMoney()
 			minhealthdmg   = INT_MAX // don't destroy on touch
 			spawnflags     = SF_PHYSPROP_TOUCH
 		})	
-		cash.SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+		cash.SetCollisionGroup(collision_group)
 		
 		if (RandomInt(0, 5) == 0)
 		{
