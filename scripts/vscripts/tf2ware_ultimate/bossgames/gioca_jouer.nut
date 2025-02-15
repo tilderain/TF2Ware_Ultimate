@@ -130,7 +130,9 @@ function GiocaJouer_Clock()
 
 function GiocaJouer_PassPlayer(player, pass)
 {
-	Ware_GetPlayerMiniData(player).gj_passed = pass
+	local minidata = Ware_GetPlayerMiniData(player)
+	if ("gj_passed" in  minidata)
+		minidata.gj_passed = pass
 }
 
 function GiocaJouer_CheckTauntableMelee(player)
