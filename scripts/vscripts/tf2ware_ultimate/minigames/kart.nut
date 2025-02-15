@@ -22,7 +22,7 @@ mode <- RandomInt(0, 2)
 if (Ware_Players.len() > 40)
 	mode = 0
 
-first <- true
+first <- mode != 2
 
 minigame.location    = tracks[mode][0]
 endzone_vector      <- tracks[mode][1]
