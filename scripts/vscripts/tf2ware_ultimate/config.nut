@@ -304,7 +304,8 @@ function Ware_LoadConfigThemes()
 
 function Ware_LoadConfigMeleeAttributes()
 {
-	local file = Ware_LoadConfigFile("melee_attributes")
+	// don't see the point of versioning this currently, so always load default
+	local file = Ware_LoadConfigFile("melee_attributes", false)
 	compilestring(format("Ware_MeleeAttributeOverrides<-{\n%s}", file))()
 }
 
