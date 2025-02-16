@@ -17,8 +17,10 @@ local distance = 50.0   // Distance from player to the picked up prop
 local outline = true    // Outline props?
 local canOffset = 100.0 // X and Y Offset for spawning cans
 local canHeightOffset = 300.0   // Z Offset for spawning cans
+local canRadiusSqr = 32.0*32.0  // Pickup radius for cans, squared
 local propFaceSameDirection = false // If true, makes the prop face the same direction as the player (similar to Half-Life 2)
 local canName = "can_minigame"  // Can targetname
+local cans = []
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -54,6 +56,11 @@ function OnUpdate()
 	{
 		if (!player.IsAlive())
 			continue
+			
+		local weapon = player.GetActiveWeapon()
+		if (weapon)
+			SetPropFloat(weapon, "m_flNextPrimaryAttack", time + 0.3)			
+			
 		local buttons = GetPropInt(player, "m_nButtons")
 		local minidata = Ware_GetPlayerMiniData(player)
 		local newButtons = buttons & ~minidata.LastButtons
@@ -68,26 +75,21 @@ function OnUpdate()
 			}
 			else 
 			{
-				local trace = 
+				local eye_pos = player.EyePosition()
+				local eye_fwd = player.EyeAngles().Forward()
+				foreach (can in cans)
 				{
-					start = player.EyePosition()
-					end = player.EyePosition() + player.EyeAngles().Forward() * (pickupDistance)
-					ignore = player
-				}
-
-				TraceLineEx(trace)
-
-				if (trace.hit)
-				{
-					local ent = trace.enthit
-					if (ent.GetName() == canName
-						&& ent.GetOwner() == null
-						&& ent.GetScriptScope().GraceHolderTime < time)
-					{				
-						minidata.PickedProp = ent
-						ent.SetOwner(player)
-						ent.GetScriptScope().LastHolder <- player
-						ent.GetScriptScope().GraceHolderTime <- time + 0.25			
+					if (can.GetOwner() != null)
+						continue				
+					local can_origin = can.GetOrigin()
+					if (VectorDistance(eye_pos, can_origin) > pickupDistance)
+						continue
+					if (IntersectRayWithSphere(eye_pos, eye_fwd, can_origin, canRadiusSqr))
+					{
+						minidata.PickedProp = can
+						can.SetOwner(player)
+						can.GetScriptScope().LastHolder <- player
+						can.GetScriptScope().GraceHolderTime <- time + 0.25								
 					}
 				}
 			}
@@ -136,6 +138,7 @@ function SpawnTrashcan()
         local glow = Ware_CreateEntity("tf_glow")
         glow.KeyValueFromString("GlowColor", "0 255 0 255")
         SetPropEntity(glow, "m_hTarget", trashcan)
+		SetEntityParent(glow, trashcan)
     }
 }
 
@@ -168,7 +171,10 @@ function SpawnCans()
             local glow = Ware_CreateEntity("tf_glow")
             glow.KeyValueFromString("GlowColor", "255 0 111 255")
             SetPropEntity(glow, "m_hTarget", can)
+			SetEntityParent(glow, can)
         }
+		
+		cans.append(can)
 	}
 }
 
@@ -213,6 +219,8 @@ function OnTriggerTouch()
         if (player)
             Ware_PassPlayer(player, true)
 
+		RemoveElementIfFound(cans, activator)
+		
         activator.Destroy() // If the cans are not removed, they will lag the server due to physics calculations.
     }
 }

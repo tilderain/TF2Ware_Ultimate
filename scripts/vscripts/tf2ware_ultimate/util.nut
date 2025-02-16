@@ -210,6 +210,18 @@ function IntersectLinePlane(start, end, normal, dist)
     return start + dir * t
 }
 
+// Performs ray vs sphere intersection test
+// If hit, returns true
+function IntersectRayWithSphere(start, dir, center, radius_sqr) 
+{
+    local oc = start - center
+    local a = dir.Dot(dir)
+    local b = 2.0 * oc.Dot(dir)
+    local c = oc.Dot(oc) - radius_sqr
+    local d = b * b - 4.0 * a * c
+    return d > 0.0
+}
+
 // Performs ray vs AABB intersection test, within [near, far] range
 // If hit, returns distance of ray to the box
 // Otherwise returns -1
@@ -354,6 +366,14 @@ function RandomElement(arr)
 function RemoveRandomElement(arr)
 {
 	return arr.remove(RandomIndex(arr))
+}
+
+// Removes an element from an array if found
+function RemoveElementIfFound(arr, element)
+{
+	local idx = arr.find(element)
+	if (idx != null)
+		arr.remove(idx)
 }
 
 // Appends element to the array if not already present
