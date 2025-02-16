@@ -285,6 +285,7 @@ function Ware_LoadConfigThemes()
 					break
 				case 2:
 					WriteTheme("ds_diy_microgame")
+					WriteTheme("wii_tinywario")
 					WriteTheme("switch_moveit_wario")
 					break
 			}
