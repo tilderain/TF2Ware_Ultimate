@@ -2,7 +2,7 @@ special_round <- Ware_SpecialRoundData
 ({
 	name = "Swap Madness"
 	author = "CzechMate"
-	description = "Players will randomly swap places during a minigame!"
+	description = "Players will randomly swap positions during a minigame!"
 	category = "teleport"
     min_players = 2
 })
