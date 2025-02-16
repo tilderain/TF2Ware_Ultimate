@@ -472,9 +472,15 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 }
 
 // Force switch to the player melee
-// If melee is null, or the switch failed, gives default melee
 function Ware_ForceSwitchPlayerMelee(player, melee)
 {
+	if (melee)
+		player.Weapon_Switch(melee)
+	
+	// removed: this was an attempt to workaround the no-melee bug, but this didn't fix it
+	// keeping old code here if needed again
+	
+	/*
 	if (melee)
 	{
 		player.Weapon_Switch(melee)
@@ -484,6 +490,7 @@ function Ware_ForceSwitchPlayerMelee(player, melee)
 		// Unsure whether this is caused by a switch failure or melee not being physically present
 	}
 	
+	// If melee is null, or the switch failed, gives default melee
 	local weapon = Ware_GivePlayerWeapon(player, STOCK_MELEE_MAP[player.GetPlayerClass()])
 	if (player.GetActiveWeapon() == weapon)
 	{
@@ -499,6 +506,7 @@ function Ware_ForceSwitchPlayerMelee(player, melee)
 		weapon.Destroy()
 		return null
 	}
+	*/
 }
 
 // Equips a melee that should override the default one, if the player doesn't have one already
