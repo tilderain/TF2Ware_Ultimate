@@ -2,7 +2,7 @@
 const WARE_MINIGAME_VERSION     = 3
 const WARE_BOSSGAME_VERSION     = 0
 const WARE_SPECIALROUND_VERSION = 3
-const WARE_THEME_VERSION        = 1
+const WARE_THEME_VERSION        = 2
 
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
@@ -276,11 +276,17 @@ function Ware_LoadConfigThemes()
 				
 		for (local v = version + 1; v <= latest_version; v++)
 		{
-			if (v == 1)
+			switch (v)
 			{
-				file += "\n// added by automatic versioning\n"
-				WriteTheme("ds_touched_mona")
-				WriteTheme("wii_penny")
+				case 1:
+					file += "\n// added by automatic versioning\n"
+					WriteTheme("ds_touched_mona")
+					WriteTheme("wii_penny")
+					break
+				case 2:
+					WriteTheme("ds_diy_microgame")
+					WriteTheme("switch_moveit_wario")
+					break
 			}
 		}
 		
