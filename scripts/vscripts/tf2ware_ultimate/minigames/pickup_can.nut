@@ -28,6 +28,7 @@ function OnPrecache()
 {
 	PrecacheModel(can_model)
 	PrecacheModel(trashcan_model)
+	PrecacheSound("common/wpn_select.wav")
 }
 
 function OnStart()
@@ -94,6 +95,7 @@ function OnUpdate()
 						can.SetOwner(player)
 						can.GetScriptScope().LastHolder <- player
 						can.GetScriptScope().GraceHolderTime <- time + 0.25
+						player.EmitSound("common/wpn_select.wav")
 					}
 				}
 			}
