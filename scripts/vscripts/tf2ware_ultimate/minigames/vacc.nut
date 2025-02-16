@@ -26,19 +26,21 @@ flamethrower_particle <- "flamethrower"
 
 function OnStart()
 {
+	local resist = RandomInt(0,2)
 	foreach (player in Ware_MinigamePlayers)
 	{
 		Ware_SetPlayerClass(player, TF_CLASS_MEDIC)
 		Ware_StripPlayer(player, false)
-		Ware_GivePlayerWeapon(player, "Vaccinator", {"heal rate bonus" : 0.0})
+		Ware_GivePlayerWeapon(player, "Vaccinator", { "mod weapon blocks healing" : 1, "uber duration bonus" : 2.0 })
 		local weapon = player.GetActiveWeapon()
 		SetPropFloat(weapon, "m_flChargeLevel", 0.25)
 
 		//Doesn't work
 		//SetPropFloat(weapon, "m_flNextPrimaryAttack", 1e100)
 
-		Ware_CreateTimer(@() SetPropInt(weapon, "m_nChargeResistType", RandomInt(0,2)), 0.05)
+		Ware_CreateTimer(@() SetPropInt(weapon, "m_nChargeResistType", resist), 0.05)
 	}
+	
 	local pos = Ware_MinigameLocation.center
 	prop = Ware_SpawnEntity("prop_dynamic",
 	{
