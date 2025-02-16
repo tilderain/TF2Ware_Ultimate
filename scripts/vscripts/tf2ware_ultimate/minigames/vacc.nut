@@ -9,14 +9,12 @@ minigame <- Ware_MinigameData
 	start_pass     = true
 })
 
-
-class_names <- ["soldier","pyro","heavy",]
-
 CLASS_SOLDIER <- 0
 CLASS_PYRO <- 1
 CLASS_HEAVY <- 2
 
-class_idx <- RandomInt(0,2)
+class_names <- ["soldier","pyro","heavy"]
+class_idx <- RandomIndex(class_names)
 	
 team_idx <- RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 
@@ -32,7 +30,7 @@ function OnStart()
 	{
 		Ware_SetPlayerClass(player, TF_CLASS_MEDIC)
 		Ware_StripPlayer(player, false)
-		Ware_GivePlayerWeapon(player, "Vaccinator")
+		Ware_GivePlayerWeapon(player, "Vaccinator", {"heal rate bonus" : 0.0})
 		local weapon = player.GetActiveWeapon()
 		SetPropFloat(weapon, "m_flChargeLevel", 0.25)
 
@@ -87,7 +85,7 @@ function SpawnHurt(type, kill_icon)
 	{
 		classname  = kill_icon
 		origin     = Ware_MinigameLocation.center
-		damage     = 150
+		damage     = 200
 		damagetype = type
 		spawnflags = SF_TRIGGER_ALLOW_CLIENTS
 	})
@@ -102,7 +100,7 @@ function SpawnRockets()
 		WeaponType = class_idx
 		SpeedMin   = 500
 		SpeedMax   = 500
-		Damage     = 125
+		Damage     = 0
 		Crits      = true
 		angles     = QAngle(90, 0, 0)
 		SplashRadius = 10000
