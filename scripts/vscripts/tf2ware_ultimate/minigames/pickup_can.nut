@@ -96,6 +96,7 @@ function OnUpdate()
 						can.GetScriptScope().LastHolder <- player
 						can.GetScriptScope().GraceHolderTime <- time + 0.25
 						player.EmitSound("common/wpn_select.wav")
+						break
 					}
 				}
 			}
