@@ -89,6 +89,8 @@ function OnUpdate()
 				{
 					if (can.GetOwner() != null)
 						continue
+					if (can.GetScriptScope().GraceHolderTime > time)
+						continue
 					local can_origin = can.GetOrigin()
 					if (VectorDistance(eye_pos, can_origin) > pickupDistance)
 						continue
@@ -97,7 +99,7 @@ function OnUpdate()
 						minidata.PickedProp = can
 						can.SetOwner(player)
 						can.GetScriptScope().LastHolder <- player
-						can.GetScriptScope().GraceHolderTime <- time + 0.25
+						can.GetScriptScope().GraceHolderTime <- time + 0.4
 						player.EmitSound("common/wpn_select.wav")
 						break
 					}
@@ -117,7 +119,7 @@ function OnUpdate()
 				prop_angles = eye_angles
 			minidata.PickedProp.Teleport(false, prop_origin, true, prop_angles, true, velocity)
 			minidata.PickedProp.SetPhysAngularVelocity(Vector(0.0, 0.0, 0.0))
-			minidata.PickedProp.GetScriptScope().GraceHolderTime = time + 0.25
+			minidata.PickedProp.GetScriptScope().GraceHolderTime = time + 0.4
 		}
 
 		minidata.LastButtons = buttons
