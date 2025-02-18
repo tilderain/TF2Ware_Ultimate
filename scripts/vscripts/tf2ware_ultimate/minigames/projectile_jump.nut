@@ -157,7 +157,7 @@ if (mode == 0)
 		
 		local dot = dir.Dot(Vector(0, 0, -1.0))
 		if (dot > 0.707) // cos(45)
-			player.SetAbsVelocity(player.GetAbsVelocity() - dir * 80.0 * dot)
+			player.SetAbsVelocity(player.GetAbsVelocity() - dir * 85.0 * dot)
 	}
 }
 else if (mode == 3)

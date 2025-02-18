@@ -13,6 +13,14 @@
 				"linux"		"495"
 				"linux64"	"495"
 			}
+			// temporary to track down weapon bug
+			"CBaseEntity::FVisible"	
+			{
+				"windows"	"148"
+				"windows64"	"148"
+				"linux"		"148"
+				"linux64"	"148"
+			}
 		}
 		"Signatures"
 		{
@@ -57,6 +65,29 @@
 						"type"	"bool"
 					}
 				}
+			}	
+			// temporary to track down weapon bug
+			"CBaseEntity::FVisible"
+			{
+				"offset"	"CBaseEntity::FVisible"
+				"hooktype"	"entity"
+				"return"	"bool"
+				"this"		"entity"
+				"arguments"
+				{
+					"entity"
+					{
+						"type"	"cbaseentity"
+					}
+					"mask"
+					{
+						"type"	"int"
+					}
+					"blocker"
+					{
+						"type"	"objectptr"
+					}
+				}				
 			}			
 		}
 	}

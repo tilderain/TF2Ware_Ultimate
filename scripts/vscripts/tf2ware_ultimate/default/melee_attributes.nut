@@ -91,7 +91,14 @@ buffer<-@"// atomizer
 	""single wep holster time increased"" : 1,
 	""mult_player_movespeed_active"" : 1,
 	""mod_maxhealth_drain_rate"" : 0,
-},	
+},
+// bread bite
+[1100] =
+{ 
+	""single wep holster time increased"" : 1,
+	""mult_player_movespeed_active"" : 1,
+	""mod_maxhealth_drain_rate"" : 0,
+},
 // fists of steel
 [331] =
 { 

@@ -18,6 +18,7 @@ public bool script_allow_loadout = false;
 
 DynamicHook g_DHook_CTFPlayerInitClass;
 DynamicDetour g_DDetour_CTFPlayerGetLoadoutItem;
+DynamicHook g_DDetour_CBaseEntityFVisible;
 
 char g_SavedTournamentWhitelist[256];
 
@@ -49,6 +50,10 @@ public void LoadoutWhitelister_Start(GameData gamedata)
 		LogError("Failed to setup detour for CTFPlayer::GetLoadoutItem");		
 		return;
 	}
+	
+	g_DDetour_CBaseEntityFVisible = DynamicHook.FromConf(gamedata, "CBaseEntity::FVisible");
+	if (!g_DDetour_CBaseEntityFVisible)
+		LogError("Failed to setup detour for CBaseEntity::FVisible");
 	
 	loadoutwhitelister_init = true;
 	
@@ -142,7 +147,6 @@ public void LoadoutWhitelister_ReloadWhitelist()
 	ServerCommand("mp_tournament_restart");
 	ServerCommand("mp_tournament_restart"); // hacky but this isn't synchronous
 }
-
 static bool g_InitClass = false;
 static int g_SavedTournamentValue = 0;
 
@@ -199,4 +203,19 @@ static MRESReturn DHookPost_CTFPlayerInitClass(int client)
 		SetTournamentValue(g_SavedTournamentValue != 0);
 	
 	return MRES_Ignored;
+}
+
+// TODO temporary hack to figure out why weapons are rarely not being given to players
+// I suspect the cause is a FVisible trace check in CTFPlayer::BumpWeapon
+// Going to see if this fixes it
+static MRESReturn DHookPre_CBaseEntityFVisible(int entity, DHookReturn ret)
+{
+	ret.Value = true;
+	return MRES_Supercede;
+}
+
+public void OnEntityCreated(int entity, const char[] classname)
+{
+	if (g_DDetour_CBaseEntityFVisible && strncmp(classname, "tf_weapon", 9) == 0)
+		g_DDetour_CBaseEntityFVisible.HookEntity(Hook_Pre, entity, DHookPre_CBaseEntityFVisible);
 }

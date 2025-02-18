@@ -56,6 +56,10 @@ function OnPlayerDeath(player, attacker, params)
 {
 	if (attacker && player != attacker)
 		Ware_PassPlayer(attacker, true)
+		
+	local assister = GetPlayerFromUserID(params.assister)
+	if (assister && player != assister)
+		Ware_PassPlayer(assister, true)
 }
 
 
