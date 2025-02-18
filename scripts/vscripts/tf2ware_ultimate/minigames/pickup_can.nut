@@ -5,6 +5,9 @@ minigame <- Ware_MinigameData
 	description   = "Pick up and trash the can!"
 	duration      = 7.0
 	music         = "sweetdays"
+	convars = {
+		tf_max_voice_speak_delay = -1
+	}
 })
 
 trashcan_model <- "models/props_trainstation/trashcan_indoor001b.mdl"
