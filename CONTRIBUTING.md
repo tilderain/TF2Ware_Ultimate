@@ -47,7 +47,7 @@ A list of commonly used overlays can be seen below. The intention for these is t
 | `survive` | **SURVIVE!** |
 
 ### Music
-All minigames and bossgames require minigame music. This music must be at least the same duration as the minigame, though it can be longer - if so it will be stopped manually. It's not uncommon for minigame duration to be based on the music's duration, though gameplay should still be the main consideration.
+All minigames and bossgames require minigame music. This music must be at least the same duration as the minigame, though it can be longer - if so it will be stopped automatically. It's not uncommon for minigame duration to be based on the music's duration, though gameplay should still be the main consideration.
 
 For minigames, you are welcome to use existing minigame music, but for bossgames new music is typically expected. See [here](#contributing-audio) for guidelines on contributing audio.
 
