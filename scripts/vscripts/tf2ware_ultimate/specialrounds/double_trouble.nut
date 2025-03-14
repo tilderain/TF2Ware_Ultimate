@@ -88,6 +88,7 @@ function OnPick()
 	data.friendly_fire     = data_a.friendly_fire && data_b.friendly_fire
 	data.force_pvp_damage  = data_a.force_pvp_damage || data_b.force_pvp_damage
 	data.bonus_points      = data_a.bonus_points || data_b.bonus_points
+	data.allow_respawnroom = data_a.allow_respawnroom && data_b.allow_respawnroom
 	// choose whichever one has non-default value
 	data.boss_count        = data_a.boss_threshold != data.boss_count ? data_a.boss_count : data_b.boss_count
 	data.boss_threshold    = data_a.boss_threshold != data.boss_threshold ? data_a.boss_threshold : data_b.boss_threshold
@@ -295,6 +296,12 @@ delegated_callbacks <-
 		DelegatedCall(scope_a, "OnPlayerVoiceline", player, name)
 		DelegatedCall(scope_b, "OnPlayerVoiceline", player, name)
 	}	
+	
+	function OnPlayerTouch(player, other_player)
+	{
+		DelegatedCall(scope_a, "OnPlayerTouch", player, other_player)
+		DelegatedCall(scope_b, "OnPlayerTouch", player, other_player)
+	}		
 
 	function GetPlayerRoll(player)
 	{
