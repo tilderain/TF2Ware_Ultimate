@@ -11,12 +11,10 @@ function OnPlayerTouch(player1, player2)
 {
 	if (Ware_Minigame)
 	{
-        local color1 = player1.GetTeam() == TF_TEAM_RED ? TF_COLOR_RED : TF_COLOR_BLUE
-		local color2 = player2.GetTeam() == TF_TEAM_RED ? TF_COLOR_RED : TF_COLOR_BLUE
+        local color2 = player2.GetTeam() == TF_TEAM_RED ? TF_COLOR_RED : TF_COLOR_BLUE
 		
 		player1.TakeDamage(1000.0, DMG_BULLET, player2)
 		
 		Ware_ChatPrint(player1, "You touched {color}{player}{color}!", color2, player2, TF_COLOR_DEFAULT)
-		Ware_ChatPrint(player2, "You touched {color}{player}{color}!", color1, player1, TF_COLOR_DEFAULT)
 	}
 }
