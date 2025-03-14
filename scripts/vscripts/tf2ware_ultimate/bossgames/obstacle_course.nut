@@ -10,10 +10,6 @@ minigame <- Ware_MinigameData
 	start_pass     = false
 	start_freeze   = 0.5
 	custom_overlay = "get_end"
-	convars = 
-	{
-		tf_avoidteammates = 0
-	}
 })
 
 function OnStart()
