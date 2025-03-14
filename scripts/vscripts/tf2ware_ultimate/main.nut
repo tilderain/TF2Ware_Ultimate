@@ -251,7 +251,10 @@ function Ware_SetupMap()
 	ClientCmd <- CreateEntitySafe("point_clientcommand")
 	
 	for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
+	{
+		trigger.SetTeam(TEAM_UNASSIGNED) // spawnpoints change team of the respawnroom
 		Ware_RespawnRooms.append(trigger)
+	}
 	
 	// avoid adding the think again to not break global execution order
 	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
