@@ -1,7 +1,7 @@
 // whenever new entries are added, these should be incremented so it's automatically added to server configs
 const WARE_MINIGAME_VERSION     = 3
 const WARE_BOSSGAME_VERSION     = 0
-const WARE_SPECIALROUND_VERSION = 3
+const WARE_SPECIALROUND_VERSION = 4
 const WARE_THEME_VERSION        = 2
 
 // everytime music is changed AND the map is *publicly* updated
@@ -171,6 +171,12 @@ function Ware_LoadConfigSpecialRounds()
 					AppendElementIfUnique(lines, "speedrun")
 					AppendElementIfUnique(lines, "wheelchair")
 					AppendElementIfUnique(lines, "barrels")
+					break
+				case 4:
+					AppendElementIfUnique(lines, "cramped_quarters")
+					// v3 had the wrong name
+					local idx = lines.find("speed_run")
+					if (idx != null) lines[idx] = "speedrun"		
 					break
 			}
 		}

@@ -159,6 +159,8 @@ class Ware_SpecialRoundData
 	cb_get_player_roll         = null
 	// CanPlayerRespawn(player)   - If returns true, allows a dead player to respawn
 	cb_can_player_respawn      = null
+	// OnPlayerTouch(player, other_player) - Called by Ware_OnUpdate when two players touch and passes the two players.
+	cb_on_player_touch         = null
 	// OnTakeDamage(params)       - Called by OnTakeDamage in main.nut and functions as normal.
 	cb_on_take_damage          = null
 	

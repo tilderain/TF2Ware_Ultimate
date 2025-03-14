@@ -943,6 +943,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_on_player_postspawn     = Ware_Callback(scope, "OnPlayerPostSpawn")
 	special_round.cb_on_player_inventory     = Ware_Callback(scope, "OnPlayerInventory")
 	special_round.cb_on_player_voiceline     = Ware_Callback(scope, "OnPlayerVoiceline")
+	special_round.cb_on_player_touch		 = Ware_Callback(scope, "OnPlayerTouch")
 	special_round.cb_get_minigame            = Ware_Callback(scope, "GetMinigameName")
 	special_round.cb_on_minigame_start       = Ware_Callback(scope, "OnMinigameStart")
 	special_round.cb_on_minigame_end         = Ware_Callback(scope, "OnMinigameEnd")
@@ -2179,6 +2180,8 @@ function Ware_OnUpdate()
 			}
 		}
 	}
+	
+	Ware_UpdatePlayerTouch()
 		
 	if (Ware_Minigame == null)
 		return -1
@@ -2235,54 +2238,6 @@ function Ware_OnUpdate()
 				}
 			}
 		}
-	}
-	
-	if (Ware_Minigame.cb_on_player_touch.IsValid())
-	{
-		local candidates = []
-		local bloat_maxs = Vector(0.05, 0.05, 0.05)
-		local bloat_mins = bloat_maxs * -1.0
-		
-		foreach (player in Ware_MinigamePlayers)
-		{
-			if (player.IsAlive())
-			{
-				local origin = player.GetOrigin()
-				candidates.append(
-				[
-					player, 
-					origin + player.GetBoundingMins() + bloat_mins, 
-					origin + player.GetPlayerMaxs() + bloat_maxs
-				])
-			}
-		}
-		
-		local intersections = {}
-		local candidates_len = candidates.len()
-		for (local i = 0; i < candidates_len; ++i)
-		{
-			local candidate_a = candidates[i]
-			if (candidate_a in intersections)
-				continue
-			
-			for (local j = i + 1; j < candidates_len; ++j)
-			{
-				local candidate_b = candidates[j]
-				if (candidate_b in intersections)
-					continue
-				
-				if (IntersectBoxBox(candidate_a[1], candidate_a[2], candidate_b[1], candidate_b[2]))
-				{
-					local player_a = candidate_a[0]
-					local player_b = candidate_b[0]		
-					intersections[player_a] <- player_b
-					intersections[player_b] <- player_a
-				}
-			}
-		}
-		
-		foreach (player, other_player in intersections)
-			Ware_Minigame.cb_on_player_touch(player, other_player)
 	}
 	
 	return -1
@@ -2347,6 +2302,72 @@ if (Ware_Plugin)
 		local ret = Ware_OnPlayerSay(player, text)
 		SetPropInt(self, "m_iHammerID", ret == false ? 1 : 0)
 	}
+}
+
+function Ware_UpdatePlayerTouch()
+{
+	// verbose but optimized as these will get accessed a lot
+	local cb_minigame_player_touch = Ware_Minigame ? Ware_Minigame.cb_on_player_touch : null
+	local cb_specialround_player_touch = Ware_SpecialRound ? Ware_SpecialRound.cb_on_player_touch : null
+
+	if (cb_minigame_player_touch && !cb_minigame_player_touch.IsValid())
+		cb_minigame_player_touch = null
+	if (cb_specialround_player_touch && !cb_specialround_player_touch.IsValid())
+		cb_specialround_player_touch = null	
+		
+	if (cb_minigame_player_touch || cb_specialround_player_touch)
+	{
+		local candidates = []
+		local bloat_maxs = Vector(0.05, 0.05, 0.05)
+		local bloat_mins = bloat_maxs * -1.0
+		
+		foreach (player in Ware_MinigamePlayers)
+		{
+			if (player.IsAlive())
+			{
+				local origin = player.GetOrigin()
+				candidates.append(
+				[
+					player, 
+					origin + player.GetBoundingMins() + bloat_mins, 
+					origin + player.GetPlayerMaxs() + bloat_maxs
+				])
+			}
+		}
+		
+		local intersections = {}
+		local candidates_len = candidates.len()
+		for (local i = 0; i < candidates_len; ++i)
+		{
+			local candidate_a = candidates[i]
+			if (candidate_a in intersections)
+				continue
+			
+			for (local j = i + 1; j < candidates_len; ++j)
+			{
+				local candidate_b = candidates[j]
+				if (candidate_b in intersections)
+					continue
+				
+				if (IntersectBoxBox(candidate_a[1], candidate_a[2], candidate_b[1], candidate_b[2]))
+				{
+					local player_a = candidate_a[0]
+					local player_b = candidate_b[0]		
+					intersections[player_a] <- player_b
+					intersections[player_b] <- player_a
+				}
+			}
+		}
+		
+		foreach (player, other_player in intersections)
+		{
+			if (cb_minigame_player_touch)
+				cb_minigame_player_touch(player, other_player)
+			if (cb_specialround_player_touch)
+				cb_specialround_player_touch(player, other_player)
+		}
+	}
+	
 }
 
 function Ware_LeaderboardUpdate()
