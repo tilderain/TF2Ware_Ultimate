@@ -80,7 +80,10 @@ function OnUpdate()
 				foreach (can in cans)
 				{
 					if (can.GetOwner() != null)
-						continue				
+						continue		
+					local can_scope = can.GetScriptScope()
+					if (can_scope.GraceHolderTime > time)
+						continue						
 					local can_origin = can.GetOrigin()
 					if (VectorDistance(eye_pos, can_origin) > pickupDistance)
 						continue
@@ -88,8 +91,9 @@ function OnUpdate()
 					{
 						minidata.PickedProp = can
 						can.SetOwner(player)
-						can.GetScriptScope().LastHolder <- player
-						can.GetScriptScope().GraceHolderTime <- time + 0.25								
+						can_scope.LastHolder <- player
+						can_scope.GraceHolderTime <- time + 0.4	
+						break
 					}
 				}
 			}
