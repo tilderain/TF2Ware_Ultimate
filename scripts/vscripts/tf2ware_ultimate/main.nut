@@ -2014,6 +2014,7 @@ function Ware_GameOverInternal()
 	
 	local delay = GetConvarValue("mp_bonusroundtime").tofloat()
 	Ware_ToggleTruce(false)
+	Ware_ToggleRespawnRooms(false)
 	
 	local winners = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) != null)
 	local losers = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) == null)
