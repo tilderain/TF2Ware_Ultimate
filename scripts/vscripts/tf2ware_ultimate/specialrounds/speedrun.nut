@@ -4,6 +4,7 @@ special_round <- Ware_SpecialRoundData
 	author = "ficool2"
 	description = "The round is 3x faster!!"
 	category = "timescale"
+	max_players = 40
 })
 
 function OnStart()
