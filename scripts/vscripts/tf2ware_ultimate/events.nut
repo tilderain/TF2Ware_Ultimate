@@ -26,6 +26,9 @@ function OnScriptHook_OnTakeDamage(params)
 			params.early_out = true
 			return
 		}
+		
+		if (params.force_friendly_fire)
+			force_pvp = true
 	}
 	
 	if (Ware_Finished)
@@ -86,8 +89,9 @@ function OnScriptHook_OnTakeDamage(params)
 		same_team = true
 	}
 
-	local can_friendly_fire = (!Ware_Minigame || Ware_Minigame.friendly_fire) 
-							&& (!Ware_SpecialRound || Ware_SpecialRound.friendly_fire)
+	local can_friendly_fire = params.force_friendly_fire ||
+							((!Ware_Minigame || Ware_Minigame.friendly_fire) 
+							&& (!Ware_SpecialRound || Ware_SpecialRound.friendly_fire))
 	if (can_friendly_fire)
 	{
 		params.force_friendly_fire = true
