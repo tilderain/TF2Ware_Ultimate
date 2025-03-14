@@ -1750,7 +1750,8 @@ function Ware_FinishMinigameInternal()
 		SetConvarValue(name, value)
 	Ware_MinigameSavedConvars.clear()
 	
-	Ware_ToggleRespawnRooms(true)
+	if (!Ware_SpecialRound || Ware_SpecialRound.allow_respawnroom)
+		Ware_ToggleRespawnRooms(true)
 	
 	local restore_collisions = Ware_Minigame.collisions && (!Ware_SpecialRound || !Ware_SpecialRound.force_collisions)
 	

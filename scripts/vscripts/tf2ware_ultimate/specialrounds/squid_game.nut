@@ -7,6 +7,7 @@ special_round <- Ware_SpecialRoundData
 	friendly_fire = true
 	allow_damage = true
 	force_pvp_damage = true
+	allow_respawnroom = false
 	min_players = 2
 })
 

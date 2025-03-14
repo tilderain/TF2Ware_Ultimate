@@ -15,6 +15,7 @@ class Ware_SpecialRoundData
 		friendly_fire     = true
 		force_pvp_damage  = false
 		bonus_points      = false
+		allow_respawnroom = true
 		boss_count        = 1
 		boss_threshold    = Ware_BossThreshold
 		speedup_threshold = Ware_SpeedUpThreshold
@@ -61,6 +62,8 @@ class Ware_SpecialRoundData
 	friendly_fire            = null
 	// Always allow player to always damage each other. Default is false
 	force_pvp_damage         = null
+	// Allow respawning in intermission when changing class? Default is true
+	allow_respawnroom        = null	
 	// Award bonus points? Default is false
 	bonus_points             = null
 	// Amount of bosses to play, default is 1
@@ -71,7 +74,7 @@ class Ware_SpecialRoundData
 	speedup_threshold        = null
 	// Override player voice pitch if set
 	pitch_override           = null
-	
+
 	// == Internal use only ==
 	file_name                = null
 	
