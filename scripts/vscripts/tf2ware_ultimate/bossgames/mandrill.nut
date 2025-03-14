@@ -8,7 +8,6 @@ minigame <- Ware_MinigameData
 	location      = "mandrill"
 	music         = "mandrill"
 	start_pass    = false
-	fail_on_death = true
 })
 
 banana_model <- "models/tf2ware_ultimate/banana.mdl"

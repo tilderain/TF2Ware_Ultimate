@@ -9,7 +9,6 @@ minigame <- Ware_MinigameData
 	max_scale      = 1.4
 	location       = "factory"
 	music          = "escape_factory"
-	fail_on_death  = true
 	convars =
 	{
 		tf_avoidteammates = 0
