@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name            = "Say the Map"
 	author          = ["ficool2"]
 	description     = "Say the name of the map!"
-	duration        = 6.0
+	duration        = 7.0
 	end_delay       = 0.5
 	music           = "whatsthat"
 	suicide_on_end  = true
