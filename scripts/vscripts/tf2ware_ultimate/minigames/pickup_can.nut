@@ -18,6 +18,7 @@ local outline = true    // Outline props?
 local canOffset = 100.0 // X and Y Offset for spawning cans
 local canHeightOffset = 300.0   // Z Offset for spawning cans
 local canRadiusSqr = 32.0*32.0  // Pickup radius for cans, squared
+local canGracePeriod = 0.4 // Grace period between picking up cans
 local propFaceSameDirection = false // If true, makes the prop face the same direction as the player (similar to Half-Life 2)
 local canName = "can_minigame"  // Can targetname
 local cans = []
@@ -39,12 +40,30 @@ function OnStart()
 		minidata.LastActionKey <- false
         minidata.PickedProp <- player
 	}
-    SpawnTriggerPush()
-    Ware_CreateTimer(@() SpawnTrashcan(), 0.3)
-    SpawnTriggerMultiple()
+
+    Ware_CreateTimer(function()
+	{
+		local radius = Ware_MinigameLocation.name.find("big") != null ? 370.0 : 190.0
+		local offsets = 
+		[
+			Vector(radius, radius)
+			Vector(radius, -radius)
+			Vector(-radius, radius)
+			Vector(-radius, -radius)
+		]
+
+		foreach (offset in offsets)
+		{
+			local pos = Ware_MinigameLocation.center + offset		
+			SpawnTrashcan(pos + Vector(0, 0, 20))
+			SpawnTriggerMultiple(pos)
+			SpawnTriggerPush(pos)
+		}
+	}, 0.3)
+
 	SpawnCans()
 
-	Ware_ChatPrint(null, "{color}TIP{color}: Pick up cans with mouse click, reload or action key!", 
+	Ware_ChatPrint(null, "{color}TIP{color}: Pick up cans with left click!", 
 		COLOR_GREEN, TF_COLOR_DEFAULT)
 }
 
@@ -66,7 +85,7 @@ function OnUpdate()
 		local newButtons = buttons & ~minidata.LastButtons
 		local usingActionKey = player.IsUsingActionSlot()
 		
-		if ((newButtons & (IN_ATTACK|IN_ATTACK2|IN_RELOAD|IN_USE)) || (usingActionKey && !minidata.LastActionKey))
+		if ((newButtons & IN_ATTACK) || (usingActionKey && !minidata.LastActionKey))
 		{
 			if (minidata.PickedProp != player && minidata.PickedProp.IsValid())
 			{
@@ -92,7 +111,7 @@ function OnUpdate()
 						minidata.PickedProp = can
 						can.SetOwner(player)
 						can_scope.LastHolder <- player
-						can_scope.GraceHolderTime <- time + 0.4	
+						can_scope.GraceHolderTime <- time + canGracePeriod
 						break
 					}
 				}
@@ -111,7 +130,7 @@ function OnUpdate()
 				prop_angles = eye_angles
 			minidata.PickedProp.Teleport(false, prop_origin, true, prop_angles, true, velocity)
 			minidata.PickedProp.SetPhysAngularVelocity(Vector(0.0, 0.0, 0.0))
-			minidata.PickedProp.GetScriptScope().GraceHolderTime = time + 0.25
+			minidata.PickedProp.GetScriptScope().GraceHolderTime = time + canGracePeriod
 		}
 
 		minidata.LastButtons = buttons
@@ -126,14 +145,12 @@ function OnPlayerDeath(player, attacker, params)
 		minidata.PickedProp.SetOwner(null)
 }
 
-function SpawnTrashcan() 
+function SpawnTrashcan(pos) 
 {
-    local center = Ware_MinigameLocation.center * 1.0
-	center += Vector(0, 0, 20)
     local trashcan = Ware_SpawnEntity("prop_dynamic",
     {  
         model = trashcan_model
-        origin = center
+        origin = pos
 		solid = SOLID_VPHYSICS
     })
 
@@ -165,6 +182,7 @@ function SpawnCans()
 			model = can_model
 			origin = origin
 		})
+		can.SetModelScale(1.5, 0.0)
         can.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
         can.ValidateScriptScope()
         can.GetScriptScope().LastHolder <- null
@@ -182,13 +200,12 @@ function SpawnCans()
 	}
 }
 
-function SpawnTriggerMultiple()
+function SpawnTriggerMultiple(pos)
 {
-    local center = Ware_MinigameLocation.center
     local trigger_multiple = Ware_SpawnEntity("trigger_multiple",
     {
         targetname = "trashcan_trigger"
-        origin     = center
+        origin     = pos
         spawnflags = SF_TRIGGER_ALLOW_PHYSICS
     })
     trigger_multiple.SetSize(Vector(-5, -5, 0), Vector(5, 5, 24))
@@ -199,13 +216,12 @@ function SpawnTriggerMultiple()
 	trigger_multiple.ConnectOutput("OnStartTouch", "OnStartTouch")
 }
 
-function SpawnTriggerPush()
+function SpawnTriggerPush(pos)
 {
-    local center = Ware_MinigameLocation.center
     local trigger_push = Ware_SpawnEntity("trigger_push", 
     {
         targetname = "trashcan_push"
-        origin     = center
+        origin     = pos
         pushdir    = QAngle(0, RandomFloat(0, 360), 0)
         speed      = 1000
         spawnflags = SF_TRIGGER_ALLOW_CLIENTS 
