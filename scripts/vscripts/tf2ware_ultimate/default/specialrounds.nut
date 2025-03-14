@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 3
+buffer<-@"VERSION 4
 adrenaline_shot
 all_in
 barrels
@@ -9,6 +9,7 @@ boss_rush
 bunnyhop
 cocanium
 collisions
+cramped_quarters
 double_trouble
 extended_round
 fov

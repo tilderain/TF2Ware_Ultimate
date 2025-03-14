@@ -13,7 +13,13 @@ buffer<-@"// atomizer
 [325] = 
 { 
 	""hit self on miss"" : 0,
-},	
+	""bleeding duration"" : 0,
+},
+// fan o war	
+[355] =
+{
+	""mark for death"" : 0,
+},
 // discipilinary action
 [447] =
 { 
