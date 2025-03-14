@@ -28,7 +28,7 @@ simon
 size_matters
 skull
 slow_mo
-speed_run
+speedrun
 squid_game
 sudden_death
 team_battles
