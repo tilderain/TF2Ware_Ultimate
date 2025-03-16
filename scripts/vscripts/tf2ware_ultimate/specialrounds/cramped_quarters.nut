@@ -12,10 +12,7 @@ local touch_dmg = false
 function OnStart()
 {
 	foreach(player in Ware_Players)
-	{
-		local data = Ware_GetPlayerSpecialRoundData(player)
-		data.touched <- false
-	}
+		Ware_GetPlayerSpecialRoundData(player).touched <- false
 }
 
 function OnPlayerSpawn(player)
