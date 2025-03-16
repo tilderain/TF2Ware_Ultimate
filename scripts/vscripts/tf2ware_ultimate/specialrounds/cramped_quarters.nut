@@ -32,7 +32,7 @@ function OnPlayerTouch(player1, player2)
 		touch_dmg = false
 		
 		// don't spam the chat if killing somehow fails, but still try to kill.
-		local data = Ware_GetPlayerSpecialRoundData(player)
+		local data = Ware_GetPlayerSpecialRoundData(player1)
 		if(!data.touched)
 		{
 			local color2 = player2.GetTeam() == TF_TEAM_RED ? TF_COLOR_RED : TF_COLOR_BLUE
