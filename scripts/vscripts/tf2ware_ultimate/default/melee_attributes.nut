@@ -20,6 +20,11 @@ buffer<-@"// atomizer
 {
 	""mark for death"" : 0,
 },
+// wrap assassin
+[648] =
+{
+	""mod bat launches ornaments"": 0,
+},
 // discipilinary action
 [447] =
 { 
