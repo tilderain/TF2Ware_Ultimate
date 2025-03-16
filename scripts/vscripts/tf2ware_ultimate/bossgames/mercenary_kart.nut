@@ -339,6 +339,7 @@ function OnStart()
 	
 	foreach (player in Ware_Players)
 	{
+		Ware_SetPlayerClass(player, RandomInt(TF_CLASS_FIRST, TF_CLASS_LAST))
 		TogglePlayerViewcontrol(player, camera, true)
 		player.AddHudHideFlags(HIDEHUD_MISCSTATUS|HIDEHUD_HEALTH)
 	}
