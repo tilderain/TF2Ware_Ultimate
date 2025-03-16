@@ -9,6 +9,20 @@ special_round <- Ware_SpecialRoundData
 
 local touch_dmg = false
 
+function OnStart()
+{
+	foreach(player in Ware_Players)
+	{
+		local data = Ware_GetPlayerSpecialRoundData(player)
+		data.touched <- false
+	}
+}
+
+function OnPlayerSpawn(player)
+{
+	Ware_GetPlayerSpecialRoundData(player).touched <- false
+}
+
 function OnPlayerTouch(player1, player2)
 {
 	if (Ware_Minigame || Ware_Finished)
@@ -20,8 +34,14 @@ function OnPlayerTouch(player1, player2)
 		SetPropBool(GameRules, "m_bTruceActive", truce)
 		touch_dmg = false
 		
-		local color2 = player2.GetTeam() == TF_TEAM_RED ? TF_COLOR_RED : TF_COLOR_BLUE
-		Ware_ChatPrint(player1, "You touched {color}{player}{color}!", color2, player2, TF_COLOR_DEFAULT)
+		// don't spam the chat if killing somehow fails, but still try to kill.
+		local data = Ware_GetPlayerSpecialRoundData(player)
+		if(!data.touched)
+		{
+			local color2 = player2.GetTeam() == TF_TEAM_RED ? TF_COLOR_RED : TF_COLOR_BLUE
+			Ware_ChatPrint(player1, "You touched {color}{player}{color}!", color2, player2, TF_COLOR_DEFAULT)
+			data.touched = true
+		}
 	}
 }
 
