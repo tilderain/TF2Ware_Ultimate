@@ -108,6 +108,7 @@ else if (mode == 8)
 }
 else if (mode == 9)
 {
+	// TODO: Prevent charge spam after initial charge
 	local pass = simon == 0
 	function OnUpdate()
 	{
