@@ -27,7 +27,7 @@ maps <-
 	[ [ "cp_egypt_final" ], "Egypt", "egypt final" ],
 	[ [ "cp_fastlane" ], "Fastlane", "fast lane" ],
 	[ [ "cp_foundry", "ctf_foundry" ], "Foundry" ],
-	[ [ "cp_gorge", "ctf_gorge", "cp_5gorge" ], "Gorge", "5gorge", "5 gorge", "five gorge" ],
+	[ [ "cp_gorge", "ctf_gorge", "cp_5gorge" ], "Gorge", "5gorge", "5 gorge", "five gorge", "George"],
 	[ [ "cp_gravelpit" ], "Gravelpit", "gravel pit" ],
 	[ [ "cp_junction_final", "cp_junction" ], "Junction", "junction final" ],
 	[ [ "cp_mercenarypark" ], "Mercenary Park", "mercenarypark" ],
