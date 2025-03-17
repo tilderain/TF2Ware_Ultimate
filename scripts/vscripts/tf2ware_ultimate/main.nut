@@ -1703,9 +1703,12 @@ function Ware_EndMinigameInternal()
 function Ware_FinishMinigameInternal()
 {
 	Ware_CriticalZone = true
+	
+	local ware_minigameplayers_len = Ware_MinigamePlayers.len()
 
-	local all_passed = true
-	local all_failed = true
+	// default to false if only one player
+	local all_passed = ware_minigameplayers_len > 1
+	local all_failed = ware_minigameplayers_len > 1
 	local pass_flag = !(Ware_SpecialRound && Ware_SpecialRound.opposite_win)
 
 	local can_suicide = Ware_Minigame.allow_suicide
