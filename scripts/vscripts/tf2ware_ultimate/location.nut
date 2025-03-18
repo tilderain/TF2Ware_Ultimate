@@ -770,6 +770,6 @@ Ware_Location.wega_challenge <-
 	Teleport = function(players)
 	{
 		foreach (player in players)
-			Ware_TeleportPlayer(player, start, QAngle(0, 180, 0), vec3_zero)
+			Ware_TeleportPlayer(player, start, QAngle(0, 45, 0), vec3_zero)
 	}
 }
