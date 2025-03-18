@@ -172,14 +172,15 @@ function OnUpdate()
         local urioBrush = Entities.FindByName(null, "uario_brush")
         urioBrush.ValidateScriptScope()
         urioBrush.GetScriptScope().sound_stalker_scream <- sound_stalker_scream
-        urioBrush.GetScriptScope().UrioJumpscape <- function(){
+        urioBrush.GetScriptScope().overlay_urio_jumpscare <- overlay_urio_jumpscare
+        urioBrush.GetScriptScope().JumpscareUario <- function(){
 
             EmitSoundEx({
 	        sound_name = this.sound_stalker_scream,
 	        entity = activator,
 	        filter_type = Constants.EScriptRecipientFilter.RECIPIENT_FILTER_SINGLE_PLAYER
             })
-            activator.SetScriptOverlayMaterial(overlay_urio_jumpscare)
+            activator.SetScriptOverlayMaterial(this.overlay_urio_jumpscare)
 
             EntFireByHandle(activator, "RunScriptCode", "self.TakeDamage(1000, Constants.FDmgType.DMG_SLASH, null)", 1.5, null, null);
             EntFireByHandle(activator, "RunScriptCode", "self.SetScriptOverlayMaterial(``)", 1.5, null, null);
@@ -841,13 +842,14 @@ function AddWegas()
             wegaEntity.GetScriptScope().speed += ((i+1) * 2)
 
         wegaEntity.GetScriptScope().sound_stalker_scream <- sound_stalker_scream
+        wegaEntity.GetScriptScope().overlay_wega_jumpscare <- overlay_wega_jumpscare
         wegaEntity.GetScriptScope().Jumpscare <- function(){
             EmitSoundEx({
 	        sound_name = this.sound_stalker_scream,
 	        entity = activator,
 	        filter_type = Constants.EScriptRecipientFilter.RECIPIENT_FILTER_SINGLE_PLAYER
             })
-            activator.SetScriptOverlayMaterial(overlay_wega_jumpscare)
+            activator.SetScriptOverlayMaterial(this.overlay_wega_jumpscare)
 
             EntFireByHandle(activator, "RunScriptCode", "self.TakeDamage(1000, Constants.FDmgType.DMG_SLASH, null)", 1.5, null, null);
             EntFireByHandle(activator, "RunScriptCode", "self.SetScriptOverlayMaterial(``)", 1.5, null, null);
@@ -969,9 +971,9 @@ if (wegaDoll != null)
     {
         Ware_CreateTimer(function()
 	    {
-        Ware_TeleportPlayer(player, Ware_Location.home.center, ang_zero, vec3_zero)
-	    Ware_ShowScreenOverlay(player, null)
-	    Ware_PassPlayer(player, true)
+            Ware_TeleportPlayer(player, Ware_Location.home.center, ang_zero, vec3_zero)
+	        Ware_ShowScreenOverlay(player, null)
+	        Ware_PassPlayer(player, true)
         }, 0.1)
     }
 }
