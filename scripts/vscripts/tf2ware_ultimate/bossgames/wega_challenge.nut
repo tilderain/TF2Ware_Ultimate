@@ -42,12 +42,12 @@ minigame <- Ware_MinigameData
 })
 
 music_wega <- "wexecution"
-music_urio <- "wexecution urio theme"
+music_urio <- "wexecution_urio_theme"
 
 model_hands <- "models/wega/hands.mdl"
 model_wega_doll <- "models/wega/wega.mdl"
 
-sound_collect <- "tf2ware_ultimate/Baseball hit.mp3"
+sound_collect <- "tf2ware_ultimate/baseball_hit.mp3"
 sound_stalker_scream <- "npc/stalker/go_alert2a.wav"
 
 overlay_counter <- "wega/wega_counter.vmt"
@@ -217,7 +217,6 @@ function OnEnd()
     foreach (player in Ware_MinigamePlayers)
 	{
         SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", null)
-        AddThinkToEnt(player, "")
     }
 }
 
@@ -854,7 +853,6 @@ function AddWegas()
             EntFireByHandle(activator, "RunScriptCode", "self.SetScriptOverlayMaterial(``)", 1.5, null, null);
         }
 
-        AddThinkToEnt(wegaEntity, "Wega_entity_tick")
         i++
         WegaArray.append(wegaEntity)
     }
