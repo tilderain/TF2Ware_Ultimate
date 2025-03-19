@@ -962,5 +962,5 @@ function DeactivateWegaAntiStall()
 function IncreaseWegaSpeedByOne()
 {
     foreach (wega in WegaArray)
-        wega.speed++
+        wega.GetScriptScope().speed++
 }
