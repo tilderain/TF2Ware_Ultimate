@@ -4,7 +4,6 @@
 //Script by Alex Turtle
 
 TriggerEnding <- true
-GameText  <- null
 
 SpawnCenter <- Vector(-32, -13280, -12608)
 
@@ -107,17 +106,13 @@ function OnStart()
         Ware_GetPlayerMiniData(player).jumping <- false
         SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
 
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_WEAPONSELECTION)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_FLASHLIGHT)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_HEALTH)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_MISCSTATUS)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_CROSSHAIR)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_BONUS_PROGRESS)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_BUILDING_STATUS)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_CLOAK_AND_FEIGN)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_PIPES_AND_CHARGE)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_METAL)
-        player.AddHudHideFlags(Constants.FHideHUD.HIDEHUD_TARGET_ID)
+        player.AddHudHideFlags(HIDEHUD_WEAPONSELECTION)
+        player.AddHudHideFlags(HIDEHUD_FLASHLIGHT)
+        player.AddHudHideFlags(HIDEHUD_HEALTH)
+        player.AddHudHideFlags(HIDEHUD_MISCSTATUS)
+        player.AddHudHideFlags(HIDEHUD_CROSSHAIR)
+        player.AddHudHideFlags(HIDEHUD_BONUS_PROGRESS)
+        player.AddHudHideFlags(HIDEHUD_TARGET_ID)
         player.SetScriptOverlayMaterial("wega/wega_counter.vmt")
 
         local weapon = player.GetActiveWeapon()
@@ -135,9 +130,6 @@ function OnStart()
 
 function OnUpdate()
 {
-    if (GameText == null)
-        return
-
     if (AntiStall)
         IncreaseWegaSpeedByOne()
 
@@ -146,9 +138,7 @@ function OnUpdate()
         Wega_player_tick(player)
     }
 
-
-    EntFireByHandle(GameText, "AddOutPut", "message " + wegacount, 0.0, null, null)
-    EntFireByHandle(GameText, "Display", null, 0.0, null, null)
+    Ware_ShowText(Ware_Players, CHANNEL_MINIGAME, wegacount.tostring(), 0.5, "255 255 255", 0.1, 0.06)
 
     local wegaEntity = null
     while (wegaEntity = Entities.FindByName(wegaEntity, "multiplayer_wega_brush*"))
@@ -172,22 +162,25 @@ function OnUpdate()
 
         Ware_CreateTimer(function()
 	    {
-        local urioBrush = Entities.FindByName(null, "uario_brush")
-        urioBrush.ValidateScriptScope()
-        urioBrush.GetScriptScope().sound_stalker_scream <- sound_stalker_scream
-        urioBrush.GetScriptScope().overlay_urio_jumpscare <- overlay_urio_jumpscare
-        urioBrush.GetScriptScope().JumpscareUario <- function(){
+            local urioBrush = Entities.FindByName(null, "uario_brush")
+            urioBrush.ValidateScriptScope()
+            urioBrush.GetScriptScope().sound_stalker_scream <- sound_stalker_scream
+            urioBrush.GetScriptScope().overlay_urio_jumpscare <- overlay_urio_jumpscare
+            urioBrush.GetScriptScope().JumpscareUario <- function(){
 
-            EmitSoundEx({
-	        sound_name = this.sound_stalker_scream,
-	        entity = activator,
-	        filter_type = Constants.EScriptRecipientFilter.RECIPIENT_FILTER_SINGLE_PLAYER
-            })
-            activator.SetScriptOverlayMaterial(this.overlay_urio_jumpscare)
+                EmitSoundEx({
+	            sound_name = this.sound_stalker_scream,
+	            entity = activator,
+	            filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
+                })
+                activator.SetScriptOverlayMaterial(this.overlay_urio_jumpscare)
 
-            EntFireByHandle(activator, "RunScriptCode", "self.TakeDamage(1000, Constants.FDmgType.DMG_SLASH, null)", 1.5, null, null);
-            EntFireByHandle(activator, "RunScriptCode", "self.SetScriptOverlayMaterial(``)", 1.5, null, null);
-        }
+                Ware_CreateTimer(function()
+	            {
+                    activator.TakeDamage(1000, DMG_SLASH, null)
+                    activator.SetScriptOverlayMaterial("")
+                }, 1.5)
+            }
         }, 0.1)
     }
 }
@@ -391,64 +384,61 @@ function Generate()
     while (x < Size-1 || y < Size-1)
     {
     
-    if (x < Size-1 && y < Size-1)
-    {
-
-        local rnd = RandomInt(0, 1)
-        if (rnd == 0)
+        if (x < Size-1 && y < Size-1)
         {
-            direction = DIRECTION.UP
+
+            local rnd = RandomInt(0, 1)
+            if (rnd == 0)
+            {
+                direction = DIRECTION.UP
+            }
+            else
+            {
+                direction = DIRECTION.RIGHT
+            }
         }
         else
         {
-            direction = DIRECTION.RIGHT
-        }
-    }
-    else
-    {
-        if (x >= Size-1 && y < Size-1)
-        {
-            direction = DIRECTION.RIGHT
-        }
+            if (x >= Size-1 && y < Size-1)
+            {
+                direction = DIRECTION.RIGHT
+            }
 
-        if (y >= Size-1 && x < Size-1)
-        {
-            direction = DIRECTION.UP
+            if (y >= Size-1 && x < Size-1)
+            {
+                direction = DIRECTION.UP
+            }
         }
-    }
-    local possibleList = [3, 5, 6, 8, 13]
+        local possibleList = [3, 5, 6, 8, 13]
 
-    switch(direction)
-    {
-        case DIRECTION.UP:
-        if (CellArray[x][y] != null)
+        switch(direction)
         {
-            possibleList = ChunkList[CellArray[x][y]].possible_up
+            case DIRECTION.UP:
+            if (CellArray[x][y] != null)
+            {
+                possibleList = ChunkList[CellArray[x][y]].possible_up
       
+            }
+
+            x++
+            break
+
+            case DIRECTION.RIGHT:
+            if (CellArray[x][y] != null)
+                possibleList = ChunkList[CellArray[x][y]].possible_right
+
+            y++
+            break
+
         }
+        if (y == Size-1 && x == Size-1)
+            break
 
-        x++
-        break
+        local possibleList = [3, 5, 6, 8, 13]
+        local rnd = RandomInt(0, possibleList.len()-1)
 
-        case DIRECTION.RIGHT:
-        if (CellArray[x][y] != null)
-            possibleList = ChunkList[CellArray[x][y]].possible_right
-
-        y++
-        break
-
-
-
-
-    }
-    if (y == Size-1 && x == Size-1)
-        break
-
-    local possibleList = [3, 5, 6, 8, 13]
-    local rnd = RandomInt(0, possibleList.len()-1)
-
-    local selectedChunk = possibleList[rnd]
-    CellArray[x][y] = selectedChunk 
+        local selectedChunk = possibleList[rnd]
+        CellArray[x][y] = selectedChunk 
     }
 
     //Phase 2, fill everything
@@ -474,10 +464,9 @@ function Generate()
 
             if (possibleList.len() > 0)
             {
-            local rnd = RandomInt(0, possibleList.len()-1)
-            selectedChunk = possibleList[rnd]
-            CellArray[x][y] = selectedChunk 
-
+                local rnd = RandomInt(0, possibleList.len()-1)
+                selectedChunk = possibleList[rnd]
+                CellArray[x][y] = selectedChunk 
             }
         }   
 
@@ -531,10 +520,9 @@ function Generate()
 
             if (possibleList.len() > 0)
             {
-            local rnd = RandomInt(0, possibleList.len()-1)
-            selectedChunk = possibleList[rnd]
-            CellArray[x][y] = selectedChunk 
-
+                local rnd = RandomInt(0, possibleList.len()-1)
+                selectedChunk = possibleList[rnd]
+                CellArray[x][y] = selectedChunk 
             }
         }   
 
@@ -578,22 +566,22 @@ function Generate()
 
     while(x >= 0)
     {
-    local possibleList = [3, 5, 6, 8, 13]
-    local rnd = RandomInt(0, possibleList.len()-1)
+        local possibleList = [3, 5, 6, 8, 13]
+        local rnd = RandomInt(0, possibleList.len()-1)
 
-    local selectedChunk = possibleList[rnd]
-    CellArray[x][Size-1] = selectedChunk 
-    x--
+        local selectedChunk = possibleList[rnd]
+        CellArray[x][Size-1] = selectedChunk 
+        x--
     }
 
     while(y >= 0)
     {
-    local possibleList = [3, 5, 6, 8, 13]
-    local rnd = RandomInt(0, possibleList.len()-1)
+        local possibleList = [3, 5, 6, 8, 13]
+        local rnd = RandomInt(0, possibleList.len()-1)
 
-    local selectedChunk = possibleList[rnd]
-    CellArray[0][y] = selectedChunk 
-    y--
+        local selectedChunk = possibleList[rnd]
+        CellArray[0][y] = selectedChunk 
+        y--
     }
 
 
@@ -622,9 +610,9 @@ function Generate()
 
             if (possibleList.len() > 0)
             {
-            local rnd = RandomInt(0, possibleList.len()-1)
-            selectedChunk = possibleList[rnd]
-            CellArray[x][y] = selectedChunk 
+                local rnd = RandomInt(0, possibleList.len()-1)
+                selectedChunk = possibleList[rnd]
+                CellArray[x][y] = selectedChunk 
 
             }
         }   
@@ -641,17 +629,14 @@ function Generate()
             direction = DIRECTION.UP
             if (CellArray[x][y-1] != null)
             {
-            possibleList = ChunkList[CellArray[x][y-1]].possible_up
+                possibleList = ChunkList[CellArray[x][y-1]].possible_up
 
-            if (possibleList.len() < 1)
-                break
+                if (possibleList.len() < 1)
+                    break
 
-            local rnd = RandomInt(0, possibleList.len()-1)
-            selectedChunk = possibleList[rnd]
-            CellArray[x][y] = selectedChunk 
-    
-
-
+                local rnd = RandomInt(0, possibleList.len()-1)
+                selectedChunk = possibleList[rnd]
+                CellArray[x][y] = selectedChunk 
             }
         }
 
@@ -674,7 +659,7 @@ function Generate()
 
             if (CellArray[x][y] != null)
             {
-                local prop = SpawnEntityFromTable("prop_dynamic",
+                local prop = Ware_SpawnEntity("prop_dynamic",
                 {
                     targetname = "wega_challenge_floor"
                     origin = Vector(x*CellWidth,y*CellWidth,0) + SpawnCenter,
@@ -684,7 +669,7 @@ function Generate()
 
                 for(local i = 0; i < ChunkList[CellArray[x][y]].doll_locations.len(); i++)
                 {
-                    local prop = SpawnEntityFromTable("prop_dynamic",
+                    local prop = Ware_SpawnEntity("prop_dynamic",
                     {
                         targetname = "wega_challenge_doll"
                         origin = Vector(x*CellWidth,y*CellWidth,0) + DollPositions[ChunkList[CellArray[x][y]].doll_locations[i]] + SpawnCenter,
@@ -695,22 +680,17 @@ function Generate()
                     prop.ValidateScriptScope()
                     prop.GetScriptScope().sound_collect <- sound_collect
                     prop.GetScriptScope().WegaCollect <- function(player){
-
                         self.Kill()
                         EmitSoundEx({
 	                    sound_name = this.sound_collect,
 	                    entity = player,
-	                    filter_type = Constants.EScriptRecipientFilter.RECIPIENT_FILTER_SINGLE_PLAYER
-                        })
+	                    filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
+                    })
                         
 
                     }
                 }
             }
-                //ChunkList[CellArray[x][y]].template_entity.SpawnEntityAtLocation(Vector(x*CellWidth,y*CellWidth,0), Vector(0,0,0))
-            /*else
-                ChunkList[10].template_entity.SpawnEntityAtLocation(Vector(x*CellWidth,y*CellWidth,0), Vector(0,0,0))*/
-
             y++
         }
         x++
@@ -722,7 +702,7 @@ function Generate()
 
 function CalculateSize()
 {
-    PlayersCount = GetActivePlayerCount()
+    PlayersCount = Ware_MinigamePlayers.len() 
     local buffer = ceil(sqrt(PlayersCount + 4))
     buffer += 3
     if (buffer < 4)
@@ -760,24 +740,6 @@ function PrepareObjective()
             wegacount++
         }
     }
-
-
-    GameText = SpawnEntityFromTable("game_text",
-    {
-        spawnflags   = 1 
-        message      = ""
-        color        = "255 255 255"
-        holdtime     = 0.5
-        fxtime       = 0.5
-        effect       = 0
-        fadein       = 0.0
-        fadeout      = 0.0
-        channel      = 0
-        x            = 0.1
-        y            = 0.06
-    })
-
-
 }
 
 function AddWegas()
@@ -788,7 +750,7 @@ function AddWegas()
 
 
     //How many wegas?
-    local playerCount = GetActivePlayerCount()
+    local playerCount = Ware_MinigamePlayers.len() 
     local extraWegas = 0
 
     //Multi only
@@ -854,8 +816,11 @@ function AddWegas()
             })
             activator.SetScriptOverlayMaterial(this.overlay_wega_jumpscare)
 
-            EntFireByHandle(activator, "RunScriptCode", "self.TakeDamage(1000, Constants.FDmgType.DMG_SLASH, null)", 1.5, null, null);
-            EntFireByHandle(activator, "RunScriptCode", "self.SetScriptOverlayMaterial(``)", 1.5, null, null);
+            Ware_CreateTimer(function()
+	        {
+                activator.TakeDamage(1000, DMG_SLASH, null)
+                activator.SetScriptOverlayMaterial("")
+            }, 1.5)
         }
 
         i++
@@ -863,74 +828,65 @@ function AddWegas()
     }
 }
 
-function GetActivePlayerCount()
-{
-    return Ware_MinigamePlayers.len() 
-}
-
-
 function Wega_entity_tick(wega)
 {
-local scope = wega.GetScriptScope()
-local id = scope.id
-local speed = scope.speed
-local playerDistance = 9999999
-local player = null
-WegaTargetArray[id] = null
+    local scope = wega.GetScriptScope()
+    local id = scope.id
+    local speed = scope.speed
+    local playerDistance = 9999999
+    WegaTargetArray[id] = null
 
-while (player = Entities.FindByClassname(player, "player") )
-{
-    if (NetProps.GetPropInt(player, "m_lifeState") != 0)
-        continue
-
-    local distance = (wega.GetOrigin() - player.GetOrigin()).Length()
-
-    //player already being chased by another one?
-    if (!AggroClosest && WegaTargetArray.find(player) != null)
+    foreach (player in Ware_Players)
     {
-        continue
+        if (!player.IsAlive())
+            continue
+
+        local distance = (wega.GetOrigin() - player.GetOrigin()).Length()
+
+        //player already being chased by another one?
+        if (!AggroClosest && WegaTargetArray.find(player) != null)
+        {
+            continue
+        }
+
+
+        if (distance < playerDistance)
+        {
+            playerDistance = distance
+            WegaTargetArray[id] = player
+        }
     }
+    if (WegaTargetArray[id] == null)
+        while (player in Ware_Players)
+        {
+            if (!player.IsAlive())
+                continue
 
+            local distance = (wega.GetOrigin() - player.GetOrigin()).Length()
 
-    if (distance < playerDistance)
-    {
-        playerDistance = distance
-        WegaTargetArray[id] = player
-    }
-}
-if (WegaTargetArray[id] == null)
-    while (player = Entities.FindByClassname(player, "player") )
-{
-    if (NetProps.GetPropInt(player, "m_lifeState") != 0 )
-        continue
+            if (distance < playerDistance)
+            {
+                playerDistance = distance
+                WegaTargetArray[id] = player
+            }
+        }
 
-    local distance = (wega.GetOrigin() - player.GetOrigin()).Length()
+    if (WegaTargetArray[id] == null)
+        return
 
-    if (distance < playerDistance)
-    {
-        playerDistance = distance
-        WegaTargetArray[id] = player
-    }
-}
+    local direction = (wega.GetOrigin() - WegaTargetArray[id].GetOrigin())
 
+    direction.Norm()
 
+    direction *= speed
 
-if (WegaTargetArray[id] == null)
-    return
+    direction *= FrameTime()
 
-local direction = (wega.GetOrigin() - WegaTargetArray[id].GetOrigin())
+    wega.SetOrigin(wega.GetOrigin() - direction)
 
-direction.Norm()
+    ScreenShake(wega.GetOrigin(), 8.0, 100, 0.05, 800, 0, true)
 
-direction *= speed
-
-direction *= FrameTime()
-
-wega.SetOrigin(wega.GetOrigin() - direction)
-
-ScreenShake(wega.GetOrigin(), 8.0, 100, 0.05, 800, 0, true)
-
-return -1
+    return -1
 
 }
 
@@ -953,35 +909,35 @@ function ShouldSwitchTargets(player, otherId)
 function Wega_player_tick(player)
 {
 
-if (NetProps.GetPropInt(player, "m_lifeState") != 0)
-    return 100
+    if (!player.IsAlive())
+        return 100
 
     local origin = player.GetOrigin()
     origin.z += 54.0
     local wegaDoll = null
 
 
-wegaDoll = Entities.FindByNameNearest("wega_challenge_doll*", origin, 80.0)
+    wegaDoll = Entities.FindByNameNearest("wega_challenge_doll*", origin, 80.0)
 
-if (wegaDoll != null)
-{
-    if (wegaDoll.GetName() == "wega_challenge_doll")
+    if (wegaDoll != null)
     {
-        wegaDoll.GetScriptScope().WegaCollect(player)
-        wegacount--
+        if (wegaDoll.GetName() == "wega_challenge_doll")
+        {
+            wegaDoll.GetScriptScope().WegaCollect(player)
+            wegacount--
+        }
+        else
+        {
+            Ware_CreateTimer(function()
+	        {
+                Ware_TeleportPlayer(player, Ware_Location.home.center, ang_zero, vec3_zero)
+	            Ware_ShowScreenOverlay(player, null)
+	            Ware_PassPlayer(player, true)
+            }, 0.1)
+        }
     }
-    else
-    {
-        Ware_CreateTimer(function()
-	    {
-            Ware_TeleportPlayer(player, Ware_Location.home.center, ang_zero, vec3_zero)
-	        Ware_ShowScreenOverlay(player, null)
-	        Ware_PassPlayer(player, true)
-        }, 0.1)
-    }
-}
 
-return 0.05
+    return 0.05
 
 }
 
@@ -1005,8 +961,6 @@ function DeactivateWegaAntiStall()
 
 function IncreaseWegaSpeedByOne()
 {
-    for (local i = 0; i < WegaArray.len(); i++)
-    {
-        WegaArray[i].speed++
-    }
+    foreach (wega in WegaArray)
+        wega.speed++
 }
