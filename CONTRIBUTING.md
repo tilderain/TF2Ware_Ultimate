@@ -17,6 +17,8 @@ First, download this repository into your TF2's `custom` folder.
 
 The repo comes with a built BSP without packed content. Type `map tf2ware_ultimate` in console to load this.
 
+For all VScript contributions, there are some common functions available at [`util.nut`](scripts/vscripts/tf2ware_ultimate/util.nut). Note that some of these are wrapped internally - e.g. `Ware_CreateTimer` is preferred over `CreateTimer` for use in minigames.
+
 ## Minigames / Bossgames
 The logic for minigames and bossgames in TF2Ware Ultimate is the same, they just are just stored in different locations. Go into [`scripts/vscripts/tf2ware_ultimate`](scripts/vscripts/tf2ware_ultimate/) and pick either `minigames` or `bossgames`.
 Create a new .nut file there.
@@ -61,7 +63,6 @@ Special Rounds have some unique parameters and callbacks that minigames don't ha
 Unlike minigames, special rounds do *not* require music or overlays and neither are expected in the code, though you may still choose to use them.
 
 ## Testing
-
 Once you are done, add the file's name to the `minigames.cfg`/`bossgames.cfg`/`specialrounds.cfg` in the `tf/scriptdata/tf2ware_ultimate` folder. 
 
 Minigames, bossgames and special rounds are hot loaded, therefore changes will be effective immediately. Use the `!ware_force` series of chat commands to force a specific one. `!ware_nextspecial` needs a restart (`!ware_restart`) before it loads. Type `!ware_help` in chat for a full list of commands.
@@ -93,8 +94,8 @@ Any required cuts should be made, with at most a small gap at the start. This sh
 For longer music that goes beyond the duration of a minigame/bossgame, the cut should be a few seconds longer than the minigame with a short fade at the end.
 
 Note: If you are editing existing audio within the versioned folder in [`sound/tf2ware_ultimate`](sound/tf2ware_ultimate/), you MUST bump the version number in the directory name, as well as WARE_MUSICVERSION in [`config.nut`](scripts/vscripts/tf2ware_ultimate/config.nut). This is due to audio with identical paths not being updated if it's already cached.
-## Mapping
 
+## Mapping
 Mapping changes are welcome, however VMF changes are more involved to merge (especially if the map has been changed in the meantime). To help with this, please be descriptive about changes made, and test your compile before submitting a PR.
 
-Note when compiling, add the following parameters to VRAD: `-noskyboxrecurse -staticproppolys -textureshadows`. If using the Hammer/Hammer++ compiler, this is in Expert under $light.exe. If using CompilePal, you can add these parameters inidividually under VRAD.
+Note when compiling, add the following parameters to VRAD: `-noskyboxrecurse -staticproppolys -textureshadows`. If using the Hammer/Hammer++ compiler, this is in Expert under $light.exe. If using CompilePal, you can add these parameters inidividually under VRAD. In addition, compile LDR and do not pack the map during development.
