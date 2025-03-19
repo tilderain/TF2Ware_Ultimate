@@ -94,7 +94,7 @@ function OnStart()
     Ware_CreateTimer(function()
 	{
         ActivateWegaAntiStall()
-	}, 160.0)
+	}, 170.0)
 
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Bat")
 
