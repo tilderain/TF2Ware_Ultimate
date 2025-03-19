@@ -167,18 +167,18 @@ function OnUpdate()
             urioBrush.GetScriptScope().sound_stalker_scream <- sound_stalker_scream
             urioBrush.GetScriptScope().overlay_urio_jumpscare <- overlay_urio_jumpscare
             urioBrush.GetScriptScope().JumpscareUario <- function(){
-
+                local victim = activator
                 EmitSoundEx({
 	            sound_name = this.sound_stalker_scream,
-	            entity = activator,
+	            entity = victim,
 	            filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
                 })
-                activator.SetScriptOverlayMaterial(this.overlay_urio_jumpscare)
+                victim.SetScriptOverlayMaterial(this.overlay_urio_jumpscare)
 
                 Ware_CreateTimer(function()
 	            {
-                    activator.TakeDamage(1000, DMG_SLASH, null)
-                    activator.SetScriptOverlayMaterial("")
+                    victim.TakeDamage(1000, DMG_SLASH, null)
+                    victim.SetScriptOverlayMaterial("")
                 }, 1.5)
             }
         }, 0.1)
@@ -809,17 +809,17 @@ function AddWegas()
         wegaEntity.GetScriptScope().sound_stalker_scream <- sound_stalker_scream
         wegaEntity.GetScriptScope().overlay_wega_jumpscare <- overlay_wega_jumpscare
         wegaEntity.GetScriptScope().Jumpscare <- function(){
+            local victim = activator
             EmitSoundEx({
 	        sound_name = this.sound_stalker_scream,
-	        entity = activator,
+	        entity = victim,
 	        filter_type = Constants.EScriptRecipientFilter.RECIPIENT_FILTER_SINGLE_PLAYER
             })
-            activator.SetScriptOverlayMaterial(this.overlay_wega_jumpscare)
-
+            victim.SetScriptOverlayMaterial(this.overlay_wega_jumpscare)
             Ware_CreateTimer(function()
 	        {
-                activator.TakeDamage(1000, DMG_SLASH, null)
-                activator.SetScriptOverlayMaterial("")
+                victim.TakeDamage(1000, DMG_SLASH, null)
+                victim.SetScriptOverlayMaterial("")
             }, 1.5)
         }
 
@@ -857,7 +857,7 @@ function Wega_entity_tick(wega)
         }
     }
     if (WegaTargetArray[id] == null)
-        while (player in Ware_Players)
+        foreach (player in Ware_Players)
         {
             if (!player.IsAlive())
                 continue
