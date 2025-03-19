@@ -223,7 +223,7 @@ function OnCheckEnd()
 }
 
 
-class Chunk
+Chunk <- class
 {
     model = null
     possible_up = null
