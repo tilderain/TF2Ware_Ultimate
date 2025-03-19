@@ -720,8 +720,8 @@ function CalculateSize()
         buffer = 4
     }
 
-    if (buffer > 10)
-        buffer = 10
+    if (buffer > 9)
+        buffer = 9
 
     Size = buffer
 }
