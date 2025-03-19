@@ -16,31 +16,6 @@ AntiStall <- false
 
 PlayersCount <- 1
 
-
-//This is the TF2Ware part, the only part I will keep clean
-minigame <- Ware_MinigameData
-({
-	name           = "Wega's challenge"
-	author         =  ["Alex Turtle"]
-	description    = "Win Wega's Challenge!"
-	custom_overlay = "wega_challenge"
-	duration       = 300.0
-    end_delay      = 3.0
-	location       = "wega_challenge"
-	music          = null
-	start_pass     = false
-    fail_on_death  = true
-    boss           = true
-    start_freeze   = 4.0
-	max_scale      = 1.5
-    convars        =
-	{
-        tf_avoidteammates_pushaway = 0
-        sv_Friction = 1
-        tf_scout_air_dash_count = 0
-	}
-})
-
 music_wega <- "wexecution"
 music_urio <- "wexecution_urio_theme"
 
@@ -53,6 +28,30 @@ sound_stalker_scream <- "npc/stalker/go_alert2a.wav"
 overlay_counter <- "wega/wega_counter.vmt"
 overlay_wega_jumpscare <- "wega/wega_jumpscare.vtf"
 overlay_urio_jumpscare <- "wega/uario_jumpscare.vtf"
+
+//This is the TF2Ware part, the only part I will keep clean
+minigame <- Ware_MinigameData
+({
+	name           = "Wega's challenge"
+	author         =  ["Alex Turtle"]
+	description    = "Win Wega's Challenge!"
+	custom_overlay = "wega_challenge"
+	duration       = 300.0
+    end_delay      = 3.0
+	location       = "wega_challenge"
+	music          = music_wega
+	start_pass     = false
+    fail_on_death  = true
+    boss           = true
+    start_freeze   = 4.0
+	max_scale      = 1.5
+    convars        =
+	{
+        tf_avoidteammates_pushaway = 0
+        sv_Friction = 1
+        tf_scout_air_dash_count = 0
+	}
+})
 
 function OnPrecache()
 {
@@ -81,7 +80,6 @@ function OnStart()
 		fogmaxdensity = 1.0,
 	})
 
-    Ware_PlayMinigameMusic(null, music_wega)
     Generate()
 
     Ware_CreateTimer(function()
