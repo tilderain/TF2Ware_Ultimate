@@ -36,7 +36,7 @@ minigame <- Ware_MinigameData
 	author         =  ["Alex Turtle"]
 	description    = "Win Wega's Challenge!"
 	custom_overlay = "wega_challenge"
-	duration       = 240.0
+	duration       = 300.0
     end_delay      = 3.0
 	location       = "wega_challenge"
 	music          = music_wega
