@@ -146,7 +146,7 @@ function OnUpdate()
     Ware_ShowText(Ware_Players, CHANNEL_MINIGAME, wegacount.tostring(), 0.5, "255 255 255", 0.1, 0.06)
 
     local wegaEntity = null
-    while (wegaEntity = Entities.FindByName(wegaEntity, "multiplayer_wega_brush*"))
+    while (wegaEntity = FindByName(wegaEntity, "multiplayer_wega_brush*"))
     {
         Wega_entity_tick(wegaEntity)
     }
@@ -168,7 +168,7 @@ function OnUpdate()
 
         Ware_CreateTimer(function()
 	    {
-            local urioBrush = Entities.FindByName(null, "uario_brush")
+            local urioBrush = FindByName(null, "uario_brush")
             urioBrush.ValidateScriptScope()
             urioBrush.GetScriptScope().sound_stalker_scream <- sound_stalker_scream
             urioBrush.GetScriptScope().overlay_urio_jumpscare <- overlay_urio_jumpscare
@@ -234,7 +234,7 @@ function OnCheckEnd()
 function ClearSounds()
 {
     local wegaEntity = null
-    while (wegaEntity = Entities.FindByName(wegaEntity, "multiplayer_wega_brush*"))
+    while (wegaEntity = FindByName(wegaEntity, "multiplayer_wega_brush*"))
     {
         EmitSoundEx({
 	    sound_name = sound_wega_scream,
@@ -753,7 +753,7 @@ wegacount <- 0
 function PrepareObjective()
 {
     local wega = null
-    while (wega = Entities.FindByClassname(wega, "prop_dynamic"))
+    while (wega = FindByClassname(wega, "prop_dynamic"))
     {
         if (wega.GetModelName() == model_wega_doll)
         {
@@ -837,7 +837,7 @@ function AddWegas()
 
 	local wegaEntity = null
     local i = 0
-    while (wegaEntity = Entities.FindByName(wegaEntity, "multiplayer_wega_brush*"))
+    while (wegaEntity = FindByName(wegaEntity, "multiplayer_wega_brush*"))
     {
         
         wegaEntity.ValidateScriptScope()
@@ -928,7 +928,7 @@ function Wega_entity_tick(wega)
     ScreenShake(wegaOriginOffset, 8.0, 100, 0.05, 800, 0, true)
 
     local caughtPlayer = null
-    while (caughtPlayer = Entities.FindByClassnameWithin(caughtPlayer, "player", wegaOriginOffset, 60.0))
+    while (caughtPlayer = FindByClassnameWithin(caughtPlayer, "player", wegaOriginOffset, 60.0))
     {
         if (!caughtPlayer.IsAlive())
             continue
@@ -971,7 +971,7 @@ function Wega_player_tick(player)
     local wegaDoll = null
 
 
-    wegaDoll = Entities.FindByNameNearest("wega_challenge_doll*", origin, 80.0)
+    wegaDoll = FindByNameNearest("wega_challenge_doll*", origin, 80.0)
 
     if (wegaDoll != null)
     {
