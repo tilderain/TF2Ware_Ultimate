@@ -23,10 +23,13 @@ model_wega_doll <- "models/wega/wega.mdl"
 
 sound_collect <- "tf2ware_ultimate/baseball_hit.mp3"
 sound_stalker_scream <- "npc/stalker/go_alert2a.wav"
+sound_wega_scream <- "tf2ware_ultimate/wega_scream.wav"
 
 overlay_counter <- "wega/wega_counter.vmt"
 overlay_wega_jumpscare <- "wega/wega_jumpscare.vtf"
 overlay_urio_jumpscare <- "wega/uario_jumpscare.vtf"
+
+material_wega <- "wega/wega.vmt"
 
 //This is the TF2Ware part, the only part I will keep clean
 minigame <- Ware_MinigameData
@@ -58,9 +61,11 @@ function OnPrecache()
     PrecacheModel(model_wega_doll)
     PrecacheSound(sound_collect)
     PrecacheSound(sound_stalker_scream)
+    PrecacheSound(sound_wega_scream)
     PrecacheOverlay(overlay_counter)
     PrecacheOverlay(overlay_wega_jumpscare)
     PrecacheOverlay(overlay_urio_jumpscare)
+    PrecacheMaterial(material_wega)
     Ware_PrecacheMinigameMusic(music_wega, true)
     Ware_PrecacheMinigameMusic(music_urio, true)
 }
@@ -148,6 +153,7 @@ function OnUpdate()
 
     if (TriggerEnding && wegacount == 1)
     {
+        ClearSounds()
         EntFire("wega_final_chase_template", "ForceSpawn")
         EntFire("start_final_chase", "Trigger")
         TriggerEnding = false
@@ -174,7 +180,7 @@ function OnUpdate()
 	            filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
                 })
                 victim.SetScriptOverlayMaterial(this.overlay_urio_jumpscare)
-
+                Ware_AddPlayerAttribute(victim, "move speed penalty", 0.0, -1)
                 Ware_CreateTimer(function()
 	            {
                     victim.TakeDamage(1000, DMG_SLASH, null)
@@ -187,6 +193,7 @@ function OnUpdate()
 
 function OnEnd()
 {
+    
     EntFire("uario_brush", "Kill")
     EntFire("uario_path_*", "Kill")
     EntFire("antifall_brush", "Kill")
@@ -204,6 +211,8 @@ function OnEnd()
 
     if (TriggerEnding)
     {
+        ClearSounds()
+
         Ware_PlayMinigameMusic(null, music_wega, SND_STOP)
     }
     else
@@ -222,6 +231,19 @@ function OnCheckEnd()
 	return Ware_GetUnpassedPlayers(true).len() == 0
 }
 
+function ClearSounds()
+{
+    local wegaEntity = null
+    while (wegaEntity = Entities.FindByName(wegaEntity, "multiplayer_wega_brush*"))
+    {
+        EmitSoundEx({
+	    sound_name = sound_wega_scream,
+	    entity = wegaEntity,
+        sound_level = 70.0,
+        flags = SND_STOP
+        })
+    }   
+}
 
 Chunk <- class
 {
@@ -720,8 +742,8 @@ function CalculateSize()
         buffer = 4
     }
 
-    if (buffer > 9)
-        buffer = 9
+    if (buffer > 10)
+        buffer = 10
 
     Size = buffer
 }
@@ -742,12 +764,32 @@ function PrepareObjective()
     }
 }
 
-function AddWegas()
+function CreateWega(location)
 {
-    local multmaker = Entities.FindByName(null, "multiplayer_wega_maker")
-    multmaker.SpawnEntityAtLocation(Vector(-1*CellWidth,-1*CellWidth,0) + SpawnCenter, Vector(0,0,0))
+    local wega = Ware_SpawnEntity("env_sprite_oriented",
+    {
+        targetname = "multiplayer_wega_brush",
+        model = material_wega,
+        scale = 0.35,
+        spawnflags = 1
+        origin = Vector(location.x, location.y, location.z + 80.0)
+    })
+
+    EmitSoundEx({
+	    sound_name = sound_wega_scream,
+	    entity = wega,
+        sound_level = 70.0,
+        filter_type = RECIPIENT_FILTER_GLOBAL
+    })
+
     WegaTargetArray.append(null)
 
+    return wega
+}
+
+function AddWegas()
+{
+    CreateWega(Vector(-1*CellWidth,-1*CellWidth,0) + SpawnCenter)
 
     //How many wegas?
     local playerCount = Ware_MinigamePlayers.len() 
@@ -778,20 +820,18 @@ function AddWegas()
         switch (rnd)
         {
         case 1:
-        multmaker.SpawnEntityAtLocation(Vector((buffer)*CellWidth,-1*CellWidth,0) + SpawnCenter, Vector(0,0,0))
+        CreateWega(Vector((buffer)*CellWidth,-1*CellWidth,0) + SpawnCenter)
         break
         case 2:
-        multmaker.SpawnEntityAtLocation(Vector(-1*CellWidth,-1*CellWidth,0) + SpawnCenter, Vector(0,0,0))
+        CreateWega(Vector(-1*CellWidth,-1*CellWidth,0) + SpawnCenter)
         break
         case 3:
-        multmaker.SpawnEntityAtLocation(Vector(-1*CellWidth,(buffer)*CellWidth,0) + SpawnCenter, Vector(0,0,0))
+        CreateWega(Vector(-1*CellWidth,(buffer)*CellWidth,0) + SpawnCenter)
         break
         case 4:
-        multmaker.SpawnEntityAtLocation(Vector((buffer)*CellWidth,(buffer)*CellWidth,0) + SpawnCenter, Vector(0,0,0))
+        CreateWega(Vector((buffer)*CellWidth,(buffer)*CellWidth,0) + SpawnCenter)
         break
         }
-
-        WegaTargetArray.append(null)
 
     }
 
@@ -808,8 +848,7 @@ function AddWegas()
 
         wegaEntity.GetScriptScope().sound_stalker_scream <- sound_stalker_scream
         wegaEntity.GetScriptScope().overlay_wega_jumpscare <- overlay_wega_jumpscare
-        wegaEntity.GetScriptScope().Jumpscare <- function(){
-            local victim = activator
+        wegaEntity.GetScriptScope().Jumpscare <- function(victim){
             EmitSoundEx({
 	        sound_name = this.sound_stalker_scream,
 	        entity = victim,
@@ -834,6 +873,8 @@ function Wega_entity_tick(wega)
     local id = scope.id
     local speed = scope.speed
     local playerDistance = 9999999
+    local wegaOrigin = wega.GetOrigin()
+    local wegaOriginOffset = Vector(wega.GetOrigin().x, wega.GetOrigin().y, wega.GetOrigin().z - 80.0)
     WegaTargetArray[id] = null
 
     foreach (player in Ware_Players)
@@ -841,7 +882,7 @@ function Wega_entity_tick(wega)
         if (!player.IsAlive())
             continue
 
-        local distance = (wega.GetOrigin() - player.GetOrigin()).Length()
+        local distance = (wegaOriginOffset - player.GetOrigin()).Length()
 
         //player already being chased by another one?
         if (!AggroClosest && WegaTargetArray.find(player) != null)
@@ -862,7 +903,7 @@ function Wega_entity_tick(wega)
             if (!player.IsAlive())
                 continue
 
-            local distance = (wega.GetOrigin() - player.GetOrigin()).Length()
+            local distance = (wegaOriginOffset - player.GetOrigin()).Length()
 
             if (distance < playerDistance)
             {
@@ -874,7 +915,7 @@ function Wega_entity_tick(wega)
     if (WegaTargetArray[id] == null)
         return
 
-    local direction = (wega.GetOrigin() - WegaTargetArray[id].GetOrigin())
+    local direction = (wegaOriginOffset - WegaTargetArray[id].GetOrigin())
 
     direction.Norm()
 
@@ -882,9 +923,22 @@ function Wega_entity_tick(wega)
 
     direction *= FrameTime()
 
-    wega.SetOrigin(wega.GetOrigin() - direction)
+    wega.SetOrigin(wegaOrigin - direction)
 
-    ScreenShake(wega.GetOrigin(), 8.0, 100, 0.05, 800, 0, true)
+    ScreenShake(wegaOriginOffset, 8.0, 100, 0.05, 800, 0, true)
+
+    local caughtPlayer = null
+    while (caughtPlayer = Entities.FindByClassnameWithin(caughtPlayer, "player", wegaOriginOffset, 60.0))
+    {
+        if (!caughtPlayer.IsAlive())
+            continue
+
+        if (caughtPlayer.GetScriptOverlayMaterial() == overlay_wega_jumpscare)
+            continue
+
+        Ware_AddPlayerAttribute(caughtPlayer, "move speed penalty", 0.0, -1)
+        wega.GetScriptScope().Jumpscare(caughtPlayer)
+    }
 
     return -1
 
