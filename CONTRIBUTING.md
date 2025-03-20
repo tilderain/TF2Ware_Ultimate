@@ -5,8 +5,11 @@ We welcome any contributions to minigames, bossgames, special rounds, themes, or
 Please follow the codebase's style when making contributions:
 * No semicolons in VScript contributions. Semicolons are optional in Squirrel and TF2Ware Ultimate does *not* use them.
 * Do not define constants or global variables within a minigame/bossgame/specialround scope.
+* When iterating through arrays and tables, use `foreach` instead of `for` where possible.
+  * Note iterating through tables uses slightly different syntax `foreach(k,v in table)` to account for keys and values, this is mandatory even if you are only accessing the key or the value.
 * Please use CRLF for line breaks.
 * Indents should be 4 spaces.
+
 
 If in doubt, there are plenty of examples for each type of contribution - try to match how they are laid out.
 
