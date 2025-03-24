@@ -13,13 +13,17 @@ minigame <- Ware_MinigameData
 
 function OnStart()
 {
+	local gun =	RandomInt(0,1)
 	foreach (player in Ware_MinigamePlayers)
 	{
 		if (mode == 0)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SOLDIER)
 			Ware_GivePlayerWeapon(player, "Buff Banner")
-			Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size bonus" : 100, "reload time decreased": 0.1})
+			if(gun == 0)
+				Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size bonus" : 100, "reload time decreased": 0.1})
+			else
+				Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5})
 		}
 		else if (mode == 1)
 		{
