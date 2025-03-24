@@ -154,6 +154,8 @@ function SpawnTrashcan(pos)
 		solid = SOLID_VPHYSICS
     })
 
+	trashcan.SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+
     if (outline)
     {
         local glow = Ware_CreateEntity("tf_glow")
@@ -183,7 +185,7 @@ function SpawnCans()
 			origin = origin
 		})
 		can.SetModelScale(1.5, 0.0)
-        can.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+        can.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
         can.ValidateScriptScope()
         can.GetScriptScope().LastHolder <- null
 		can.GetScriptScope().GraceHolderTime <- 0.0
