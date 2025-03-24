@@ -5,7 +5,7 @@ minigame <- Ware_MinigameData
 	author         = ["tilderain"]
 	description    = "Activate buff!"
 	duration       = 15
-	music          = "keepitup"
+	music          = "woody"
 	min_players    = 2
 	allow_damage   = true
 	//fail_on_death  = true
