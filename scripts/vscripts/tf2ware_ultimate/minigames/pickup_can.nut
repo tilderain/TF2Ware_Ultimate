@@ -39,6 +39,7 @@ function OnStart()
         minidata.LastButtons <- 0
 		minidata.LastActionKey <- false
         minidata.PickedProp <- player
+		player.SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 	}
 
     Ware_CreateTimer(function()
@@ -67,6 +68,13 @@ function OnStart()
 		COLOR_GREEN, TF_COLOR_DEFAULT)
 }
 
+function OnCleanup()
+{
+	foreach (player in Ware_MinigamePlayers)
+	{
+		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
+	}
+}
 // Inspired by Prop Kill (https://github.com/Batfoxkid/TF2-Prop-Kill)
 function OnUpdate()
 {
@@ -153,9 +161,7 @@ function SpawnTrashcan(pos)
         origin = pos
 		solid = SOLID_VPHYSICS
     })
-
 	trashcan.SetCollisionGroup(COLLISION_GROUP_DEBRIS)
-
     if (outline)
     {
         local glow = Ware_CreateEntity("tf_glow")
