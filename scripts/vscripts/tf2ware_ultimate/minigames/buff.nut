@@ -8,7 +8,7 @@ minigame <- Ware_MinigameData
 	music          = "woody"
 	min_players    = 2
 	allow_damage   = true
-	//fail_on_death  = true
+	fail_on_death  = true
 })
 
 function OnStart()
@@ -37,7 +37,7 @@ function OnUpdate()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (player.IsRageDraining())
+		if (player.IsRageDraining() && player.IsAlive())
 			Ware_PassPlayer(player, true)
 		//Don't know how to show rage meter hud
 		Ware_ShowText(player, CHANNEL_MINIGAME, format("Rage: %.1f", player.GetRageMeter()), 0.4)
