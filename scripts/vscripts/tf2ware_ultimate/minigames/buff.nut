@@ -16,6 +16,10 @@ function OnStart()
 	local gun =	RandomInt(0,1)
 	foreach (player in Ware_MinigamePlayers)
 	{
+		player.RemoveHudHideFlags(HIDEHUD_CLOAK_AND_FEIGN)
+		//Makes the flag apply if already soldier
+		player.Regenerate(true)
+		Ware_StripPlayer(player, false)
 		if (mode == 0)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SOLDIER)
@@ -43,8 +47,6 @@ function OnUpdate()
 	{
 		if (player.IsRageDraining() && player.IsAlive())
 			Ware_PassPlayer(player, true)
-		//Don't know how to show rage meter hud
-		Ware_ShowText(player, CHANNEL_MINIGAME, format("Rage: %.1f", player.GetRageMeter()), 0.4)
 	}
 	
 }
@@ -54,5 +56,6 @@ function OnCleanup()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		SetPropBool(player, "m_Shared.m_bRageDraining", false)
+		player.AddHudHideFlags(HIDEHUD_CLOAK_AND_FEIGN)
 	}
 }
