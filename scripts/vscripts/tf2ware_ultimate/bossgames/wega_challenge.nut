@@ -971,7 +971,7 @@ function Wega_player_tick(player)
     local wegaDoll = null
 
 
-    wegaDoll = FindByNameNearest("wega_challenge_doll*", origin, 80.0)
+    wegaDoll = Entities.FindByNameNearest("wega_challenge_doll*", origin, 80.0)
 
     if (wegaDoll != null)
     {
