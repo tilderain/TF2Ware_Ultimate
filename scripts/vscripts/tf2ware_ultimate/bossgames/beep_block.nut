@@ -182,17 +182,15 @@ function OnTouchItembox()
 	local player = activator
 	if (player)
 	{
+		player.EmitSound("MK_Itembox_Use")
+		DispatchParticleEffect("bot_impact_heavy_sparks", itembox.GetOrigin() - Vector(0, 0, 48), Vector(90, 0, 0))
 		local minidata = Ware_GetPlayerMiniData(activator)
-
-		//if(!("itembox" in minidata) || minidata.debounce > Time())
-		//{
-			player.EmitSound("MK_Itembox_Use")
-			DispatchParticleEffect("bot_impact_heavy_sparks", itembox.GetOrigin() - Vector(0, 0, 48), Vector(90, 0, 0))
+		if(!("hasgun" in minidata))
+		{
+			minidata.hasgun <- true
 			Ware_GivePlayerWeapon(player, "Rescue Ranger", { "deploy time increased" : 1.0 })
+		}
 		//	player.SetHealth(125)
-
-		//	minidata.debounce <- Time() + 1;
-		//}
 		
 	}
 
