@@ -110,7 +110,14 @@ function OnUpdate()
 //from https://github.com/potato-tf/OOAssets/blob/main/scripts/vscripts/rev_spacepost_pea.nut#L2891
 function SpawnCap(org)
 {
-	local obj_control_blucapture_rate = Ware_MinigamePlayers.len() > 1 ? 9.0 : 7.0
+	local obj_control_blucapture_rate = 7.0
+	local len = Ware_MinigamePlayers.len()
+	if(len > 12)
+		obj_control_blucapture_rate = 12.0
+	else if (len > 6)
+		obj_control_blucapture_rate = 10.0
+	else if (len > 1)
+		obj_control_blucapture_rate = 9.0
 	control_point_3 = Ware_SpawnEntity("team_control_point",
 	{
 		origin                    = org
