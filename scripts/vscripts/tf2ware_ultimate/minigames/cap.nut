@@ -10,6 +10,7 @@ minigame <- Ware_MinigameData
 	convars = 
 	{
 		tf_avoidteammates = 1
+		tf_scout_air_dash_count = 0 
 	}
 })
 
