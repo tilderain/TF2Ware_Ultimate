@@ -196,6 +196,8 @@ function OnTakeDamage(params)
 		local attacker = params.attacker
 		if (attacker && attacker.IsPlayer())
 		{
+			if(attacker.InCond(TF_COND_CRITBOOSTED_USER_BUFF))
+				params.damage *= 3
 			Ware_PlaySoundOnClient(attacker, params.const_entity.GetScriptScope().hit_sound)
 			Ware_ShowText(attacker, CHANNEL_MINIGAME, format("Damage: %.1f", params.damage), Ware_GetMinigameRemainingTime())
 			if(params.damage > 125)
