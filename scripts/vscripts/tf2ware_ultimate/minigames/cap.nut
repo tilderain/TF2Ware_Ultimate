@@ -4,7 +4,7 @@ minigame <- Ware_MinigameData
 	author      = ["tilderain"]
 	description = "Help me cap!"
 	duration    = 12.0
-	music       = "bloober1"
+	music       = "bloober"
 	allow_damage = true
 	friendly_fire = true
 	convars = 
@@ -46,16 +46,16 @@ function OnStart()
 	//https://github.com/ValveSoftware/source-sdk-2013/blob/master/src/game/server/tf/tf_player.cpp#L19408
 }
 
-function PushLine(player, radius)
+function PushLine(self, radius)
 {
-	local player_origin = player.GetOrigin()
-	local player_team = player.GetTeam()
+	local player_origin = self.GetOrigin()
+	local player_team = self.GetTeam()
+	local start = self.GetCenter()
+	local forward = self.EyeAngles().Forward()
 	foreach (other in Ware_MinigamePlayers)
 	{
-		if(player == other)
+		if(other == self)
 			continue
-		local start = player.GetCenter()
-		local forward = player.EyeAngles().Forward()	
 		forward.z = 0.0
 		forward.Norm()
 		
@@ -63,16 +63,15 @@ function PushLine(player, radius)
 		local mins = otherOrg + other.GetPlayerMins()
 		local maxs = otherOrg + other.GetPlayerMaxs()
 		
-		DebugDrawLine(start, start + forward * radius, 255, 0, 0, false, 5.0)
-		DebugDrawBox(vec3_zero, mins, maxs, 255, 0, 0, 20, 5.0)
+		//DebugDrawLine(start, start + forward * radius, 255, 0, 0, false, 5.0)
+		//DebugDrawBox(vec3_zero, mins, maxs, 255, 0, 0, 20, 5.0)
 
 		local t = IntersectRayWithBox(start, forward, mins, maxs, 0.0, radius)
 		if (t >= 0.0)
 		{
-			player.EmitSound( "Weapon_Hands.PushImpact" )
-			Ware_ChatPrint(null, "{int}", t)
+			other.EmitSound( "Weapon_Hands.PushImpact" )
 			forward.z = 2.0
-			other.TakeDamage(1, DMG_CLUB, player)
+			other.TakeDamage(5, DMG_CLUB, self)
 			other.ApplyAbsVelocityImpulse(forward*500)
 		}
 	}
@@ -97,11 +96,10 @@ function OnUpdate()
 		local atk = 0.0
 		if (weapon)
 			atk = GetPropFloat(weapon, "m_flNextSecondaryAttack")
-		local minidata = Ware_GetPlayerMiniData(player)	
-		//Ware_ChatPrint(null, "{int}", atk)
 		if("lastAtk" in minidata && minidata.lastAtk != atk)
 		{
-			Ware_CreateTimer(@() PushLine(player, 128.0), 0.4)
+			local target = player // squirrel needs this to be happy
+			Ware_CreateTimer(@() PushLine(target, 128.0), 0.2)
 			minidata.lastAtk = atk
 		}
 
@@ -112,7 +110,7 @@ function OnUpdate()
 //from https://github.com/potato-tf/OOAssets/blob/main/scripts/vscripts/rev_spacepost_pea.nut#L2891
 function SpawnCap(org)
 {
-	local obj_control_blucapture_rate = Ware_MinigamePlayers.len() > 1 ? 10.0 : 7.0
+	local obj_control_blucapture_rate = Ware_MinigamePlayers.len() > 1 ? 9.0 : 7.0
 	control_point_3 = Ware_SpawnEntity("team_control_point",
 	{
 		origin                    = org
