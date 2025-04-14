@@ -11,6 +11,7 @@ minigame <- Ware_MinigameData
 	{
 		tf_avoidteammates = 1
 		tf_scout_air_dash_count = 0 
+		mp_teams_unbalance_limit = 0
 	}
 })
 
