@@ -23,7 +23,13 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Shortstop")
 	SetPropInt(GameRules, "m_nHudType", 2)
-	SpawnCap(Ware_MinigameLocation.center)
+
+	local origin = Vector(
+		RandomFloat(Ware_MinigameLocation.mins.x + 50.0, Ware_MinigameLocation.maxs.x - 50.0),
+		RandomFloat(Ware_MinigameLocation.mins.y + 50.0, Ware_MinigameLocation.maxs.y - 50.0),
+		Ware_MinigameLocation.center.z)
+
+	SpawnCap(origin)
 
 	local heavy_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 	foreach (player in Ware_MinigamePlayers)
@@ -36,7 +42,7 @@ function OnStart()
 		if (weapon)
 			atk = GetPropFloat(weapon, "m_flNextSecondaryAttack")
 		minidata.lastAtk <- atk
-		if(VectorDistance(player.GetOrigin(), Ware_MinigameLocation.center) < 200)
+		if(VectorDistance(player.GetOrigin(), origin) < 200)
 			player.SetOrigin(player.GetOrigin() + Vector(0,0,25))
 	}
 
