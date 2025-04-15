@@ -36,6 +36,8 @@ function OnStart()
 		if (weapon)
 			atk = GetPropFloat(weapon, "m_flNextSecondaryAttack")
 		minidata.lastAtk <- atk
+		if(VectorDistance(player.GetOrigin(), Ware_MinigameLocation.center) < 200)
+			player.SetOrigin(player.GetOrigin() + Vector(0,0,25))
 	}
 
 	EntFire("control_point_3", "SetLocked", "0")
@@ -143,7 +145,7 @@ function SpawnCap(org)
 		spawnflags                = 4
 		point_warn_sound          = "ControlPoint.CaptureWarn"
 		point_warn_on_cap      
-		   = 2
+ = 2
 		point_printname           = "The freaking point"
 		point_index               = 0
 		point_group               = 0
@@ -173,6 +175,7 @@ function SpawnCap(org)
 	{
 		origin        = org
 		model         = "models/props_gameplay/cap_point_base.mdl"
+		solid = SOLID_VPHYSICS
 	})
 	
 	EntFire("control_point_3_trigger", "SetControlPoint", "control_point_3")
