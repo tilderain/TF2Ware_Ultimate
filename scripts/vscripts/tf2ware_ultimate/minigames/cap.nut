@@ -114,7 +114,7 @@ function SpawnCap(org)
 		obj_control_blucapture_rate = 12.0
 	else if (len > 6)
 		obj_control_blucapture_rate = 10.0
-	else if (len > 1)
+	else if (len > 2)
 		obj_control_blucapture_rate = 9.0
 	control_point_3 = Ware_SpawnEntity("team_control_point",
 	{
