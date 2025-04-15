@@ -42,9 +42,6 @@ function OnStart()
 	
 	//Prevent ui lingering
 	CreateTimer(@() MovePoint(), 11.975)
-
-	//todo dunno why HELP isn't saying it correctly
-	//https://github.com/ValveSoftware/source-sdk-2013/blob/master/src/game/server/tf/tf_player.cpp#L19408
 }
 
 function PushLine(self, radius)
@@ -160,7 +157,7 @@ function SpawnCap(org)
 		origin             = org
 		mins               = Vector(-150, -150, -100)
 		maxs               = Vector(150, 150, 250)
-		solid              = 2
+		solid              = SOLID_BSP
 		team_startcap_3    = 1
 		team_startcap_2    = 1
 		team_numcap_3      = 1
@@ -169,6 +166,7 @@ function SpawnCap(org)
 		team_cancap_2      = 1
 		area_time_to_cap   = obj_control_blucapture_rate
 		area_cap_point     = "control_point_3"
+		model         = "*1" //Use a random brush model because valve really wants you to have a brush model so scout can be a cocksucker
 	})
 	
 	local control_point_3_base = Ware_SpawnEntity("prop_dynamic",
@@ -181,9 +179,9 @@ function SpawnCap(org)
 	control_point_3_trigger.KeyValueFromFloat("area_time_to_cap", obj_control_blucapture_rate)
 	SetPropFloat(control_point_3_trigger, "m_flCapTime", obj_control_blucapture_rate)
 	
-	control_point_3_trigger.KeyValueFromInt("solid", 2)
 	control_point_3_trigger.KeyValueFromString("mins", "-150 -150 -100")
 	control_point_3_trigger.KeyValueFromString("maxs", "150 150 250")
+	control_point_3_trigger.KeyValueFromInt("solid", SOLID_BSP)
 	
 	EntFire("control_point_3", "SetLocked", "0")
 
