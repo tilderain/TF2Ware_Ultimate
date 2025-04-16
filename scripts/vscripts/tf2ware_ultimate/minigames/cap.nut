@@ -36,7 +36,6 @@ function OnStart()
 	{
 		Ware_SetPlayerTeam(player, heavy_team)
 		local minidata = Ware_GetPlayerMiniData(player)
-		minidata.lastCaps <- player.GetCaptures()
 		local atk = 0.0
 		local weapon = player.GetActiveWeapon()
 		if (weapon)
@@ -44,6 +43,7 @@ function OnStart()
 		minidata.lastAtk <- atk
 		if(VectorDistance(player.GetOrigin(), origin) < 200)
 			player.SetOrigin(player.GetOrigin() + Vector(0,0,25))
+		minidata.InCap <- false
 	}
 
 	EntFire("control_point_3", "SetLocked", "0")
@@ -95,8 +95,6 @@ function OnUpdate()
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
 		Ware_DisablePlayerPrimaryFire(player)
-		if(player.GetCaptures() > minidata.lastCaps)
-			Ware_PassPlayer(player, true)
 
 		local weapon = player.GetActiveWeapon()
 		local atk = 0.0
@@ -191,7 +189,16 @@ function SpawnCap(org)
 	control_point_3_trigger.KeyValueFromString("mins", "-150 -150 -100")
 	control_point_3_trigger.KeyValueFromString("maxs", "150 150 250")
 	control_point_3_trigger.KeyValueFromInt("solid", SOLID_BSP)
-	
+
+	control_point_3_trigger.ValidateScriptScope()
+	control_point_3_trigger.GetScriptScope().OnStartTouch <- OnTriggerStartTouch
+	control_point_3_trigger.GetScriptScope().OnEndTouch <- OnTriggerEndTouch
+	control_point_3_trigger.ConnectOutput("OnStartTouch", "OnStartTouch")
+	control_point_3_trigger.ConnectOutput("OnEndTouch", "OnEndTouch")
+
+	control_point_3_trigger.GetScriptScope().OnEndCap <- OnTriggerEndCap
+	control_point_3_trigger.ConnectOutput("OnEndCap", "OnEndCap")
+
 	EntFire("control_point_3", "SetLocked", "0")
 
 	control_point_controller = Ware_SpawnEntity("team_control_point_master",
@@ -208,6 +215,32 @@ function SpawnCap(org)
 	})
 }
 
+function OnTriggerStartTouch()
+{
+	if (activator && activator.IsPlayer())
+	{
+		local minidata = Ware_GetPlayerMiniData(activator)
+		minidata.inCap <- true
+	}
+}
+
+function OnTriggerEndTouch()
+{
+	if (activator && activator.IsPlayer())
+	{
+		local minidata = Ware_GetPlayerMiniData(activator)
+		minidata.inCap <- false
+	}
+}
+function OnTriggerEndCap()
+{
+	foreach (player in Ware_MinigamePlayers)
+	{
+		local minidata = Ware_GetPlayerMiniData(player)
+		if(minidata.inCap)
+			Ware_PassPlayer(player, true)
+	}
+}
 
 function OnCleanup()
 {
