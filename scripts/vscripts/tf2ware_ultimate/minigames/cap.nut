@@ -237,7 +237,8 @@ function OnTriggerEndCap()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
-		if(minidata.inCap)
+		//The check shouldn't be necessary?
+		if("inCap" in minidata && minidata.inCap)
 			Ware_PassPlayer(player, true)
 	}
 }
