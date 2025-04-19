@@ -106,7 +106,7 @@ function WitchThink()
 		
 		foreach(player in Ware_MinigamePlayers)
 		{
-			if (VectorDistance(player.GetOrigin(), my_origin) < 32.0)
+			if (VectorDistance(player.GetOrigin(), my_origin) < 45.0)
 			{
 				self.EmitSound(shriek_sound)
 				if(player != threat && Ware_GetMinigameTime() > 3 && player.IsAlive())
