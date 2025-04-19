@@ -104,11 +104,22 @@ function WitchThink()
 			step_timer = time + 0.15
 		}		
 		
-		if (VectorDistance(threat.GetOrigin(), my_origin) < 70.0)
+		foreach(player in Ware_MinigamePlayers)
 		{
-			self.EmitSound(shriek_sound)
-			threat.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
-		}			
+			if (VectorDistance(player.GetOrigin(), my_origin) < 32.0)
+			{
+				self.EmitSound(shriek_sound)
+				if(player != threat && Ware_GetMinigameTime() > 3 && player.IsAlive())
+				{
+					player.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
+					Ware_ChatPrint(null, "{player} {color}was {color}collateral damage{color}!", 
+						player, TF_COLOR_DEFAULT, COLOR_RED, TF_COLOR_DEFAULT)
+				}
+				else if (player == threat)
+					player.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
+
+			}
+		}
 
 		amb_timer = time + 1.5
 		path_timer = time
