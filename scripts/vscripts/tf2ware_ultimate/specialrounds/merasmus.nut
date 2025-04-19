@@ -12,6 +12,7 @@ special_round <- Ware_SpecialRoundData
 		tf_merasmus_chase_range = 10000000
 		tf_merasmus_chase_duration = 10000000
 		tf_merasmus_health_base = 5500 * Ware_Players.len()
+		tf_merasmus_health_per_player = 0
 	}
 })
 
@@ -65,12 +66,14 @@ function OnTakeDamage(params)
 	{
 		params.damage *= 0.33
 	}
+	else if (attacker && attacker.GetClassname() == "merasmus" && Ware_Finished)
+	{
+		params.damage *= 3
+	}
 }
 function OnCalculateTopScorers(top_players)
 {
-	mera <- FindByClassname(null, "merasmus")
-
-	if(mera)
+	if(merasmus && merasmus.IsValid())
 	{
 		top_players.clear()
 	}
@@ -97,11 +100,9 @@ function OnCalculateTopScorers(top_players)
 
 function OnDeclareWinners(top_players, top_score, winner_count)
 {
-	mera <- FindByClassname(null, "merasmus")
-
-	if(mera)
+	if(merasmus && merasmus.IsValid())
 	{
-		Ware_ChatPrint(null, "{color}MERASMUS{color} wins!", COLOR_GREEN, TF_COLOR_DEFAULT)
+		Ware_ChatPrint(null, "{color}MERASMUS!{color} wins!", "71b149", TF_COLOR_DEFAULT)
 	}
 	else
 	{
