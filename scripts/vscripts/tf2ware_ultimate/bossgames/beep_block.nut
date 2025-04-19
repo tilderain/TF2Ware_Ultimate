@@ -24,7 +24,7 @@ minigame <- Ware_MinigameData
 
 // variables
 tempo            <- 0.0
-tempo_increase   <- 1.2
+tempo_increase   <- 1.12
 beat             <- 0.0
 bgm_offset       <- 0.0
 interrupted      <- false
