@@ -2531,7 +2531,7 @@ kart_routines <-
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "vehicle")
-				HitPlayer(other.m_driver)
+				HitPlayer(m_driver)
 			}
 		}
 		else if (other.m_mega_timer > 0.0)
@@ -2539,7 +2539,7 @@ kart_routines <-
 			if (m_star_timer == 0.0 && m_mega_timer == 0.0 && Squish(5.0))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "rocketpack_stomp")
-				HitPlayer(other.m_driver)
+				HitPlayer(m_driver)
 			}
 		}
 		else if (other.m_star_timer > 0.0)
@@ -2548,7 +2548,7 @@ kart_routines <-
 				&& m_star_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
-				HitPlayer(other.m_driver)
+				HitPlayer(m_driver)
 				AddKillFeedMessage(m_driver, other.m_driver, "wrench_golden")
 			}
 		}
@@ -3428,7 +3428,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_SPIN))
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
-					kart.HitPlayer(m_owner_kart ? m_owner_kart.m_driver : null)
+					kart.HitPlayer(kart.m_driver)
 				}
 				
 				Destroy()			
@@ -3439,7 +3439,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
-					kart.HitPlayer(m_owner_kart ? m_owner_kart.m_driver : null)
+					kart.HitPlayer(kart.m_driver)
 				}
 				
 				DispatchParticleEffect("drg_cow_explosion_sparkles", self.GetOrigin(), vec3_zero)
@@ -3483,7 +3483,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
 						m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
-					kart.HitPlayer(m_owner_kart ? m_owner_kart.m_driver : null)
+					kart.HitPlayer(kart.m_driver)
 				}
 
 				Destroy()
