@@ -83,7 +83,7 @@ function OnStart()
 			targetname = format("sandbag%d", index)
 			origin = player.GetOrigin() + Vector(0, 150, 60),
 			angles = QAngle(0, -90, 0),
-			massscale = 500
+			massscale = 5
 		})
 
 		index++
@@ -215,12 +215,12 @@ function OnUpdate()
 			local distance = sandbag.GetOrigin().y - Ware_MinigameLocation.center.y
 			Ware_ShowText(scope.player, CHANNEL_MINIGAME, format("Distance: %.1fHU", distance), Ware_GetMinigameRemainingTime())
 
-			if(scope.destY*2 > 1000 && distance < (scope.destY*2) - 1000)
+			if(scope.destY > 1000 && distance < (scope.destY/60))
 			{
 				//	sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99999)
-				sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*1.005)
+				sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*1.12)
 			}
-			else if (scope.destY*2 > 1000 && distance > scope.destY*2)
+			else if (scope.destY > 1000 && distance > scope.destY/60)
 			{
 				sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99444)
 			}
@@ -286,7 +286,10 @@ function OnTakeDamage(params)
 	if (ent == sandbag)
 	{
 		local scope = sandbag.GetScriptScope()
-		scope.percent += (params.damage * 0.15) + RandomFloat(-0.2, 0.2)
+		local dmg = (params.damage * 0.15) + RandomFloat(-0.2, 0.2)
+		if(sandbag.GetOrigin().z > -14050)
+			dmg *= 2
+		scope.percent += dmg
 		local percent = scope.percent
 
 		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon()) ? 1.0 : 1.0
@@ -299,7 +302,7 @@ function OnTakeDamage(params)
 		}
 
 		printl("pre: " + params.damage_force)
-		params.damage_force *= ((percent / 500.0) * melee_multiplier)
+		params.damage_force *= ((percent / 5.0) * melee_multiplier)
 		if (melee_multiplier > 1.0)
 			params.damage_force.z = fabs(params.damage_force.z)
 
@@ -307,7 +310,7 @@ function OnTakeDamage(params)
 
 		scope.destY <- params.damage_force.y
 
-		ent.Teleport(false, Vector(), false, QAngle(), true, params.damage_force)
+		//ent.Teleport(false, Vector(), false, QAngle(), true, params.damage_force)
 
 		//printl("damage pos" + params.damage_position)
 
