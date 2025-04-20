@@ -130,27 +130,27 @@ local ITEM_TYPE_SHELL_RED    = 8
 local ITEM_TYPE_SHELL_BLUE   = 9
 
 
-ItemResponse <- array(ITEM_LAST);
+ItemResponse <- array(ITEM_LAST)
 
-ItemResponse[ITEM_BANANA_ONE]		 = RESPONSE_ITEM_COMMON;
-ItemResponse[ITEM_SHROOM_MEGA]		 = RESPONSE_ITEM_RARE;
-ItemResponse[ITEM_POW]				 = RESPONSE_ITEM_RARE;
-ItemResponse[ITEM_SHOCK]			 = RESPONSE_ITEM_GODLIKE;
-ItemResponse[ITEM_STAR]				 = RESPONSE_ITEM_GODLIKE;
-ItemResponse[ITEM_SHROOM_TWO]		 = RESPONSE_ITEM_COMMON;
-ItemResponse[ITEM_FIB]				 = RESPONSE_ITEM_COMMON;
-ItemResponse[ITEM_BOMB]				 = RESPONSE_ITEM_RARE;
-ItemResponse[ITEM_SHROOM_THREE]		 = RESPONSE_ITEM_RARE;
-ItemResponse[ITEM_BULLET]			 = RESPONSE_ITEM_GODLIKE;
-ItemResponse[ITEM_SHELL_BLUE]		 = RESPONSE_ITEM_RARE;
-ItemResponse[ITEM_SHROOM_ONE]		 = RESPONSE_ITEM_COMMON;
-ItemResponse[ITEM_SHELL_RED_THREE]	 = RESPONSE_ITEM_RARE;
-ItemResponse[ITEM_SHELL_GREEN_ONE]	 = RESPONSE_ITEM_COMMON;
-ItemResponse[ITEM_BANANA_THREE]		 = RESPONSE_ITEM_COMMON;
-ItemResponse[ITEM_SHROOM_GOLD]		 = RESPONSE_ITEM_RARE;
-ItemResponse[ITEM_SHELL_RED_ONE]	 = RESPONSE_ITEM_COMMON;
-ItemResponse[ITEM_BLOOPER]			 = RESPONSE_ITEM_COMMON;
-ItemResponse[ITEM_SHELL_GREEN_THREE] = RESPONSE_ITEM_COMMON;
+ItemResponse[ITEM_BANANA_ONE]		 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_SHROOM_MEGA]		 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_POW]				 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHOCK]			 = RESPONSE_ITEM_GODLIKE
+ItemResponse[ITEM_STAR]				 = RESPONSE_ITEM_GODLIKE
+ItemResponse[ITEM_SHROOM_TWO]		 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_FIB]				 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_BOMB]				 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHROOM_THREE]		 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_BULLET]			 = RESPONSE_ITEM_GODLIKE
+ItemResponse[ITEM_SHELL_BLUE]		 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHROOM_ONE]		 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_SHELL_RED_THREE]	 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHELL_GREEN_ONE]	 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_BANANA_THREE]		 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_SHROOM_GOLD]		 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHELL_RED_ONE]	 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_BLOOPER]			 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_SHELL_GREEN_THREE] = RESPONSE_ITEM_COMMON
 
 
 intro_camera_keyframes <-
@@ -1152,6 +1152,8 @@ function CreateKart(origin, angles)
 	kart.m_blooper_timer      <- 0.0
 	kart.m_bullet_timer       <- 0.0
 	kart.m_shroom_gold_timer  <- 0.0
+
+	kart.m_response_hit_timer <- 0.0
 	
 	kart.m_rescued            <- false
 	kart.m_rescue_point       <- null
@@ -2097,12 +2099,14 @@ kart_routines <-
 			if (m_boost_type > BOOST_DRIFT)
 				return
 			EmitSoundOnClient("MK_Kart_Drift_Boost", m_driver)
+			ResponsePlay(RESPONSE_POSITIVE, m_driver)
 		}
 		else if (type == BOOST_SURFACE)
 		{
 			if (m_blooper_timer > 0.0) m_blooper_timer = 0.01 // reset
 			if (m_boost_timer == 0.0)
 			{
+				ResponsePlay(RESPONSE_POSITIVE, m_driver)
 				EmitSoundOnClient("MK_Boost", m_driver)
 			}
 		}
@@ -2110,6 +2114,7 @@ kart_routines <-
 		{
 			if (m_blooper_timer > 0.0) m_blooper_timer = 0.01 // reset
 			m_prop.EmitSound("MK_Item_Shroom_Use")
+			ResponsePlay(RESPONSE_POSITIVE, m_driver)
 		}
 		
 		m_boost_type = type
@@ -2155,6 +2160,7 @@ kart_routines <-
 		m_rescue_plane = m_map_next_plane
 
 		EntityEntFire(m_entity, "CallScriptFunction", "RescueStart", 1.0)
+		ResponsePlay(RESPONSE_NEGATIVE, m_driver);
 	}
 	
 	RescueStart = function()
@@ -2230,6 +2236,7 @@ kart_routines <-
 		{
 			case SPINOUT_SPIN:
 			{
+				ResponsePlay(RESPONSE_PAIN_SHARP, m_driver)
 				m_prop.EmitSound("MK_Kart_Spin")
 				m_prop.AcceptInput("SetAnimation", "spinout", null, null)
 				m_spin_out_timer = Time() + 1.0
@@ -2237,6 +2244,7 @@ kart_routines <-
 			}
 			case SPINOUT_SPIN_DOUBLE:
 			{
+				ResponsePlay(RESPONSE_PAIN_SEVERE, m_driver)
 				m_prop.EmitSound("MK_Kart_Spin")
 				m_prop.AcceptInput("SetAnimation", "spinout_double", null, null)
 				m_spin_out_timer = Time() + 2.0	
@@ -2244,6 +2252,7 @@ kart_routines <-
 			}		
 			case SPINOUT_TUMBLE_FORWARD:
 			{
+				ResponsePlay(RESPONSE_PAIN_SEVERE, m_driver)
 				m_prop.AcceptInput("SetAnimation", "tumble_forward", null, null)
 				m_spin_out_timer = Time() + 1.2	
 				m_velocity *= 0.4
@@ -2252,6 +2261,7 @@ kart_routines <-
 			}
 			case SPINOUT_TUMBLE_LEFT:
 			{
+				ResponsePlay(RESPONSE_PAIN_SEVERE, m_driver)
 				m_prop.EmitSound("MK_Item_Star_Hit")
 				m_prop.AcceptInput("SetAnimation", "tumble_right", null, null)			
 				m_spin_out_timer = Time() + 1.2
@@ -2265,6 +2275,7 @@ kart_routines <-
 			}
 			case SPINOUT_TUMBLE_RIGHT:
 			{
+				ResponsePlay(RESPONSE_PAIN_SEVERE, m_driver)
 				m_prop.EmitSound("MK_Item_Star_Hit")
 				m_prop.AcceptInput("SetAnimation", "tumble_left", null, null)
 				m_spin_out_timer = Time() + 1.2
@@ -2278,6 +2289,7 @@ kart_routines <-
 			}
 			case SPINOUT_LAUNCH_UP:
 			{
+				ResponsePlay(RESPONSE_PAIN_CRITICAL, m_driver)
 				m_prop.AcceptInput("SetAnimation", "tumble_high", null, null)
 				m_spin_out_timer = Time() + 2.5
 				m_velocity = Vector(0, 0, 800)
@@ -2287,6 +2299,7 @@ kart_routines <-
 			}		
 			case SPINOUT_ENGINE_FAIL:
 			{	
+				ResponsePlay(RESPONSE_NEGATIVE, m_driver)
 				m_prop.EmitSound("MK_Kart_Burnout")
 				DispatchParticleEffect("enginefail", 
 					m_origin + m_angles.Forward() * -60.0 + m_angles.Up() * 12.0, 
@@ -2468,6 +2481,7 @@ kart_routines <-
 		{
 			if (m_star_timer == 0.0 && m_mega_timer == 0.0 && Squish(5.0))
 			{
+				HitPlayer(other.driver)
 				AddKillFeedMessage(m_driver, other.m_driver, "rocketpack_stomp")
 			}
 		}
@@ -2477,6 +2491,7 @@ kart_routines <-
 				&& m_star_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
+				HitPlayer(other.driver)
 				AddKillFeedMessage(m_driver, other.m_driver, "wrench_golden")
 			}
 		}
@@ -2639,17 +2654,17 @@ kart_routines <-
 			return
 				
 		local idx = -m_item_idx
-		local response = ItemResponse[idx];
+		local response = Ware_MinigameScope.ItemResponse[idx]
 		SetItem(idx)
 
 		if (response == RESPONSE_ITEM_COMMON)
 			if (RandomInt(0, 3) == 1)
-				ResponsePlay(response, driver);
+				ResponsePlay(response, m_driver)
 		else if (response == RESPONSE_ITEM_RARE)
 			if (RandomInt(0, 2) == 1)
-				ResponsePlay(response, driver);	
+				ResponsePlay(response, m_driver)
 		else if (response == RESPONSE_ITEM_GODLIKE)
-			ResponsePlay(response, driver);			
+			ResponsePlay(response, m_driver)	
 	}
 	
 	SetItem = function(idx)
@@ -2766,6 +2781,7 @@ kart_routines <-
 			m_prop.SetModelScale(1.5, 1.0)	
 			if (m_driver)			
 				Ware_AddPlayerAttribute(m_driver, "voice pitch scale", 0.8, -1)			
+			ResponsePlay(RESPONSE_INVULNERABLE, m_driver)
 		}
 		m_mega_timer = Time() + 10.0		
 	}
@@ -3127,6 +3143,62 @@ kart_routines <-
 		m_pinball_score = true
 		EmitSoundOnClient("MK_Pinball_Score", m_driver)
 	}
+
+
+	HitPlayer = function(player)
+	{
+		if (m_driver == player)
+			return
+
+		if (m_spin_out_timer > 0.0)
+			return
+
+		time = Time()
+		if (m_response_hit_timer >= time)
+			return
+
+		if (RandomInt(0, 1) == 1)
+		{
+			local player_class = player.GetPlayerClass() - 1
+			switch (driver_class)
+			{
+				case TF_CLASS_DEMOMAN:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_DEMOMAN_HIT, m_driver, player_class)
+					return
+				}
+				case TF_CLASS_ENGINEER:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_ENGINEER_HIT, m_driver, player_class)
+					return
+				}
+				case TF_CLASS_SNIPER:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SNIPER_HIT, m_driver, player_class)
+					return
+				}
+				case TF_CLASS_SOLDIER:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SOLDIER_HIT, m_driver, player_class)
+					return
+				}	
+				case TF_CLASS_SPY:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SPY_HIT, m_driver, player_class)
+					return
+				}	
+				case TF_CLASS_SCOUT:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SCOUT_HIT, m_driver, player_class)
+					return
+				}
+			}
+		}
+
+		ResponsePlay(RESPONSE_PLAYER_HIT, m_driver)
+		m_response_hit_timer = time + 7.0
+	}
+
 	
 	UpdateDebug = function()
 	{
