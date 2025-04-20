@@ -1104,6 +1104,7 @@ function CreateKart(origin, angles)
 	kart.m_id                 <- kart_id++
 	kart.m_driver             <- null	
 	kart.m_driver_bot         <- false
+	kart.m_driver_class 	  <- 0
 	kart.m_entity             <- kart_entity
 	kart.m_prop               <- kart_prop
 	kart.m_model              <- kart_model
@@ -1320,6 +1321,7 @@ kart_routines <-
 	Enter = function(player)
 	{
 		m_driver = player
+		m_driver_class <- player.GetPlayerClass();
 		m_driver_bot = player.IsFakeClient()
 		Ware_GetPlayerMiniData(player).kart <- this
 		
@@ -2429,21 +2431,17 @@ kart_routines <-
 
 	HitPlayer = function(player)
 	{
-		if (player == null)
-			return
 		if (m_driver == player)
 			return
-		if (m_spin_out_timer > 0.0)
-			return
-
-		time = Time()
+		//if (m_spin_out_timer > 0.0)
+		//	return
+		time <- Time()
 		if (m_response_hit_timer >= time)
 			return
-
 		if (RandomInt(0, 1) == 1)
 		{
 			local player_class = player.GetPlayerClass() - 1
-			switch (driver_class)
+			switch (m_driver_class)
 			{
 				case TF_CLASS_DEMOMAN:		
 				{
@@ -2479,7 +2477,7 @@ kart_routines <-
 		}
 
 		ResponsePlay(RESPONSE_PLAYER_HIT, m_driver)
-		m_response_hit_timer = time + 7.0
+		m_response_hit_timer = time + 1.0
 	}
 
 	Touch_mk_itembox     = function(entity) { entity.GetScriptScope().Touch(this) }	
@@ -2550,7 +2548,7 @@ kart_routines <-
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "vehicle")
-				HitPlayer(m_driver)
+				other.HitPlayer(m_driver)
 			}
 		}
 		else if (other.m_mega_timer > 0.0)
@@ -2558,7 +2556,7 @@ kart_routines <-
 			if (m_star_timer == 0.0 && m_mega_timer == 0.0 && Squish(5.0))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "rocketpack_stomp")
-				HitPlayer(m_driver)
+				other.HitPlayer(m_driver)
 			}
 		}
 		else if (other.m_star_timer > 0.0)
@@ -2567,7 +2565,7 @@ kart_routines <-
 				&& m_star_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
-				HitPlayer(m_driver)
+				other.HitPlayer(m_driver)
 				AddKillFeedMessage(m_driver, other.m_driver, "wrench_golden")
 			}
 		}
@@ -3447,7 +3445,8 @@ local function ItemCreate(classname, model, owner_kart, type)
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_SPIN))
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
-					kart.HitPlayer(kart.m_driver)
+					if(m_owner_kart)
+						m_owner_kart.HitPlayer(kart.m_driver)
 				}
 				
 				Destroy()			
@@ -3458,7 +3457,8 @@ local function ItemCreate(classname, model, owner_kart, type)
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
-					kart.HitPlayer(kart.m_driver)
+					if(m_owner_kart)
+						m_owner_kart.HitPlayer(kart.m_driver)
 				}
 				
 				DispatchParticleEffect("drg_cow_explosion_sparkles", self.GetOrigin(), vec3_zero)
@@ -3502,7 +3502,8 @@ local function ItemCreate(classname, model, owner_kart, type)
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
 						m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
-					kart.HitPlayer(kart.m_driver)
+					if(m_owner_kart)
+						m_owner_kart.HitPlayer(kart.m_driver)
 				}
 
 				Destroy()
