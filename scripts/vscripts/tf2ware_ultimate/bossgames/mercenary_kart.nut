@@ -1135,8 +1135,6 @@ function CreateKart(origin, angles)
 	kart.m_particle_wheel_left <- CreateDriftParticle(kart_prop, 
 			origin - (angles.Forward() * 36.0) - (angles.Left() * 22.0) - (angles.Up() * const_height),
 		 	angles)
-
-	kart.m_kart_particle_drift <- KartParticleDrift
 	
 	kart.m_id                 <- kart_id++
 	kart.m_driver             <- null	
@@ -1804,7 +1802,7 @@ kart_routines <-
 						entity = m_prop
 					})
 					
-					local particle = m_kart_particle_drift[m_boost_stage - 1]		
+					local particle = Ware_MinigameScope.KartParticleDrift[m_boost_stage - 1]		
 					SetPropInt(m_particle_wheel_left, "m_iEffectIndex", particle)
 					SetPropInt(m_particle_wheel_right, "m_iEffectIndex", particle)
 					ToggleWheelParticles(false)
