@@ -40,6 +40,7 @@ function OnPrecache()
 	PrecacheSound("tf2ware_ultimate/homerun/smash.mp3")
 	PrecacheSound("tf2ware_ultimate/homerun/failure.mp3")
 	PrecacheSound("tf2ware_ultimate/homerun/anewrecord.mp3")
+	PrecacheSound("tf2ware_ultimate/homerun/complete.mp3")
 	Ware_PrecacheMinigameMusic("targets", true)
 }
 
@@ -63,6 +64,8 @@ function OnTeleport(players)
 local timer = 5
 
 win_distance <- 6000
+highest_distance <- 0
+highest_player <- null
 
 function OnStart()
 {
@@ -238,12 +241,29 @@ function OnUpdate()
 			{
 				Ware_PassPlayer(scope.player, true)
 			}
-			if(scope.groundTime > 450 || Ware_GetMinigameRemainingTime() < 2.5)
+			if(distance > highest_distance)
+			{
+				highest_distance = distance
+				highest_player = scope.player
+			}
+
+			if(scope.groundTime > 99999 || Ware_GetMinigameRemainingTime() < 2.5)
 			{
 				if(distance > win_distance)
 				{
 					Ware_PassPlayer(scope.player, true)
-					Ware_PlaySoundOnClient(scope.player, "tf2ware_ultimate/homerun/anewrecord.mp3")
+					if(highest_player == scope.player)
+					{
+						Ware_PlaySoundOnClient(scope.player, "tf2ware_ultimate/homerun/anewrecord.mp3")
+						Ware_ChatPrint(null, "{player} {color}got the highest distance with {float}HU!",
+							scope.player, TF_COLOR_DEFAULT, distance)
+							Ware_GiveBonusPoints(scope.player)
+					}
+					else
+					{
+						Ware_PlaySoundOnClient(scope.player, "tf2ware_ultimate/homerun/complete.mp3")
+					}
+
 				}
 				else
 				{
