@@ -1,38 +1,38 @@
 // by ficool2
 
-const RESPONSE_INVULNERABLE			= 0;
-const RESPONSE_PAIN_SHARP			= 1;
-const RESPONSE_PAIN_SEVERE			= 2;
-const RESPONSE_PAIN_CRITICAL		= 3;
-const RESPONSE_ITEM_COMMON			= 4;
-const RESPONSE_ITEM_RARE			= 5;
-const RESPONSE_ITEM_GODLIKE			= 6;
-const RESPONSE_POSITIVE				= 7;
-const RESPONSE_NEGATIVE				= 8;
-const RESPONSE_PLAYER_HIT			= 9;
-const RESPONSE_PLAYER_DEMOMAN_HIT	= 10;
-const RESPONSE_PLAYER_ENGINEER_HIT	= 11;
-const RESPONSE_PLAYER_SNIPER_HIT	= 12;
-const RESPONSE_PLAYER_SOLDIER_HIT	= 13;
-const RESPONSE_PLAYER_SPY_HIT		= 14;
-const RESPONSE_PLAYER_SCOUT_HIT		= 15;
-const RESPONSE_FALL					= 16;
-const RESPONSE_LAST					= 17;
+const RESPONSE_INVULNERABLE			= 0
+const RESPONSE_PAIN_SHARP			= 1
+const RESPONSE_PAIN_SEVERE			= 2
+const RESPONSE_PAIN_CRITICAL		= 3
+const RESPONSE_ITEM_COMMON			= 4
+const RESPONSE_ITEM_RARE			= 5
+const RESPONSE_ITEM_GODLIKE			= 6
+const RESPONSE_POSITIVE				= 7
+const RESPONSE_NEGATIVE				= 8
+const RESPONSE_PLAYER_HIT			= 9
+const RESPONSE_PLAYER_DEMOMAN_HIT	= 10
+const RESPONSE_PLAYER_ENGINEER_HIT	= 11
+const RESPONSE_PLAYER_SNIPER_HIT	= 12
+const RESPONSE_PLAYER_SOLDIER_HIT	= 13
+const RESPONSE_PLAYER_SPY_HIT		= 14
+const RESPONSE_PLAYER_SCOUT_HIT		= 15
+const RESPONSE_FALL					= 16
+const RESPONSE_LAST					= 17
 
-Responses <- array(RESPONSE_LAST);
+Responses <- array(RESPONSE_LAST)
 
 
 
 function ResponsePlay(id, player)
 {
-	local responses = Responses[id][player.GetPlayerClass() - 1];
-	player.PlayScene(responses[RandomInt(0, responses.len() - 1)], 0.0);
+	local responses = Responses[id][player.GetPlayerClass() - 1]
+	player.PlayScene(responses[RandomInt(0, responses.len() - 1)], 0.0)
 }
 
 function ResponsePlayIdx(id, player, idx)
 {
-	local responses = Responses[id][idx];
-	player.PlayScene(responses[RandomInt(0, responses.len() - 1)], 0.0);
+	local responses = Responses[id][idx]
+	player.PlayScene(responses[RandomInt(0, responses.len() - 1)], 0.0)
 }
 
 Responses[RESPONSE_INVULNERABLE] =
@@ -96,7 +96,7 @@ Responses[RESPONSE_INVULNERABLE] =
 		"scenes/player/engineer/low/177.vcd", 
 		"scenes/player/engineer/low/3619.vcd", 
 	],
-];
+]
 
 Responses[RESPONSE_PAIN_SHARP] =
 [
@@ -186,7 +186,7 @@ Responses[RESPONSE_PAIN_SHARP] =
 		"scenes/player/engineer/low/1252.vcd",
 		"scenes/player/engineer/low/1253.vcd",
 	],
-];
+]
 
 Responses[RESPONSE_PAIN_SEVERE] =
 [
@@ -253,7 +253,7 @@ Responses[RESPONSE_PAIN_SEVERE] =
 		"scenes/player/engineer/low/1256.vcd",
 		"scenes/player/engineer/low/1257.vcd",
 	],
-];
+]
 
 Responses[RESPONSE_PAIN_CRITICAL] =
 [
@@ -310,7 +310,7 @@ Responses[RESPONSE_PAIN_CRITICAL] =
 		"scenes/player/engineer/low/1259.vcd",
 		"scenes/player/engineer/low/1260.vcd",
 	],
-];
+]
 
 Responses[RESPONSE_ITEM_COMMON] =
 [
@@ -362,7 +362,7 @@ Responses[RESPONSE_ITEM_COMMON] =
 		"scenes/player/engineer/low/7855.vcd",
 		"scenes/player/engineer/low/7857.vcd",
 	],
-];
+]
 
 Responses[RESPONSE_ITEM_RARE] =
 [
@@ -419,7 +419,7 @@ Responses[RESPONSE_ITEM_RARE] =
 		"scenes/player/engineer/low/8467.vcd",
 		"scenes/player/engineer/low/8468.vcd",
 	],
-];
+]
 
 Responses[RESPONSE_ITEM_GODLIKE] =
 [
@@ -462,7 +462,7 @@ Responses[RESPONSE_ITEM_GODLIKE] =
 		"scenes/player/engineer/low/7863.vcd",
 		"scenes/player/engineer/low/8466.vcd",
 	],
-];
+]
 
 Responses[RESPONSE_POSITIVE] =
 [
@@ -531,7 +531,7 @@ Responses[RESPONSE_POSITIVE] =
 		"scenes/player/engineer/low/39.vcd",
 		"scenes/player/engineer/low/44.vcd",
 	],
-];
+]
 
 Responses[RESPONSE_NEGATIVE] =
 [
@@ -613,7 +613,7 @@ Responses[RESPONSE_NEGATIVE] =
 		"scenes/player/engineer/low/1342.vcd",
 		"scenes/player/engineer/low/1343.vcd",
 	],
-];
+]
 
 Responses[RESPONSE_PLAYER_HIT] =
 [
@@ -801,7 +801,7 @@ Responses[RESPONSE_PLAYER_HIT] =
 		"scenes/player/engineer/low/177.vcd",
 		"scenes/player/engineer/low/178.vcd",
 	],
-];
+]
 
 Responses[RESPONSE_PLAYER_HIT] =
 [
@@ -968,7 +968,7 @@ Responses[RESPONSE_PLAYER_HIT] =
 		"scenes/player/engineer/low/177.vcd",
 		"scenes/player/engineer/low/178.vcd",	
 	],
-];
+]
 
 Responses[RESPONSE_PLAYER_DEMOMAN_HIT] =
 [
@@ -1033,7 +1033,7 @@ Responses[RESPONSE_PLAYER_DEMOMAN_HIT] =
 		"scenes/player/demoman/low/3523.vcd", 
 		"scenes/player/demoman/low/3524.vcd", 
 	],
-];
+]
 
 Responses[RESPONSE_PLAYER_ENGINEER_HIT] =
 [
@@ -1143,7 +1143,7 @@ Responses[RESPONSE_PLAYER_ENGINEER_HIT] =
 		"scenes/player/engineer/low/3640.vcd", 
 		"scenes/player/engineer/low/3641.vcd", 
 	],
-];
+]
 
 Responses[RESPONSE_PLAYER_SNIPER_HIT] =
 [
@@ -1216,7 +1216,7 @@ Responses[RESPONSE_PLAYER_SNIPER_HIT] =
 		"scenes/player/sniper/low/3089.vcd", 
 		"scenes/player/sniper/low/3090.vcd", 
 	],
-];
+]
 
 Responses[RESPONSE_PLAYER_SOLDIER_HIT] =
 [
@@ -1312,7 +1312,7 @@ Responses[RESPONSE_PLAYER_SOLDIER_HIT] =
 		"scenes/player/soldier/low/3422.vcd", 
 		"scenes/player/soldier/low/3423.vcd", 
 	],
-];
+]
 Responses[RESPONSE_PLAYER_SPY_HIT] =
 [
 	[
@@ -1390,7 +1390,7 @@ Responses[RESPONSE_PLAYER_SPY_HIT] =
 		"scenes/player/spy/low/3064.vcd", 
 		"scenes/player/spy/low/3070.vcd", 
 	],
-];
+]
 
 Responses[RESPONSE_PLAYER_SCOUT_HIT] =
 [
@@ -1463,7 +1463,7 @@ Responses[RESPONSE_PLAYER_SCOUT_HIT] =
 		"scenes/player/scout/low/2710.vcd", 
 		"scenes/player/scout/low/2711.vcd", 
 	],
-];
+]
 
 Responses[RESPONSE_FALL] =
 [
@@ -1495,5 +1495,5 @@ Responses[RESPONSE_FALL] =
 	[
 		"scenes/player/engineer/low/130.vcd",
 	],
-];
+]
 
