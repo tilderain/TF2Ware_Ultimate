@@ -215,12 +215,13 @@ function OnUpdate()
 			local distance = sandbag.GetOrigin().y - Ware_MinigameLocation.center.y
 			Ware_ShowText(scope.player, CHANNEL_MINIGAME, format("Distance: %.1fHU", distance), Ware_GetMinigameRemainingTime())
 
-			if(scope.destY > 1000 && distance < (scope.destY/60))
+			local nudgeTo = (scope.destY/60)
+			if(nudgeTo > 1000 && distance < nudgeTo)
 			{
 				//	sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99999)
 				sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*1.12)
 			}
-			else if (scope.destY > 1000 && distance > scope.destY/60)
+			else if (nudgeTo > 1000 && distance > nudgeTo)
 			{
 				sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99444)
 			}
