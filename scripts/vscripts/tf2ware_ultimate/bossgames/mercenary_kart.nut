@@ -29,6 +29,8 @@ minigame <- Ware_MinigameData
 	}
 })
 
+IncludeScript("tf2ware_ultimate/bossgames/data/mkresponses", ROOT)
+
 kart_base_offset    <- Vector(0, 0, 18)
 kart_mins           <- Vector(-32, -34, -kart_base_offset.z)
 kart_maxs           <- Vector(60, 34, 16)
@@ -126,6 +128,30 @@ local ITEM_TYPE_SHROOM_GOLD  = 6
 local ITEM_TYPE_SHELL_GREEN  = 7
 local ITEM_TYPE_SHELL_RED    = 8
 local ITEM_TYPE_SHELL_BLUE   = 9
+
+
+ItemResponse <- array(ITEM_LAST);
+
+ItemResponse[ITEM_BANANA_ONE]		 = RESPONSE_ITEM_COMMON;
+ItemResponse[ITEM_SHROOM_MEGA]		 = RESPONSE_ITEM_RARE;
+ItemResponse[ITEM_POW]				 = RESPONSE_ITEM_RARE;
+ItemResponse[ITEM_SHOCK]			 = RESPONSE_ITEM_GODLIKE;
+ItemResponse[ITEM_STAR]				 = RESPONSE_ITEM_GODLIKE;
+ItemResponse[ITEM_SHROOM_TWO]		 = RESPONSE_ITEM_COMMON;
+ItemResponse[ITEM_FIB]				 = RESPONSE_ITEM_COMMON;
+ItemResponse[ITEM_BOMB]				 = RESPONSE_ITEM_RARE;
+ItemResponse[ITEM_SHROOM_THREE]		 = RESPONSE_ITEM_RARE;
+ItemResponse[ITEM_BULLET]			 = RESPONSE_ITEM_GODLIKE;
+ItemResponse[ITEM_SHELL_BLUE]		 = RESPONSE_ITEM_RARE;
+ItemResponse[ITEM_SHROOM_ONE]		 = RESPONSE_ITEM_COMMON;
+ItemResponse[ITEM_SHELL_RED_THREE]	 = RESPONSE_ITEM_RARE;
+ItemResponse[ITEM_SHELL_GREEN_ONE]	 = RESPONSE_ITEM_COMMON;
+ItemResponse[ITEM_BANANA_THREE]		 = RESPONSE_ITEM_COMMON;
+ItemResponse[ITEM_SHROOM_GOLD]		 = RESPONSE_ITEM_RARE;
+ItemResponse[ITEM_SHELL_RED_ONE]	 = RESPONSE_ITEM_COMMON;
+ItemResponse[ITEM_BLOOPER]			 = RESPONSE_ITEM_COMMON;
+ItemResponse[ITEM_SHELL_GREEN_THREE] = RESPONSE_ITEM_COMMON;
+
 
 intro_camera_keyframes <-
 [
@@ -2613,7 +2639,17 @@ kart_routines <-
 			return
 				
 		local idx = -m_item_idx
+		local response = ItemResponse[idx];
 		SetItem(idx)
+
+		if (response == RESPONSE_ITEM_COMMON)
+			if (RandomInt(0, 3) == 1)
+				ResponsePlay(response, driver);
+		else if (response == RESPONSE_ITEM_RARE)
+			if (RandomInt(0, 2) == 1)
+				ResponsePlay(response, driver);	
+		else if (response == RESPONSE_ITEM_GODLIKE)
+			ResponsePlay(response, driver);			
 	}
 	
 	SetItem = function(idx)
