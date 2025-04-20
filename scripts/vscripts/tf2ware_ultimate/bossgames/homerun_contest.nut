@@ -62,6 +62,8 @@ function OnTeleport(players)
 
 local timer = 5
 
+win_distance <- 6000
+
 function OnStart()
 {
 	for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
@@ -91,8 +93,10 @@ function OnStart()
 		sandbag.ValidateScriptScope()
 		local scope = sandbag.GetScriptScope()
 		scope.percent <- 0.0
+		scope.destY <- 0.0
 		scope.player <- player // this might cause null reference issues if a player disconnects, maybe kill the sandbag if a player leaves?
 		scope.flying <- false
+		scope.outsidePodium <- false
 		scope.lastOrigin <- sandbag.GetOrigin()
 		scope.groundTime <- -1
 
@@ -149,9 +153,24 @@ function OnStart()
 	}, 5.0)
 }
 
+function IsPointInTrigger(point, trigger)
+{
+	trigger.RemoveSolidFlags(4)  // FSOLID_NOT_SOLID
+	local trace =
+	{
+		start = point
+		end   = point
+		mask  = 1
+	}
+	TraceLineEx(trace)
+	trigger.AddSolidFlags(4)
+
+	return trace.hit && trace.enthit == trigger
+}
+
 function OnUpdate()
 {
-	foreach (player in Ware_Players)
+	foreach (player in Ware_MinigamePlayers)
 	{
 		local camera = Ware_GetPlayerMiniData(player).camera
 		local origin = Ware_GetPlayerMiniData(player).sandbag.GetOrigin() + Vector(600, 0, 0)
@@ -175,13 +194,37 @@ function OnUpdate()
 	foreach(sandbag in HomeRun_Sandbags)
 	{
 		local scope = sandbag.GetScriptScope()
-		if(scope.flying)
+		if(!scope.outsidePodium)
+		{
+			local org = sandbag.GetOrigin()
+			local ent = FindByName(null, "HomeRun_PodiumClip")
+			if(VectorDistance2D(org, Ware_MinigameLocation.center) > 270)
+			{
+				SetCamera(scope.player)
+				scope.outsidePodium = true
+				scope.flying = true
+			}
+			if(Ware_GetMinigameRemainingTime() < 2.5)
+			{
+				scope.outsidePodium = true
+				Ware_PlaySoundOnClient(scope.player, "tf2ware_ultimate/homerun/failure.mp3")
+			}
+		}
+		else if(scope.flying)
 		{
 			local distance = sandbag.GetOrigin().y - Ware_MinigameLocation.center.y
 			Ware_ShowText(scope.player, CHANNEL_MINIGAME, format("Distance: %.1fHU", distance), Ware_GetMinigameRemainingTime())
 
+			if(scope.destY*2 > 1000 && distance < (scope.destY*2) - 1000)
+			{
+				//	sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99999)
+				sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*1.005)
+			}
+			else if (scope.destY*2 > 1000 && distance > scope.destY*2)
+			{
+				sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99444)
+			}
 
-			sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99999)
 
 			local origin = sandbag.GetOrigin()
 			if(abs(scope.lastOrigin.z - origin.z) <= 1)
@@ -190,9 +233,13 @@ function OnUpdate()
 			scope.lastOrigin = origin
 
 			//printl("lol +" + scope.groundTime)
-			if(scope.groundTime > 450)
+			if(distance > win_distance)
 			{
-				if(distance > 6000)
+				Ware_PassPlayer(scope.player, true)
+			}
+			if(scope.groundTime > 450 || Ware_GetMinigameRemainingTime() < 2.5)
+			{
+				if(distance > win_distance)
 				{
 					Ware_PassPlayer(scope.player, true)
 					Ware_PlaySoundOnClient(scope.player, "tf2ware_ultimate/homerun/anewrecord.mp3")
@@ -242,21 +289,23 @@ function OnTakeDamage(params)
 		scope.percent += (params.damage * 0.15) + RandomFloat(-0.2, 0.2)
 		local percent = scope.percent
 
-		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon()) ? percent * 10.0 : 1.0
+		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon()) ? 1.0 : 1.0
 
 		if (params.inflictor.GetClassname() == "tf_projectile_spellfireball")
 		{
-			melee_multiplier = 10000.0
-			params.damage_force *= 10
+			melee_multiplier = 2.0
+			params.damage_force *= 20
 			params.damage = 500.0
 		}
 
 		printl("pre: " + params.damage_force)
-		params.damage_force *= ((percent / 100.0) * melee_multiplier)
+		params.damage_force *= ((percent / 500.0) * melee_multiplier)
 		if (melee_multiplier > 1.0)
 			params.damage_force.z = fabs(params.damage_force.z)
 
 		printl("post: " + params.damage_force)
+
+		scope.destY <- params.damage_force.y
 
 		ent.Teleport(false, Vector(), false, QAngle(), true, params.damage_force)
 
@@ -275,6 +324,7 @@ function OnTakeDamage(params)
 			ent.EmitSound("tf2ware_ultimate/homerun/smash.mp3")
 			SetCamera(attacker)
 			scope.flying = true
+			scope.outsidePodium = true
 		}
 
 	}
@@ -348,7 +398,7 @@ function SetCamera(player)
 
 function OnCleanup()
 {
-	foreach (player in Ware_Players)
+	foreach (player in Ware_MinigamePlayers)
 	{
 		local camera = Ware_GetPlayerMiniData(player).camera
 		TogglePlayerViewcontrol(player, camera, false)
