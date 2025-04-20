@@ -29,6 +29,25 @@ minigame <- Ware_MinigameData
 	}
 })
 
+const RESPONSE_INVULNERABLE			= 0
+const RESPONSE_PAIN_SHARP			= 1
+const RESPONSE_PAIN_SEVERE			= 2
+const RESPONSE_PAIN_CRITICAL		= 3
+const RESPONSE_ITEM_COMMON			= 4
+const RESPONSE_ITEM_RARE			= 5
+const RESPONSE_ITEM_GODLIKE			= 6
+const RESPONSE_POSITIVE				= 7
+const RESPONSE_NEGATIVE				= 8
+const RESPONSE_PLAYER_HIT			= 9
+const RESPONSE_PLAYER_DEMOMAN_HIT	= 10
+const RESPONSE_PLAYER_ENGINEER_HIT	= 11
+const RESPONSE_PLAYER_SNIPER_HIT	= 12
+const RESPONSE_PLAYER_SOLDIER_HIT	= 13
+const RESPONSE_PLAYER_SPY_HIT		= 14
+const RESPONSE_PLAYER_SCOUT_HIT		= 15
+const RESPONSE_FALL					= 16
+const RESPONSE_LAST					= 17
+
 IncludeScript("tf2ware_ultimate/bossgames/data/mkresponses", ROOT)
 
 kart_base_offset    <- Vector(0, 0, 18)
