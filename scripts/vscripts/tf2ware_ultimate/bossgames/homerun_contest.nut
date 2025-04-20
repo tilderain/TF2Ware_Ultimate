@@ -18,7 +18,7 @@ minigame <- Ware_MinigameData
 	name           = "Home-Run Contest"
 	author         = "pokemonPasta"
 	description    = "Home-Run Contest!"
-	duration       = INT_MAX.tofloat() // going to always end manually. may reduce this a bit in case something breaks.
+	duration       = 23
 	location       = "homerun_contest"
 	music          = "targets"
 	convars        =
@@ -79,7 +79,7 @@ function OnStart()
 		minidata.sandbag <- SpawnEntityFromTableSafe("prop_physics_override", {
 			model = sandbag_model,
 			targetname = format("sandbag%d", index)
-			origin = player.GetOrigin() + Vector(0, 150, 40),
+			origin = player.GetOrigin() + Vector(0, 150, 60),
 			angles = QAngle(0, -90, 0),
 			massscale = 500
 		})
@@ -120,20 +120,31 @@ function OnStart()
 
 	Ware_CreateTimer(function()
 	{
-		Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%d", timer))
 		if (timer > 0)
+		{
+			Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%d", timer))
 			Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/homerun/%d.mp3", timer), 1.0, 100 * Ware_GetPitchFactor())
+		}
 
 		timer--
 
 		if (timer >= 0)
 			return 1.0
-		else
+		else if (timer == -1)
 		{
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, null)
 
 			for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
 				EntityAcceptInput(ent, "Disable")
+			return 1.0
+		}
+		else if (timer == -2)
+		{
+			Ware_SetGlobalAttribute("no_attack", 1, -1)
+			Ware_SetGlobalAttribute("no_jump", 1, -1)
+			foreach (player in Ware_MinigamePlayers)
+				player.AddFlag(FL_ATCONTROLS)
+		
 		}
 	}, 5.0)
 }
@@ -143,7 +154,10 @@ function OnUpdate()
 	foreach (player in Ware_Players)
 	{
 		local camera = Ware_GetPlayerMiniData(player).camera
-		camera.KeyValueFromVector("origin", Ware_GetPlayerMiniData(player).sandbag.GetOrigin() + Vector(600, 0, 0))
+		local origin = Ware_GetPlayerMiniData(player).sandbag.GetOrigin() + Vector(600, 0, 0)
+		if(origin.x > -10200)
+			origin.x = -10200
+		camera.KeyValueFromVector("origin", origin)
 	}
 
 	local time = Time()
@@ -288,14 +302,6 @@ function OnEnd()
 
 		HomeRun_Sandbags.remove(HomeRun_Sandbags.find(sandbag))
 	}
-
-	foreach (player in Ware_Players)
-	{
-		TogglePlayerViewcontrol(player, null, false)
-		player.SetForceLocalDraw(false)
-		player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
-		player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)
-	}
 }
 
 function GiveSpecialMelee(player)
@@ -348,5 +354,6 @@ function OnCleanup()
 		TogglePlayerViewcontrol(player, camera, false)
 		player.SetForceLocalDraw(false)
 		player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
+		player.RemoveFlag(FL_ATCONTROLS)
 	}
 }
