@@ -39,7 +39,6 @@ bot_data <-
 explode_particle <- "hightower_explosion"
 bot_location <- Ware_MinigameLocation.center + Vector(0,0,150)
 
-alert_vo <- "vo/mvm_sentry_buster_alerts01.mp3"
 buster_mdl <- "models/bots/demo/bot_sentry_buster.mdl"
 
 snd_explode <- "mvm/sentrybuster/mvm_sentrybuster_explode.wav"
@@ -54,7 +53,11 @@ function OnPrecache()
 		PrecacheSound(format("vo/mvm_get_to_upgrade%02d.mp3", i))
 	}
 
-	PrecacheSound(alert_vo)
+
+	for (local i = 1; i <= 11; i++)
+	{
+		PrecacheSound(format( "vo/mvm_sentry_buster_alerts%02d.mp3", i))
+	}
 
 	PrecacheModel(buster_mdl)
 
@@ -124,7 +127,7 @@ function OnStart()
 	}
 	else if (mission == MISSION_RESIST)
 	{
-		Ware_PlaySoundOnAllClients(alert_vo)
+		Ware_PlaySoundOnAllClients(format("vo/mvm_sentry_buster_alerts%02d.mp3", RandomInt(1,3)))
 		Ware_PlaySoundOnAllClients(snd_intro, 0.5)
 		Ware_PlaySoundOnAllClients(snd_loop, 0.5)
 		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 7)
