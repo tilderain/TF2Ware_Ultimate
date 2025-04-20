@@ -20,7 +20,7 @@ minigame <- Ware_MinigameData
 	description    = "Home-Run Contest!"
 	duration       = INT_MAX.tofloat() // going to always end manually. may reduce this a bit in case something breaks.
 	location       = "homerun_contest"
-	music          = "homerun_contest"
+	music          = "targets"
 	convars        =
 	{
 		tf_fastbuild = 1
@@ -30,9 +30,17 @@ minigame <- Ware_MinigameData
 function OnPrecache()
 {
 	PrecacheModel(sandbag_model)
-	
+
 	for (local i = 1; i <= 5; i++)
-		PrecacheSound(format("vo/announcer_begins_%dsec.mp3", i))
+	{
+		PrecacheSound(format("tf2ware_ultimate/homerun/%d.mp3", i))
+		PrecacheSound(format("tf2ware_ultimate/homerun/hit%d.mp3", i))
+	}
+
+	PrecacheSound("tf2ware_ultimate/homerun/smash.mp3")
+	PrecacheSound("tf2ware_ultimate/homerun/failure.mp3")
+	PrecacheSound("tf2ware_ultimate/homerun/anewrecord.mp3")
+	Ware_PrecacheMinigameMusic("targets", true)
 }
 
 function OnTeleport(players)
@@ -44,7 +52,7 @@ function OnTeleport(players)
 		player.ForceRegenerateAndRespawn()
 	}
 	Ware_TogglePlayerLoadouts(false)
-	
+
 	Ware_TeleportPlayersRow(players,
 		Ware_MinigameLocation.center
 		QAngle(0, 90, 0),
@@ -52,85 +60,209 @@ function OnTeleport(players)
 		0.0, 0.0)
 }
 
+local timer = 5
+
 function OnStart()
 {
 	for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
 		EntityAcceptInput(ent, "Enable")
-	
+
 	// TODO:
 	// spawn a podium for each player
 	// create a podium clip around each podium
-	
+	local index = 0
+
 	foreach(player in Ware_MinigamePlayers)
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
+
 		minidata.sandbag <- SpawnEntityFromTableSafe("prop_physics_override", {
 			model = sandbag_model,
+			targetname = format("sandbag%d", index)
 			origin = player.GetOrigin() + Vector(0, 150, 40),
 			angles = QAngle(0, -90, 0),
-			massscale = 5
+			massscale = 500
 		})
-		
+
+		index++
+
 		local sandbag = minidata.sandbag
 		EntityAcceptInput(sandbag, "Sleep")
 		sandbag.ValidateScriptScope()
 		local scope = sandbag.GetScriptScope()
 		scope.percent <- 0.0
 		scope.player <- player // this might cause null reference issues if a player disconnects, maybe kill the sandbag if a player leaves?
+		scope.flying <- false
+		scope.lastOrigin <- sandbag.GetOrigin()
+		scope.groundTime <- -1
+
 		HomeRun_Sandbags.append(sandbag)
-		
+
+		sandbag.SetGravity(0.1)
+
+		minidata.camera <- Ware_SpawnEntity("point_viewcontrol",
+		{
+			classname  = "ware_viewcontrol" // don't preserve
+			target =     minidata.sandbag.GetName()
+			origin     = sandbag.GetOrigin() + Vector(600, 0, 0)
+			angles     = QAngle(0, 180, 0)
+			spawnflags = 8
+		})
+		//minidata.camera.SetMoveType(12, 0)
+
+		//SetEntityParent(minidata.camera, sandbag)
+
+
 		// i need to delay this for some reason
 		Ware_CreateTimer(function() {Ware_ShowText(player, CHANNEL_MINIGAME, format("Sandbag: 0.0%%"), Ware_GetMinigameRemainingTime())},0.1)
 	}
-	
-	local timer = 5
+
+
 	Ware_CreateTimer(function()
 	{
 		Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%d", timer))
 		if (timer > 0)
-			Ware_PlaySoundOnAllClients(format("vo/announcer_begins_%dsec.mp3", timer), 1.0, 100 * Ware_GetPitchFactor())
-		
+			Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/homerun/%d.mp3", timer), 1.0, 100 * Ware_GetPitchFactor())
+
 		timer--
-		
+
 		if (timer >= 0)
 			return 1.0
 		else
 		{
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, null)
-			
+
 			for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
 				EntityAcceptInput(ent, "Disable")
 		}
 	}, 5.0)
-	
+}
+
+function OnUpdate()
+{
+	foreach (player in Ware_Players)
+	{
+		local camera = Ware_GetPlayerMiniData(player).camera
+		camera.KeyValueFromVector("origin", Ware_GetPlayerMiniData(player).sandbag.GetOrigin() + Vector(600, 0, 0))
+	}
+
+	local time = Time()
+	foreach (player in Ware_MinigamePlayers)
+	{
+		local attack_time = player.GetTauntAttackTime()
+		if (attack_time >= time)
+		{
+			local target = player // squirrel needs this to be happy
+			Ware_CreateTimer(@() SpawnFireball(target), attack_time - time)
+			player.ClearTauntAttack()
+		}
+	}
+
+	foreach(sandbag in HomeRun_Sandbags)
+	{
+		local scope = sandbag.GetScriptScope()
+		if(scope.flying)
+		{
+			local distance = sandbag.GetOrigin().y - Ware_MinigameLocation.center.y
+			Ware_ShowText(scope.player, CHANNEL_MINIGAME, format("Distance: %.1fHU", distance), Ware_GetMinigameRemainingTime())
+
+
+			sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99999)
+
+			local origin = sandbag.GetOrigin()
+			if(abs(scope.lastOrigin.z - origin.z) <= 1)
+				scope.groundTime++
+
+			scope.lastOrigin = origin
+
+			//printl("lol +" + scope.groundTime)
+			if(scope.groundTime > 450)
+			{
+				if(distance > 6000)
+				{
+					Ware_PassPlayer(scope.player, true)
+					Ware_PlaySoundOnClient(scope.player, "tf2ware_ultimate/homerun/anewrecord.mp3")
+				}
+				else
+				{
+					Ware_PlaySoundOnClient(scope.player, "tf2ware_ultimate/homerun/failure.mp3")
+				}
+
+				scope.flying = false
+				sandbag.SetMoveType(MOVETYPE_NONE, 0)
+			}
+
+		}
+	}
+
+}
+
+
+function SpawnFireball(player)
+{
+	local fireball = Ware_CreateEntity("tf_projectile_spellfireball")
+	fireball.Teleport(
+		true, player.EyePosition(),
+		true, player.EyeAngles(),
+		true, player.EyeAngles().Forward() * 650.0)
+	fireball.SetTeam(player.GetTeam())
+	fireball.SetOwner(player)
+	fireball.SetModelScale(3.0, 0.0)
+	SetPropBool(fireball, "m_bCritical", true)
+	fireball.DispatchSpawn()
 }
 
 function OnTakeDamage(params)
 {
 	local ent = params.const_entity
 	local attacker = params.attacker
-	
+
 	if (!(attacker.IsPlayer() && attacker.IsValid()))
 		return
-	
+
 	local sandbag = Ware_GetPlayerMiniData(attacker).sandbag
-	
+
 	if (ent == sandbag)
 	{
 		local scope = sandbag.GetScriptScope()
 		scope.percent += (params.damage * 0.15) + RandomFloat(-0.2, 0.2)
 		local percent = scope.percent
-		
+
 		local melee_multiplier = (params.weapon && params.weapon.IsMeleeWeapon()) ? percent * 10.0 : 1.0
-		
-		//printl("pre: " + params.damage_force)
+
+		if (params.inflictor.GetClassname() == "tf_projectile_spellfireball")
+		{
+			melee_multiplier = 10000.0
+			params.damage_force *= 10
+			params.damage = 500.0
+		}
+
+		printl("pre: " + params.damage_force)
 		params.damage_force *= ((percent / 100.0) * melee_multiplier)
 		if (melee_multiplier > 1.0)
 			params.damage_force.z = fabs(params.damage_force.z)
-		
-		//printl("post: " + params.damage_force)
-		
-		Ware_ShowText(attacker, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", percent), Ware_GetMinigameRemainingTime())
+
+		printl("post: " + params.damage_force)
+
+		ent.Teleport(false, Vector(), false, QAngle(), true, params.damage_force)
+
+		//printl("damage pos" + params.damage_position)
+
+		DispatchParticleEffect("ExplosionCore_sapperdestroyed", params.damage_position, Vector())
+		DispatchParticleEffect("repair_claw_heal_blue3", params.damage_position, Vector())
+
+		if(timer >= 0)
+		{
+			ent.EmitSound(format("tf2ware_ultimate/homerun/hit%d.mp3", RandomInt(1,5)))
+			Ware_ShowText(attacker, CHANNEL_MINIGAME, format("Sandbag: %.1f%%", percent), Ware_GetMinigameRemainingTime())
+		}
+		else if(timer < 0)
+		{
+			ent.EmitSound("tf2ware_ultimate/homerun/smash.mp3")
+			SetCamera(attacker)
+			scope.flying = true
+		}
+
 	}
 	else if (attacker == ent || attacker == sandbag)
 	{
@@ -143,7 +275,7 @@ function OnGameEvent_player_builtobject(params)
 	local building = EntIndexToHScript(params.index)
 	if (!building)
 		return
-		
+
 	SetPropInt(building, "m_nDefaultUpgradeLevel", 2)
 }
 
@@ -153,7 +285,68 @@ function OnEnd()
 	{
 		if (sandbag)
 			sandbag.Destroy()
-			
+
 		HomeRun_Sandbags.remove(HomeRun_Sandbags.find(sandbag))
+	}
+
+	foreach (player in Ware_Players)
+	{
+		TogglePlayerViewcontrol(player, null, false)
+		player.SetForceLocalDraw(false)
+		player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
+		player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)
+	}
+}
+
+function GiveSpecialMelee(player)
+{
+	local data = Ware_GetPlayerData(player)
+	local melee, vm
+
+	if (!data.special_melee || !data.special_melee.IsValid())
+	{
+		melee = CreateEntitySafe("tf_weapon_bat")
+		SetPropInt(melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 1123)
+		SetPropBool(melee, "m_AttributeManager.m_Item.m_bInitialized", true)
+		melee.DispatchSpawn()
+
+		for (local i = 0; i < 4; i++)
+			SetPropIntArray(melee, "m_nModelIndexOverrides", bat_modelindex, i)
+		SetPropBool(melee, "m_bBeingRepurposedForTaunt", true)
+		SetPropInt(melee, "m_nRenderMode", kRenderTransColor)
+	}
+
+	if (!data.special_vm || !data.special_vm.IsValid())
+	{
+		vm = Entities.CreateByClassname("tf_wearable_vm")
+		SetPropInt(vm, "m_nModelIndex", bat_modelindex)
+		SetPropBool(vm, "m_bValidatedAttachedEntity", true)
+		vm.DispatchSpawn()
+	}
+
+	if (melee || vm)
+		Ware_EquipSpecialMelee(player, melee, vm)
+}
+
+
+function SetCamera(player)
+{
+	local camera = Ware_GetPlayerMiniData(player).camera
+	TogglePlayerViewcontrol(player, camera, true)
+	player.SetForceLocalDraw(true)
+	player.AddHudHideFlags(HIDEHUD_TARGET_ID)
+	player.RemoveCond(TF_COND_TAUNTING)
+	player.AddCond(TF_COND_GRAPPLED_TO_PLAYER) // prevent taunting
+	SetPropInt(player, "m_takedamage", DAMAGE_YES)
+}
+
+function OnCleanup()
+{
+	foreach (player in Ware_Players)
+	{
+		local camera = Ware_GetPlayerMiniData(player).camera
+		TogglePlayerViewcontrol(player, camera, false)
+		player.SetForceLocalDraw(false)
+		player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
 	}
 }
