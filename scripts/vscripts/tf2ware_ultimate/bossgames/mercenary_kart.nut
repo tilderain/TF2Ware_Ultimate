@@ -2407,6 +2407,62 @@ kart_routines <-
 		}
 	}
 	
+
+	HitPlayer = function(player)
+	{
+		if (player == null)
+			return
+		if (m_driver == player)
+			return
+		if (m_spin_out_timer > 0.0)
+			return
+
+		time = Time()
+		if (m_response_hit_timer >= time)
+			return
+
+		if (RandomInt(0, 1) == 1)
+		{
+			local player_class = player.GetPlayerClass() - 1
+			switch (driver_class)
+			{
+				case TF_CLASS_DEMOMAN:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_DEMOMAN_HIT, m_driver, player_class)
+					return
+				}
+				case TF_CLASS_ENGINEER:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_ENGINEER_HIT, m_driver, player_class)
+					return
+				}
+				case TF_CLASS_SNIPER:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SNIPER_HIT, m_driver, player_class)
+					return
+				}
+				case TF_CLASS_SOLDIER:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SOLDIER_HIT, m_driver, player_class)
+					return
+				}	
+				case TF_CLASS_SPY:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SPY_HIT, m_driver, player_class)
+					return
+				}	
+				case TF_CLASS_SCOUT:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SCOUT_HIT, m_driver, player_class)
+					return
+				}
+			}
+		}
+
+		ResponsePlay(RESPONSE_PLAYER_HIT, m_driver)
+		m_response_hit_timer = time + 7.0
+	}
+
 	Touch_mk_itembox     = function(entity) { entity.GetScriptScope().Touch(this) }	
 	Touch_mk_banana      = function(entity) { entity.GetScriptScope().Touch(this) }	
 	Touch_mk_fib         = function(entity) { entity.GetScriptScope().Touch(this) }	
@@ -2475,14 +2531,15 @@ kart_routines <-
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "vehicle")
+				HitPlayer(other.m_driver)
 			}
 		}
 		else if (other.m_mega_timer > 0.0)
 		{
 			if (m_star_timer == 0.0 && m_mega_timer == 0.0 && Squish(5.0))
 			{
-				HitPlayer(other.driver)
 				AddKillFeedMessage(m_driver, other.m_driver, "rocketpack_stomp")
+				HitPlayer(other.m_driver)
 			}
 		}
 		else if (other.m_star_timer > 0.0)
@@ -2491,7 +2548,7 @@ kart_routines <-
 				&& m_star_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
-				HitPlayer(other.driver)
+				HitPlayer(other.m_driver)
 				AddKillFeedMessage(m_driver, other.m_driver, "wrench_golden")
 			}
 		}
@@ -3143,62 +3200,6 @@ kart_routines <-
 		m_pinball_score = true
 		EmitSoundOnClient("MK_Pinball_Score", m_driver)
 	}
-
-
-	HitPlayer = function(player)
-	{
-		if (m_driver == player)
-			return
-
-		if (m_spin_out_timer > 0.0)
-			return
-
-		time = Time()
-		if (m_response_hit_timer >= time)
-			return
-
-		if (RandomInt(0, 1) == 1)
-		{
-			local player_class = player.GetPlayerClass() - 1
-			switch (driver_class)
-			{
-				case TF_CLASS_DEMOMAN:		
-				{
-					ResponsePlayIdx(RESPONSE_PLAYER_DEMOMAN_HIT, m_driver, player_class)
-					return
-				}
-				case TF_CLASS_ENGINEER:		
-				{
-					ResponsePlayIdx(RESPONSE_PLAYER_ENGINEER_HIT, m_driver, player_class)
-					return
-				}
-				case TF_CLASS_SNIPER:		
-				{
-					ResponsePlayIdx(RESPONSE_PLAYER_SNIPER_HIT, m_driver, player_class)
-					return
-				}
-				case TF_CLASS_SOLDIER:		
-				{
-					ResponsePlayIdx(RESPONSE_PLAYER_SOLDIER_HIT, m_driver, player_class)
-					return
-				}	
-				case TF_CLASS_SPY:		
-				{
-					ResponsePlayIdx(RESPONSE_PLAYER_SPY_HIT, m_driver, player_class)
-					return
-				}	
-				case TF_CLASS_SCOUT:		
-				{
-					ResponsePlayIdx(RESPONSE_PLAYER_SCOUT_HIT, m_driver, player_class)
-					return
-				}
-			}
-		}
-
-		ResponsePlay(RESPONSE_PLAYER_HIT, m_driver)
-		m_response_hit_timer = time + 7.0
-	}
-
 	
 	UpdateDebug = function()
 	{
@@ -3427,6 +3428,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_SPIN))
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
+					kart.HitPlayer(m_owner_kart ? m_owner_kart.m_driver : null)
 				}
 				
 				Destroy()			
@@ -3437,6 +3439,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
+					kart.HitPlayer(m_owner_kart ? m_owner_kart.m_driver : null)
 				}
 				
 				DispatchParticleEffect("drg_cow_explosion_sparkles", self.GetOrigin(), vec3_zero)
@@ -3480,6 +3483,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
 						m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
+					kart.HitPlayer(m_owner_kart ? m_owner_kart.m_driver : null)
 				}
 
 				Destroy()
