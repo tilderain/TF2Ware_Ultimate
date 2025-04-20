@@ -1,4 +1,7 @@
 mission <- RandomInt(0, 1)
+damage_mode <- RandomInt(0, 1)
+if(mission == 0 && damage_mode == 1)
+	mission = 2
 minigame <- Ware_MinigameData
 ({
 	name		   = "Upgrade"
@@ -7,19 +10,22 @@ minigame <- Ware_MinigameData
 	[
 		"Upgrade and do over 125 damage!"
 		"Upgrade and resist the damage!"
+		"Upgrade firing speed and hit faster than 0.8s!"
 	]
 	duration	   = 8.5
-	music		  = mission == 0 ? "upgrademusic" : "upgraderesist"
+	music		  = (mission != 1) ? "upgrademusic" : "upgraderesist"
 	custom_overlay =
 	[
 		"upgrade_damage"
 		"upgrade_resist"
+		"upgrade_rate"
 	]
 	fail_on_death = true
 })
 
 MISSION_DAMAGE <- 0
 MISSION_RESIST <- 1
+MISSION_RATE <- 2
 
 killicon_dummy <- null
 
@@ -90,6 +96,9 @@ function OnStart()
 		//Ware_SetPlayerLoadout(player, TF_CLASS_SNIPER, ["Kukri", "SMG", "Sniper Rifle"])
 		//player.BleedPlayerEx(8, 10, false, 0)
 		//GivePlayerBottle(player)
+		local minidata = Ware_GetPlayerMiniData(player)
+		minidata.lastHit <- 0
+		minidata.curHit <- 0
 	}
 	local x = Ware_MinigameLocation.center.x
 	local y = Ware_MinigameLocation.center.y
@@ -102,7 +111,7 @@ function OnStart()
 	SpawnFuncUpgrade(Ware_MinigameLocation.center)
 
 
-	if(mission == MISSION_DAMAGE)
+	if(mission == MISSION_DAMAGE || mission == MISSION_RATE)
 	{
 		Ware_PlaySoundOnAllClients(format("vo/mvm_get_to_upgrade%02d.mp3", RandomInt(1,11)))
 
@@ -197,7 +206,7 @@ function OnTakeDamage(params)
 	if (params.const_entity.GetName() == "upgrade_robot")
 	{
 		local attacker = params.attacker
-		if (attacker && attacker.IsPlayer())
+		if (attacker && attacker.IsPlayer() && mission == MISSION_DAMAGE)
 		{
 			if(attacker.InCond(TF_COND_CRITBOOSTED_USER_BUFF))
 				params.damage *= 3
@@ -205,7 +214,19 @@ function OnTakeDamage(params)
 			Ware_ShowText(attacker, CHANNEL_MINIGAME, format("Damage: %.1f", params.damage), Ware_GetMinigameRemainingTime())
 			if(params.damage > 125)
         		Ware_PassPlayer(attacker, true)
+		}
+		if (attacker && attacker.IsPlayer() && mission == MISSION_RATE)
+		{
+			Ware_PlaySoundOnClient(attacker, params.const_entity.GetScriptScope().hit_sound)
+			local minidata = Ware_GetPlayerMiniData(attacker)
 
+			minidata.lastHit <- minidata.curHit
+			minidata.curHit <- Ware_GetMinigameTime()
+			
+			local diff = minidata.curHit - minidata.lastHit
+			Ware_ShowText(attacker, CHANNEL_MINIGAME, format("Last hit: %.1fs", diff), Ware_GetMinigameRemainingTime())
+			if(diff < 0.8)
+        		Ware_PassPlayer(attacker, true)
 		}
 
 		return false
