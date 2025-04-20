@@ -8,7 +8,7 @@ minigame <- Ware_MinigameData
 		"Upgrade and do over 125 damage!"
 		"Upgrade and resist the damage!"
 	]
-	duration	   = 9
+	duration	   = 8.5
 	music		  = mission == 0 ? "upgrademusic" : "upgraderesist"
 	custom_overlay =
 	[
@@ -130,9 +130,9 @@ function OnStart()
 		Ware_PlaySoundOnAllClients(format("vo/mvm_sentry_buster_alerts%02d.mp3", RandomInt(1,3)))
 		Ware_PlaySoundOnAllClients(snd_intro, 0.5)
 		Ware_PlaySoundOnAllClients(snd_loop, 0.5)
-		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 6)
+		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 5.5)
 
-		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.5), 6)
+		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.5), 5.5)
 
 
    		local bot = Ware_SpawnEntity("prop_dynamic_override",
@@ -150,8 +150,8 @@ function OnStart()
 		//bot.SetMoveType(MOVETYPE_NONE, 0)
 		bot.ValidateScriptScope()
 
-		CreateTimer(@() SetExplodeAnim(bot), 6)
-		CreateTimer(@() ExplodeBot(bot), 8.0)
+		CreateTimer(@() SetExplodeAnim(bot), 5.5)
+		CreateTimer(@() ExplodeBot(bot), 7.5)
 	}
 
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Original")
