@@ -43,7 +43,7 @@ function OnStart()
 		minidata.lastAtk <- atk
 		if(VectorDistance(player.GetOrigin(), origin) < 200)
 			player.SetOrigin(player.GetOrigin() + Vector(0,0,25))
-		minidata.InCap <- false
+		minidata.inCap <- false
 	}
 
 	EntFire("control_point_3", "SetLocked", "0")
@@ -114,14 +114,8 @@ function OnUpdate()
 //from https://github.com/potato-tf/OOAssets/blob/main/scripts/vscripts/rev_spacepost_pea.nut#L2891
 function SpawnCap(org)
 {
-	local obj_control_blucapture_rate = 7.0
-	local len = Ware_MinigamePlayers.len()
-	if(len > 12)
-		obj_control_blucapture_rate = 12.0
-	else if (len > 6)
-		obj_control_blucapture_rate = 10.0
-	else if (len > 2)
-		obj_control_blucapture_rate = 9.0
+	obj_control_blucapture_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 13.0, 7.0, 12.0)
+
 	control_point_3 = Ware_SpawnEntity("team_control_point",
 	{
 		origin                    = org
@@ -148,8 +142,7 @@ function SpawnCap(org)
 		team_bodygroup_0          = 3
 		spawnflags                = 4
 		point_warn_sound          = "ControlPoint.CaptureWarn"
-		point_warn_on_cap      
- = 2
+		point_warn_on_cap         = 2
 		point_printname           = "The freaking point"
 		point_index               = 0
 		point_group               = 0
@@ -220,7 +213,7 @@ function OnTriggerStartTouch()
 	if (activator && activator.IsPlayer())
 	{
 		local minidata = Ware_GetPlayerMiniData(activator)
-		minidata.inCap <- true
+		minidata.inCap = true
 	}
 }
 
@@ -229,7 +222,7 @@ function OnTriggerEndTouch()
 	if (activator && activator.IsPlayer())
 	{
 		local minidata = Ware_GetPlayerMiniData(activator)
-		minidata.inCap <- false
+		minidata.inCap = false
 	}
 }
 function OnTriggerEndCap()
@@ -237,8 +230,7 @@ function OnTriggerEndCap()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
-		//The check shouldn't be necessary?
-		if("inCap" in minidata && minidata.inCap)
+		if(minidata.inCap)
 			Ware_PassPlayer(player, true)
 	}
 }
