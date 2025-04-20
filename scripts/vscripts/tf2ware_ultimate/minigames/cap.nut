@@ -78,7 +78,7 @@ function PushLine(self, radius)
 			other.EmitSound( "Weapon_Hands.PushImpact" )
 			forward.z = 2.0
 			other.TakeDamage(5, DMG_CLUB, self)
-			other.ApplyAbsVelocityImpulse(forward*500)
+			other.ApplyAbsVelocityImpulse(forward*360)
 		}
 	}
 }
