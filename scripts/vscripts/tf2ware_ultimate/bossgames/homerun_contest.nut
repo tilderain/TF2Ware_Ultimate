@@ -79,25 +79,74 @@ shouldend <- false
 
 function OnStart()
 {
+	local clip = null
 	for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
+	{
+		clip = ent.GetModelName()
 		EntityAcceptInput(ent, "Enable")
+	}
+
 
 	// TODO:
 	// spawn a podium for each player
 	// create a podium clip around each podium
+	local name = null
+	local add = 400
+	local the = Vector(0,0,0)
+	for (local ent; ent = FindByClassname(ent, "func_brush");)
+	{
+		the = ent.GetOrigin()
+		if(the.x == -12127.5)
+		{
+			the = ent.GetOrigin()
+			Ware_ChatPrint(null, "lol {float}", the)
+			name = ent.GetModelName()
+			break;
+		}
+	}
 	local index = 0
 
 	foreach(player in Ware_MinigamePlayers)
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
+		local newbrush = null
+		local neworigin = Vector(0,0,0)
+		if(index>0)
+		{
+			newbrush = Ware_SpawnEntity("func_brush", {
+				model = name,
+				origin = the + Vector(add, 0, 0),
+			})
+			neworigin = the + Vector(add, 0, 0),
 
-		minidata.sandbag <- Ware_SpawnEntity("prop_physics_override", {
-			model = sandbag_model,
-			targetname = format("sandbag%d", index)
-			origin = player.GetOrigin() + Vector(0, 150, 60),
-			angles = QAngle(0, -90, 0),
-			massscale = 5
-		})
+			newbrush = Ware_SpawnEntity("func_brush", {
+				model = clip,
+				origin = the + Vector(add, 0, 0),
+				targetname = "HomeRun_PodiumClip",
+			})
+			player.SetOrigin( the + Vector(add, 0, 50) )
+			minidata.sandbag <- Ware_SpawnEntity("prop_physics_override", {
+				model = sandbag_model,
+				targetname = format("sandbag%d", index)
+				origin = the + Vector(add, 0, 0) + Vector(0, 150, 80),
+				//origin = player.GetOrigin() + Vector(0, 150, 60),
+				angles = QAngle(0, -90, 0),
+				massscale = 5
+			})
+			add += 400
+		}
+		else
+		{
+			minidata.sandbag <- Ware_SpawnEntity("prop_physics_override", {
+				model = sandbag_model,
+				targetname = format("sandbag%d", index)
+				origin = the + Vector(0, 150, 80),
+				//origin = player.GetOrigin() + Vector(0, 150, 60),
+				angles = QAngle(0, -90, 0),
+				massscale = 5
+			})
+			neworigin = Ware_MinigameLocation.center
+		}
 
 		index++
 
@@ -113,6 +162,7 @@ function OnStart()
 		scope.lastOrigin <- sandbag.GetOrigin()
 		scope.groundTime <- -1
 		scope.lastHitTime <- 0
+		scope.initOrigin <- neworigin
 
 		HomeRun_Sandbags.append(sandbag)
 
@@ -234,8 +284,9 @@ function OnUpdate()
 		{
 			local org = sandbag.GetOrigin()
 			local ent = FindByName(null, "HomeRun_PodiumClip")
-			if(VectorDistance2D(org, Ware_MinigameLocation.center) > 230)
+			if(VectorDistance2D(org, scope.initOrigin) > 230)
 			{
+				Ware_ChatPrint(null, "lol {int}", VectorDistance2D(org, scope.initOrigin))
 				SetCamera(scope.player)
 				scope.outsidePodium = true
 				scope.flying = true
