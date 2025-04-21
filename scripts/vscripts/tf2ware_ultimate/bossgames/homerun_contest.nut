@@ -47,8 +47,14 @@ function OnPrecache()
 function OnTeleport(players)
 {
 	Ware_TogglePlayerLoadouts(true)
+	// unfortunately have to exclude pyro because it sucks dick
+	class_idx <- RandomInt(TF_CLASS_FIRST, TF_CLASS_SPY)
+	if (class_idx == TF_CLASS_PYRO)
+		class_idx = TF_CLASS_HEAVYWEAPONS
+	
 	foreach (player in players)
 	{
+		//Ware_SetPlayerClass(player, class_idx)
 		local data = Ware_GetPlayerData(player)
 		player.ForceRegenerateAndRespawn()
 	}
@@ -67,6 +73,10 @@ win_distance <- 6000
 highest_distance <- 0
 highest_player <- null
 
+game_over <- false
+
+shouldend <- false
+
 function OnStart()
 {
 	for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
@@ -81,7 +91,7 @@ function OnStart()
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
 
-		minidata.sandbag <- SpawnEntityFromTableSafe("prop_physics_override", {
+		minidata.sandbag <- Ware_SpawnEntity("prop_physics_override", {
 			model = sandbag_model,
 			targetname = format("sandbag%d", index)
 			origin = player.GetOrigin() + Vector(0, 150, 60),
@@ -102,6 +112,7 @@ function OnStart()
 		scope.outsidePodium <- false
 		scope.lastOrigin <- sandbag.GetOrigin()
 		scope.groundTime <- -1
+		scope.lastHitTime <- 0
 
 		HomeRun_Sandbags.append(sandbag)
 
@@ -154,6 +165,7 @@ function OnStart()
 		
 		}
 	}, 5.0)
+
 }
 
 function IsPointInTrigger(point, trigger)
@@ -173,10 +185,15 @@ function IsPointInTrigger(point, trigger)
 
 function OnUpdate()
 {
+
 	foreach (player in Ware_MinigamePlayers)
 	{
-		local camera = Ware_GetPlayerMiniData(player).camera
-		local origin = Ware_GetPlayerMiniData(player).sandbag.GetOrigin() + Vector(600, 0, 0)
+		local minidata = Ware_GetPlayerMiniData(player)
+		//Sometimes game freaks out because camera is missing
+		if(!minidata.camera.IsValid() || !minidata.sandbag.IsValid())
+			return
+		local camera = minidata.camera
+		local origin = minidata.sandbag.GetOrigin() + Vector(600, 0, 0)
 		if(origin.x > -10200)
 			origin.x = -10200
 		camera.KeyValueFromVector("origin", origin)
@@ -193,7 +210,23 @@ function OnUpdate()
 			player.ClearTauntAttack()
 		}
 	}
-
+	if(!shouldend && Ware_GetMinigameRemainingTime() < 9.5)
+	{
+		shouldend = true
+		foreach(sandbag in HomeRun_Sandbags)
+		{
+			if(sandbag.GetScriptScope().outsidePodium)
+			{
+				shouldend = false
+				break
+			}
+		}
+		if(shouldend)
+		{
+			Ware_Minigame.duration = 1
+			Ware_CreateTimer(function() {game_over = true}, 2.5)
+		}
+	}
 	foreach(sandbag in HomeRun_Sandbags)
 	{
 		local scope = sandbag.GetScriptScope()
@@ -201,11 +234,19 @@ function OnUpdate()
 		{
 			local org = sandbag.GetOrigin()
 			local ent = FindByName(null, "HomeRun_PodiumClip")
-			if(VectorDistance2D(org, Ware_MinigameLocation.center) > 270)
+			if(VectorDistance2D(org, Ware_MinigameLocation.center) > 230)
 			{
 				SetCamera(scope.player)
 				scope.outsidePodium = true
 				scope.flying = true
+				if(scope.lastHitTime < Time() + 1)
+					scope.destY = 0
+			}
+			else
+			{
+				//Clipping thru floor
+				if(org.z < -14200)
+					sandbag.SetOrigin(org + Vector(0,0,100))
 			}
 			if(Ware_GetMinigameRemainingTime() < 2.5)
 			{
@@ -279,6 +320,10 @@ function OnUpdate()
 
 }
 
+function OnCheckEnd()
+{
+	return game_over
+}
 
 function SpawnFireball(player)
 {
@@ -330,6 +375,7 @@ function OnTakeDamage(params)
 		printl("post: " + params.damage_force)
 
 		scope.destY <- params.damage_force.y
+		scope.lastHitTime <- Time()
 
 		//ent.Teleport(false, Vector(), false, QAngle(), true, params.damage_force)
 
@@ -369,13 +415,7 @@ function OnGameEvent_player_builtobject(params)
 
 function OnEnd()
 {
-	foreach(sandbag in HomeRun_Sandbags)
-	{
-		if (sandbag)
-			sandbag.Destroy()
 
-		HomeRun_Sandbags.remove(HomeRun_Sandbags.find(sandbag))
-	}
 }
 
 function GiveSpecialMelee(player)
