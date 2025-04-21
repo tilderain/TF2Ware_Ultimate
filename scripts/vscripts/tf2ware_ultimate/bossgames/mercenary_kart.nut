@@ -1056,12 +1056,9 @@ function CreateDriftParticle(kart_prop, origin, angles)
 		effect_name = "error",
 		origin = origin,
 		angles = angles,
-		start_active = false
+		start_active = true
 	})
-	particle.DisableDraw()
-	SetPropBool(particle, "m_bForcePurgeFixedupStrings", true)
-	SetPropFloat(particle, "m_flStartTime", FLT_MAX)
-	EntFireByHandle(particle, "SetParent", "!activator", -1, kart_prop, null)
+	SetEntityParent(particle, kart_prop)
 	return particle
 }
 
@@ -1128,13 +1125,13 @@ function CreateKart(origin, angles)
 	const_height <- 18.0
 
 	// TODO should be decided by attachments
-	kart.m_particle_wheel_right <- CreateDriftParticle(kart_prop, 
-			origin - (angles.Forward() * 36.0) - (angles.Left() * 22.0) - (angles.Up() * const_height) + Vector(0, 44, 0),
-		 	angles)
+	//kart.m_particle_wheel_right <- CreateDriftParticle(kart_prop, 
+	//		origin - (angles.Forward() * 36.0) - (angles.Left() * 22.0) - (angles.Up() * const_height) + Vector(0, 44, 0),
+	//	 	angles)
 	
-	kart.m_particle_wheel_left <- CreateDriftParticle(kart_prop, 
-			origin - (angles.Forward() * 36.0) - (angles.Left() * 22.0) - (angles.Up() * const_height),
-		 	angles)
+	kart.m_particle_wheel_left <- null
+
+	kart.m_drift_particle <- 0
 	
 	kart.m_id                 <- kart_id++
 	kart.m_driver             <- null	
@@ -1759,7 +1756,7 @@ kart_routines <-
 		if (m_drifting)
 		{
 			if (m_particle_drift_restart > 0 && --m_particle_drift_restart == 0)
-				ToggleWheelParticles(true)
+				ToggleWheelParticles(true, false)
 			
 			if (!(m_buttons & IN_JUMP))
 			{
@@ -1803,9 +1800,8 @@ kart_routines <-
 					})
 					
 					local particle = Ware_MinigameScope.KartParticleDrift[m_boost_stage - 1]		
-					SetPropInt(m_particle_wheel_left, "m_iEffectIndex", particle)
-					SetPropInt(m_particle_wheel_right, "m_iEffectIndex", particle)
-					ToggleWheelParticles(false)
+					m_drift_particle = particle
+					ToggleWheelParticles(false, false)
 					m_particle_drift_restart = 5
 				}							
 			}
@@ -2213,7 +2209,7 @@ kart_routines <-
 		m_prop.StopSound("MK_Kart_Drift")
 
 		// TODO: drifting into offroad stops particles
-		ToggleWheelParticles(false)
+		ToggleWheelParticles(false, true)
 	}
 	
 	RescueInit = function()
@@ -2382,12 +2378,31 @@ kart_routines <-
 		return true
 	}
 	
-	ToggleWheelParticles = function (active)
+	ToggleWheelParticles = function (active, kill)
 	{
-		SetPropBool(m_particle_wheel_left, "m_bActive", active)
-		SetPropBool(m_particle_wheel_right, "m_bActive", active)
-		m_particle_wheel_left.SetDrawEnabled(active)
-		m_particle_wheel_right.SetDrawEnabled(active)
+		if(active && !m_particle_wheel_left)
+		{
+			m_particle_wheel_left = Ware_MinigameScope.CreateDriftParticle(m_prop, 
+			m_origin - (m_angles.Forward() * 36.0) - (m_angles.Left() * 1) - (m_angles.Up() * 18.0),
+		 	m_angles)
+		}
+		if(m_particle_wheel_left)
+		{
+			SetPropInt(m_particle_wheel_left, "m_iEffectIndex", m_drift_particle)
+			SetPropBool(m_particle_wheel_left, "m_bActive", active)		
+			m_particle_wheel_left.SetDrawEnabled(active)
+		}
+
+
+		//SetPropBool(m_particle_wheel_right, "m_bActive", active)
+		
+		if(kill && m_particle_wheel_left)
+		{
+			m_particle_wheel_left.Destroy()
+			m_particle_wheel_left = null
+		}
+
+		//m_particle_wheel_right.SetDrawEnabled(active)
 	}
 
 	Shrink = function(timer)
