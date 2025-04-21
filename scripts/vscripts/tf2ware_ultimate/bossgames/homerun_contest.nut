@@ -54,7 +54,7 @@ function OnTeleport(players)
 	
 	foreach (player in players)
 	{
-		//Ware_SetPlayerClass(player, class_idx)
+		Ware_SetPlayerClass(player, TF_CLASS_SOLDIER)
 		local data = Ware_GetPlayerData(player)
 		player.ForceRegenerateAndRespawn()
 	}
@@ -79,6 +79,17 @@ shouldend <- false
 
 function OnStart()
 {
+	fog <- Ware_SpawnEntity("env_fog_controller",
+	{
+		fogenable = true,
+		fogcolor = "0 0 0",
+		fogcolor2 = "20 20 20",
+		fogstart = 250,
+		fogend = 3500,
+		fogmaxdensity = 0.9,
+		farz = 2400,
+	})
+
 	local clip = null
 	for (local ent; ent = FindByName(ent, "HomeRun_PodiumClip");)
 	{
@@ -108,6 +119,7 @@ function OnStart()
 
 	foreach(player in Ware_MinigamePlayers)
 	{
+	//	SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
 		local minidata = Ware_GetPlayerMiniData(player)
 		local newbrush = null
 		local neworigin = Vector(0,0,0)
@@ -131,7 +143,7 @@ function OnStart()
 				origin = the + Vector(add, 0, 0) + Vector(0, 150, 80),
 				//origin = player.GetOrigin() + Vector(0, 150, 60),
 				angles = QAngle(0, -90, 0),
-				massscale = 5
+				massscale = 500
 			})
 			add += 400
 		}
@@ -244,8 +256,8 @@ function OnUpdate()
 			return
 		local camera = minidata.camera
 		local origin = minidata.sandbag.GetOrigin() + Vector(600, 0, 0)
-		if(origin.x > -10200)
-			origin.x = -10200
+		//if(origin.x > -102000)
+		//	origin.x = -102000
 		camera.KeyValueFromVector("origin", origin)
 	}
 
@@ -318,7 +330,7 @@ function OnUpdate()
 			}
 			else if (nudgeTo > 1000 && distance > nudgeTo)
 			{
-				sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99444)
+			//	sandbag.SetPhysVelocity(sandbag.GetPhysVelocity()*0.99444)
 			}
 
 
@@ -418,17 +430,17 @@ function OnTakeDamage(params)
 			params.damage = 500.0
 		}
 
-		printl("pre: " + params.damage_force)
+		//printl("pre: " + params.damage_force)
 		params.damage_force *= ((percent / 5.0) * melee_multiplier)
 		if (melee_multiplier > 1.0)
 			params.damage_force.z = fabs(params.damage_force.z)
 
-		printl("post: " + params.damage_force)
+		//printl("post: " + params.damage_force)
 
 		scope.destY <- params.damage_force.y
 		scope.lastHitTime <- Time()
 
-		//ent.Teleport(false, Vector(), false, QAngle(), true, params.damage_force)
+		ent.Teleport(false, Vector(), false, QAngle(), true, params.damage_force)
 
 		//printl("damage pos" + params.damage_position)
 
