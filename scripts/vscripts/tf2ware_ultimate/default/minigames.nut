@@ -47,6 +47,7 @@ limbo
 math
 melee_arena
 merasmus
+most_bombs
 move
 parachute
 pickup_can
@@ -61,7 +62,6 @@ sap
 sawrun
 shark
 shoot_barrel
-shoot_bombs
 shoot_gifts
 shoot_target
 simon_says

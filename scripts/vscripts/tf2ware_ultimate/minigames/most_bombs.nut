@@ -1,7 +1,7 @@
 mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
-	name           = "Shoot Bombs"
+	name           = "Most Bombs"
 	author         = ["Mecha the Slag", "ficool2"]
 	description    = mode == 0 ? "Shoot the most occurring color!" : "Shoot the least occurring color!"
 	duration       = 8.0
