@@ -346,7 +346,7 @@ function OnUpdate()
 					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_SUPER:
-				if (player.GetOrigin().z > -6800.0)
+				if (player.GetOrigin().z > -6900.0)
 					GiocaJouer_PassPlayer(player, true)
 				break
 		}
