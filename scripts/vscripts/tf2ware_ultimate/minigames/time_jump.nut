@@ -16,7 +16,7 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null, { "air dash count" : 10 })
 	if(mode == 1)
 	{
-		target_height = 600.0
+		target_height = 570.0
 		foreach(player in Ware_MinigamePlayers)
 			Ware_GivePlayerWeapon(player, "Force-a-Nature", { "air dash count" : 10 })
 	}
