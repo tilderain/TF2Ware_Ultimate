@@ -44,7 +44,7 @@ chrises <-
 ]
 
 micro <- null        // microgame tracker
-micro_num <- null        // microgame num
+micro_num <- 0        // microgame num
 min_score <- 16      // minimum score to win. Only the players with the highest score win, might change this to just check min_score, and increase min_score.
 micro_grace <- false // tracks grace period for certain microgames.
 
@@ -129,7 +129,7 @@ function OnStart()
 	// increments "micro", and starts the next one.
 
 	Shuffle(micro_rotation)
-	micro_rotation.append(17)
+	micro_rotation.append(MICRO_RESET)
 
 	foreach(announcement in announcements)
 	{
@@ -166,7 +166,11 @@ function GiocaJouer_Countdown(delay)
 function GiocaJouer_Clock()
 {
 	if (micro == null)
-		micro_num = 0
+	{
+		micro = 0
+		if(micro_num > 0)
+			micro_num++
+	}
 	else
 	{
 		OnMicroEnd()
@@ -210,7 +214,7 @@ function GiocaJouer_CheckTauntableMelee(player)
 
 function OnMicroStart()
 {
-	micro = micro_rotation[micro_num%16]
+	micro = micro_rotation[micro_num%18]
 	minigame.description = microgame_info[micro][0]
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
 
@@ -220,7 +224,7 @@ function OnMicroStart()
 		micro = null
 		return
 	}
-	Ware_ChatPrint(null, "{int}", micro_num)
+	
 	local sound = chrises[micro]
 	if(micro_num > 16) sound += "2"
 	sound += ".mp3"
