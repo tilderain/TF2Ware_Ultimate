@@ -4,7 +4,7 @@ minigame <- Ware_MinigameData
 	name        = "Time Jumps"
 	author      = ["tilderain"]
 	description = "Time your jumps to the top!"
-	duration    = mode == 0 ? 6.5 : 7.5
+	duration    = mode == 0 ? 6.5 : 8.5
 	end_delay   = 0.2
 	music       = "golden"
 })
