@@ -9,6 +9,10 @@ minigame <- Ware_MinigameData
 	duration       = 4.0
 	music          = "ringring"
 	fail_on_death  = true
+	convars =
+	{
+		tf_scout_air_dash_count = 69
+	}
 })
 
 function OnPrecache()
@@ -23,6 +27,12 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Atomizer")
 }
 
+function FailJump(player)
+{
+	Ware_SuicidePlayer(player)
+	Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/double_jump_fail")
+}
+
 function OnUpdate()
 {
 	foreach (player in Ware_MinigamePlayers)
@@ -34,14 +44,13 @@ function OnUpdate()
 				if (airdashes == 1)
 					Ware_PassPlayer(player, true)
 				else if (airdashes == 2)
-				{
-					Ware_SuicidePlayer(player)
-					Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/double_jump_fail")
-				}
+					FailJump(player)
 				break
 			case 1:
 				if (airdashes == 2)
 					Ware_PassPlayer(player, true)
+				else if (airdashes == 3)
+					FailJump(player)
 				break
 		}
 	}
