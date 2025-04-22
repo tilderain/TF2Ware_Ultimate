@@ -134,12 +134,12 @@ function OnStart()
 	foreach(announcement in announcements)
 	{
 		local sound = announcement[0] //squirrel
-		Ware_CreateTimer(@() Ware_PlaySoundOnAllClients(sound), announcement[1] * Ware_GetPitchFactor())
+		Ware_CreateTimer(@() Ware_PlaySoundOnAllClients(sound), announcement[1])
 	}
 	foreach (microgame in microgame_info)
 	{
-		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[2] * Ware_GetPitchFactor())
-		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[3] * Ware_GetPitchFactor())
+		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[2])
+		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[3])
 	}
 }
 
@@ -153,14 +153,14 @@ function GiocaJouer_Countdown(delay)
 			// count up to 8
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%s", timer.tostring()))
 			timer++
-			return 0.489 * Ware_GetPitchFactor()
+			return 0.489
 		}
 		else
 		{
 			// kill the overlay
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, null)
 		}
-	}, delay * Ware_GetPitchFactor())
+	}, delay)
 }
 
 function GiocaJouer_Clock()
@@ -224,7 +224,7 @@ function OnMicroStart()
 		micro = null
 		return
 	}
-	
+
 	local sound = chrises[micro]
 	if(micro_num > 16) sound += "2"
 	sound += ".mp3"
