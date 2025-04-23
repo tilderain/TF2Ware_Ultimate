@@ -6,7 +6,7 @@ minigame <- Ware_MinigameData
 	description = "Time your jumps to the top!"
 	duration    = mode == 0 ? 6.5 : 8.5
 	end_delay   = 0.2
-	music       = "golden"
+	music       = "starlift"
 })
 
 target_height  <- 500.0
