@@ -540,6 +540,17 @@ function OnGameEvent_player_disconnect(params)
 		Ware_SpecialRound.cb_on_player_disconnect(player)
 }
 
+function OnGameEvent_vote_cast(params)
+{
+	local player = GetPlayerFromUserID(params.entityid)
+	if (player == null)
+		return
+
+	local vote_option = params.vote_option
+	
+	if (Ware_Minigame)
+		Ware_Minigame.cb_on_vote_cast(player, vote_option, params)
+}
 function OnGameEvent_teamplay_game_over(params)
 {
 	// map end

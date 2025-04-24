@@ -159,6 +159,8 @@ class Ware_MinigameData
 	cb_on_player_horn		= null
 	// OnPlayerTouch(player, other_player) - Called by Ware_OnUpdate when two players touch and passes the two players.
 	cb_on_player_touch		= null
+	// OnVoteCast(player, vote_option, params) - OnGameEvent_vote_cast, and passes the player, what option they picked and remaining parameters.
+	cb_on_vote_cast			= null
 }
 
 // Global variables
