@@ -1,0 +1,6 @@
+LightmappedGeneric
+{
+	"$basetexture"  "tf2ware\map_textures\follow_sandvich"
+	"$translucent" "1"
+	"$nodecal"     "1"
+}

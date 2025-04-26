@@ -84,7 +84,8 @@ local pages_info =
 	],
 ]
 
-local pages_collected = 0
+pages_collected <- 0
+
 local page_add_time = 12.0
 local pages_max = pages_info.len()
 
@@ -132,6 +133,7 @@ function OnStart()
 			Ware_SetPlayerTeam(player, TF_TEAM_RED)
 			Ware_PassPlayer(player, false)
 			SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
+			Ware_GetPlayerMiniData(player).pages_collected <- 0
 		}
 	}
 	
@@ -169,7 +171,8 @@ function OnStart()
 
 function OnTeleport(players)
 {
-	local slender_count = Clamp(ceil(players.len() / 10.0).tointeger(), 1, 3)
+	local max_slender_count = players.len() > 40 ? 5 : 3
+	local slender_count = Clamp(ceil(players.len() / 10.0).tointeger(), 1, max_slender_count)
 	for (local i = 0; i < slender_count; i++)
 		slenders.append(RemoveRandomElement(players))
 	
@@ -179,11 +182,14 @@ function OnTeleport(players)
 		400.0,
 		60.0, 60.0)
 	
+	local spacing = 60.0
+	if (players.len() > 40)
+		spacing *= 0.65
 	Ware_TeleportPlayersRow(players,
 		Ware_MinigameLocation.lobby,
 		QAngle(0, -90, 0),
 		400.0,
-		-60.0, 60.0)
+		spacing, spacing)
 }
 
 function ShowStatusText()
@@ -242,9 +248,9 @@ function OnUpdate()
 function OnTakeDamage(params)
 {
 	local victim = params.const_entity
+	local attacker = params.attacker
 	if (victim.IsPlayer())
 	{
-		local attacker = params.attacker
 		if (victim.GetPlayerClass() == TF_CLASS_SPY)
 			return false
 	}
@@ -257,6 +263,9 @@ function OnTakeDamage(params)
 		EntityEntFire(victim, "Kill", "", 0.1)
 		
 		pages_collected++
+		if (attacker && attacker.IsPlayer())
+			Ware_GetPlayerMiniData(attacker).pages_collected++
+		
 		end_time += page_add_time
 		if (end_time > end_time_max)
 		{
@@ -278,12 +287,17 @@ function OnPlayerDeath(player, attacker, params)
 
 function OnEnd()
 {
-	local survivors = Ware_GetAlivePlayers(TF_TEAM_RED)
-	
 	if (pages_collected >= pages_max)
 	{
+		local survivors = Ware_GetTeamPlayers(TF_TEAM_RED)		
 		foreach (player in survivors)
-			Ware_PassPlayer(player, true)
+		{
+			if (player.IsAlive())
+				Ware_PassPlayer(player, true)
+			// dead survivors who picked up a page will pass
+			else if (Ware_GetPlayerMiniData(player).pages_collected > 0)
+				Ware_PassPlayer(player, true)
+		}
 			
 		foreach (player in slenders)
 		{
@@ -293,7 +307,7 @@ function OnEnd()
 		
 		Ware_ChatPrint(null, "All pages collected... The Survivors win!")
 	}
-	else if (survivors.len() == 0)
+	else if (Ware_GetAlivePlayers(TF_TEAM_RED).len() == 0)
 	{
 		Ware_ChatPrint(null, "All survivors are dead... Slender wins!")
 	}

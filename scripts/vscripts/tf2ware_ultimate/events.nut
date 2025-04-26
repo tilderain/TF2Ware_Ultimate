@@ -9,24 +9,37 @@ function OnScriptHook_OnTakeDamage(params)
 		// always allow skull damage
 		return
 	}
+	
+	local victim = params.const_entity
+	local attacker = params.attacker
+	local force_pvp = false
 		
 	if (Ware_SpecialRound)
 	{
-		if (Ware_SpecialRound.cb_on_take_damage(params) == false)
+		if (Ware_SpecialRound.force_pvp_damage)
+			force_pvp = victim.IsPlayer() && attacker && attacker.IsPlayer()
+		
+		if (Ware_SpecialRound.cb_on_take_damage(params) == false
+			&& !force_pvp)
 		{
 			params.damage = 0
 			params.early_out = true
 			return
 		}
+		
+		if (params.force_friendly_fire)
+			force_pvp = true
 	}
 	
 	if (Ware_Finished)
 	{
-		if (Ware_MinigameTopScorers.find(params.const_entity) != null &&
-			Ware_MinigameTopScorers.find(params.inflictor) != null &&
-			params.inflictor != params.const_entity)
+		if (!force_pvp 
+			&& params.inflictor != params.const_entity
+			&& Ware_MinigameTopScorers.find(params.const_entity) != null 
+			&& Ware_MinigameTopScorers.find(params.inflictor) != null)
 		{
 			params.damage = 0.0
+			params.early_out = true
 			return
 		}
 	}
@@ -40,9 +53,6 @@ function OnScriptHook_OnTakeDamage(params)
 			return
 		}
 	}
-	
-	local victim = params.const_entity
-	local attacker = params.attacker
 	
 	if (victim == attacker)
 	{
@@ -58,7 +68,9 @@ function OnScriptHook_OnTakeDamage(params)
 		// handle the case where truce is disabled but don't want damage between players
 		if (victim.IsPlayer() && attacker.IsPlayer())
 		{
-			if (!Ware_Finished && Ware_Started && (Ware_Minigame == null || !Ware_Minigame.allow_damage))
+			if (!force_pvp && !Ware_Finished && Ware_Started
+				&& (!Ware_Minigame || !Ware_Minigame.allow_damage)
+				&& (!Ware_SpecialRound || !Ware_SpecialRound.allow_damage))
 			{
 				params.damage = 0
 				params.early_out = true	
@@ -77,7 +89,9 @@ function OnScriptHook_OnTakeDamage(params)
 		same_team = true
 	}
 
-	local can_friendly_fire = (!Ware_Minigame || Ware_Minigame.friendly_fire) && (!Ware_SpecialRound || Ware_SpecialRound.friendly_fire)
+	local can_friendly_fire = params.force_friendly_fire ||
+							((!Ware_Minigame || Ware_Minigame.friendly_fire) 
+							&& (!Ware_SpecialRound || Ware_SpecialRound.friendly_fire))
 	if (can_friendly_fire)
 	{
 		params.force_friendly_fire = true
@@ -127,7 +141,8 @@ function OnScriptHook_OnTakeDamage(params)
 	}
 	
 	if (Ware_Minigame != null 
-		&& Ware_Minigame.cb_on_take_damage(params) == false)
+		&& Ware_Minigame.cb_on_take_damage(params) == false
+		&& !force_pvp)
 	{
 		params.damage = 0
 		params.early_out = true
@@ -185,21 +200,18 @@ function OnGameEvent_teamplay_round_start(params)
 		Ware_SetTheme(Ware_DebugNextTheme)
 		Ware_DebugNextTheme = ""
 	}
-	else if (Ware_RoundsPlayed > 0)
+	else if (Ware_RoundsPlayed > 0 && Ware_Themes.len() > 1)
 	{
-		// roll until we get a new one
-		local new_theme
-		do 
-		{
-			new_theme = RandomElement(Ware_Themes)
-		}
-		while (new_theme == Ware_Theme)
-		
-		Ware_Theme = new_theme
-		
+		// roll a new one
+		local themes = clone(Ware_Themes)
+		local idx = themes.find(Ware_Theme)
+		if (idx != null)
+			themes.remove(idx)
+
+		Ware_Theme = RandomElement(themes)
 		Ware_SetupThemeSounds()
 	}
-	else if (Ware_IsThemeValid())
+	else if (Ware_IsThemeValid(Ware_Theme))
 	{
 		Ware_SetupThemeSounds()
 	}
@@ -287,6 +299,8 @@ function OnGameEvent_scorestats_accumulated_update(params)
 			SetConvarValue(name, value)
 		Ware_MinigameSavedConvars.clear()
 		
+		ClearGameEventsFromScope(Ware_MinigameScope, Ware_MinigameEvents)
+		
 		if (Ware_Minigame.music)
 			Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
 	}
@@ -343,18 +357,32 @@ function OnGameEvent_recalculate_truce(params)
 	if (melee == null)
 		melee = ware_data.melee
 	
+	if (melee && !melee.IsValid())
+		melee = null
+	
 	if (melee != null)
 	{
 		// TODO: is this code even needed now that loadout cacher is removed?
 		// not sure why this is needed
-		melee.SetModel(TF_CLASS_ARMS[self.GetPlayerClass()])		
-		self.Weapon_Switch(melee)
-		melee.EnableDraw()
+		melee.SetModel(TF_CLASS_ARMS[self.GetPlayerClass()])	
 		
-		// hack: something is not clearing the render color
-		// last minute for the playtest
-		SetPropInt(melee, "m_clrRender", 0xFFFFFFFF)
+		melee = Ware_ForceSwitchPlayerMelee(self, melee)
+		if (melee)
+		{
+			melee.EnableDraw()
+			
+			// hack: something is not clearing the render color
+			// last minute for the playtest
+			SetPropInt(melee, "m_clrRender", 0xFFFFFFFF)
+		}
 	}
+	else
+	{
+		melee = Ware_ForceSwitchPlayerMelee(self, null)
+	}
+	
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_postspawn.IsValid())
+		Ware_SpecialRound.cb_on_player_postspawn(self)
 }
 
 function OnGameEvent_player_spawn(params)

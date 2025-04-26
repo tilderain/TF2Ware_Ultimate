@@ -39,6 +39,7 @@ minigame <- Ware_MinigameData
 })
 
 pass_sound <- "Halloween.PumpkinDrop"
+fail_sound <- "TF2Ware_Ultimate.Fail"
 
 microgame_info <-
 [
@@ -129,7 +130,9 @@ function GiocaJouer_Clock()
 
 function GiocaJouer_PassPlayer(player, pass)
 {
-	Ware_GetPlayerMiniData(player).gj_passed = pass
+	local minidata = Ware_GetPlayerMiniData(player)
+	if ("gj_passed" in  minidata)
+		minidata.gj_passed = pass
 }
 
 function GiocaJouer_CheckTauntableMelee(player)
@@ -358,6 +361,10 @@ function OnMicroEnd()
 			// For microgames that start true, keep it here in OnEnd()
 			// also lower the volume
 			EmitSoundOnClient(pass_sound, player)
+		}
+		else
+		{
+			EmitSoundOnClient(fail_sound, player)
 		}
 	}
 }

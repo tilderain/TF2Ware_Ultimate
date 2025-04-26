@@ -9,7 +9,6 @@ minigame <- Ware_MinigameData
 	max_scale      = 1.4
 	location       = "factory"
 	music          = "escape_factory"
-	fail_on_death  = true
 	convars =
 	{
 		tf_avoidteammates = 0
@@ -58,7 +57,28 @@ function OnEndzoneTouch()
 		}
 		
 		Ware_PassPlayer(player, true)
-		Ware_CreateTimer(@() Ware_ShowScreenOverlay(player, null), 0.02)
+		
+		local weapon = player.GetActiveWeapon()
+		if (weapon)
+			weapon.RemoveAttribute("active health degen")
+		
+		Ware_CreateTimer(@() Ware_ShowScreenOverlay(player, null), 0.02)	
+	}
+}
+
+function OnTakeDamage(params)
+{
+	local victim = params.const_entity
+	if (victim.IsPlayer())
+	{
+		local inflictor = params.inflictor
+		if (inflictor && inflictor.GetClassname() == "env_laser")
+		{
+			// fix weapons being dissolved after respawn
+			params.damage_type = params.damage_type & ~(DMG_DISSOLVE)	
+			params.damage_stats = TF_DMG_CUSTOM_PLASMA
+			params.damage *= 2.0
+		}
 	}
 }
 

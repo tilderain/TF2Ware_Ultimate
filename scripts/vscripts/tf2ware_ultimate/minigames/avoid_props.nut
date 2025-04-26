@@ -39,7 +39,11 @@ function OnPrecache()
 
 function OnStart()
 {
-	foreach (player in Ware_MinigamePlayers)
+	local targets = Shuffle(clone(Ware_MinigamePlayers))
+	if (targets.len() > 50)
+		targets.resize(50)
+	
+	foreach (player in targets)
 	{
 		local origin = player.GetOrigin() + Vector(0, 0, 1000)
 		local prop = Ware_SpawnEntity("prop_physics_override", 
@@ -47,8 +51,8 @@ function OnStart()
 			origin       = origin
 			model        = prop_model
 			skin         = RandomInt(0, 1)
-			spawnflags   = SF_PHYSPROP_TOUCH,	
-			minhealthdmg = INT_MAX, // don't destroy on touch			
+			spawnflags   = SF_PHYSPROP_TOUCH
+			minhealthdmg = INT_MAX // don't destroy on touch			
 		})	
 		Ware_SlapEntity(prop, 40.0)
 	}

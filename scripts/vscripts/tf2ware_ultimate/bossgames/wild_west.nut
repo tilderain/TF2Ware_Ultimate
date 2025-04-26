@@ -71,7 +71,10 @@ function PlacePlayers(players)
 		Ware_TeleportPlayersCircle(players, Ware_MinigameLocation.center, 135.0)
 
 		foreach (player in players)
+		{
+			player.AddCond(TF_COND_GRAPPLED_TO_PLAYER)
 			Ware_GetPlayerMiniData(player).opponent <- null
+		}
 
 		Ware_PlayMinigameMusic(null, music, SND_STOP)
 		Ware_PlaySoundOnAllClients(sound_standoff)
@@ -90,6 +93,9 @@ function PlacePlayers(players)
 	local x_spacing = 70.0
 	local y_spacing = 150.0
 	
+	if (players.len() > 40)
+		x_spacing *= 0.5
+	
 	local last_player = null
 	
 	local candidates = []
@@ -99,7 +105,10 @@ function PlacePlayers(players)
 	
 	foreach (candidate in candidates)
 	{
-		local player = candidate.player
+		local player = candidate.player	
+		
+		// disable taunts
+		player.AddCond(TF_COND_GRAPPLED_TO_PLAYER)
 
 		if (flip % 4 == 0)
 		{
@@ -247,6 +256,7 @@ function StopShootout()
 				Ware_StripPlayer(player, true)
 				Ware_ShowScreenOverlay(player, null)
 				player.AddCustomAttribute("no_attack", 1, -1)	
+				player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)			
 				final_players.append(player)
 			}
 		}
@@ -311,11 +321,20 @@ function OnTakeDamage(params)
 	}
 }
 
+function OnPlayerDeath(player, attacker, params)
+{
+	if (attacker && attacker.IsPlayer())
+		attacker.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)
+}
+
 function OnUpdate()
 {
 	local time = Time()
 	foreach (player in Ware_MinigamePlayers)
 	{
+		if (!player.IsAlive())
+			continue
+
 		local weapon = player.GetActiveWeapon()
 		if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY)
 		{		
@@ -352,19 +371,17 @@ function OnUpdate()
 	}
 }
 
-function OnEnd()
-{
-	foreach (player in Ware_MinigamePlayers)
-	{
-		player.RemoveFlag(FL_ATCONTROLS)
-		SetPropInt(player, "m_afButtonForced", 0)
-	}
-}
-
 function OnCleanup()
 {
 	if (mexican_standoff)
 		Ware_PlaySoundOnAllClients(sound_standoff, 1.0, 100, SND_STOP)
+		
+	foreach (player in Ware_MinigamePlayers)
+	{
+		player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)		
+		player.RemoveFlag(FL_ATCONTROLS)
+		SetPropInt(player, "m_afButtonForced", 0)
+	}		
 }
 
 function OnCheckEnd()

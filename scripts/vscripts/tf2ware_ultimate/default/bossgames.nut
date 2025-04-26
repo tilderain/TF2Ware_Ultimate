@@ -1,5 +1,6 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"beep_block
+buffer<-@"VERSION 0
+beep_block
 cuddly_heavies
 escape_factory
 falling_platforms

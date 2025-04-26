@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 	duration       = 7.0
 	location       = "dirtsquare"
 	music          = "countdown"
-	start_freeze   = true
+	start_freeze   = 0.5
 })
 
 clock_model <- "models/tf2ware_ultimate/clock.mdl"
@@ -24,10 +24,10 @@ function OnPrecache()
 function OnTeleport(players)
 {
 	Ware_TeleportPlayersRow(players, 
-		Ware_MinigameLocation.center - Vector(0, 300, 0), 
+		Ware_MinigameLocation.center - Vector(0, 400, 0), 
 		QAngle(-10, 90, 0), 
 		700.0, 
-		128.0, 70.0)
+		69.0, 64.0)
 }
 
 function OnStart()
@@ -83,7 +83,7 @@ function OnStart()
 	})
 	SetPropBool(clock, "m_bClientSideAnimation", false)
 	clock.SetPoseParameter(clock.LookupPoseParameter("minutes"), minute / 60.0)
-	clock.SetPoseParameter(clock.LookupPoseParameter("hours"), hour / 12.0)
+	clock.SetPoseParameter(clock.LookupPoseParameter("hours"), hour / 12.0 + ((1.0 / 12.0) * minute / 60.0))
 	clock.StudioFrameAdvance()
 }
 

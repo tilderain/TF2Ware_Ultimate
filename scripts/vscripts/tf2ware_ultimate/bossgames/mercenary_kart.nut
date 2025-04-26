@@ -43,7 +43,7 @@ camera_base_offset  <- Vector(-140.0, 0.0, 70.0)
 camera_base_rotaton <- QAngle(10, 0, 0)
 
 race_start_time     <- 0.0
-race_max_laps       <- 3
+race_max_laps       <- 2
 race_sequence       <- 0
 race_results        <- []
 race_finish_timer   <- null
@@ -57,7 +57,7 @@ intro_camera         <- null
 intro_camera_start   <- 0.0
 intro_camera_end     <- 0.0
 intro_camera_seq     <- -1
-intro_skip           <- false // debug
+intro_skip           <- false
 
 game_over            <- false
 
@@ -78,6 +78,7 @@ local item_map               = {}
 local gravity_rate           = Convars.GetFloat("sv_gravity")
 
 local kart_touch_swap        = null
+local kart_skip_tick         = 1
 
 local BOOST_NONE			 = 0
 local BOOST_DRIFT			 = 1
@@ -279,6 +280,8 @@ function OnPrecache()
 	PrecacheParticle("mk_lightning_parent")
 	PrecacheParticle("spell_skeleton_bits_green")
 	PrecacheParticle("spell_pumpkin_mirv_bits_red")
+	
+	PrecacheMaterial("tf2ware_ultimate/grey")
 }
 
 function OnPick()
@@ -296,7 +299,10 @@ function OnTeleport(players)
 	players = Ware_GetSortedScorePlayers(true)
 	
 	local start = Ware_MinigameLocation.start_position * 1.0
-	Ware_TeleportPlayersRow(players, start, QAngle(0, 180, 0), 500.0, 200.0, 150.0)
+	local spacing_x = 200.0
+	if (players.len() > 50)
+		spacing_x *= 0.5
+	Ware_TeleportPlayersRow(players, start, QAngle(0, 180, 0), 500.0, spacing_x, 150.0)
 	
 	foreach (player in players)
 	{
@@ -333,6 +339,7 @@ function OnStart()
 	
 	foreach (player in Ware_Players)
 	{
+		Ware_SetPlayerClass(player, RandomInt(TF_CLASS_FIRST, TF_CLASS_LAST))
 		TogglePlayerViewcontrol(player, camera, true)
 		player.AddHudHideFlags(HIDEHUD_MISCSTATUS|HIDEHUD_HEALTH)
 	}
@@ -485,6 +492,19 @@ function RaceShowResult()
 {
 	local start = Ware_MinigameHomeLocation.mins + Vector(0, 0, 430)
 	
+	local padding = 32.0	
+	local background_width = Ware_MinigameHomeLocation.maxs.y - Ware_MinigameHomeLocation.mins.y
+	local background = Ware_SpawnEntity("vgui_screen", 
+	{
+		origin          = Ware_MinigameHomeLocation.mins - Vector(1, padding, 0)
+		angles          = QAngle()
+		panelname       = "pda_panel_spy_invis"
+		overlaymaterial = "tf2ware_ultimate/grey"
+		width           = background_width + padding * 2.0
+		height          = 640.0
+	})
+	SetPropInt(background, "m_fScreenFlags", 17)
+	
 	Ware_SpawnEntity("point_worldtext",
 	{
 		message  = "RANKINGS"
@@ -494,20 +514,41 @@ function RaceShowResult()
 		textsize = 130
 		rainbow  = true
 	})
+	
+	local text_size = 32
+	local spacing_x = 700.0
+	local spacing_y = 32.0
+	local row_size = 12
+	if (race_results.len() > 64)
+	{
+		text_size = 16
+		spacing_x *= 0.5
+		spacing_y *= 0.5
+		row_size = 25
+	}
+	else if (race_results.len() > 24)
+	{
+		text_size = 24
+		spacing_x *= 0.7
+		spacing_y *= 0.75
+		row_size = 24
+	}
 
-	local kv = 
+	local kv =
 	{
 		message      = null
 		origin       = start * 1.0
 		angles       = QAngle(0, 180, 0)
 		font         = 8
-		textsize     = 32
+		textsize     = text_size
 		textspacingX = -18
 		color        = null
 	}
 	
 	local win_threshold
-	if (Ware_MinigamePlayers.len() > 24)
+	if (Ware_MinigamePlayers.len() > 64)
+		win_threshold = 10
+	else if (Ware_MinigamePlayers.len() > 24)
 		win_threshold = 6
 	else if (Ware_MinigamePlayers.len() > 6)
 		win_threshold = 3
@@ -524,6 +565,7 @@ function RaceShowResult()
 				
 		local pos = i + 1
 		local prefix = "th"
+		local postfix = i < 99 ? " " : ""
 		local digit = pos % 10
 		if (pos < 10 || pos > 20)
 		{
@@ -548,9 +590,9 @@ function RaceShowResult()
 			time_format = FloatToTimeFormat(final_time)
 		}
 		
-		kv.message = format("%2d%s : %24s : %s", pos, prefix, result.name, time_format)
-		kv.origin.y = start.y + 700.0 * (i / 12)
-		kv.origin.z = start.z - 32.0 * (i % 12)
+		kv.message = format("%2d%s: %24s : %s", pos, prefix + postfix, result.name, time_format)
+		kv.origin.y = start.y + spacing_x * (i / row_size)
+		kv.origin.z = start.z - spacing_y * (i % row_size)
 		Ware_SpawnEntity("point_worldtext", kv)
 		
 		local player = result.player
@@ -749,8 +791,16 @@ function OnUpdate()
 		kart.SetPosition(i, position_shift, time)
 		kart.Update(time, frame)
 	}
-	
+
 	RaceCheckFinishers()
+	
+	// TODO this makes the kart in the camera very jittery
+	//if (karts.len() > 80)
+	//	kart_skip_tick = 3
+	//else if (karts.len() > 40)
+	//	kart_skip_tick = 2
+	//else
+	//	kart_skip_tick = 1
 }
 
 function OnCheckEnd()
@@ -784,19 +834,37 @@ function OnPlayerDeath(player, attacker, params)
 		EntityEntFire(player, "CallScriptFunction", "PlayerResetHealth")	
 		player.AddCond(TF_COND_HALLOWEEN_IN_HELL)
 		
-		CreateTimer(function()
+		if (race_sequence == 4)
 		{
-			if (player.GetTeam() & TF_TEAM_MASK)
+			CreateTimer(function()
 			{
-				kart.RescueInit()
-			}
-			else
-			{
-				kart = GetKart(player)
-				if (kart)
-					kart.Destroy()
-			}
-		}, 0.0)
+				if (player.GetTeam() & TF_TEAM_MASK)
+				{
+					kart.RescueInit()
+				}
+				else
+				{
+					kart = GetKart(player)
+					if (kart)
+						kart.Destroy()
+				}
+			}, 0.0)
+		}
+	}
+}
+
+// saxton hale rage support
+function OnGameEvent_player_stunned(params)
+{
+	local victim = GetPlayerFromUserID(params.victim)
+	if (victim)
+	{
+		local kart = GetKart(victim)
+		if (kart && kart.CanSpinout())
+		{
+			kart.Spinout(SPINOUT_SPIN)
+			kart.DropItems()
+		}
 	}
 }
 
@@ -984,6 +1052,9 @@ function CreateKart(origin, angles)
 		disableshadows = true
 	})
 	kart_prop.SetOwner(kart_entity)
+						
+	foreach (name, func in kart_routines)
+		kart[name] <- func.bindenv(kart)
 	
 	kart.m_id                 <- kart_id++
 	kart.m_driver             <- null	
@@ -1090,9 +1161,10 @@ function CreateKart(origin, angles)
 	kart.m_head_offset        <- Vector()
 
 	kart.m_pinball_score      <- true
-								
-	foreach (name, func in kart_routines)
-		kart[name] <- func.bindenv(kart)
+	
+	kart.HudUpdateLap()
+	kart.HudUpdatePosition()
+	kart.HudUpdateItem(kart.m_item_idx)
 
 	return kart
 }
@@ -1116,6 +1188,10 @@ function CreateCamera(kart)
 
 function CreateShadow(kart)
 {
+	// save entities
+	if (MAX_CLIENTS > 64)
+		return null
+	
 	local shadow = Ware_SpawnEntity("prop_dynamic_override",
 	{
 		classname      = "mk_shadow"
@@ -1131,6 +1207,7 @@ function CreateHud(kart)
 {
 	local camera = kart.m_camera
 	local hud = CreateEntitySafe("obj_teleporter")
+	hud.KeyValueFromString("classname", "mk_hud")
 	hud.SetAbsOrigin(camera.GetOrigin())
 	hud.SetAbsAngles(camera.GetAbsAngles())
 	hud.SetModel("models/mariokart/hud.mdl")
@@ -1141,10 +1218,6 @@ function CreateHud(kart)
 	SetPropInt(hud, "m_fObjectFlags", 2)
 	SetPropInt(hud, "m_fEffects", EF_NOSHADOW)
 	SetEntityParent(hud, camera)
-	
-	SetPropInt(hud, "m_iTeamNum", kart.m_lap_idx + 4)
-	SetPropInt(hud, "m_clrRender", (kart.m_position_idx << 24) | 0x00FFFFFF)
-	SetPropInt(hud, "m_iTextureFrameIndex", kart.m_item_idx)
 	return hud
 }
 
@@ -1192,7 +1265,8 @@ kart_routines <-
 		m_head.Kill()
 		m_camera.Kill()
 		m_prop.Kill()
-		m_shadow.Kill()
+		if (m_shadow)
+			m_shadow.Kill()
 		m_entity.Kill()
 	}
 	
@@ -1285,6 +1359,13 @@ kart_routines <-
 
 	Update = function(time, tick)
 	{
+		if ((m_id % kart_skip_tick) != (tick % kart_skip_tick))
+		{
+			m_entity.SetAbsVelocity(vec3_epsilon)
+			return
+		}
+		local dt = kart_skip_tick * TICKDT
+			
 		m_origin   = m_entity.GetOrigin()
 		m_origin.z -= m_hop_height
 		m_angles   = m_entity.GetAbsAngles()
@@ -1294,8 +1375,8 @@ kart_routines <-
 		UpdateInput(time)
 		UpdateCamera(time)
 		UpdatePoint()
-		UpdateItems(time)
-		UpdatePhysics(time)
+		UpdateItems(time, dt)
+		UpdatePhysics(time, dt)
 		UpdateHead(tick)
 		//UpdateDebug()
 	}
@@ -1488,14 +1569,14 @@ kart_routines <-
 		m_camera.SetForwardVector(camera_dir)
 	}
 
-	UpdatePhysics = function(time)
+	UpdatePhysics = function(time, dt)
 	{
 		if (m_ground && !m_ground.IsValid())
 			m_ground = null
 		
 		if (m_rescue_point)
 		{
-			PhysicsRescue()
+			PhysicsRescue(dt)
 		}
 		else if (m_bullet_timer != 0.0)
 		{
@@ -1507,18 +1588,21 @@ kart_routines <-
 		}
 		else
 		{
-			PhysicsGravity()
-			PhysicsGroundCollision()
-			PhysicsMove(time)
+			PhysicsGravity(dt)
+			PhysicsGroundCollision(dt)
+			PhysicsMove(time, dt)
 			PhysicsWallCollision(time)		
 		}
 		
-		local velocity_dt = m_velocity * TICKDT
+		local velocity_dt = m_velocity * dt
 		m_origin += velocity_dt
 				
-		m_shadow.SetAbsOrigin(m_origin - m_base_offset + vec3_up)
-		m_shadow.SetAbsAngles(m_angles)
-		m_shadow.SetDrawEnabled(m_ground != null)		
+		if (m_shadow)
+		{
+			m_shadow.SetAbsOrigin(m_origin - m_base_offset + vec3_up)
+			m_shadow.SetAbsAngles(m_angles)
+			m_shadow.SetDrawEnabled(m_ground != null)	
+		}		
 		
 		m_origin.z += m_hop_height
 		
@@ -1530,28 +1614,29 @@ kart_routines <-
 		m_prop.SetAbsAngles(m_angles)
 	}
 	
-	PhysicsMove = function(time)
+	PhysicsMove = function(time, dt)
 	{
+		local inv_dt = dt / TICKDT
 		local turn_amount = 0.0
 		if (m_drifting)
 		{
 			if (m_boost_side_move < 0.0)
 			{
 				if (m_side_move > 0.0)
-					turn_amount = m_turn_rate * (m_boost_side_move * 0.0) * TICKDT
+					turn_amount = m_turn_rate * (m_boost_side_move * 0.0) * dt
 				else if (m_side_move < 0.0)
-					turn_amount = m_turn_rate * (m_boost_side_move * 1.4) * TICKDT
+					turn_amount = m_turn_rate * (m_boost_side_move * 1.4) * dt
 				else
-					turn_amount = m_turn_rate * (m_boost_side_move * 0.7) * TICKDT
+					turn_amount = m_turn_rate * (m_boost_side_move * 0.7) * dt
 			}
 			else if (m_boost_side_move > 0.0)
 			{
 				if (m_side_move < 0.0)
-					turn_amount = m_turn_rate * (m_boost_side_move * 0.0) * TICKDT
+					turn_amount = m_turn_rate * (m_boost_side_move * 0.0) * dt
 				else if (m_side_move > 0.0)
-					turn_amount = m_turn_rate * (m_boost_side_move * 1.4) * TICKDT
+					turn_amount = m_turn_rate * (m_boost_side_move * 1.4) * dt
 				else
-					turn_amount = m_turn_rate * (m_boost_side_move * 0.7) * TICKDT
+					turn_amount = m_turn_rate * (m_boost_side_move * 0.7) * dt
 			}
 		}
 		else if (m_side_move != 0.0)
@@ -1566,7 +1651,7 @@ kart_routines <-
 			{
 				turn_rate *= 0.5
 			}	
-			turn_amount = turn_rate * m_side_move * TICKDT
+			turn_amount = turn_rate * m_side_move * dt
 		}
 		
 		if (m_boost_type > BOOST_DRIFT || m_star_timer > 0.0)
@@ -1608,9 +1693,9 @@ kart_routines <-
 				if (m_ground)
 				{
 					if (m_side_move == m_boost_side_move)
-						m_boost_counter += 5
+						m_boost_counter += 5 * inv_dt.tointeger()
 					else
-						m_boost_counter += 2	
+						m_boost_counter += 2 * inv_dt.tointeger()
 				}
 				
 				if (m_boost_counter >= 634)
@@ -1660,7 +1745,7 @@ kart_routines <-
 			}
 		
 			local wish_direction = m_direction * forward_move
-			local acceleration = m_acceleration_rate
+			local acceleration = m_acceleration_rate * inv_dt
 			local dot = m_forward.Dot(wish_direction)
 			local max_speed
 			local braking
@@ -1722,13 +1807,13 @@ kart_routines <-
 			
 			if (m_slope_normal.z < 0.707) 
 			{
-				local slide_force = m_slope_normal * (800.0 * TICKDT)
+				local slide_force = m_slope_normal * (800.0 * dt)
 				m_velocity += slide_force
 			}
 			
 			local friction = m_velocity * -1.0
 			friction.Norm()
-			friction *= m_friction_rate * TICKDT		
+			friction *= m_friction_rate * dt		
 			
 			local speed = m_velocity.Length2D()	
 			local friction_speed = friction.Length2D()
@@ -1824,14 +1909,14 @@ kart_routines <-
 		m_landed = false
 	}
 	
-	PhysicsGravity = function()
+	PhysicsGravity = function(dt)
 	{
-		local gravity = gravity_rate * m_gravity_factor * TICKDT
+		local gravity = gravity_rate * m_gravity_factor * dt
 		if (m_velocity.z > -1000.0)
 			m_velocity.z -= gravity
 	}
 	
-	PhysicsGroundCollision = function()
+	PhysicsGroundCollision = function(dt)
 	{
 		local down = m_ground ? -20.0 : -0.1
 		local tr =
@@ -1839,7 +1924,7 @@ kart_routines <-
 			start  = m_origin
 			end    = m_origin 
 					- m_base_offset
-					+ Vector(0, 0, down + m_velocity.z * TICKDT)
+					+ Vector(0, 0, down + m_velocity.z * dt)
 			mask   = MASK_PLAYERSOLID_BRUSHONLY
 			ignore = self
 		}
@@ -2081,7 +2166,7 @@ kart_routines <-
 		m_rescue_land_buffer = 15
 	}
 	
-	PhysicsRescue = function()
+	PhysicsRescue = function(dt)
 	{
 		if (m_rescued)
 		{
@@ -2091,8 +2176,16 @@ kart_routines <-
 		}
 		else
 		{
-			PhysicsGravity()
+			PhysicsGravity(dt)
 		}
+	}
+	
+	CanSpinout = function()
+	{
+		return m_star_timer == 0.0 && 
+				m_bullet_timer == 0.0 &&
+				m_mega_timer == 0.0 &&
+				m_cannon_end_pos == null
 	}
 	
 	Spinout = function(type)
@@ -2198,7 +2291,8 @@ kart_routines <-
 		if (not_shrinked)
 			m_prop.EmitSound("MK_Kart_Shrink")
 		m_prop.SetModelScale(0.5, 1.0)
-		m_shadow.SetModelScale(0.5, 1.0)
+		if (m_shadow)
+			m_shadow.SetModelScale(0.5, 1.0)
 		Spinout(SPINOUT_SPIN)
 		m_shrink_timer = timer
 		
@@ -2209,7 +2303,8 @@ kart_routines <-
 	{
 		m_prop.EmitSound("MK_Kart_Grow")
 		m_prop.SetModelScale(1.0, 1.0)
-		m_shadow.SetModelScale(1.0, 1.0)
+		if (m_shadow)
+			m_shadow.SetModelScale(1.0, 1.0)
 		m_shrink_timer = 0.0
 	}
 	
@@ -2221,7 +2316,8 @@ kart_routines <-
 		if (not_squished)
 			m_prop.EmitSound("MK_Kart_Shrink")
 		m_prop.SetModelScale(0.5, 0.3)
-		m_shadow.SetModelScale(0.5, 0.3)
+		if (m_shadow)
+			m_shadow.SetModelScale(0.5, 0.3)
 		m_spin_out_timer = time + 0.5
 		m_velocity *= 0.5
 		m_shrink_timer = time + duration
@@ -2245,9 +2341,24 @@ kart_routines <-
 		m_hud.SetBodygroup(1, 0)
 	}
 	
+	HudUpdateLap = function()
+	{
+		SetPropInt(m_hud, "m_clrRender", (Max(m_lap_idx + 1, 1) << 24) | 0x00FFFFFF)
+	}
+	
+	HudUpdatePosition = function()
+	{
+		SetPropInt(m_hud, "m_iTextureFrameIndex", m_position_idx)
+	}
+	
+	HudUpdateItem = function(idx)
+	{
+		SetPropInt(m_hud, "m_iTeamNum", idx + 2)
+	}
+	
 	UpdateHead = function(tick)
 	{
-		if (m_id % 5 == tick % 5)
+		if ((m_id & 1) == (tick & 1))
 		{
 			local delta = (m_origin - map_data.center) * 0.00161
 			delta.z = -delta.x
@@ -2329,7 +2440,7 @@ kart_routines <-
 		}
 		else if (other.m_mega_timer > 0.0)
 		{
-			if (Squish(5.0))
+			if (m_star_timer == 0.0 && m_mega_timer == 0.0 && Squish(5.0))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "rocketpack_stomp")
 			}
@@ -2337,6 +2448,7 @@ kart_routines <-
 		else if (other.m_star_timer > 0.0)
 		{
 			if (m_bullet_timer == 0.0
+				&& m_star_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "wrench_golden")
@@ -2489,7 +2601,7 @@ kart_routines <-
 		local idx = PickItem(m_position_idx)
 
 		m_item_idx = -idx
-		SetPropInt(m_hud, "m_iTextureFrameIndex", ITEM_LAST + 1)
+		HudUpdateItem(ITEM_LAST + 1)
 			
 		EmitSoundOnClient("MK_Item_Roulette", m_driver)
 		EntityEntFire(m_entity, "CallScriptFunction", "SelectItem", 4.0)
@@ -2514,7 +2626,7 @@ kart_routines <-
 		
 		m_item_idx = idx
 		m_item_scope = item_map[idx]
-		SetPropInt(m_hud, "m_iTextureFrameIndex", idx)
+		HudUpdateItem(idx)
 	}
 	
 	SetHeldItems = function(idx, entities)
@@ -2575,7 +2687,7 @@ kart_routines <-
 		if (m_bullet_timer > 0.0) m_bullet_timer = 0.01
 		if (m_blooper_timer > 0.0) m_blooper_timer = 0.01
 		if (m_shroom_gold_timer > 0.0) m_shroom_gold_timer = 0.01
-		UpdateItems(Time())
+		UpdateItems(Time(), 0.0)
 
 		SetItem(ITEM_NONE)
 	}
@@ -2737,7 +2849,7 @@ kart_routines <-
 		SetItem(ITEM_NONE)
 	}
 	
-	UpdateItems = function(time)
+	UpdateItems = function(time, dt)
 	{
 		if (m_star_timer > 0.0 && m_star_timer < time)
 			StopStar()
@@ -2745,7 +2857,7 @@ kart_routines <-
 		if (m_bullet_timer > 0.0)
 		{
 			if (m_cannon_end_pos)
-				m_bullet_timer += TICKDT
+				m_bullet_timer += dt
 			if (m_bullet_timer < time)
 				StopBullet()
 		}
@@ -2876,7 +2988,7 @@ kart_routines <-
 				EmitSoundOnClient("MK_Lap", m_driver)	
 				EntityEntFire(m_entity, "CallScriptFunction", "RestoreMusic", 2.5)				
 			}
-			SetPropInt(m_hud, "m_iTeamNum", m_lap_idx + 3)
+			HudUpdateLap()
 		}
 	}
 
@@ -2914,8 +3026,8 @@ kart_routines <-
 			m_position_timer = time + 0.5
 		}
 	
-		SetPropInt(m_hud, "m_clrRender", (idx << 24) | 0x00FFFFFF)
 		m_position_idx = idx
+		HudUpdatePosition()
 	}	
 	
 	Finish = function()
@@ -2996,11 +3108,12 @@ kart_routines <-
 		local x = 0.1, y = 0.35
 		local r = 200, g = 255, b = 200, a = 255
 		local i = 0
+		local dt = NDEBUG_TICK * kart_skip_tick
 		local DrawText = function(...)
 		{
 			vargv.insert(0, this)
 			local text = format.acall(vargv)
-			DebugDrawScreenTextLine(x, y, i++, text, r, g, b, a, NDEBUG_TICK)			
+			DebugDrawScreenTextLine(x, y, i++, text, r, g, b, a, dt)			
 		}
 		
 		DrawText("Buttons: %d", m_buttons)
@@ -3203,15 +3316,9 @@ local function ItemCreate(classname, model, owner_kart, type)
 		{
 			case ITEM_TYPE_BANANA:
 			{
-				if (kart.m_star_timer == 0.0 && 
-					kart.m_bullet_timer == 0.0 &&
-					kart.m_mega_timer == 0.0 &&
-					kart.m_cannon_end_pos == null)
+				if (kart.CanSpinout() && kart.Spinout(SPINOUT_SPIN))
 				{
-					if (kart.Spinout(SPINOUT_SPIN))
-					{
-						AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
-					}
+					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
 				}
 				
 				Destroy()			
@@ -3219,16 +3326,10 @@ local function ItemCreate(classname, model, owner_kart, type)
 			}
 			case ITEM_TYPE_FIB:
 			{
-				if (kart.m_star_timer == 0.0 && 
-					kart.m_bullet_timer == 0.0 &&
-					kart.m_mega_timer == 0.0 &&
-					kart.m_cannon_end_pos == null)
+				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
-					if (kart.Spinout(SPINOUT_TUMBLE_FORWARD))
-					{
-						AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
-					}
-				}		
+					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
+				}
 				
 				DispatchParticleEffect("drg_cow_explosion_sparkles", self.GetOrigin(), vec3_zero)
 				kart.m_prop.EmitSound("MK_Itembox_Hit")
@@ -3267,17 +3368,12 @@ local function ItemCreate(classname, model, owner_kart, type)
 			case ITEM_TYPE_SHELL_GREEN:
 			case ITEM_TYPE_SHELL_RED:
 			{
-				if (kart.m_star_timer == 0.0 && 
-					kart.m_bullet_timer == 0.0 &&
-					kart.m_mega_timer == 0.0 &&
-					kart.m_cannon_end_pos == null)
+				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
-					if (kart.Spinout(SPINOUT_TUMBLE_FORWARD))
-					{
-						AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
-							m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
-					}
+					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
+						m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
 				}
+
 				Destroy()
 				break
 			}

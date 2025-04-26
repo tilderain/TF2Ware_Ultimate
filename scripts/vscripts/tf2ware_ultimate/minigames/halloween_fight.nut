@@ -10,11 +10,11 @@ minigame <- Ware_MinigameData
 	custom_overlay = "fight"
 	min_players    = 2
 	start_pass     = true
-	start_freeze    = true
+	start_freeze   = 0.5
 	allow_damage   = true
 	fail_on_death  = true
 	thirdperson    = true
-	collisions     = true
+	collisions     = Ware_Players.len() <= 40
 	convars =
 	{
 		tf_avoidteammates = 0

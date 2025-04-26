@@ -7,7 +7,8 @@ minigame <- Ware_MinigameData
 	location      = "circlepit"
 	music         = "actfast"
 	min_players   = 2
-	start_freeze  = true
+	max_players   = 40
+	start_freeze  = 0.5
 	collisions    = true
 	convars       = 
 	{

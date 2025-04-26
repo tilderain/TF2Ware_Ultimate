@@ -52,7 +52,10 @@ function OnUpdate()
 
 function OnTakeDamage(params)
 {
-	params.damage = 0.0
+	local victim = params.const_entity
+	local attacker = params.attacker
+	if (victim.IsPlayer() && attacker && attacker.IsPlayer())
+		return false
 }
 
 function OnEnd()

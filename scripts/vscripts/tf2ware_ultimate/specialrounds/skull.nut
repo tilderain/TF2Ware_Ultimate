@@ -4,6 +4,7 @@ special_round <- Ware_SpecialRoundData
 	author      = ["Mikusch", "ficool2"]
 	description = "Beware of the skull..."
 	category    = ""
+	allow_respawnroom = false
 })
 
 skull_model <- "models/props_mvm/mvm_human_skull_collide.mdl"

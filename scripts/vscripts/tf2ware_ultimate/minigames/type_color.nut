@@ -54,7 +54,8 @@ function OnStart()
 	text_color = text_colors[text_idx]
 	visual_color = text_colors[visual_idx]
 
-	Ware_ShowMinigameText(null, text_color, colors[visual_idx])
+	// these spaces are to prevent localization
+	Ware_ShowMinigameText(null, format(" %s ", text_color), colors[visual_idx])
 	
 	answer = mode == 0 ? text_color : visual_color
 }

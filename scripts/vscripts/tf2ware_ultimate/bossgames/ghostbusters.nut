@@ -152,8 +152,16 @@ function OnStart()
 
 function OnTeleport(players)
 {
-	local medic_count = Clamp(ceil(players.len() / 3.5).tointeger(), 2, 7)
-	local heavy_count = Min(Clamp(players.len() / 4, 1, 3), players.len())
+	local max_medic_count = 8, max_heavy_count = 2
+	if (players.len() > 40)
+	{
+		local factor = players.len() > 80 ? 3 : 2
+		max_medic_count *= factor
+		max_heavy_count *= factor
+	}
+	
+	local medic_count = Clamp(ceil(players.len() / 3.5).tointeger(), 2, max_medic_count)
+	local heavy_count = Min(Clamp(players.len() / 4, 1, max_heavy_count), players.len())
 	
 	medic_count = Min(medic_count, players.len())
 	for (local i = 0; i < medic_count; i++)
@@ -377,8 +385,9 @@ function OnEnd()
 	}
 	else
 	{
+		local verb = alive_spies.len() > 1 ? "are" : "is"
 		local word = alive_spies.len() > 1 ? "ghosts" : "ghost"
-		Ware_ChatPrint(null, "There is {int} {str} left standing... The Undead win!", alive_spies.len(), word)
+		Ware_ChatPrint(null, "There {str} {int} {str} left standing... The Undead win!", verb, alive_spies.len(), word)
 	}
 }
 

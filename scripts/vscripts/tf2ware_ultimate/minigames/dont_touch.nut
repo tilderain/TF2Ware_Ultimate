@@ -36,7 +36,7 @@ function OnTakeDamage(params)
 
 function OnPlayerTouch(player1, player2)
 {
-	if (Ware_GetMinigameTime() < 1.5) // grace period
+	if (Ware_GetMinigameTime() < 2.0) // grace period
 		return
 		
     if (player1)

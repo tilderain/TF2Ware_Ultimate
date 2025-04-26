@@ -20,7 +20,7 @@ function OnPrecache()
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Grenade Launcher")
+	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Grenade Launcher", { "fuse bonus" : 0.6 })
 	
 	foreach (player in Ware_MinigamePlayers)
 	{

@@ -97,10 +97,9 @@ def generate_image(name, text, color):
     name1 = generate_image_internal(name, text, color, 0)
     name2 = generate_image_internal(name, text, color, 1)
     
-    command = f"bin\\VTFCmd.exe -file {name1} -file {name2} -outname {name} -output \"../materials/hud/tf2ware_ultimate/minigames\" -format \"dxt5\" -alphaformat \"dxt5\" -flag CLAMPS -flag CLAMPT -nomipmaps -animated"
+    bin = "bin\\VTFCmd.exe" if os.name == "nt" else "wine bin/VTFCmd.exe"
     
-    if(os.name == "posix"):
-        command = "wine " + command
+    command = f"{bin} -file {name1} -file {name2} -outname {name} -output \"../materials/hud/tf2ware_ultimate/minigames\" -format \"dxt5\" -alphaformat \"dxt5\" -flag CLAMPS -flag CLAMPT -nomipmaps -animated"
     
     os.system(command)
     

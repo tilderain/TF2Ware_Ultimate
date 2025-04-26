@@ -14,11 +14,12 @@ minigame <- Ware_MinigameData
 	description   = "Push Away the Enemies!"
 	location      = RandomElement(arenas)
 	min_players   = 2
+	max_players   = 40
 	max_scale     = 1.0
 	allow_damage  = true
 	fail_on_death = true
 	start_pass    = true
-	start_freeze  = true
+	start_freeze  = 0.5
 	collisions    = true
 	convars       =
 	{

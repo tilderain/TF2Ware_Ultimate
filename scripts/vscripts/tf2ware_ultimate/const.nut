@@ -132,11 +132,14 @@ const TF_COLOR_SPEC    = "CCCCCC"
 const CHANNEL_MINIGAME     = 3
 const CHANNEL_SPECIALROUND = 4
 const CHANNEL_MISC         = 2
+const CHANNEL_BACKUP       = 1 // not reliable as plugins may use it
 
 const SFX_WARE_FIREWORKS = "Summer.Fireworks"
 const SFX_WARE_PASS      = "TF2Ware_Ultimate.Pass"
+const SFX_WARE_PASSME    = "TF2Ware_Ultimate.PassMe"
 const SFX_WARE_KART_HORN = "TF2Ware_Ultimate.KartHorn"
 const SFX_WARE_ERROR     = "TF2Ware_Ultimate.Error"
+const SFX_WARE_FAIL      = "TF2Ware_Ultimate.Fail"
 
 const PFX_WARE_FIREWORKS = "mvm_pow_gold_seq_firework_mid"
 const PFX_WARE_PASS_RED  = "teleportedin_red"
@@ -171,6 +174,19 @@ ITEM_PROJECTILE_MAP <-
 	[1152] = "tf_projectile_grapplinghook",
 }
 
+STOCK_MELEE_MAP <- 
+{
+	[TF_CLASS_SCOUT]        = "Bat",
+	[TF_CLASS_SOLDIER]      = "Shovel",
+	[TF_CLASS_PYRO]         = "Fire Axe",
+	[TF_CLASS_DEMOMAN]      = "Bottle",
+	[TF_CLASS_HEAVYWEAPONS] = "Fists",
+	[TF_CLASS_ENGINEER]     = "Wrench",
+	[TF_CLASS_MEDIC]        = "Bonesaw",
+	[TF_CLASS_SNIPER]       = "Kukri",
+	[TF_CLASS_SPY]          = "Knife",
+}
+
 SAXXY_CLASSNAME_MAP <-
 {
 	[TF_CLASS_SCOUT]        = "tf_weapon_bat",
@@ -186,8 +202,10 @@ SAXXY_CLASSNAME_MAP <-
 
 PrecacheScriptSound(SFX_WARE_FIREWORKS)
 PrecacheScriptSound(SFX_WARE_PASS)
+PrecacheScriptSound(SFX_WARE_PASSME)
 PrecacheScriptSound(SFX_WARE_KART_HORN)
 PrecacheScriptSound(SFX_WARE_ERROR)
+PrecacheScriptSound(SFX_WARE_FAIL)
 
 PrecacheModel("models/player/items/taunts/bumpercar/parts/bumpercar.mdl")
 PrecacheModel("models/props_halloween/bumpercar_cage.mdl")

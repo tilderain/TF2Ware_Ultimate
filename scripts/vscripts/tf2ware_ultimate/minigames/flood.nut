@@ -14,7 +14,7 @@ minigame <- Ware_MinigameData
 	fail_on_death  = true
 })
 
-platform_index <- 0
+platform_index <- RandomInt(1, 4)
 
 waterfall_model <- "models/props_forest/waterfall001.mdl"
 
@@ -26,16 +26,16 @@ function OnPrecache()
 function OnStart()
 {
 	local location_name = Ware_MinigameLocation.name
-	
-	platform_index = RandomInt(1, 4)
-	
-	local platform_name = format("%s_platform_%d", location_name, platform_index)
+	local platform_name = format("%s_platform_%d", location_name, platform_index)	
 	
 	EntFire(location_name + "_flood", "Open", "", 2.0 + bonus_time)
 	EntFire(location_name + "_croc", "Enable", "", 2.0 + bonus_time)
-	EntFire(platform_name, "Close")
 	
-	Ware_ShowAnnotation(Entities.FindByName(null, platform_name).GetOrigin() + Vector(0, 0, 100), "GET ON ME!")
+	local platform = FindByName(null, platform_name)
+	platform.AddFlag(FL_UNBLOCKABLE_BY_PLAYER)
+	EntityAcceptInput(platform, "Close")
+	
+	Ware_ShowAnnotation(platform.GetOrigin() + Vector(0, 0, 100), "GET ON ME!")
 	
 	// the waterfall model is really busted so have to do this in an ugly manner
 	local offset = Vector(444, 256, 0)

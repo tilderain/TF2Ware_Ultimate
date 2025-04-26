@@ -3,7 +3,8 @@ minigame <- Ware_MinigameData
 	name           = "Shoot 10 Gifts"
 	author         = ["Mecha the Slag", "ficool2"]
 	description    = "Shoot the Gift 10 times!"
-	duration       = 29.9
+	duration       = 29.4
+	end_delay      = 0.5
 	music          = "pumpit"
 	location       = "targetrange"
 	custom_overlay = "shoot_gift_10"
@@ -16,13 +17,20 @@ minigame <- Ware_MinigameData
 
 gift_model <- "models/tf2ware_ultimate/gift.mdl"
 hit_sound  <- "Player.HitSoundBeepo"
+bomb_model <- "models/props_lakeside_event/bomb_temp.mdl"
+bomb_modelindex <- PrecacheModel(bomb_model)
+bomb_count <- 0
+bomb_sound <- "vo/taunts/demo/taunt_demo_nuke_8_explosion.mp3"
 
+gift_count <- 0
 gifts_active <- []
 
 function OnPrecache()
 {
 	PrecacheModel(gift_model)
+	PrecacheModel(bomb_model)
 	PrecacheScriptSound(hit_sound)
+	PrecacheSound(bomb_sound)
 }
 
 function OnStart()
@@ -45,7 +53,23 @@ function SpawnGift()
 		model  = gift_model
 		origin = origin
 		angles = angles
+		skin   = RandomInt(0, 1)
 	})
+	
+	if (gift_count >= 2 
+		&& bomb_count < 4
+		&& RandomInt(1, 5) == 1)
+	{
+		SetPropInt(gift, "m_nModelIndex", bomb_modelindex)
+		gift.SetModelScale(1.25, 0.0)
+		bomb_count++
+	}
+	else
+	{
+		gift_count++
+	}
+	
+	gift.KeyValueFromString("classname", "pumpkindeath") // kill icon
 	gift.AddEFlags(EFL_NO_DAMAGE_FORCES)
 	gift.SetPhysVelocity(Vector(RandomFloat(-500, 500), 0, RandomFloat(1000, 1200)))
 	gift.ValidateScriptScope()
@@ -67,7 +91,7 @@ function SpawnGift()
 		gift.Kill()
 	}, RemapValClamped(Ware_GetTimeScale(), 1.0, 2.0, 1.7, 2.6))
 	
-	return RandomFloat(1.7, 2.1)
+	return RandomFloat(1.7, 2.0)
 }
 
 function OnPlayerAttack(player)
@@ -96,14 +120,22 @@ function OnPlayerAttack(player)
 			lag_origin + gift.maxs, 
 			0.0, 8192.0) > 0.0)
 		{
-			local minidata = Ware_GetPlayerMiniData(player)
-			minidata.points++
-			
-			Ware_PlaySoundOnClient(player, hit_sound)			
-			Ware_ShowText(player, CHANNEL_MINIGAME, "x", 0.25, "255 255 255", -1, -1)
-			
-			if (minidata.points >= 10)
-				Ware_PassPlayer(player, true)			
+			if (GetPropInt(gift.self, "m_nModelIndex") == bomb_modelindex)
+			{
+				player.EmitSound(bomb_sound)
+				player.TakeDamage(1000.0, DMG_BLAST, gift.self)
+			}
+			else
+			{
+				local minidata = Ware_GetPlayerMiniData(player)
+				minidata.points++
+				
+				Ware_PlaySoundOnClient(player, hit_sound)			
+				Ware_ShowText(player, CHANNEL_MINIGAME, "x", 0.25, "255 255 255", -1, -1)
+				
+				if (minidata.points >= 10)
+					Ware_PassPlayer(player, true)		
+			}
 		}
 	}
 }
@@ -115,4 +147,9 @@ function OnUpdate()
 		if (Ware_GetPlayerAmmo(player, TF_AMMO_PRIMARY) == 0)
 			SetPropInt(player, "m_nImpulse", 101)
 	}
+}
+
+function OnCheckEnd()
+{
+	return Ware_GetAlivePlayers().len() == 0
 }

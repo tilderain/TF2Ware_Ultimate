@@ -4,7 +4,7 @@
 function Ware_GetPitchFactor()
 {
 	// TODO change to 0.5 factor but use 0.4 for themes
-	return 1.0 + (Ware_TimeScale - 1.0) * 0.4
+	return 1.0 + (Ware_PitchScale - 1.0) * 0.4
 }
 
 // Plays a sound on a specific client, with pitch scaling from timescale included
@@ -29,14 +29,19 @@ function Ware_PlayGameSound(player, name, flags = 0, volume = 1.0)
 	local path
 	
 	if (name in Ware_CurrentThemeSounds)
-		path = format("%s/%s", Ware_CurrentThemeSounds[name][0], name)
+	{
+		local theme_sound = Ware_CurrentThemeSounds[name]
+		path = format("%s/%s", theme_sound.theme_name, theme_sound.sound_name)
+	}
 	else
+	{
 		path = format("%s/%s", Ware_Themes[0].theme_name, name)
+	}
 	
 	if (player)
-		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), volume, 100, flags)
+		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSIC_VERSION, path), volume, 100, flags)
 	else
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSICVERSION, path), volume, 100, flags)
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSIC_VERSION, path), volume, 100, flags)
 }
 
 // Plays minigame music to the target player
@@ -47,16 +52,16 @@ function Ware_PlayMinigameMusic(player, name, flags = 0, volume = 1.0)
 {
 	local gametype = Ware_Minigame.boss ? "bossgame" : "minigame"
 	if (player)
-		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100, flags)
+		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSIC_VERSION, gametype, name), volume, 100, flags)
 	else
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSICVERSION, gametype, name), volume, 100, flags)
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSIC_VERSION, gametype, name), volume, 100, flags)
 }
 
 // Gets the duration of a sound under the given theme, and also compensating for timescale
 function Ware_GetThemeSoundDuration(sound)
 {
 	if (sound in Ware_CurrentThemeSounds)
-		return Ware_CurrentThemeSounds[sound][1] * Ware_GetPitchFactor()
+		return Ware_CurrentThemeSounds[sound].duration * Ware_GetPitchFactor()
 	else
 		return Ware_Themes[0].sounds[sound] * Ware_GetPitchFactor()
 }

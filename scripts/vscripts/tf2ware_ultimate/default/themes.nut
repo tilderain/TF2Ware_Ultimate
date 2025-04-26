@@ -1,5 +1,6 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"{
+buffer<-@"VERSION 2
+{
 	theme_name = ""_default""
 	visual_name = ""TF2Ware Ultimate""
 	sounds = 
@@ -69,7 +70,7 @@ buffer<-@"{
 },
 {
 	theme_name = ""ds_diy_shuffle""
-	visual_name = ""Shuffle (DS - D.I.Y.)""
+	visual_name = ""Shuffle (WiiWare - D.I.Y. Showcase)""
 	sounds = 
 	{
 		""boss"":     4.008
@@ -82,8 +83,23 @@ buffer<-@"{
 	}
 },
 {
+	theme_name = ""ds_diy_microgame""
+	visual_name = ""Microgame (WiiWare - D.I.Y. Showcase)""
+	author = ""GeeNoVoid""
+	sounds = 
+	{
+		""boss"":     4.035
+		""failure"":  2.004
+		""gameover"": 3.822
+		""intro"":    2.01
+		""results"":  0.0
+		""speedup"":  4.018
+		""victory"":  2.028
+	}
+},
+{
 	theme_name = ""ds_diy_warioman"" // from DIY showcase, should that be counted separately?
-	visual_name = ""Wario-Man (DS - D.I.Y.)"" // another of the classic tf2ware themes, this is one of the ones used in tonyware
+	visual_name = ""Wario-Man (WiiWare - D.I.Y. Showcase)"" // another of the classic tf2ware themes, this is one of the ones used in tonyware
 	sounds = 
 	{
 		""boss"":     4.004
@@ -104,6 +120,18 @@ buffer<-@"{
 		""intro"":   2.183
 		""results"": 0.0
 		""victory"": 2.020
+	}
+},
+{
+	theme_name = ""ds_touched_mona""
+	visual_name = ""Mona (DS - Touched!)""
+	author = ""tilderain""
+	sounds = 
+	{
+		""failure"": 2.075
+		""intro"":   1.937
+		""results"": 0.0
+		""victory"": 2.022
 	}
 },
 {
@@ -171,6 +199,46 @@ buffer<-@"{
 		""intro"":   4.1
 		""results"": 0.0
 		""victory"": 2.097
+	}
+},
+{
+	theme_name = ""wii_penny""
+	visual_name = ""Penny (Wii)""
+	author = ""tilderain""
+	sounds = 
+	{
+		""failure"": 2.052
+		""intro"":   4.115
+		""results"": 0.0
+		""victory"": 2.078
+	}
+},
+{
+	theme_name = ""wii_tinywario""
+	visual_name = ""Tiny Wario (Wii)""
+	author = ""Infomaniac""
+	sounds = 
+	{
+		""failure"": 2.039
+		""intro"":   4.167
+		""results"": 0.0
+		""victory"": 1.990
+	}
+},
+{
+	theme_name = ""switch_moveit_wario""
+	visual_name = ""Wario (Switch - Move It!)""
+	author = ""GeeNoVoid""
+	sounds = 
+	{
+		""boss"":     4.005
+		""failure"":  1.997
+		""gameclear"": 4.554
+		""gameover"": 3.36
+		""intro"":    4.146
+		""results"":  0.0
+		""speedup"":  4.016
+		""victory"":  2.03
 	}
 },
 // these aren't rolled and should never be set as Ware_Theme, but rather Ware_SetupThemeSounds() checks for them

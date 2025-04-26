@@ -1,5 +1,7 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"airblast
+buffer<-@"VERSION 3
+airblast
+airshot
 avoid_props
 avoid_trains
 backstab
@@ -16,10 +18,12 @@ catch_cubes
 catch_money
 change_class
 count_bombs
+destroy_barrels
 disguise
 dodge_laser
 dont_touch
 double_jump
+eat_plate
 extinguish
 flipper_ball
 flood
@@ -29,6 +33,7 @@ grapple_cutout
 grapple_player
 halloween_fight
 headshot
+heavy_medic
 hit_balls
 hit_player
 hoop
@@ -45,7 +50,7 @@ merasmus
 most_bombs
 move
 parachute
-eat_plate
+pickup_can
 piggyback
 pirate
 pop_jack
@@ -73,8 +78,12 @@ touch_sky
 treasure_hunt
 trivia
 type_color
+type_map
 type_time
 type_word
+vacc
+wanted
 watch_fall
 water_war
-witch"
+witch
+"

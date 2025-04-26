@@ -10,7 +10,7 @@ minigame <- Ware_MinigameData
 	custom_overlay = "push_enemy"
 	min_players    = 2	
 	start_pass     = true
-	start_freeze   = true
+	start_freeze   = 0.5
 	fail_on_death  = true
 	allow_damage   = true
 	collisions     = true
@@ -61,6 +61,7 @@ class Hex
 			disableshadows = true
 			disablereceiveshadows = true
 		})
+		entity.AddFlag(FL_UNBLOCKABLE_BY_PLAYER)
 		SetPropInt(entity, "m_takedamage", DAMAGE_YES)
 	}
 	
@@ -88,7 +89,11 @@ function OnTeleport(players)
 	local size = 112.0
 	local speed = 300.0
 
-	local SpawnHex = function(q, r)
+	local shape = RandomInt(0, 3)
+	local len = players.len()
+	local dim = Max(ceil(sqrt(len)).tointeger() + 1, 4)
+	
+	local function SpawnHex(q, r)
 	{
 		local hex = Hex(q, r)
 		local pos = center * 1.0
@@ -97,9 +102,14 @@ function OnTeleport(players)
 		hexes.append(hex)
 	}
 	
-	local shape = RandomInt(0, 3)
-	local len = players.len()
-	local dim = Max(ceil(sqrt(len)).tointeger() + 1, 4)
+	// HACK
+	if (shape == 0)	
+		center -= Vector(1400, 1400, 0)	
+	else if (shape == 1)	
+		center -= Vector(1200, 1200, 0)	
+	else if (shape == 3)
+		center -= Vector(1000, 1000, 0)
+	
 	if (shape == 0) // parallelogram
 	{
 		for (local q = 0; q < dim; q++)
@@ -112,11 +122,10 @@ function OnTeleport(players)
 	}
 	else if (shape == 1) // triangle
 	{
-		// this is not really right
-		if (len >= 16)
-			dim++
-		if (len >= 46)
-			dim++		
+		// hack: this is not really right
+		if (len >= 16) dim++
+		if (len >= 46) dim++		
+		if (len >= 79) dim++
 		for (local q = 0; q < dim; q++) 
 		{
 			for (local r = 0; r < dim - q; r++) 

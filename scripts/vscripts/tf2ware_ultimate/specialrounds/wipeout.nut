@@ -52,10 +52,9 @@ function OnStart()
 {
 	foreach(player in Ware_Players)
 	{
-		local data = Ware_GetPlayerSpecialRoundData(player)
-		data.lives <- 2 // TODO: Find a different fix to the long rounds then set this back to 3.
-		
-		Ware_GetPlayerData(player).score = data.lives
+		local max_lives = 2 // TODO: Find a different fix to the long rounds then set this back to 3.
+		Ware_GetPlayerSpecialRoundData(player).lives <- max_lives
+		Ware_GetPlayerData(player).score = max_lives
 	}
 }
 

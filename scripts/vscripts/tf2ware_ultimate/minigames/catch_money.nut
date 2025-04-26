@@ -20,6 +20,9 @@ cash_amounts <-
 	50
 	100
 ]
+cash_multiplier <- 1
+
+required_amount <- 400
 
 bomb_model <- "models/props_lakeside_event/bomb_temp.mdl"
 touch_sound <- "MVM.MoneyPickup"
@@ -29,6 +32,8 @@ bomb_modelindex <- PrecacheModel(bomb_model)
 spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 16.0, 0.4, 0.02)
 
 cash_spawned <- 0
+
+collision_group <- Ware_IsSpecialRoundSet("collisions") ? COLLISION_GROUP_NONE : COLLISION_GROUP_DEBRIS
 
 function OnPrecache()
 {
@@ -48,6 +53,11 @@ function OnStart()
 		
 	// show money counter
 	ForceEnableUpgrades(2)
+	
+	if (Ware_MinigamePlayers.len() >= 32)
+		cash_multiplier = 2
+	else if (Ware_MinigamePlayers.len() >= 64)
+		cash_multiplier = 3
 	
 	Ware_CreateTimer(@() CreateMoney(), 0.5)
 }
@@ -71,7 +81,7 @@ function CreateMoney()
 			minhealthdmg   = INT_MAX // don't destroy on touch
 			spawnflags     = SF_PHYSPROP_TOUCH
 		})	
-		cash.SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+		cash.SetCollisionGroup(collision_group)
 		
 		if (RandomInt(0, 5) == 0)
 		{
@@ -80,7 +90,7 @@ function CreateMoney()
 		}
 		else
 		{
-			SetPropInt(cash, "m_iHammerID", cash_amounts[idx])
+			SetPropInt(cash, "m_iHammerID", cash_amounts[idx] * cash_multiplier)
 			cash_spawned++
 		}
 	}
@@ -116,7 +126,7 @@ function OnTakeDamage(params)
 									
 					victim.EmitSound(touch_sound)
 					victim.AddCurrency(GetPropInt(attacker, "m_iHammerID"))
-					if (victim.GetCurrency() >= 400)
+					if (victim.GetCurrency() >= required_amount)
 						Ware_PassPlayer(victim, true)
 				}
 			}
@@ -128,7 +138,7 @@ function OnTakeDamage(params)
 
 function OnEnd()
 {
-	local highest_amount = 0
+	local highest_amount = required_amount - 1
 	local highest_player
 	
 	foreach (player in Ware_MinigamePlayers)

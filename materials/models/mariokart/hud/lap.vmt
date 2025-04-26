@@ -9,11 +9,23 @@ UnlitGeneric
 	$model 1
 	
 	$frame 0
+	$alpha 0
+	$twofiftyfive 255
 	
 	Proxies
 	{
-		TeamTexture
+		Alpha
 		{
+		}
+		Equals
+		{
+			srcVar1 $alpha
+			resultVar $frame
+		}
+		Equals	
+		{
+			srcVar1 $twofiftyfive
+			resultVar $alpha
 		}
 	}
 }

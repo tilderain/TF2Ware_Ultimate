@@ -57,19 +57,22 @@ function OnTeleport(players)
 {
 	if (Ware_MinigameLocation.name == "beach")
 	{
-		Ware_TeleportPlayersRow(players, 
-			Ware_MinigameLocation.center, 
-			QAngle(0, 0, 0), 
-			1200.0, 
-			64.0, 64.0)
+		Ware_MinigameLocation.Teleport(players)
 	}
 	else if (Ware_MinigameLocation.name == "manor")
 	{
+		local spacing_x = 64.0, spacing_y = 64.0
+		if (players.len() > 40)
+		{
+			spacing_x = 32.0
+			spacing_y = 48.0
+		}
+		
 		Ware_TeleportPlayersRow(players,
 			Ware_MinigameLocation.center,
 			QAngle(0, 180, 0),
 			400.0,
-			64.0, 64.0)
+			spacing_x, spacing_y)
 	}
 }
 

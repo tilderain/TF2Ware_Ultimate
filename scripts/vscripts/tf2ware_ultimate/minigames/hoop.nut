@@ -26,15 +26,16 @@ function OnPrecache()
 
 function OnTeleport(players)
 {
-	Ware_TeleportPlayersRow(players,
-		Ware_MinigameLocation.center + Vector(0, 800, 0),
-		QAngle(0, 270, 0),
-		1300.0,
-		100.0, 60.0)
+	local red_players  = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED)
+	local blue_players  = players.filter(@(i, player) player.GetTeam() == TF_TEAM_BLUE)
+	local width   = 1000.0
+	local spacing = 60.0
+	Ware_TeleportPlayersRow(blue_players, Ware_MinigameLocation.center + Vector(0, -800, 0), QAngle(0, 90, 0), width, spacing, spacing)
+	Ware_TeleportPlayersRow(red_players, Ware_MinigameLocation.center + Vector(0, 800, 0), QAngle(0, 270, 0), width, spacing, spacing)
 		
-	point_a = Ware_MinigameLocation.center + Vector(RandomFloat(-1000, 1000), 700, 0)
-	point_b = Ware_MinigameLocation.center + Vector(0, 0, RandomFloat(2000, 3000))
-	point_c = Ware_MinigameLocation.center + Vector(RandomFloat(-1000, 1000), RandomFloat(-1000, -600), 0)
+	point_a = Ware_MinigameLocation.center + Vector(RandomFloat(-800, 800), 700, 0)
+	point_b = Ware_MinigameLocation.center + Vector(0, 0, RandomFloat(1000, 2000))
+	point_c = Ware_MinigameLocation.center + Vector(RandomFloat(-800, 800), RandomFloat(-1000, -600), 0)
 }
 
 function OnStart()

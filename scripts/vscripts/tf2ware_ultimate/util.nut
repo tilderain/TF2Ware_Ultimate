@@ -210,6 +210,18 @@ function IntersectLinePlane(start, end, normal, dist)
     return start + dir * t
 }
 
+// Performs ray vs sphere intersection test
+// If hit, returns true
+function IntersectRayWithSphere(start, dir, center, radius_sqr) 
+{
+    local oc = start - center
+    local a = dir.Dot(dir)
+    local b = 2.0 * oc.Dot(dir)
+    local c = oc.Dot(oc) - radius_sqr
+    local d = b * b - 4.0 * a * c
+    return d > 0.0
+}
+
 // Performs ray vs AABB intersection test, within [near, far] range
 // If hit, returns distance of ray to the box
 // Otherwise returns -1
@@ -350,10 +362,34 @@ function RandomElement(arr)
 	return arr[RandomIndex(arr)]
 }
 
-// Remove and return a random element frm the array
+// Remove and return a random element from the array
 function RemoveRandomElement(arr)
 {
 	return arr.remove(RandomIndex(arr))
+}
+
+// Removes an element from an array if found
+function RemoveElementIfFound(arr, element)
+{
+	local idx = arr.find(element)
+	if (idx != null)
+		arr.remove(idx)
+}
+
+// Appends element to the array if not already present
+function AppendElementIfUnique(arr, element)
+{
+	if (arr.find(element) == null)
+		arr.append(element)
+}
+
+// Returns the given column from a 2D array
+function GetElementsColumn(arr, column)
+{
+	local elements = []
+	foreach (elem in arr)
+		elements.append(elem[column])
+	return elements
 }
 
 // Returns either true or false at random
@@ -432,6 +468,35 @@ function FloatToTimeFormat(time)
 	return format("%02d:%02d:%03d", minutes, seconds, milliseconds)
 }
 
+// Generates an alphanumeric hash of the specified time
+// This is seeded by both the game's RNG routine and current system time
+function GenerateHash(length) 
+{
+    local radix = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    local radix_len = radix.len()
+	
+	local tm = {}
+    local combined = RandomInt(1, INT_MAX)
+	LocalTime(tm)
+    combined = (combined * 1 + tm.second) % INT_MAX
+    combined = (combined * 10 + tm.minute) % INT_MAX
+    combined = (combined * 100 + tm.hour) % INT_MAX
+    combined = (combined * 1000 + tm.day) % INT_MAX
+   
+	local hash = ""  
+    for (local i = 0; i < length; i++) 
+	{
+		local position = i + 1
+		local value = combined
+		value = value * position + i * 31
+		value = value * 17 + 23
+		combined = (combined * 31 + value) % INT_MAX
+		hash += radix[value % radix_len].tochar()
+    }
+    
+    return hash
+}
+
 function CollectGameEventsInScope(scope)
 {
 	local events = []
@@ -477,6 +542,12 @@ function ClearGameEventsFromScope(scope, events)
 function MarkForPurge(entity)
 {
 	SetPropBool(entity, "m_bForcePurgeFixedupStrings", true)
+}
+
+// Precache a model including gibs
+function PrecacheModelGibs(model)
+{
+	PrecacheEntityFromTable({ classname = "tf_generic_bomb", model = model })
 }
 
 // Precache a material
@@ -659,12 +730,6 @@ function SetEntityParent(entity, parent, attachment = null)
 	{
 		entity.AcceptInput("ClearParent", "", null, null)
 	}
-}
-
-// Gets an entity's parent, if one exists.
-function GetEntityParent(entity)
-{
-	return GetPropEntity(entity, "m_pParent")
 }
 
 // Sets a player's parent
@@ -1034,17 +1099,17 @@ function KillWeapon(weapon)
 	if (wearable)
 	{
 		MarkForPurge(wearable)
-		wearable.Kill()
+		wearable.Destroy()
 	}
 	
 	wearable = GetPropEntity(weapon, "m_hExtraWearableViewModel")
 	if (wearable)
 	{
 		MarkForPurge(wearable)
-		wearable.Kill()
+		wearable.Destroy()
 	}
 	
-	weapon.Kill()
+	weapon.Destroy()
 }
 
 // Internal use only
@@ -1052,12 +1117,12 @@ if (!("TriggerHurtDisintegrateProxy" in this) || !TriggerHurtDisintegrateProxy.I
 {
 	// Spoof an item to create the disintegration effect
     TriggerHurtDisintegrateProxy <- CreateEntitySafe("tf_weapon_bat")
-	TriggerHurtDisintegrateProxy.KeyValueFromString("classname", "ware_disintegrate")
     SetPropInt(TriggerHurtDisintegrateProxy, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 349)
     SetPropBool(TriggerHurtDisintegrateProxy, "m_AttributeManager.m_Item.m_bInitialized", true)
     TriggerHurtDisintegrateProxy.DispatchSpawn()
 	TriggerHurtDisintegrateProxy.DisableDraw()
     TriggerHurtDisintegrateProxy.AddAttribute("ragdolls become ash", 1, -1)
+	TriggerHurtDisintegrateProxy.KeyValueFromString("classname", "ware_disintegrate")
 }
   
 // Trigger hurt effect used by the map

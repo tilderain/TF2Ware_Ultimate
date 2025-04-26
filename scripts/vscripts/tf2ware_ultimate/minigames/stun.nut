@@ -7,6 +7,7 @@ minigame <- Ware_MinigameData
 	description  = "Stun an Enemy!"
 	allow_damage = true
 	min_players  = 2
+	max_players  = 64
 })
 
 proj_times <- {}

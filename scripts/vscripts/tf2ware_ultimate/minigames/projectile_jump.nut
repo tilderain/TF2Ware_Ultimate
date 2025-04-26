@@ -1,13 +1,15 @@
 mode_infos <- 
 [
-	[ "Needle jump!",       "needle_jump",        480.0],
+	[ "Needle jump!",       "needle_jump",        700.0],
 	[ "Rocket jump!",       "rocket_jump",        384.0],
 	[ "Sticky jump!",       "sticky_jump",        384.0],
 	[ "Sentry jump!",       "sentry_jump",        384.0],
 	[ "Flare jump!",        "flare_jump",         400.0],
 	[ "Short Circuit jump!", "shortcircuit_jump", 384.0],
 ]
-mode <- RandomInt(0, 5)
+// needle jump generates crazy amount of entities
+local min_mode = Ware_Players.len() > 40 ? 1 : 0
+mode <- RandomInt(min_mode, 5)
 
 minigame <- Ware_MinigameData
 ({
@@ -155,7 +157,7 @@ if (mode == 0)
 		
 		local dot = dir.Dot(Vector(0, 0, -1.0))
 		if (dot > 0.707) // cos(45)
-			player.SetAbsVelocity(player.GetAbsVelocity() - dir * 80.0 * dot)
+			player.SetAbsVelocity(player.GetAbsVelocity() - dir * 88.0 * dot)
 	}
 }
 else if (mode == 3)

@@ -80,6 +80,8 @@ function OnStart()
 	barrier.SetCollisionGroup(TFCOLLISION_GROUP_RESPAWNROOMS)
 	
 	ball_max_count = Ware_MinigamePlayers.len() > 24 ? 20 : 10
+	if (Ware_MinigamePlayers.len() >= 64)
+		ball_max_count *= 2
 	Ware_CreateTimer(@() SpawnBalls(), 0.1)
 }
 
@@ -102,6 +104,17 @@ function SpawnBalls()
 	
 	if (++ball_count < ball_max_count)
 		return 0.1
+	else if (ball_count % 2 == 0) // to prevent ties, don't allow even number of balls.
+	{
+		local side = RandomBool() ? 1 : -1
+		ball = Ware_SpawnEntity("prop_soccer_ball",
+		{
+			model = ball_model,
+			origin = Ware_MinigameLocation.center + Vector(RandomFloat(-700, 700), 320 * side, 100),
+			skin = RandomInt(0,1)
+		})
+		ball.AddFlag(FL_DONTTOUCH)
+	}
 }
 
 function OnEnd()

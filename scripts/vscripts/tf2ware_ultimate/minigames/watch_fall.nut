@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 	start_pass     = true
 	fail_on_death  = true
 	thirdperson    = true
-	start_freeze   = true
+	start_freeze   = 0.5
 	convars        =
 	{
 		sv_gravity = RemapValClamped(Ware_TimeScale, 1.0, 2.0, 700.0, 270.0)

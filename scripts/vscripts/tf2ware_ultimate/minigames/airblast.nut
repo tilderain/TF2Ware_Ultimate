@@ -9,7 +9,7 @@ minigame <- Ware_MinigameData
 	music         = "clumsy"
 	min_players   = 2
 	start_pass    = true
-	start_freeze  = true
+	start_freeze  = 0.5
 	allow_damage  = true
 	fail_on_death = true
 	convars       =

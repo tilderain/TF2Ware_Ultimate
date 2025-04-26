@@ -38,7 +38,7 @@ function OnStart()
 		if (team == TF_TEAM_RED)
 			Ware_SetPlayerMission(player, 0)
 		else if (team == TF_TEAM_BLUE)
-			Ware_SetPlayerMission(player, 1);	
+			Ware_SetPlayerMission(player, 1)	
 	}
 	
 	local swap = RandomBool()

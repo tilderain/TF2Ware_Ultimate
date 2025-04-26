@@ -135,7 +135,7 @@ function OnUpdate()
 				
 				if (teleported || (player.GetFlags() & FL_ONGROUND))
 				{
-					Ware_RemovePlayerAttribute(player, "cancel falling damage")
+					player.RemoveCustomAttribute("cancel falling damage")
 
 					if (special.hale_injump == 2)
 					{
@@ -231,7 +231,7 @@ function OnUpdate()
 					special.hale_jumptime = -(time + 5.0)
 					special.hale_injump = 1
 
-					Ware_AddPlayerAttribute(player, "cancel falling damage", 1.0, -1)
+					player.AddCustomAttribute("cancel falling damage", 1.0, -1)
 				}
 				else
 				{
@@ -260,7 +260,7 @@ function OnUpdate()
 				text += "\nSuper Jump will be ready again in: " + (-jump).tointeger().tostring()
 			}
 
-			Ware_ShowText(player, CHANNEL_MISC, text, 0.2, rage >= 100 ? "255 0 0" : "255 255 255", -1.0, 0.83)
+			Ware_ShowText(player, CHANNEL_MISC, text, 0.3, rage >= 100 ? "255 0 0" : "255 255 255", -1.0, 0.83)
 		}
 	}
 }
@@ -337,8 +337,8 @@ function OnCalculateScore(data)
 	}
 	else
 	{
-		local rage = special.hale_rage + 20
-		special.hale_rage = Min(rage, 100)
+		local amount = Ware_Minigame.boss ? 50 : 20
+		special.hale_rage = Min(special.hale_rage + amount, 100)
 		special.hale_rambletime = Time() + 3.0
 
 		Ware_PlaySoundOnClient(player, hale_death_sound, 1.0, 100, SND_CHANGE_PITCH)
@@ -356,7 +356,7 @@ function OnEnd()
 		Ware_TogglePlayerWearables(player, true)
 		Ware_UpdatePlayerVoicePitch(player)
 
-		Ware_RemovePlayerAttribute(player, "cancel falling damage")
+		player.RemoveCustomAttribute("cancel falling damage")
 		player.SetGravity(1.0)
 
 		Ware_DestroySpecialMelee(player)

@@ -1,5 +1,5 @@
-local location = Ware_Location.sawrun
-local player_count = 40
+local location = Ware_Location.love
+local player_count = 100
 local copy_player = Ware_ListenHost
 
 if ("ghosts" in this)
@@ -22,7 +22,18 @@ for (local i = 0; i < player_count; i++)
 	ghosts.append(ghost)
 }
 
-location.Teleport(ghosts)
+if (1)
+{
+	location.Teleport(ghosts)
+}
+else
+{
+	Ware_TeleportPlayersRow(ghosts,
+		location.center_right,
+		QAngle(0, 90, 0),
+		400.0,
+		-50.0, 33.0)	
+}
 
 local stuck = 0
 foreach (ghost in ghosts)

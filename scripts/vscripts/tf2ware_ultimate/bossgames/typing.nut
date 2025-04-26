@@ -4,7 +4,7 @@ if (RandomInt(1, 10) == 1 || Ware_IsSpecialRoundSet("math_only"))
 
 minigame <- Ware_MinigameData
 ({
-	name           = mode == 0 ? "Typing" : "Math Blitz"
+	name           = mode == 0 ? "Super Typing Attack 2: Goodbye Keyboard" : "Hyper Math Rumble: Digit Destruction"
 	author         = ["Gemidyne", "ficool2"]
 	description    = mode == 0 ? "Type each word as fast as you can!" : "Solve each question as fast as you can!"
 	duration       = 210.0
@@ -72,6 +72,7 @@ function OnPrecache()
 	PrecacheScriptSound(sound_bad_end)
 	PrecacheScriptSound(sound_good_end)
 	PrecacheScriptSound(sound_level_up)
+	PrecacheScriptSound(sound_difficulty_up)
 	PrecacheScriptSound(sound_overview_start)
 	PrecacheScriptSound(sound_word_start)
 	PrecacheScriptSound(sound_word_fail)
@@ -116,6 +117,7 @@ function Descent()
 	SetCamera("DRBoss_DescentCamera_Point")
 	Ware_PlaySoundOnAllClients(sound_descent_begin)
 	Ware_ShowScreenOverlay(Ware_Players, null)
+	Ware_ShowMinigameText(Ware_Players, "")
 	current_music = "typing-" + RemoveRandomElement(music_choices)
 	Ware_PlayMinigameMusic(null, current_music)
 	CreateTimer(Prepare, 3.5)
@@ -197,12 +199,12 @@ function StartWords()
 
 	foreach (player in Ware_Players)
 	{
-		Ware_ShowScreenOverlay(player, overlay_type)
+		Ware_ShowScreenOverlay(player, player.IsAlive() ? overlay_type : null)
 			
 		if (Ware_MinigamePlayers.find(player) != null)
 		{
 			local minidata = Ware_GetPlayerMiniData(player)
-			minidata.score <- 0
+			minidata.score <- player.IsFakeClient() ? RandomInt(0, 5) : 0 // debug
 			minidata.word_count <- 0
 			if (!("word_count_total" in minidata))
 				minidata.word_count_total <- 0
@@ -234,6 +236,8 @@ function EndWords()
 	
 	Ware_ShowScreenOverlay(Ware_Players, overlay_announcement)
 	Ware_PlayMinigameMusic(null, current_music, SND_STOP)
+	Ware_ShowText(Ware_Players, CHANNEL_BACKUP, "", 1.0)
+			
 	EntFire("DRBoss_OverviewSequence_Start", "Trigger")
 	SetCamera("DRBoss_DescentCamera_Point")
 	
@@ -263,7 +267,7 @@ function EndWords()
 	Ware_PlaySoundOnAllClients(sound_overview_start)
 	
 	scores.sort(@(a, b) b <=> a)
-	median_score = Median(scores)
+	median_score = Max(Median(scores), 1)
 	
 	local failed = 0, max_display = 6
 	local failed_players = []
@@ -285,7 +289,7 @@ function EndWords()
 			}
 		}
 		
-		if (failed >= max_display)
+		if (failed > max_display)
 			text += format("\n\nand %d more...", failed - max_display)
 	}
 	else
@@ -293,7 +297,7 @@ function EndWords()
 		text += "no one!\n\nEveryone survives to the next level!"
 	}
 	
-	Ware_ShowMinigameText(null, text)
+	Ware_ShowMinigameText(Ware_Players, text)
 	
 	CreateTimer(function()
 	{
@@ -337,13 +341,13 @@ function CheckGameOver()
 				local text = "The winners are...\n"
 				foreach (player in players)
 					text +=  GetPlayerName(player) + "\n"
-				Ware_ShowMinigameText(null, text)
+				Ware_ShowMinigameText(Ware_Players, text)
 			}
 			else
 			{
 				local player = players[0]
 				local average_word_count = Ware_GetPlayerMiniData(player).word_count_total / (level + 1).tofloat()
-				Ware_ShowMinigameText(null, format("The winner is...\n%s!", GetPlayerName(player)))
+				Ware_ShowMinigameText(Ware_Players, format("The winner is...\n%s!", GetPlayerName(player)))
 				
 				if (mode == 0)
 				{
@@ -358,14 +362,29 @@ function CheckGameOver()
 		else
 		{
 			Ware_PlaySoundOnAllClients(sound_bad_end)
-			Ware_ShowMinigameText(null, "Nobody is the winner...")
+			Ware_ShowMinigameText(Ware_Players, "Nobody is the winner...")
 		}
 	}
 	else
 	{
 		level++
 		
-		Ware_ShowMinigameText(null, "")
+		local text = "The remaining players are...\n\n"
+		
+		local max_display = 6
+		local count = max_display
+		foreach (player in players)
+		{
+			text += GetPlayerName(player) + "\n"
+			if (--count <= 0)
+				break
+		}
+		
+		if (players.len() > max_display)
+			text += format("\n\nand %d more...", players.len() - max_display)
+		
+		Ware_ShowMinigameText(Ware_Players, text)
+
 		Ware_PlaySoundOnAllClients(sound_level_up)
 		CreateTimer(Descent, 3.0)
 		
@@ -408,16 +427,39 @@ function SetCamera(name)
 
 function ShowWord(player, score)
 {
-	local color = "255 255 40"
 	local word = word_rotation[score]
 	local next_word = word_rotation[score + 1]
+	
+	local text, text2
 	if (mode != 0)
 	{
-		Ware_ShowMinigameText(player, format("%s = ?\n\nNext question:\n%s\n", word.expression, next_word.expression), color)	
+		text = word.expression + " = ?"
+		text2 = "Next question:\n" + next_word.expression
 	}
 	else
 	{
-		Ware_ShowMinigameText(player, format("%s\n\nNext word:\n%s\n", word, next_word), color)	
+		// these spaces are needed to avoid localization kicking in!!
+		text = format(" %s ", word)
+		text2 = "Next word:\n" + next_word
+	}
+		
+	Ware_ShowText(player, CHANNEL_MINIGAME, text, word_type_duration, "255 255 40")
+	Ware_ShowText(player, CHANNEL_BACKUP, text2, word_type_duration, "255 255 255", -1.0, 0.4)
+	
+	local spec_text
+	foreach (spectator in Ware_Players)
+	{
+		if (!spectator.IsAlive() && GetPropEntity(spectator, "m_hObserverTarget") == player)
+		{
+			if (spec_text == null)
+			{
+				if (mode != 0)
+					spec_text = format("%s's current question is:\n%s", GetPlayerName(player), word.expression)
+				else
+					spec_text = format("%s's current word is:\n%s", GetPlayerName(player), word)
+			}
+			Ware_ShowText(spectator, CHANNEL_MINIGAME, spec_text, word_type_duration, "255 255 255")
+		}
 	}
 }
 

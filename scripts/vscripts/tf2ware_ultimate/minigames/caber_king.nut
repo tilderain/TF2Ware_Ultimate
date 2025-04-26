@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Caber King"
 	author         = ["LiLGuY", "ficool2"]
 	description    = "Survive!"
-	duration       = 3.5
+	duration       = 4.5
 	end_delay      = 0.5
 	music          = "falling"
 	custom_overlay = "survive"
@@ -16,10 +16,10 @@ minigame <- Ware_MinigameData
 function OnStart()
 {
 	// can't give shields directly unfortunately
-	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Ullapool Caber")
-	
+	// TODO: Prevent charge spam after initial charge
 	foreach (player in Ware_MinigamePlayers)
 	{
+		Ware_SetPlayerLoadout(player, TF_CLASS_DEMOMAN, "Ullapool Caber")
 		Ware_GetPlayerMiniData(player).attack2 <- false
 		SetPropBool(player, "m_Shared.m_bShieldEquipped", true)
 	}

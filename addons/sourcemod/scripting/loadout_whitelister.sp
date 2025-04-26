@@ -10,6 +10,7 @@
 ConVar mp_tournament;
 ConVar mp_tournament_whitelist;
 ConVar loadoutwhitelister_enable;
+ConVar loadoutwhitelister_cosmetics;
 ConVar loadoutwhitelister_taunts;
 
 bool loadoutwhitelister_init = false;
@@ -17,8 +18,16 @@ public bool script_allow_loadout = false;
 
 DynamicHook g_DHook_CTFPlayerInitClass;
 DynamicDetour g_DDetour_CTFPlayerGetLoadoutItem;
+DynamicHook g_DDetour_CBaseEntityFVisible;
 
 char g_SavedTournamentWhitelist[256];
+
+void SetTournamentValue(bool toggle)
+{
+	mp_tournament.Flags &= ~(FCVAR_REPLICATED|FCVAR_NOTIFY);
+	mp_tournament.SetInt(toggle ? 1 : 0, false, false);
+	mp_tournament.Flags |= (FCVAR_REPLICATED|FCVAR_NOTIFY);
+}
 
 public void LoadoutWhitelister_Start(GameData gamedata)
 {
@@ -42,16 +51,20 @@ public void LoadoutWhitelister_Start(GameData gamedata)
 		return;
 	}
 	
+	g_DDetour_CBaseEntityFVisible = DynamicHook.FromConf(gamedata, "CBaseEntity::FVisible");
+	if (!g_DDetour_CBaseEntityFVisible)
+		LogError("Failed to setup detour for CBaseEntity::FVisible");
+	
 	loadoutwhitelister_init = true;
 	
 	g_DDetour_CTFPlayerGetLoadoutItem.Enable(Hook_Pre, DHookPre_CTFPlayerGetLoadoutItem);
 	
 	mp_tournament = FindConVar("mp_tournament");
 	mp_tournament_whitelist = FindConVar("mp_tournament_whitelist");
-	mp_tournament.Flags = mp_tournament.Flags & ~(FCVAR_NOTIFY);	
 	mp_tournament_whitelist.GetString(g_SavedTournamentWhitelist, sizeof(g_SavedTournamentWhitelist));
 	mp_tournament_whitelist.SetString("cfg/tf2ware_ultimate/item_whitelist.cfg"); // TODO: don't hardcode this here?
 	loadoutwhitelister_enable = CreateConVar("loadoutwhitelister_enable", "1", "");
+	loadoutwhitelister_cosmetics = CreateConVar("loadoutwhitelister_cosmetics", MaxClients > 64 ? "0" : "1", "Allow cosmetics. Whitelist will still be used");
 	loadoutwhitelister_taunts = CreateConVar("loadoutwhitelister_taunts", "4", "Allow up to N amount of taunts (0 for none)");
 	
 	AddCommandListener(ListenerTournamentRestart, "mp_tournament_restart");
@@ -69,7 +82,6 @@ public void LoadoutWhitelister_End(bool map_unload)
 		return;
 	loadoutwhitelister_init = false;
 	
-	mp_tournament.Flags = mp_tournament.Flags | (FCVAR_NOTIFY);	
 	mp_tournament_whitelist.SetString(g_SavedTournamentWhitelist);
 	
 	if (g_DDetour_CTFPlayerGetLoadoutItem)
@@ -103,7 +115,7 @@ Action ListenerTournamentRestart(int client, const char[] command, int argc)
 		{
 			GameRules_SetProp("m_bInWaitingForPlayers", g_PrevWPF);
 			GameRules_SetProp("m_bAwaitingReadyRestart", 0);
-			mp_tournament.SetInt(0, false, false);
+			SetTournamentValue(false);
 			
 			g_InRestart = false;
 			g_ReloadingWhitelist = false;
@@ -112,7 +124,7 @@ Action ListenerTournamentRestart(int client, const char[] command, int argc)
 		
 		g_InRestart = true;
 		
-		mp_tournament.SetInt(1, false, false);
+		SetTournamentValue(true);
 		g_PrevWPF = GameRules_GetProp("m_bInWaitingForPlayers"); 
 		GameRules_SetProp("m_bInWaitingForPlayers", 1);
 	}
@@ -135,7 +147,6 @@ public void LoadoutWhitelister_ReloadWhitelist()
 	ServerCommand("mp_tournament_restart");
 	ServerCommand("mp_tournament_restart"); // hacky but this isn't synchronous
 }
-
 static bool g_InitClass = false;
 static int g_SavedTournamentValue = 0;
 
@@ -146,7 +157,7 @@ static MRESReturn DHookPre_CTFPlayerInitClass(int client)
 	if (loadoutwhitelister_enable.BoolValue)
 	{
 		g_SavedTournamentValue = mp_tournament.IntValue;
-		mp_tournament.SetInt(1, false, false);
+		SetTournamentValue(true);
 	}
 	
 	return MRES_Ignored;
@@ -159,10 +170,15 @@ static MRESReturn DHookPre_CTFPlayerGetLoadoutItem(int client, DHookReturn ret, 
 		int slot = param.Get(2);
 		// remove weapons (except melee)
 		// keep up to N taunts (defined by convar)
-		// keep wearables (whitelist will kill those)
-		if (slot == SLOT_MELEE 
-			|| (slot >= SLOT_WEARABLES 
-				&& slot < (SLOT_TAUNT1 + loadoutwhitelister_taunts.IntValue)))
+		// keep wearables (whitelist will kill those), unless >64 players
+		if (slot == SLOT_MELEE)
+		{
+		}
+		else if (loadoutwhitelister_cosmetics.IntValue 
+				&& (slot >= SLOT_WEARABLES && slot < (SLOT_TAUNT1 + loadoutwhitelister_taunts.IntValue)))
+		{
+		}
+		else if (slot >= SLOT_TAUNT1 && slot < (SLOT_TAUNT1 + loadoutwhitelister_taunts.IntValue))
 		{
 		}
 		else
@@ -184,9 +200,22 @@ static MRESReturn DHookPost_CTFPlayerInitClass(int client)
 	g_InitClass = false;
 	
 	if (loadoutwhitelister_enable.BoolValue)
-	{
-		mp_tournament.SetInt(g_SavedTournamentValue, false, false);
-	}
+		SetTournamentValue(g_SavedTournamentValue != 0);
 	
 	return MRES_Ignored;
+}
+
+// TODO temporary hack to figure out why weapons are rarely not being given to players
+// I suspect the cause is a FVisible trace check in CTFPlayer::BumpWeapon
+// Going to see if this fixes it
+static MRESReturn DHookPre_CBaseEntityFVisible(int entity, DHookReturn ret)
+{
+	ret.Value = true;
+	return MRES_Supercede;
+}
+
+public void OnEntityCreated(int entity, const char[] classname)
+{
+	if (g_DDetour_CBaseEntityFVisible && strncmp(classname, "tf_weapon", 9) == 0)
+		g_DDetour_CBaseEntityFVisible.HookEntity(Hook_Pre, entity, DHookPre_CBaseEntityFVisible);
 }

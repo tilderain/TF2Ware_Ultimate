@@ -50,8 +50,8 @@ function OnTeleport(players)
 	Ware_TeleportPlayersRow(players,
 		Ware_MinigameLocation.center + Vector(3500, 0, -250),
 		QAngle(0, -180, 0),
-		1300.0,
-		65.0, 65.0)
+		1500.0,
+		65.0, 60.0)
 		
 	Ware_TeleportPlayer(shark, Ware_MinigameLocation.center + Vector(1500, 0, -200), ang_zero, vec3_zero)
 }
@@ -64,7 +64,7 @@ function OnStart()
 		teamnum = TF_TEAM_RED
 	})
 	blocker.SetSolid(SOLID_BBOX)
-	blocker.SetSize(Vector(-8, -1000, -1000), Vector(8, 1000, 1000))
+	blocker.SetSize(Vector(-8, -1100, -1100), Vector(8, 1100, 1100))
 	
 	shark_icon = Ware_SpawnEntity("handle_dummy", { classname = "shark" } ) // kill icon
 	
@@ -102,7 +102,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	local shark_pos = shark.IsValid() ? shark.GetOrigin() : null
+	local shark_pos = shark.IsValid() && shark.IsAlive() ? shark.GetOrigin() : null
 	local threshold = Ware_MinigameLocation.center.x + 512.0
 	foreach (player in Ware_MinigamePlayers)
 	{

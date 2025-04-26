@@ -1,6 +1,6 @@
 simon    <- RandomInt(0, 1)
-mode     <- RandomInt(0, 7)
-suffixes <- ["Taunt", "Jump", "Crouch", "Medic", "Eat", "Drink", "Inspect", "Horn"]
+mode     <- RandomInt(0, 9)
+suffixes <- ["Taunt", "Jump", "Crouch", "Medic", "Eat", "Drink", "Inspect", "Horn", "Type", "Charge"]
 
 minigame <- Ware_MinigameData
 ({
@@ -40,6 +40,15 @@ function OnStart()
 	else if (mode == 7)
 	{
 		Ware_SetGlobalCondition(TF_COND_HALLOWEEN_KART)
+	}
+	else if (mode == 9)
+	{ 
+		foreach (player in Ware_MinigamePlayers)
+		{
+			Ware_SetPlayerLoadout(player, TF_CLASS_DEMOMAN)
+			Ware_GetPlayerMiniData(player).attack2 <- false
+			SetPropBool(player, "m_Shared.m_bShieldEquipped", true)
+		}
 	}
 }
 
@@ -87,6 +96,33 @@ else if (mode == 7)
 	{
 		local pass = simon == 0
 		PassOrFailPlayer(player, !pass)
+	}
+}
+else if (mode == 8)
+{
+	function OnPlayerSay(player, text)
+	{
+		local pass = simon == 0
+		PassOrFailPlayer(player, !pass)
+	}
+}
+else if (mode == 9)
+{
+	// TODO: Prevent charge spam after initial charge
+	local pass = simon == 0
+	function OnUpdate()
+	{
+		foreach (player in Ware_MinigamePlayers)
+		{
+			local minidata = Ware_GetPlayerMiniData(player)
+			local attack2 = GetPropInt(player, "m_nButtons") & IN_ATTACK2
+			if (attack2 && !minidata.attack2)
+			{
+				player.AddCond(TF_COND_SHIELD_CHARGE)
+				PassOrFailPlayer(player, !pass)
+			}
+			minidata.attack2 = attack2
+		}
 	}
 }
 else

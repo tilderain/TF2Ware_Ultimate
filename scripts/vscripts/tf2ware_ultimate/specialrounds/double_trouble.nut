@@ -86,8 +86,10 @@ function OnPick()
 	data.force_collisions  = data_a.force_collisions || data_b.force_collisions
 	data.opposite_win      = data_a.opposite_win || data_b.opposite_win
 	data.friendly_fire     = data_a.friendly_fire && data_b.friendly_fire
+	data.force_pvp_damage  = data_a.force_pvp_damage || data_b.force_pvp_damage
 	data.bonus_points      = data_a.bonus_points || data_b.bonus_points
 	data.non_stop          = data_a.non_stop || data_b.non_stop
+	data.allow_respawnroom = data_a.allow_respawnroom && data_b.allow_respawnroom
 	// choose whichever one has non-default value
 	data.boss_count        = data_a.boss_threshold != data.boss_count ? data_a.boss_count : data_b.boss_count
 	data.boss_threshold    = data_a.boss_threshold != data.boss_threshold ? data_a.boss_threshold : data_b.boss_threshold
@@ -198,8 +200,10 @@ delegated_callbacks <-
 		local ret_b = DelegatedCall(scope_b, "OnBeginIntermission", is_boss) 
 		
 		// for simon special round
-		special_round.opposite_win = scope_a.special_round.opposite_win || scope_b.special_round.opposite_win
-	
+		special_round.opposite_win = scope_a.special_round.opposite_win
+		if (scope_b.special_round.opposite_win)
+			special_round.opposite_win = !special_round.opposite_win 
+		
 		return ret_a || ret_b
 	}
 
@@ -239,6 +243,8 @@ delegated_callbacks <-
 		local ret = DelegatedCall(scope_a, "OnCalculateScore", data)
 		if (call_failed || ret == false)
 			ret = DelegatedCall(scope_b, "OnCalculateScore", data)	
+		if (call_failed)
+			ret = false
 		return ret
 	}
 
@@ -273,6 +279,12 @@ delegated_callbacks <-
 		DelegatedCall(scope_a, "OnPlayerSpawn", player)
 		DelegatedCall(scope_b, "OnPlayerSpawn", player)
 	}
+	
+	function OnPlayerPostSpawn(player)
+	{
+		DelegatedCall(scope_a, "OnPlayerPostSpawn", player)
+		DelegatedCall(scope_b, "OnPlayerPostSpawn", player)
+	}
 
 	function OnPlayerInventory(player)
 	{
@@ -285,6 +297,12 @@ delegated_callbacks <-
 		DelegatedCall(scope_a, "OnPlayerVoiceline", player, name)
 		DelegatedCall(scope_b, "OnPlayerVoiceline", player, name)
 	}	
+	
+	function OnPlayerTouch(player, other_player)
+	{
+		DelegatedCall(scope_a, "OnPlayerTouch", player, other_player)
+		DelegatedCall(scope_b, "OnPlayerTouch", player, other_player)
+	}		
 
 	function GetPlayerRoll(player)
 	{

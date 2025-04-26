@@ -6,13 +6,16 @@ class Ware_SpecialRoundData
 	function constructor(table = null)
 	{
 		min_players       = 0
+		max_players       = 256
 		convars           = {}
 		reverse_text      = false
 		allow_damage      = false
 		force_collisions  = false
 		opposite_win      = false
 		friendly_fire     = true
+		force_pvp_damage  = false
 		bonus_points      = false
+		allow_respawnroom = true
 		non_stop          = false
 		boss_count        = 1
 		boss_threshold    = Ware_BossThreshold
@@ -43,6 +46,8 @@ class Ware_SpecialRoundData
 	// == Optional settings ==
 	// Minimum amount of players needed to start, default is 0
 	min_players      		 = null
+	// Maximum amount of players needed to start, default is 256
+	max_players      		 = null	
 	// Table of convars to set for this special round
 	// Reverted to previous values after special round ends	
 	convars          		 = null
@@ -56,6 +61,10 @@ class Ware_SpecialRoundData
 	opposite_win			 = null
 	// Friendly fire allowed on minigames? Default is true
 	friendly_fire            = null
+	// Always allow player to always damage each other. Default is false
+	force_pvp_damage         = null
+	// Allow respawning in intermission when changing class? Default is true
+	allow_respawnroom        = null	
 	// Award bonus points? Default is false
 	bonus_points             = null
 	// No breaks between minigames, default is false
@@ -68,7 +77,7 @@ class Ware_SpecialRoundData
 	speedup_threshold        = null
 	// Override player voice pitch if set
 	pitch_override           = null
-	
+
 	// == Internal use only ==
 	file_name                = null
 	
@@ -144,6 +153,9 @@ class Ware_SpecialRoundData
 	cb_on_player_disconnect	   = null
 	// OnPlayerSpawn(player)      - Called by OnGameEvent_player_spawn and passes the player that spawned.
 	cb_on_player_spawn         = null
+	// OnPlayerPostSpawn(player)  - Called at the end of the frame by OnGameEvent_player_spawn
+	//                            - Useful to apply attributes as those won't apply in OnPlayerSpawn
+	cb_on_player_postspawn     = null
 	// OnPlayerInventory(player)  - Called by OnGameEvent_post_inventory_application. 
 	//                            - This happens when a player spawns, but is intended for manipulating loadouts.
 	cb_on_player_inventory     = null
@@ -153,6 +165,8 @@ class Ware_SpecialRoundData
 	cb_get_player_roll         = null
 	// CanPlayerRespawn(player)   - If returns true, allows a dead player to respawn
 	cb_can_player_respawn      = null
+	// OnPlayerTouch(player, other_player) - Called by Ware_OnUpdate when two players touch and passes the two players.
+	cb_on_player_touch         = null
 	// OnTakeDamage(params)       - Called by OnTakeDamage in main.nut and functions as normal.
 	cb_on_take_damage          = null
 	

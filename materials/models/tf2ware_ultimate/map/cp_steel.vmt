@@ -1,0 +1,7 @@
+UnlitGeneric
+{
+	$basetexture vgui/maps/menu_photos_cp_steel
+	$basetexturetransform "center 0 .5 scale 0.8 0.8 rotate 0 translate 0 0"
+	$halflambert 1
+	$translucent 1
+}

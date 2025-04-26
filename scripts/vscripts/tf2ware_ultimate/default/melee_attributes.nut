@@ -13,7 +13,18 @@ buffer<-@"// atomizer
 [325] = 
 { 
 	""hit self on miss"" : 0,
-},	
+	""bleeding duration"" : 0,
+},
+// fan o war	
+[355] =
+{
+	""mark for death"" : 0,
+},
+// wrap assassin
+[648] =
+{
+	""mod bat launches ornaments"": 0,
+},
 // discipilinary action
 [447] =
 { 
@@ -91,7 +102,14 @@ buffer<-@"// atomizer
 	""single wep holster time increased"" : 1,
 	""mult_player_movespeed_active"" : 1,
 	""mod_maxhealth_drain_rate"" : 0,
-},	
+},
+// bread bite
+[1100] =
+{ 
+	""single wep holster time increased"" : 1,
+	""mult_player_movespeed_active"" : 1,
+	""mod_maxhealth_drain_rate"" : 0,
+},
 // fists of steel
 [331] =
 { 
@@ -136,6 +154,8 @@ buffer<-@"// atomizer
 [173] = { ""max health additive penalty"" : 0 },
 // bushwacka
 [232] = { ""dmg taken increase"" : 1 },
+// tribalman's shiv
+[171] = { ""bleeding duration"" : 0 },
 // conniver's kunai
 [356] = 
 { 

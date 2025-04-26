@@ -108,13 +108,14 @@ words <-
 	"Claidheamh Mor"
 ]
 
-first <- false
+first <- true
 word <- null
 
 function OnStart()
 {
 	word = RandomElement(words)
-	Ware_ShowMinigameText(null, word)
+	// these spaces are to prevent localization
+	Ware_ShowMinigameText(null, format(" %s ", word))
 	word = word.tolower()
 }
 

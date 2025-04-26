@@ -110,7 +110,7 @@ function Ware_PassPlayer(player, pass)
 	local data = player.GetScriptScope().ware_data
 	if (data.passed == pass)
 		return false
-	if (data.suicided && !Ware_Minigame.allow_suicide)
+	if (data.suicided && Ware_Minigame && !Ware_Minigame.allow_suicide)
 		return false
 	
 	if (!Ware_BlockPassEffects)
@@ -215,13 +215,15 @@ function Ware_GetPlayerMission(player)
 
 // Sets a player loadout, i.e. their class and their items
 // This removes all items/weapons they currently have, including their melee (unless "keep_melee" is true)
+// If class is TF_CLASS_UNDEFINED, the class is not changed
 // Items is an optional item name, or array of item names to give to the player
 // For a list of item names, see items.nut
 // If items is null, the player is switched to their default melee
 // Item attributes is a list of attributes to apply to the given item, or default melee
 function Ware_SetPlayerLoadout(player, player_class, items = null, item_attributes = {}, keep_melee = false, switch_weapon = true)
 {
-	Ware_SetPlayerClass(player, player_class, false)
+	if (player_class != TF_CLASS_UNDEFINED)
+		Ware_SetPlayerClass(player, player_class, false)
 	
 	if (items)
 	{
@@ -249,7 +251,10 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 		else
 			melee = data.melee
 
-		if (melee && melee.IsValid())
+		if (melee && !melee.IsValid())
+			melee = null
+			
+		if (melee)
 		{
 			if (item_attributes.len() > 0)
 			{
@@ -257,9 +262,10 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 					melee.AddAttribute(attribute, value, -1.0)
 				data.melee_attributes = clone(item_attributes)
 			}
-			
-			player.Weapon_Switch(melee)
 		}
+		
+		melee = Ware_ForceSwitchPlayerMelee(player, melee)
+		
 	}
 		
 	SetPropEntity(player, "m_hLastWeapon", null)	
@@ -344,7 +350,7 @@ function Ware_StripPlayer(player, give_default_melee)
 					}
 				}
 				
-				player.Weapon_Switch(use_melee)
+				use_melee = Ware_ForceSwitchPlayerMelee(player, use_melee)
 			}
 		}
 	}
@@ -465,6 +471,44 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 	return weapon
 }
 
+// Force switch to the player melee
+function Ware_ForceSwitchPlayerMelee(player, melee)
+{
+	if (melee)
+		player.Weapon_Switch(melee)
+	
+	// removed: this was an attempt to workaround the no-melee bug, but this didn't fix it
+	// keeping old code here if needed again
+	
+	/*
+	if (melee)
+	{
+		player.Weapon_Switch(melee)
+		if (player.GetActiveWeapon() == melee)
+			return melee
+		// HACK: failsafe for unknown rare bug where the player has no melee
+		// Unsure whether this is caused by a switch failure or melee not being physically present
+	}
+	
+	// If melee is null, or the switch failed, gives default melee
+	local weapon = Ware_GivePlayerWeapon(player, STOCK_MELEE_MAP[player.GetPlayerClass()])
+	if (player.GetActiveWeapon() == weapon)
+	{
+		local data = player.GetScriptScope().ware_data
+		if (data.melee && data.melee.IsValid())
+			KillWeapon(data.melee)
+		data.melee = weapon
+		return weapon
+	}
+	else
+	{
+		// if switch still failed we are screwed at this point!!
+		weapon.Destroy()
+		return null
+	}
+	*/
+}
+
 // Equips a melee that should override the default one, if the player doesn't have one already
 // This melee will only be used if the minigame doesn't strip out melees
 // A viewmodel entity can also be equipped, intended to complement the special weapon
@@ -579,12 +623,13 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 	{
 		// not sure why this is needed
 		melee.SetModel(TF_CLASS_ARMS[player_class])
+	}
 	
-		if (switch_melee)
-		{
-			player.Weapon_Switch(melee)
+	if (switch_melee)
+	{
+		melee = Ware_ForceSwitchPlayerMelee(player, melee)
+		if (melee)
 			melee.EnableDraw()
-		}
 	}
 }
 
@@ -809,11 +854,18 @@ function Ware_RadiusDamagePlayers(origin, radius, damage, attacker)
 function Ware_TeleportPlayer(player, origin, angles, velocity)
 {
 	local has_origin = true, has_angles = true, has_velocity = true
+	
 	if (origin == null)
 	{
 		has_origin = false
 		origin = vec3_zero
 	}
+	else
+	{
+		// potential fix for players not getting teleported
+		SetPropVector(player, "m_oldOrigin", origin)
+	}
+	
 	if (angles == null)
 	{
 		has_angles = false

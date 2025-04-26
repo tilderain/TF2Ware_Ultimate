@@ -36,6 +36,15 @@ BaseCombatCharacter.AmmoPickup
 	wave			common/null.wav
 }
 
+TFPlayer.MedicChargedDeath
+{
+	channel		CHAN_STATIC
+	volume		0.6
+	soundlevel	SNDLVL_60dB
+	pitch		PITCH_NORM
+	wave		player/medic_charged_death.wav
+}
+
 Weapon_RocketPack.BoostersExtend
 {
 	channel			CHAN_WEAPON
@@ -70,6 +79,39 @@ DisciplineDevice.PowerDown
 	volume		0.0
 	pitch		0
 	wave		common/null.wav
+}
+
+WeaponMedigun_Vaccinator.Charged_tier_01
+{
+	channel		CHAN_STATIC
+	soundlevel	SNDLVL_60dB
+	volume		0.5
+	wave		)weapons/vaccinator_charge_tier_01.wav
+}
+
+WeaponMedigun_Vaccinator.InvulnerableOn
+{
+	channel		CHAN_WEAPON
+	volume		0.6
+	soundlevel 	SNDLVL_60dB
+	wave		)player/invuln_on_vaccinator.wav
+}
+
+WeaponGrapplingHook.ImpactDefault
+{
+	channel		CHAN_STATIC
+	soundlevel	SNDLVL_70dB
+	volume		0.7
+	pitch		PITCH_NORM
+	wave		weapons/grappling_hook_impact_default.wav
+}
+
+WeaponGrapplingHook.ImpactFlesh
+{
+	channel		CHAN_STATIC
+	soundlevel	SNDLVL_70dB
+	volume		0.7
+	wave		)weapons/grappling_hook_impact_flesh.wav
 }
 
 Game.Revenge
@@ -109,15 +151,173 @@ Game.PenetrationKill
 	wave  			common/null.wav
 }
 
+// - copy pasted from game_sounds_vo_mvm
+
+// note: channels replaced from CHAN_VOICE so it doesn't override player voicelines
+
+Demoman.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/demoman_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/demoman_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/demoman_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/demoman_mvm_PainSevere04.mp3
+	}
+}
+
+Engineer.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_95dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/engineer_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere05.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere06.mp3
+		wave		vo/mvm/norm/engineer_mvm_PainSevere07.mp3
+	}
+}
+
+Heavy.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/heavy_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/heavy_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/heavy_mvm_PainSevere03.mp3
+	}
+}
+
+Medic.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/medic_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/medic_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/medic_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/medic_mvm_PainSevere04.mp3
+	}
+}
+
+Pyro.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/pyro_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere05.mp3
+		wave		vo/mvm/norm/pyro_mvm_PainSevere06.mp3
+	}
+}
+
+Scout.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/scout_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere05.mp3
+		wave		vo/mvm/norm/scout_mvm_PainSevere06.mp3
+	}
+}
+
+Sniper.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/sniper_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/sniper_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/sniper_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/sniper_mvm_PainSevere04.mp3
+	}
+}
+
+Spy.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/spy_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/spy_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/spy_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/spy_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/spy_mvm_PainSevere05.mp3
+	}
+}
+
+
+Soldier.MVM_Death
+{
+	channel		CHAN_AUTO
+	volume		VOL_NORM
+	pitch		PITCH_NORM
+	soundlevel	SNDLVL_80dB
+	rndwave			
+	{
+		wave		vo/mvm/norm/soldier_mvm_PainSevere01.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere02.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere03.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere04.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere05.mp3
+		wave		vo/mvm/norm/soldier_mvm_PainSevere06.mp3
+	}
+}
+
 // - custom
 
 TF2Ware_Ultimate.Pass
 {
-	channel			CHAN_STATIC
+	channel			-1 // CHAN_REPLACE
 	volume			VOL_NORM
 	pitch			PITCH_NORM
-	soundlevel		SNDLVL_60dB
+	soundlevel		SNDLVL_70dB
 	wave			tf2ware_ultimate/pass.mp3
+}
+
+TF2Ware_Ultimate.PassMe
+{
+	channel			-1 // CHAN_REPLACE
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			tf2ware_ultimate/pass_me.mp3
 }
 
 TF2Ware_Ultimate.Hadoken
@@ -253,13 +453,13 @@ TF2Ware_Ultimate.KartHorn
 	soundlevel		SNDLVL_80dB
 	rndwave
 	{
-		wave	 tf2ware_ultimate/v2/kart_horns/beepbeep.mp3
-		wave	 tf2ware_ultimate/v2/kart_horns/hazzard.mp3
-		wave	 tf2ware_ultimate/v2/kart_horns/horn1.mp3
-		wave	 tf2ware_ultimate/v2/kart_horns/horn2.mp3
-		wave	 tf2ware_ultimate/v2/kart_horns/horn3.mp3
-		wave	 tf2ware_ultimate/v2/kart_horns/horn4.mp3
-		wave	 tf2ware_ultimate/v2/kart_horns/horn5.mp3
+		wave	 tf2ware_ultimate/kart_horns/beepbeep.mp3
+		wave	 tf2ware_ultimate/kart_horns/hazzard.mp3
+		wave	 tf2ware_ultimate/kart_horns/horn1.mp3
+		wave	 tf2ware_ultimate/kart_horns/horn2.mp3
+		wave	 tf2ware_ultimate/kart_horns/horn3.mp3
+		wave	 tf2ware_ultimate/kart_horns/horn4.mp3
+		wave	 tf2ware_ultimate/kart_horns/horn5.mp3
 	}
 }
 
@@ -311,6 +511,15 @@ TF2Ware_Ultimate.WitchShriek
 		wave	 tf2ware_ultimate/witch/shriek_1.mp3
 		wave	 tf2ware_ultimate/witch/shriek_2.mp3
 	}
+}
+
+TF2Ware_Ultimate.Fail
+{
+	channel			CHAN_AUTO
+	volume			VOL_NORM
+	pitch			PITCH_NORM
+	soundlevel		SNDLVL_NONE
+	wave			buttons/button10.wav
 }
 
 TF2Ware_Ultimate.Error
