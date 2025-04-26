@@ -45,5 +45,5 @@ function OnStart()
 
 function OnVoteCast(player, vote_option, params)
 {
-
+	Ware_ChatPrint(null, "{int}{int}{int}", player, vote_option, params)
 }
