@@ -305,6 +305,7 @@ function OnMinigameEnd()
 			{
 				local data = Ware_GetPlayerSpecialRoundData(player)
 				data.lives <- 1
+				Ware_GetPlayerData(player).score = data.lives
 			}
 			break
 	}
