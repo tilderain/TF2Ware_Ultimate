@@ -346,11 +346,3 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 		Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
 	}
 }
-
-function OnEnd()
-{
-	foreach(player in Ware_Players)
-	{
-		player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
-	}
-}
