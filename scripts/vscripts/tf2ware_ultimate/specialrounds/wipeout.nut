@@ -315,13 +315,18 @@ function OnMinigameEnd()
 		
 		local lives = Ware_GetPlayerSpecialRoundData(player).lives
 		if(lives > 0)
+		{
 			player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
+			Ware_SetPlayerClass(player, RandomInt(TF_CLASS_FIRST, TF_CLASS_SNIPER))
+		}
 
 		player.SetMoveType(MOVETYPE_WALK, 0)
 		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		player.RemoveCond(TF_COND_HALLOWEEN_KART)
 		SetPropInt(player, "m_nRenderMode", kRenderNormal)	
 		SetEntityColor(player, 255, 255, 255, 100)
+
+
 	}
 	Ware_MinigameHomeLocation.Teleport(Wipeout_Spectators)
 
