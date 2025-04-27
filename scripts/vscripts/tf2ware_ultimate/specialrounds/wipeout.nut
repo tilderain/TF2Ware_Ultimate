@@ -196,6 +196,19 @@ function Wipeout_GetAlivePlayers()
 	return alive_players
 }
 
+function OnCalculateTopScorers(top_players)
+{
+	foreach (data in Ware_PlayersData)
+	{
+		local player = data.player
+		local lives = Ware_GetPlayerSpecialRoundData(player).lives
+		if (lives > 0)
+		{
+			top_players.append(player)
+		}
+	}
+}
+
 function OnCalculateScore(data)
 {
 	local specialdata = Ware_GetPlayerSpecialRoundData(data.player)
