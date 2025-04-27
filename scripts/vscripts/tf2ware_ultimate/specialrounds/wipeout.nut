@@ -189,6 +189,32 @@ function OnBeginIntermission(is_boss)
 	return true
 }
 
+function OnUpdate()
+{
+	if(Ware_Minigame)
+	{
+		foreach(spec in Wipeout_Spectators)
+		{
+			if(!spec.IsAlive()) continue
+			local origin1 = spec.GetOrigin()
+			foreach(pl in Wipeout_ValidPlayers)
+			{
+				if(!pl.IsAlive()) continue
+				local origin2 = pl.GetOrigin()
+				if(VectorDistance(origin1, origin2) < 300)
+				{
+
+           			local delta = origin2 - origin1
+					local dir = delta * 1.0
+					dir.Norm()
+                	local newOrigin = origin1 - (dir * 80)
+                	spec.KeyValueFromVector("origin", newOrigin)
+				}		
+			}
+		}
+	}
+}
+
 function GetValidPlayers()
 {
 	return Wipeout_ValidPlayers
@@ -258,6 +284,9 @@ function OnMinigameStart()
 		//Ware_AddPlayerAttribute(player, "mod see enemy health", 1, -1)
 
 		player.SetMoveType(MOVETYPE_NOCLIP, 0)
+
+		SetPropInt(player, "m_nRenderMode", kRenderTransColor)	
+		SetEntityColor(player, 255, 255, 255, 40)
 	}
 }
 function OnMinigameEnd()
@@ -291,6 +320,8 @@ function OnMinigameEnd()
 		player.SetMoveType(MOVETYPE_WALK, 0)
 		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		player.RemoveCond(TF_COND_HALLOWEEN_KART)
+		SetPropInt(player, "m_nRenderMode", kRenderNormal)	
+		SetEntityColor(player, 255, 255, 255, 100)
 	}
 	Ware_MinigameHomeLocation.Teleport(Wipeout_Spectators)
 
@@ -317,6 +348,7 @@ function AnnounceKnockouts()
 			
 			Wipeout_ValidPlayers.remove(idx)
 			player.AddCond(TF_COND_HALLOWEEN_GHOST_MODE)
+			SetEntityColor(player, 255, 255, 255, 40)
 		}
 	}
 	
