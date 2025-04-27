@@ -1,4 +1,4 @@
-
+//merasmus_health_per_player <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 5500.0, 24.0, 2500.0)
 
 special_round <- Ware_SpecialRoundData
 ({
