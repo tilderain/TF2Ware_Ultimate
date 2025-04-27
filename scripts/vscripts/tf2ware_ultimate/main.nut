@@ -1398,31 +1398,8 @@ function Ware_StartMinigameInternal(is_boss)
 {
 	Ware_CriticalZone = true
 	
-	local valid_players = []
-	foreach (player in Ware_Players)
-	{
-		if (player.GetTeam() & TF_TEAM_MASK)
-		{
-			if (!player.IsAlive())
-			{
-				// only respawn everyone before the boss
-				// for minigames intentionally not respawning people
-				// as punishment for dying in certain special rounds (like Skull)
-				if (is_boss && Ware_CanPlayerRespawn(player))
-				{
-					player.ForceRespawn()
-					// safety check
-					if (player.IsAlive())
-						valid_players.append(player)	
-				}
-			}
-			else
-			{
-				valid_players.append(player)
-			}
-		}
-	}
-
+	local valid_players = Ware_GetValidPlayers(is_boss)
+	
 	Ware_MinigameScope.clear()
 	
 	local player_count = valid_players.len()

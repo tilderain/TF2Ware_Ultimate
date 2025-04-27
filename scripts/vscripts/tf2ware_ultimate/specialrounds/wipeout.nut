@@ -1,7 +1,5 @@
 
 // TODO: More testing/fixes when players join or leave mid-round
-// TODO: Make spectators more interesting (use actual spectating stuff?)
-// TODO: Give players that join mid-round 1 life, but avoid any cheesing from relogging.
 
 // wipeout description found at https://wiki.teamfortress.com/wiki/TF2Ware
 
@@ -20,7 +18,7 @@ duel_sounds <- {
 	two_lives        = "ui/duel_challenge_accepted.wav"
 	one_life         = "ui/duel_event.wav"
 	three_lives_last = "ui/duel_challenge_with_restriction.wav"
-	two_lives_last   = "duel_challenge_accepted_with_restriction.wav"
+	two_lives_last   = "ui/duel_challenge_accepted_with_restriction.wav"
 }
 
 overlay <- "hud/tf2ware_ultimate/get_ready.vmt"
@@ -56,18 +54,17 @@ function OnStart()
 		Ware_GetPlayerSpecialRoundData(player).lives <- max_lives
 		Ware_GetPlayerData(player).score = max_lives
 	}
+	Ware_SetTheme("_tf2ware_classic")
 }
 
 function OnPlayerConnect(player)
 {
-	Ware_GetPlayerSpecialRoundData(player).lives <- 0
-}
-
-function OnPlayerSpawn(player)
-{
 	local data = Ware_GetPlayerSpecialRoundData(player)
 	if (!("lives" in data))
+		data.lives <- 1
+	else
 		data.lives <- 0
+	Ware_GetPlayerData(player).score = data.lives
 }
 
 function OnPlayerDisconnect(player)
@@ -83,7 +80,7 @@ function OnPlayerDisconnect(player)
 function OnTakeDamage(params)
 {
 	local arr = Wipeout_Spectators
-	if (arr.find(params.const_entity) != null || arr.find(params.inflictor) != null)
+	if (!Ware_Finished && arr.find(params.const_entity) != null || arr.find(params.inflictor) != null)
 		params.damage = 0.0
 }
 
@@ -211,6 +208,33 @@ function OnCalculateScore(data)
 	data.score = specialdata.lives
 }
 
+function OnMinigameStart()
+{
+	if("Teleport" in Ware_MinigameLocation)
+		Ware_MinigameLocation.Teleport(Wipeout_Spectators)
+	else if(Ware_MinigameLocation != Ware_MinigameHomeLocation)
+	{
+		local spacing_x = 58.0, spacing_y = 65.0
+
+		Ware_TeleportPlayersRow(Wipeout_Spectators,
+			Ware_MinigameLocation.center,
+			QAngle(0, 0, 0),
+			500.0,
+			-spacing_x, spacing_y)
+	}
+	foreach(player in Wipeout_Spectators)
+	{
+		//Put this before ghost mode or it'll spawn a bunch of pdas and run out of edicts
+		Ware_SetPlayerClass(player, TF_CLASS_SPY)
+		player.AddCond(TF_COND_HALLOWEEN_GHOST_MODE)
+		if(Ware_MinigameLocation != Ware_MinigameHomeLocation)
+			player.SetOrigin(player.GetOrigin() + Vector(0,0,225))
+
+		//Ware_AddPlayerAttribute(player, "mod see enemy health", 1, -1)
+
+		player.SetMoveType(MOVETYPE_NOCLIP, 0)
+	}
+}
 function OnMinigameEnd()
 {
 	switch (Wipeout_GetAlivePlayers().len()) {
@@ -233,8 +257,12 @@ function OnMinigameEnd()
 	
 	foreach(player in Wipeout_Spectators)
 	{
-		Ware_PlayGameSound(player, "victory") // there's just a weird silence without this
+		//Ware_PlayGameSound(player, "victory") // there's just a weird silence without this
+		player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
+		player.SetMoveType(MOVETYPE_WALK, 0)
+		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 	}
+	Ware_MinigameHomeLocation.Teleport(Wipeout_Spectators)
 }
 
 function OnDeclareWinners(top_players, top_score, winner_count)
