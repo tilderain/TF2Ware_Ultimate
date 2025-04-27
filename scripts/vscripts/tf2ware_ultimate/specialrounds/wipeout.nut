@@ -4,6 +4,18 @@
 // wipeout description found at https://wiki.teamfortress.com/wiki/TF2Ware
 
 player_thresholds <- [
+	[20, 100],
+	[19, 95],
+	[18, 90],
+	[17, 85],
+	[16, 80],
+	[15, 75],
+	[14, 70],
+	[13, 65],
+	[12, 60],
+	[11, 55],
+	[10, 50],
+	[9, 45],
 	[8, 40],
 	[7, 35],
 	[6, 30],
