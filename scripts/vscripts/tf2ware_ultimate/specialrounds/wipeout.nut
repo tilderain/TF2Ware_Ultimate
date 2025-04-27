@@ -261,6 +261,7 @@ function OnMinigameEnd()
 		player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
 		player.SetMoveType(MOVETYPE_WALK, 0)
 		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
+		player.RemoveCond(TF_COND_HALLOWEEN_KART)
 	}
 	Ware_MinigameHomeLocation.Teleport(Wipeout_Spectators)
 }
