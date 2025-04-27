@@ -325,7 +325,7 @@ function AnnounceKnockouts()
 
 	if (knocked_out > 0)
 	{
-		Ware_ChatPrint(null, "{int} {str} been knocked out! There are {int} {str} still standing.", 
+		Ware_ChatPrint(null, "{int} {str} been wiped out! There are {int} {str} still standing.", 
 			knocked_out,
 			knocked_out > 1 ? "players have" : "player has",
 			players_len,
