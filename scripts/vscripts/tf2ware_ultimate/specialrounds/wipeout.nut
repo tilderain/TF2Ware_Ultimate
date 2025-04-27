@@ -316,8 +316,7 @@ function AnnounceKnockouts()
 			Ware_ChatPrint(null, "{player}{color} has been {color}wiped out!", player, "9AB973", COLOR_GREEN);
 			
 			Wipeout_ValidPlayers.remove(idx)
-			if (player.IsAlive())
-				Ware_SuicidePlayer(player)
+			player.AddCond(TF_COND_HALLOWEEN_GHOST_MODE)
 		}
 	}
 	
