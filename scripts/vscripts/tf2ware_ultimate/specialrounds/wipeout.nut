@@ -258,7 +258,11 @@ function OnMinigameEnd()
 	foreach(player in Wipeout_Spectators)
 	{
 		//Ware_PlayGameSound(player, "victory") // there's just a weird silence without this
-		player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
+		
+		local lives = Ware_GetPlayerSpecialRoundData(player).lives
+		if(lives > 0)
+			player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
+			
 		player.SetMoveType(MOVETYPE_WALK, 0)
 		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		player.RemoveCond(TF_COND_HALLOWEEN_KART)
