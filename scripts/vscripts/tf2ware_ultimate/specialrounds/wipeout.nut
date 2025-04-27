@@ -262,13 +262,58 @@ function OnMinigameEnd()
 		local lives = Ware_GetPlayerSpecialRoundData(player).lives
 		if(lives > 0)
 			player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
-			
+
 		player.SetMoveType(MOVETYPE_WALK, 0)
 		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		player.RemoveCond(TF_COND_HALLOWEEN_KART)
 	}
 	Ware_MinigameHomeLocation.Teleport(Wipeout_Spectators)
+
+	AnnounceKnockouts()
 }
+
+
+function AnnounceKnockouts()
+{
+	local knocked_out = 0
+	
+	foreach (data in Ware_PlayersData)
+	{
+		local player = data.player
+		local idx = Wipeout_ValidPlayers.find(player)
+		if (idx == null)
+			continue
+
+		local lives = Ware_GetPlayerSpecialRoundData(player).lives
+		if (lives <= 0)
+		{
+			knocked_out++
+			Ware_ChatPrint(null, "{player}{color} has been {color}wiped out!", player, "9AB973", COLOR_GREEN);
+			
+			Wipeout_ValidPlayers.remove(idx)
+			if (player.IsAlive())
+				Ware_SuicidePlayer(player)
+		}
+	}
+	
+	local players_len = Wipeout_GetAlivePlayers().len()
+
+	if (knocked_out > 0)
+	{
+		Ware_ChatPrint(null, "{int} {str} been knocked out! There are {int} {str} still standing.", 
+			knocked_out,
+			knocked_out > 1 ? "players have" : "player has",
+			players_len,
+			players_len == 1 ? "player" : "players")
+	}
+	//else
+	//{
+	//	Ware_ChatPrint(null, "No one has been knocked out! There are {int} {str} still standing.", 
+	//		players_len,
+	//		players_len == 1 ? "player" : "players")		
+	//}
+}
+
 
 function OnDeclareWinners(top_players, top_score, winner_count)
 {
@@ -286,5 +331,13 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 	else if (winner_count == 0)
 	{
 		Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
+	}
+}
+
+function OnEnd()
+{
+	foreach(player in Ware_Players)
+	{
+		player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
 	}
 }

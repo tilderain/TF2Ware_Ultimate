@@ -1399,7 +1399,7 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_CriticalZone = true
 	
 	local valid_players = Ware_GetValidPlayers(is_boss)
-	
+
 	Ware_MinigameScope.clear()
 	
 	local player_count = valid_players.len()
@@ -1847,7 +1847,7 @@ function Ware_FinishMinigameInternal()
 		}
 		else
 		{
-			passed = false
+			passed = true
 		}
 		
 		if (all_passed)
@@ -1873,7 +1873,8 @@ function Ware_FinishMinigameInternal()
 		
 		Ware_ShowMinigameText(player, "")
 		Ware_PlayGameSound(player, sound)
-		Ware_ShowScreenOverlay(player, overlay)
+		if (participated && !all_passed && !all_failed)
+			Ware_ShowScreenOverlay(player, overlay)
 		if (Ware_MinigameOverlay2Set)
 			Ware_ShowScreenOverlay2(player, null)
 		
