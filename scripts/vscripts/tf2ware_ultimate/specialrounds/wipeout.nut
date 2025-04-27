@@ -72,7 +72,7 @@ function OnStart()
 function OnPlayerConnect(player)
 {
 	local data = Ware_GetPlayerSpecialRoundData(player)
-	if (!("lives" in data))
+	if (!("lives" in data) && special_round.boss_threshold != 0)
 		data.lives <- 1
 	else
 		data.lives <- 0
