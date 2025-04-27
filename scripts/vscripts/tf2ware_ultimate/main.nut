@@ -1873,7 +1873,7 @@ function Ware_FinishMinigameInternal()
 		
 		Ware_ShowMinigameText(player, "")
 		Ware_PlayGameSound(player, sound)
-		if (participated && !all_passed && !all_failed)
+		if (participated || all_passed || all_failed)
 			Ware_ShowScreenOverlay(player, overlay)
 		if (Ware_MinigameOverlay2Set)
 			Ware_ShowScreenOverlay2(player, null)
