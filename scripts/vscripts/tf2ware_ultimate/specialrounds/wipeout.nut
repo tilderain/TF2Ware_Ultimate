@@ -353,7 +353,8 @@ function AnnounceKnockouts()
 			Ware_ChatPrint(null, "{player}{color} has been {color}wiped out!", player, "9AB973", COLOR_GREEN);
 			
 			Wipeout_ValidPlayers.remove(idx)
-			player.AddCond(TF_COND_HALLOWEEN_GHOST_MODE)
+			if(Wipeout_GetAlivePlayers().len() != 2)
+				player.AddCond(TF_COND_HALLOWEEN_GHOST_MODE)
 			SetEntityColor(player, 255, 255, 255, 40)
 		}
 	}
