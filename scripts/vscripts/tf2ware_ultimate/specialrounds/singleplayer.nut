@@ -4,6 +4,7 @@ special_round <- Ware_SpecialRoundData
 	author           = ["Mecha the Slag", "tilderain"]
 	description      = "You're playing alone...?"
 	category         = ""
+    min_players = 2
 })
 
 // Toggles the visibility of all wearables (including weapons!) on a player
