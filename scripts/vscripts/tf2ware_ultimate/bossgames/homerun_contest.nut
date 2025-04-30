@@ -98,7 +98,7 @@ function OnStart()
 		EntityAcceptInput(ent, "Enable")
 	}
 
-	Ware_PlaySoundOnAllClients("tf2ware_ultimate/homerun/ready.mp3")
+	//Ware_PlaySoundOnAllClients("tf2ware_ultimate/homerun/ready.mp3")
 
 	// TODO:
 	// spawn a podium for each player
@@ -106,6 +106,8 @@ function OnStart()
 	local name = null
 	local add = 400
 	local the = Vector(0,0,0)
+
+	//Findbyname HomeRun_Podium
 	for (local ent; ent = FindByClassname(ent, "func_brush");)
 	{
 		the = ent.GetOrigin()
