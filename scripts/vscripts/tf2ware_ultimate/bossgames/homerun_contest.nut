@@ -41,6 +41,7 @@ function OnPrecache()
 	PrecacheSound("tf2ware_ultimate/homerun/failure.mp3")
 	PrecacheSound("tf2ware_ultimate/homerun/anewrecord.mp3")
 	PrecacheSound("tf2ware_ultimate/homerun/complete.mp3")
+	PrecacheSound("tf2ware_ultimate/homerun/ready.mp3")
 	Ware_PrecacheMinigameMusic("targets", true)
 }
 
@@ -97,6 +98,7 @@ function OnStart()
 		EntityAcceptInput(ent, "Enable")
 	}
 
+	Ware_PlaySoundOnAllClients("tf2ware_ultimate/homerun/ready.mp3")
 
 	// TODO:
 	// spawn a podium for each player
@@ -203,7 +205,7 @@ function OnStart()
 		if (timer > 0)
 		{
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%d", timer))
-			Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/homerun/%d.mp3", timer), 1.0, 100 * Ware_GetPitchFactor())
+			Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/homerun/%d.mp3", timer), 1.0)
 		}
 
 		timer--
