@@ -99,8 +99,8 @@ function OnStart()
 		//player.BleedPlayerEx(8, 10, false, 0)
 		//GivePlayerBottle(player)
 		local minidata = Ware_GetPlayerMiniData(player)
-		minidata.lastHit <- 0
-		minidata.curHit <- 0
+		minidata.lastHit <- -2
+		minidata.curHit <- -1
 	}
 	local x = Ware_MinigameLocation.center.x
 	local y = Ware_MinigameLocation.center.y
@@ -210,6 +210,65 @@ function SpawnHurt(type, kill_icon)
 	hurt.SetSize(Vector(-3000, -3000, -3000), Vector(3000, 3000, 3000))
 }
 
+function CheckWeaponFire(weapon, player)
+{
+	if(mission == MISSION_DAMAGE)
+	{
+		firetime <- GetPropFloat(weapon, "m_flLastFireTime")
+		if(firetime < 1) return
+		local minidata = Ware_GetPlayerMiniData(player)
+		if(minidata.curHit != firetime)
+		{
+			minidata.lastHit <- minidata.curHit
+			minidata.curHit <- firetime
+			local dmg = weapon.GetAttribute("damage bonus", 1)
+			//Ware_ChatPrint(null, "{int}", dmg)
+			if(dmg > 1.49 || player.InCond(TF_COND_CRITBOOSTED_USER_BUFF))
+			    Ware_PassPlayer(player, true)
+		}
+	}
+	else if(mission == MISSION_RATE)
+	{
+		firetime <- GetPropFloat(weapon, "m_flLastFireTime")
+		if(firetime < 1) return
+		local minidata = Ware_GetPlayerMiniData(player)
+		if(minidata.curHit != firetime)
+		{
+			minidata.lastHit <- minidata.curHit
+			minidata.curHit <- firetime
+			//Ware_ChatPrint(null, "{int}", GetPropFloat(weapon, "m_flLastFireTime"))
+
+			local diff = minidata.curHit - minidata.lastHit
+			Ware_ShowText(player, CHANNEL_MINIGAME, format("Last hit: %.1fs", diff), Ware_GetMinigameRemainingTime())
+			if(diff < 0.79)
+        		Ware_PassPlayer(player, true)
+		}
+	}
+}
+
+function CheckFiring(player)
+{
+	for (local i = 0; i < MAX_WEAPONS; i++)
+	{
+		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
+		if (!weapon)
+			continue
+
+		if (weapon.GetSlot() != TF_SLOT_MELEE)
+		{
+			CheckWeaponFire(weapon, player)
+		}
+	}
+}
+
+function OnUpdate()
+{
+	foreach(player in Ware_MinigamePlayers)
+	{
+		CheckFiring(player)
+	}
+}
+
 function OnTakeDamage(params)
 {
 	if (params.const_entity.GetName() == "upgrade_robot")
@@ -221,10 +280,10 @@ function OnTakeDamage(params)
 				params.damage *= 3
 			Ware_PlaySoundOnClient(attacker, params.const_entity.GetScriptScope().hit_sound)
 			Ware_ShowText(attacker, CHANNEL_MINIGAME, format("Damage: %.1f", params.damage), Ware_GetMinigameRemainingTime())
-			if(params.damage > 125)
-        		Ware_PassPlayer(attacker, true)
+		//	if(params.damage > 125)
+        //		Ware_PassPlayer(attacker, true)
 		}
-		if (attacker && attacker.IsPlayer() && mission == MISSION_RATE)
+		/*if (attacker && attacker.IsPlayer() && mission == MISSION_RATE)
 		{
 			Ware_PlaySoundOnClient(attacker, params.const_entity.GetScriptScope().hit_sound)
 			local minidata = Ware_GetPlayerMiniData(attacker)
@@ -234,9 +293,9 @@ function OnTakeDamage(params)
 			
 			local diff = minidata.curHit - minidata.lastHit
 			Ware_ShowText(attacker, CHANNEL_MINIGAME, format("Last hit: %.1fs", diff), Ware_GetMinigameRemainingTime())
-			if(diff < 0.8)
+			if(diff < 0.79)
         		Ware_PassPlayer(attacker, true)
-		}
+		}*/
 
 		return false
 	}
@@ -255,17 +314,6 @@ function OnTakeDamage(params)
 		}
 		
 	}
-}
-
-function OnUpdate()
-{
-	/*foreach (player in Ware_MinigamePlayers)
-	{
-		if(player.InCond(TF_COND_CRITBOOSTED_USER_BUFF))
-			Ware_PassPlayer(player, true)
-		if(player.InCond(TF_COND_INVULNERABLE_USER_BUFF))
-			Ware_PassPlayer(player, true)
-	}*/
 }
 
 function OnEnd()
