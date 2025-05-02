@@ -52,6 +52,8 @@ snd_intro <- "mvm/sentrybuster/mvm_sentrybuster_intro.wav"
 snd_loop <- "mvm/sentrybuster/mvm_sentrybuster_loop.wav"
 snd_spin <- "mvm/sentrybuster/mvm_sentrybuster_spin.wav"
 
+func_upgrade <- null
+
 function OnPrecache()
 {
 	for (local i = 1; i <= 11; i++)
@@ -167,7 +169,14 @@ function OnStart()
 
 	foreach (player in Ware_MinigamePlayers)
 		Ware_SetPlayerMission(player, mission)
+	//Prevent ui lingering
+	CreateTimer(@() MoveUpgrade(), 8.475)
+}
 
+function MoveUpgrade()
+{
+	if(func_upgrade)
+		func_upgrade.SetOrigin(Vector(0,0,0))
 }
 
 function SetExplodeAnim(bot)
@@ -338,15 +347,15 @@ function SpawnFuncUpgrade(pos)
 	local mins = Vector(-150, -150, -150)
 	local maxs = Vector(150, 150, 150)
 
-	local brush = Ware_SpawnEntity("func_upgradestation",
+	func_upgrade = Ware_SpawnEntity("func_upgradestation",
 	{
 		targetname  = "vscript_upgrade_station",
 		origin	  = pos
 	})
 
-	brush.KeyValueFromInt("solid", 2)
-	brush.KeyValueFromString("mins", mins.x.tostring() + " " + mins.y.tostring() + " " + mins.z.tostring())
-	brush.KeyValueFromString("maxs", maxs.x.tostring() + " " + maxs.y.tostring() + " " + maxs.z.tostring())
+	func_upgrade.KeyValueFromInt("solid", 2)
+	func_upgrade.KeyValueFromString("mins", mins.x.tostring() + " " + mins.y.tostring() + " " + mins.z.tostring())
+	func_upgrade.KeyValueFromString("maxs", maxs.x.tostring() + " " + maxs.y.tostring() + " " + maxs.z.tostring())
 }
 
 
