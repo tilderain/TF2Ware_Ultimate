@@ -1,3 +1,5 @@
+mode <- RandomInt(0,1)
+
 minigame <- Ware_MinigameData
 ({
 	name          = "Floppy Scout"
@@ -42,7 +44,7 @@ function SpawnPipewall(org)
             local angles = QAngle(0,0,0)
             local beam = Ware_SpawnEntity("prop_physics_override", 
             {
-                origin       = org + Vector(-880,0,add) + Vector(i*120, 0, 300 + j*165)
+                origin       = org + Vector(-880,0,add) + Vector(i*120, 0, 300 + j*170)
                 model        = pipe_model
                 spawnflags   = SF_PHYSPROP_TOUCH
                 minhealthdmg = 999999 // Don't destroy on touch    
@@ -85,7 +87,14 @@ function OnStart()
 function OnUpdate()
 {
 	foreach (player in Ware_MinigamePlayers)
-	{		
+	{	
+		if(mode == 1)
+		{
+			player.AddFlag(FL_ATCONTROLS)
+			local vel = player.GetAbsVelocity()
+			vel.y = 200
+			player.SetAbsVelocity(vel)
+		}
 		if(player.GetFlags() & FL_ONGROUND)
 			Ware_SuicidePlayer(player)
 		if (player.GetOrigin().y > goal_vectors.y)
@@ -142,5 +151,13 @@ function OnTakeDamage(params)
 				return false
 			}
 		}
+	}
+}
+
+function OnCleanup()
+{
+	foreach (player in Ware_MinigamePlayers)
+	{	
+		player.RemoveFlag(FL_ATCONTROLS)
 	}
 }
