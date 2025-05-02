@@ -37,7 +37,7 @@ function OnStart()
 			Ware_SetPlayerClass(player, TF_CLASS_HEAVYWEAPONS)
 			Ware_StripPlayer(player, false)
 			Ware_SetPlayerTeam(player, TF_TEAM_RED)
-			Ware_GivePlayerWeapon(player, "Minigun", { "deploy time increased" : 1.75 })
+			Ware_GivePlayerWeapon(player, "Minigun", { "deploy time increased" : 2.0 })
 		}
 		else
 		{
