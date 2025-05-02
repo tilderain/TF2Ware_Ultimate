@@ -24,7 +24,7 @@ function OnPrecache()
 function OnTeleport(players)
 {
 	Ware_TeleportPlayersRow(players, 
-		Ware_MinigameLocation.center + Vector(0, -700, 0), 
+		Ware_MinigameLocation.center + Vector(0, -700, 600), 
 		QAngle(0, 90, 0), 
 		1600.0, 
 		60.0, 120.0)
@@ -42,7 +42,7 @@ function SpawnPipewall(org)
             local angles = QAngle(0,0,0)
             local beam = Ware_SpawnEntity("prop_physics_override", 
             {
-                origin       = org + Vector(-880,0,add) + Vector(i*120, 0, 300 + j*175)
+                origin       = org + Vector(-880,0,add) + Vector(i*120, 0, 300 + j*165)
                 model        = pipe_model
                 spawnflags   = SF_PHYSPROP_TOUCH
                 minhealthdmg = 999999 // Don't destroy on touch    
@@ -54,6 +54,16 @@ function SpawnPipewall(org)
             beam.SetCollisionGroup(TFCOLLISION_GROUP_RESPAWNROOMS)
         }
     }
+	local hurt = Ware_SpawnEntity("trigger_hurt",
+	{
+		origin     = org
+		damage     = 1000
+		damagetype = DMG_SLASH
+		spawnflags = SF_TRIGGER_ALLOW_CLIENTS
+	})
+	hurt.SetSolid(SOLID_BBOX)
+	hurt.SetSize(org + Vector(-200,-200,-800), org + Vector(200,200,800))
+	DebugDrawBox(vec3_zero, hurt.GetBoundingMinsOriented(), hurt.GetBoundingMaxsOriented(), 255, 0, 0, 20, 5.0)
 }
 
 function OnStart()
@@ -76,6 +86,8 @@ function OnUpdate()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{		
+		if(player.GetFlags() & FL_ONGROUND)
+			Ware_SuicidePlayer(player)
 		if (player.GetOrigin().y > goal_vectors.y)
 			Ware_PassPlayer(player, true)
 	}
