@@ -25,11 +25,17 @@ function OnStart()
 		if (mode == 0)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SOLDIER)
-			Ware_GivePlayerWeapon(player, "Buff Banner")
+			Ware_GivePlayerWeapon(player, "Buff Banner", {"deploy time increased": 1})
+			local weapon = null
 			if(gun == 0)
-				Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size bonus" : 100, "reload time decreased": 0.1})
+			{
+				weapon = Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size bonus" : 100, "deploy time increased": 1})
+				weapon.SetClip1(69)
+			}
 			else
-				Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5})
+			{
+				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1})
+			}
 		}
 		else if (mode == 1)
 		{
@@ -38,7 +44,7 @@ function OnStart()
 			Ware_GivePlayerWeapon(player, "Phlogistinator", { "damage bonus" : 3})
 			Ware_RemovePlayerAttribute(player, "afterburn immunity")
 		}
-		player.SetHealth(1050)
+		player.SetHealth(1100)
 		player.SetRageMeter(0)
 	}
 }
