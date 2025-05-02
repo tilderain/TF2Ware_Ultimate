@@ -11,8 +11,6 @@ minigame <- Ware_MinigameData
 	fail_on_death  = true
 })
 
-function OnPrecache(){}
-
 function OnStart()
 {
 	local gun =	RandomInt(0,1)
@@ -37,13 +35,12 @@ function OnStart()
 				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1})
 			}
 		}
-		else if (mode == 1)
+		/*else if (mode == 1)
 		{
-			//Flamethrower sucks against pyro so this probably won't work
+			//Flamethrower isn't damaging for some reason
 			Ware_SetPlayerClass(player, TF_CLASS_PYRO)
 			Ware_GivePlayerWeapon(player, "Phlogistinator", { "damage bonus" : 3})
-			Ware_RemovePlayerAttribute(player, "afterburn immunity")
-		}
+		}*/
 		player.SetHealth(1100)
 		player.SetRageMeter(0)
 	}
