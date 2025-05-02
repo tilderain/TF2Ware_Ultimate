@@ -51,7 +51,7 @@ function SpawnPipewall(org)
                 angles = angles
             })
             beam.SetMoveType(MOVETYPE_NONE, 0)
-            beam.SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
+            beam.SetCollisionGroup(TFCOLLISION_GROUP_RESPAWNROOMS)
         }
     }
 }
