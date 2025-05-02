@@ -1,5 +1,6 @@
 mode <- RandomInt(0,1)
 
+
 minigame <- Ware_MinigameData
 ({
 	name          = "Floppy Scout"
@@ -95,6 +96,7 @@ function OnUpdate()
 			vel.y = 200
 			player.SetAbsVelocity(vel)
 		}
+		player.RemoveFlag(FL_DUCKING)
 		if(player.GetFlags() & FL_ONGROUND)
 			Ware_SuicidePlayer(player)
 		if (player.GetOrigin().y > goal_vectors.y)
