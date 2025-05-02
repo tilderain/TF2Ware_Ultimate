@@ -4,12 +4,14 @@ minigame <- Ware_MinigameData
 	name           = "Buff"
 	author         = ["tilderain"]
 	description    = "Activate buff!"
-	duration       = 18.5
+	duration       = 15
 	music          = "woody"
 	min_players    = 2
 	allow_damage   = true
 	fail_on_death  = true
 })
+
+function OnPrecache(){}
 
 function OnStart()
 {
@@ -36,7 +38,7 @@ function OnStart()
 			Ware_GivePlayerWeapon(player, "Phlogistinator", { "damage bonus" : 3})
 			Ware_RemovePlayerAttribute(player, "afterburn immunity")
 		}
-		player.SetHealth(1250)
+		player.SetHealth(1050)
 		player.SetRageMeter(0)
 	}
 }
