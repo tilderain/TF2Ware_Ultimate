@@ -139,11 +139,11 @@ function OnStart()
 	else if (mission == MISSION_RESIST)
 	{
 		Ware_PlaySoundOnAllClients(format("vo/mvm_sentry_buster_alerts%02d.mp3", RandomInt(1,3)))
-		Ware_PlaySoundOnAllClients(snd_intro, 0.5)
-		Ware_PlaySoundOnAllClients(snd_loop, 0.5)
+		Ware_PlaySoundOnAllClients(snd_intro, 0.25)
+		Ware_PlaySoundOnAllClients(snd_loop, 0.20)
 		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 5.5)
 
-		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.5), 5.5)
+		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.35), 5.5)
 
 
    		local bot = Ware_SpawnEntity("prop_dynamic_override",
