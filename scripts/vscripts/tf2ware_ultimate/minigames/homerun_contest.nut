@@ -247,6 +247,7 @@ function OnStart()
 		}
 	}, 5.0)
 
+	Ware_ChatPrint(null, "{color}HINT:{color} Rack up damage and then finish with a strong attack, melee, or tauntkill!", COLOR_GREEN, TF_COLOR_DEFAULT)
 }
 
 function IsPointInTrigger(point, trigger)
