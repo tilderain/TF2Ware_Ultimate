@@ -10,6 +10,9 @@
 // - add teleport trigger at end if its hit really far to go back to start of location or to an extension of the arena.
 // - allow class changes? maybe one class change? not sure the best way to do this
 
+//Extend podium clip height, set targetname for podium
+//Knockback calc for base hits and then seperate desty for final hits
+
 sandbag_model <- "models/tf2ware_ultimate/sandbag.mdl"
 HomeRun_Sandbags <- []
 
