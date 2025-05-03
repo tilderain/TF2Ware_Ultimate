@@ -183,7 +183,7 @@ function OnTakeDamage(params)
 		if(attacker && attacker.IsPlayer())
 		{
 			local special = Ware_GetPlayerSpecialRoundData(attacker)
-			special.damage <- special.damage + params.damage
+			special.damage += params.damage
 		}
 	}
 	else if (attacker && attacker.GetClassname() == "merasmus" && !Ware_Finished)
