@@ -271,8 +271,8 @@ function OnUpdate()
 			return
 		local camera = minidata.camera
 		local origin = minidata.sandbag.GetOrigin() + Vector(600, 0, 0)
-		if(origin.x > -8400)
-			origin.x = -8400
+		if(origin.x > -10200)
+			origin.x = -10200
 		camera.KeyValueFromVector("origin", origin)
 	}
 
