@@ -12,6 +12,7 @@
 
 //Extend podium clip height, set targetname for podium
 //Knockback calc for base hits and then seperate desty for final hits
+//Restructure win check to timer?
 
 sandbag_model <- "models/tf2ware_ultimate/sandbag.mdl"
 HomeRun_Sandbags <- []
