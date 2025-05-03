@@ -16,6 +16,7 @@ class Ware_SpecialRoundData
 		force_pvp_damage  = false
 		bonus_points      = false
 		allow_respawnroom = true
+		non_stop          = false
 		boss_count        = 1
 		boss_threshold    = Ware_BossThreshold
 		speedup_threshold = Ware_SpeedUpThreshold
@@ -66,6 +67,8 @@ class Ware_SpecialRoundData
 	allow_respawnroom        = null	
 	// Award bonus points? Default is false
 	bonus_points             = null
+	// No breaks between minigames, default is false
+	non_stop                 = null
 	// Amount of bosses to play, default is 1
 	boss_count       		 = null
 	// Amount of minigames played before a boss, default is Ware_BossThreshold in config.nut

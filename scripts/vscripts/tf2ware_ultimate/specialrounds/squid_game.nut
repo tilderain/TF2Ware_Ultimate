@@ -16,6 +16,10 @@ function OnMinigameStart()
 	Ware_Minigame.allow_damage = true
 	Ware_Minigame.friendly_fire = true
 	foreach (player in Ware_MinigamePlayers)
+	{
 		player.RemoveSolidFlags(FSOLID_NOT_SOLID)
-}
+		Ware_GivePlayerWeapon(player, "Candy Cane", {}, false)
+		player.RemoveCustomAttribute("no_attack")
+	}
 
+}

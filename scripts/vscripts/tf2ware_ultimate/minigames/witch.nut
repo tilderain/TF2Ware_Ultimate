@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 	allow_damage  = true
 })
 
-witch_origin         <- Ware_MinigameLocation.center
+witch_origin         <- null
 witch_model          <- "models/tf2ware_ultimate/alaxe/witch.mdl"
 witch_spawn_particle <- "wrenchmotron_teleport_beam"
 witch_leave_particle <- "halloween_ghost_smoke"
@@ -38,7 +38,7 @@ function OnStart()
 {
 	// detect melee hits against world
 	SetPropInt(World, "m_takedamage", DAMAGE_EVENTS_ONLY)
-	
+	witch_origin = Ware_MinigameLocation.center
 	Ware_ShowAnnotation(witch_origin + Vector(0, 0, 68), "WITCH!", 1.5)
 	Ware_CreateTimer(@() SpawnWitchPre(), 1.0)
 	Ware_CreateTimer(@() SpawnWitch(), 1.5)
@@ -104,11 +104,22 @@ function WitchThink()
 			step_timer = time + 0.15
 		}		
 		
-		if (VectorDistance(threat.GetOrigin(), my_origin) < 70.0)
+		foreach(player in Ware_MinigamePlayers)
 		{
-			self.EmitSound(shriek_sound)
-			threat.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
-		}			
+			if (VectorDistance(player.GetOrigin(), my_origin) < 45.0)
+			{
+				self.EmitSound(shriek_sound)
+				if(player != threat && Ware_GetMinigameTime() > 3 && player.IsAlive())
+				{
+					player.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
+					Ware_ChatPrint(null, "{player} {color}was {color}collateral damage{color}!", 
+						player, TF_COLOR_DEFAULT, COLOR_RED, TF_COLOR_DEFAULT)
+				}
+				else if (player == threat)
+					player.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
+
+			}
+		}
 
 		amb_timer = time + 1.5
 		path_timer = time
@@ -200,7 +211,7 @@ function SpawnWitch()
 		origin    = witch_origin
 		angles    = QAngle(0, RandomFloat(-180, 180), 0)
 		model     = witch_model
-		health    = INT_MAX
+		health    = 999999
 	})
 	EntityAcceptInput(witch, "Disable")
 	witch.ResetSequence(witch.LookupSequence("idle"))

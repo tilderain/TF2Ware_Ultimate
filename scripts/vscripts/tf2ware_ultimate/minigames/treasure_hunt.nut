@@ -5,11 +5,13 @@ treasures <-
 			Vector(2170.51, -94.5874, -271.395)
 			Vector(2976.74, 174.691, -399.494)
 			Vector(466.239, -977.024, -71.8184)
-			Vector(2312.92, 945.426, -241.269)
+			Vector(2312.92, 945.426, -200.269)
 			Vector(3268.91, -522.682, -415.319)
 			Vector(3547.32, 773.357, -403.642)
 			Vector(2184.68, -295.731, -332.245)
 			Vector(2460.42, -124.22, -332.857)
+			Vector(3729.74, -894.53, 170.161)
+			Vector(-262.39, 1075.72, -20.216)
 		],
 	],
 	["manor", "Secret Diary", "secret_diary", "superrare_beams1", "models/player/items/all_class/hwn_spellbook_diary.mdl",

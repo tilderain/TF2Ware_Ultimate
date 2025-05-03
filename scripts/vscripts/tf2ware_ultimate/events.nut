@@ -122,8 +122,9 @@ function OnScriptHook_OnTakeDamage(params)
 					local viewmodel = GetPropEntity(attacker, "m_hViewModel")
 					if (viewmodel)
 						viewmodel.ResetSequence(viewmodel.LookupSequence("ACT_MELEE_VM_SWINGHARD"))
-						
-					params.damage       = victim.GetHealth() * 2.0
+					
+					if(victim.GetClassname() != "merasmus")
+						params.damage       = victim.GetHealth() * 2.0
 					params.damage_stats = TF_DMG_CUSTOM_BACKSTAB
 					params.damage_type  = params.damage_type | DMG_CRIT
 				}			
@@ -167,7 +168,11 @@ function OnGameEvent_teamplay_round_start(params)
 		data.score = 0
 		data.bonus = 0
 		if (data.start_sound)
+		{
 			Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
+			Ware_PlayGameSound(player, "lets_get_started_alt", SND_STOP)
+		}
+
 		player.SetScriptOverlayMaterial("")
 		cmd.AcceptInput("Command", "r_screenoverlay off", player, null)
 		cmd.AcceptInput("Command", "r_cleardecals", player, null)
@@ -223,6 +228,29 @@ function OnGameEvent_teamplay_round_start(params)
 	}
 	
 	Ware_ChatPrint(null, "Theme: {color}{str}", COLOR_LIME, Ware_Theme.visual_name)
+
+	local sky_names = ["sky_borealis01"
+	"sky_day01_01"
+	"sky_day01_08"
+	"sky_day02_02"
+	"sky_day02_04"
+	"sky_day02_07"
+	"sky_day03_05"
+	"sky_day03_06b"
+	"sky_badlands_01"
+	"sky_dustbowl_01" 
+	"sky_goldrush_01"
+	"sky_gravel_01"
+	"sky_harvest_night_01"
+	"sky_hydro_01"
+	"sky_island_01" 
+	"sky_morningsnow_01"
+	"sky_night_01"
+	"sky_nightfall_01"
+	"sky_tf2_04"
+	"tf2ware_sky"]
+
+	SetSkyboxTexture(RandomElement(sky_names))
 	
 	Ware_ToggleTruce(true)
 
@@ -309,6 +337,7 @@ function OnGameEvent_scorestats_accumulated_update(params)
 	{
 		Ware_EndSpecialRound()
 		Ware_PlayGameSound(null, "special_round", SND_STOP)
+		Ware_PlayGameSound(null, "special_round_alt", SND_STOP)
 	}
 }
 
@@ -453,6 +482,9 @@ function OnGameEvent_post_inventory_application(params)
 	if (player == null)
 		return
 	
+	if (Ware_Minigame != null)
+		Ware_Minigame.cb_on_player_inventory(player)
+		
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_player_inventory(player)
 }

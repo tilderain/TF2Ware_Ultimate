@@ -90,6 +90,9 @@ function OnStart()
 			Ware_TogglePlayerWearables(shark, false)
 			SetPropFloat(player, "m_PainFinished", 1e30) // disable drowning
 			Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
+
+			if (RandomInt(0, 49) == 0)
+				Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size penalty" : 0.25, "damage penalty": 0.5, "reload time increased": 1.5})
 		}
 		else
 		{

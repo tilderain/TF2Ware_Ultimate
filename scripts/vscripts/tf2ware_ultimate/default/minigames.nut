@@ -10,10 +10,12 @@ bombs
 boxing
 break_barrel
 break_box
+buff
 build_this
 bullseye
 bumpers
 caber_king
+cap
 catch_cubes
 catch_money
 change_class
@@ -27,6 +29,7 @@ eat_plate
 extinguish
 flipper_ball
 flood
+floppy
 ghost
 goomba
 grapple_cutout
@@ -36,6 +39,7 @@ headshot
 heavy_medic
 hit_balls
 hit_player
+homerun_contest
 hoop
 hot_potato
 jarate
@@ -74,6 +78,7 @@ stun
 sumo
 swim_up
 taunt_kill
+time_jump
 touch_sky
 treasure_hunt
 trivia
@@ -82,6 +87,7 @@ type_map
 type_time
 type_word
 vacc
+upgrade
 wanted
 watch_fall
 water_war

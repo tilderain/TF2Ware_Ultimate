@@ -237,7 +237,10 @@ if (!("Ware_Precached" in this))
 	}
 
 	// this shuts up incursion distance warnings from the nav mesh
-	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
+	dummy_boss <- CreateEntitySafe("base_boss")
+	dummy_boss.KeyValueFromString("classname", "point_commentary_viewpoint")
+	dummy_boss.SetSolidFlags(FSOLID_NOT_SOLID)
+
 }
 
 function Ware_SetupMap()
@@ -850,7 +853,9 @@ function Ware_PlayStartSound()
 	
 	if (IsInWaitingForPlayers())
 	{
-		Ware_PlayGameSound(self, "lets_get_started")
+		local sound = RandomInt(0, 1) == 0 ? "lets_get_started" : "lets_get_started_alt"
+
+		Ware_PlayGameSound(self, sound)
 		Ware_ShowScreenOverlay(self, "hud/tf2ware_ultimate/waiting_players")
 	}
 }
@@ -1056,13 +1061,15 @@ function Ware_BeginSpecialRoundInternal()
 	Ware_SpecialRoundPrevious = true
 	
 	// ingame sequence
-	Ware_PlayGameSound(null, "special_round")
+	local sound = RandomInt(0, 1) == 0 ? "special_round" : "special_round_alt"
+
+	Ware_PlayGameSound(null, sound)
 	
 	foreach (player in Ware_Players)
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/special_round")
 	
 	local start_time = Time()
-	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
+	local duration = Ware_GetThemeSoundDuration(sound) * 0.99 // finish slightly faster to set special round before intermission begins
 	local reveal_duration = duration * 0.6
 	local start_interval = 0.5, end_interval = 0.05
 	local end_duration = duration - reveal_duration
@@ -1170,6 +1177,8 @@ function Ware_SetupMinigameCallbacks()
 	minigame.cb_on_player_voiceline		= Ware_Callback(scope, "OnPlayerVoiceline")
 	minigame.cb_on_player_horn			= Ware_Callback(scope, "OnPlayerHorn")
 	minigame.cb_on_player_touch			= Ware_Callback(scope, "OnPlayerTouch")
+	minigame.cb_on_player_inventory		= Ware_Callback(scope, "OnPlayerInventory")
+	
 }
 
 function Ware_BeginIntermissionInternal(is_boss)
@@ -1247,7 +1256,11 @@ function Ware_BeginBossInternal()
 			Ware_ShowScreenOverlay2(player, null)
 		}
 		
-		CreateTimer(@() Ware_BeginIntermission(true), Ware_GetThemeSoundDuration("boss"))
+		local sound_duration = Ware_GetThemeSoundDuration("boss")
+		if(Ware_SpecialRound && Ware_SpecialRound.non_stop)
+			sound_duration = 0.4
+
+		CreateTimer(@() Ware_BeginIntermission(true), sound_duration)
 	}
 }
 
@@ -1267,8 +1280,11 @@ function Ware_SpeedupInternal()
 			Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed")
 			Ware_ShowScreenOverlay2(player, null)
 		}
-		
-		CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
+		local sound_duration = Ware_GetThemeSoundDuration("speedup")
+		if(Ware_SpecialRound && Ware_SpecialRound.non_stop)
+			sound_duration = 0.4
+
+		CreateTimer(@() Ware_BeginIntermission(false), sound_duration)
 	}
 }
 
@@ -1398,30 +1414,7 @@ function Ware_StartMinigameInternal(is_boss)
 {
 	Ware_CriticalZone = true
 	
-	local valid_players = []
-	foreach (player in Ware_Players)
-	{
-		if (player.GetTeam() & TF_TEAM_MASK)
-		{
-			if (!player.IsAlive())
-			{
-				// only respawn everyone before the boss
-				// for minigames intentionally not respawning people
-				// as punishment for dying in certain special rounds (like Skull)
-				if (is_boss && Ware_CanPlayerRespawn(player))
-				{
-					player.ForceRespawn()
-					// safety check
-					if (player.IsAlive())
-						valid_players.append(player)	
-				}
-			}
-			else
-			{
-				valid_players.append(player)
-			}
-		}
-	}
+	local valid_players = Ware_GetValidPlayers(is_boss)
 
 	Ware_MinigameScope.clear()
 	
@@ -1600,12 +1593,13 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_SetupMinigameCallbacks()	
 	
 	// late precache if new minigames are added at runtime
-	if (developer() > 0 && "OnPrecache" in Ware_MinigameScope)
+	if (developer() > 0)
 	{
 		if (Ware_Minigame.music)
 			Ware_PrecacheMinigameMusic(Ware_Minigame.music, is_boss)
-	
-		Ware_MinigameScope.OnPrecache()
+
+		if("OnPrecache" in Ware_MinigameScope)
+			Ware_MinigameScope.OnPrecache()
 	}
 	
 	if (custom_teleport)
@@ -1870,7 +1864,7 @@ function Ware_FinishMinigameInternal()
 		}
 		else
 		{
-			passed = false
+			passed = true
 		}
 		
 		if (all_passed)
@@ -1896,7 +1890,8 @@ function Ware_FinishMinigameInternal()
 		
 		Ware_ShowMinigameText(player, "")
 		Ware_PlayGameSound(player, sound)
-		Ware_ShowScreenOverlay(player, overlay)
+		if (participated || all_passed || all_failed)
+			Ware_ShowScreenOverlay(player, overlay)
 		if (Ware_MinigameOverlay2Set)
 			Ware_ShowScreenOverlay2(player, null)
 		
@@ -1989,6 +1984,9 @@ function Ware_FinishMinigameInternal()
 	local sound_duration = Max(Ware_GetThemeSoundDuration("victory"), Ware_GetThemeSoundDuration("failure"))
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
+
+	if(Ware_SpecialRound && Ware_SpecialRound.non_stop)
+		sound_duration = 0.4
 	
 	if ((Ware_MinigamesPlayed > Ware_GetBossThreshold() && Ware_BossgamesPlayed >= Ware_GetBossCount()) 
 		|| (Ware_SpecialRound && Ware_SpecialRound.cb_on_check_gameover())
@@ -2154,6 +2152,27 @@ function Ware_GameOverInternal()
 		{
 			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
 		}
+	}
+
+	function UpdateSpritePosition(target, sprite)
+	{
+		if(target && target.IsValid() && target.IsAlive())
+		{
+			sprite.KeyValueFromVector("origin", target.GetOrigin() + Vector(0,0,115))
+			return 0.015
+		}
+	}
+	foreach (player in top_players)
+	{
+		local sprite = SpawnEntityFromTableSafe("env_glow",
+		{
+			model       = SPRITE_WINNER
+			origin      = player.GetOrigin() + Vector(0,0,125)
+			scale       = 0.5
+			rendermode  = kRenderTransColor
+		})
+		local target = player //squirrel
+		CreateTimer(@() UpdateSpritePosition(target, sprite), 0.015)
 	}
 }
 

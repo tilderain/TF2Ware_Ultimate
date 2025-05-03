@@ -29,6 +29,27 @@ minigame <- Ware_MinigameData
 	}
 })
 
+const RESPONSE_INVULNERABLE			= 0
+const RESPONSE_PAIN_SHARP			= 1
+const RESPONSE_PAIN_SEVERE			= 2
+const RESPONSE_PAIN_CRITICAL		= 3
+const RESPONSE_ITEM_COMMON			= 4
+const RESPONSE_ITEM_RARE			= 5
+const RESPONSE_ITEM_GODLIKE			= 6
+const RESPONSE_POSITIVE				= 7
+const RESPONSE_NEGATIVE				= 8
+const RESPONSE_PLAYER_HIT			= 9
+const RESPONSE_PLAYER_DEMOMAN_HIT	= 10
+const RESPONSE_PLAYER_ENGINEER_HIT	= 11
+const RESPONSE_PLAYER_SNIPER_HIT	= 12
+const RESPONSE_PLAYER_SOLDIER_HIT	= 13
+const RESPONSE_PLAYER_SPY_HIT		= 14
+const RESPONSE_PLAYER_SCOUT_HIT		= 15
+const RESPONSE_FALL					= 16
+const RESPONSE_LAST					= 17
+
+IncludeScript("tf2ware_ultimate/bossgames/data/mkresponses", ROOT)
+
 kart_base_offset    <- Vector(0, 0, 18)
 kart_mins           <- Vector(-32, -34, -kart_base_offset.z)
 kart_maxs           <- Vector(60, 34, 16)
@@ -127,6 +148,30 @@ local ITEM_TYPE_SHELL_GREEN  = 7
 local ITEM_TYPE_SHELL_RED    = 8
 local ITEM_TYPE_SHELL_BLUE   = 9
 
+
+ItemResponse <- array(ITEM_LAST)
+
+ItemResponse[ITEM_BANANA_ONE]		 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_SHROOM_MEGA]		 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_POW]				 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHOCK]			 = RESPONSE_ITEM_GODLIKE
+ItemResponse[ITEM_STAR]				 = RESPONSE_ITEM_GODLIKE
+ItemResponse[ITEM_SHROOM_TWO]		 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_FIB]				 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_BOMB]				 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHROOM_THREE]		 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_BULLET]			 = RESPONSE_ITEM_GODLIKE
+ItemResponse[ITEM_SHELL_BLUE]		 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHROOM_ONE]		 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_SHELL_RED_THREE]	 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHELL_GREEN_ONE]	 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_BANANA_THREE]		 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_SHROOM_GOLD]		 = RESPONSE_ITEM_RARE
+ItemResponse[ITEM_SHELL_RED_ONE]	 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_BLOOPER]			 = RESPONSE_ITEM_COMMON
+ItemResponse[ITEM_SHELL_GREEN_THREE] = RESPONSE_ITEM_COMMON
+
+
 intro_camera_keyframes <-
 [
 	[
@@ -188,6 +233,24 @@ item_table_to_id <-
 	ITEM_SHELL_RED_THREE
 	ITEM_BANANA_THREE
 ]
+
+const PARTICLE_COLOR_DIRT			= 0
+const PARTICLE_COLOR_LAST			= 1
+const PARTICLE_ALPHA_30				= 0
+const PARTICLE_ALPHA_LAST			= 1
+
+KartParticleDrift <- array(4)
+KartParticleOffroad <- null
+KartParticleColors <- array(PARTICLE_COLOR_LAST)
+KartParticleAlphas <- array(PARTICLE_ALPHA_LAST)
+
+
+const PFX_KART_MINI_DRIFT_SPARKS	= "sparks_blue"
+const PFX_KART_MINI_DRIFT			= "drift_blue"
+const PFX_KART_SUPER_DRIFT_SPARKS	= "sparks_orange"
+const PFX_KART_SUPER_DRIFT			= "drift_orange"
+
+const SFX_KART_DRIFT_SPARKS			= "MK_Kart_Drift_Sparks"
 
 function OnPrecache()
 {
@@ -280,7 +343,12 @@ function OnPrecache()
 	PrecacheParticle("mk_lightning_parent")
 	PrecacheParticle("spell_skeleton_bits_green")
 	PrecacheParticle("spell_pumpkin_mirv_bits_red")
-	
+
+	PrecacheParticle(PFX_KART_MINI_DRIFT_SPARKS)
+	PrecacheParticle(PFX_KART_MINI_DRIFT)
+	PrecacheParticle(PFX_KART_SUPER_DRIFT_SPARKS)
+	PrecacheParticle(PFX_KART_SUPER_DRIFT)
+
 	PrecacheMaterial("tf2ware_ultimate/grey")
 }
 
@@ -291,6 +359,31 @@ function OnPick()
 		return Ware_TimeScale <= 1.1
 	return true
 }
+
+function CreateMapEntities()
+{
+	KartParticleDrift[0] = GetParticleIndex(PFX_KART_MINI_DRIFT_SPARKS)
+	KartParticleDrift[1] = GetParticleIndex(PFX_KART_MINI_DRIFT)
+	KartParticleDrift[2] = GetParticleIndex(PFX_KART_SUPER_DRIFT_SPARKS)
+	KartParticleDrift[3] = GetParticleIndex(PFX_KART_SUPER_DRIFT)
+	
+	//MK_KartParticleColors[PARTICLE_COLOR_DIRT] = CreateParticleColor(64, 41, 5)
+	//MK_KartParticleAlphas[PARTICLE_ALPHA_30]   = CreateParticleAlpha(30)
+}
+
+function GetParticleIndex(name)
+{
+	local particle = Ware_SpawnEntity("info_particle_system", 
+	{
+		effect_name = name, 
+		start_active = false
+	})
+	
+	local index = GetPropInt(particle, "m_iEffectIndex")
+	particle.Destroy()
+	return index
+}
+
 
 function OnTeleport(players)
 {
@@ -877,6 +970,8 @@ function OnPlayerDisconnect(player)
 
 function SetupMap()
 {
+	CreateMapEntities()
+
 	local bound_thinker = Ware_CreateEntity("logic_relay")
 	local bounds = Ware_MinigameLocation.bound_spinners
 	local bound_spin_pos = Ware_MinigameLocation.bound_spin_pos
@@ -998,6 +1093,20 @@ function CreateItembox(origin)
 	return itembox
 }
 
+function CreateDriftParticle(kart_prop, origin, angles)
+{
+	// TODO should be decided by attachments
+	local particle = Ware_SpawnEntity("info_particle_system",
+	{
+		effect_name = "error",
+		origin = origin,
+		angles = angles,
+		start_active = true
+	})
+	SetEntityParent(particle, kart_prop)
+	return particle
+}
+
 function CreateKart(origin, angles)
 {
 	// touches items and itemboxes
@@ -1056,9 +1165,23 @@ function CreateKart(origin, angles)
 	foreach (name, func in kart_routines)
 		kart[name] <- func.bindenv(kart)
 	
+	kart.m_particle_drift_restart <- 0
+
+	const_height <- 18.0
+
+	// TODO should be decided by attachments
+	//kart.m_particle_wheel_right <- CreateDriftParticle(kart_prop, 
+	//		origin - (angles.Forward() * 36.0) - (angles.Left() * 22.0) - (angles.Up() * const_height) + Vector(0, 44, 0),
+	//	 	angles)
+	
+	kart.m_particle_wheel_left <- null
+
+	kart.m_drift_particle <- 0
+	
 	kart.m_id                 <- kart_id++
 	kart.m_driver             <- null	
 	kart.m_driver_bot         <- false
+	kart.m_driver_class 	  <- 0
 	kart.m_entity             <- kart_entity
 	kart.m_prop               <- kart_prop
 	kart.m_model              <- kart_model
@@ -1126,6 +1249,8 @@ function CreateKart(origin, angles)
 	kart.m_blooper_timer      <- 0.0
 	kart.m_bullet_timer       <- 0.0
 	kart.m_shroom_gold_timer  <- 0.0
+
+	kart.m_response_hit_timer <- 0.0
 	
 	kart.m_rescued            <- false
 	kart.m_rescue_point       <- null
@@ -1273,6 +1398,7 @@ kart_routines <-
 	Enter = function(player)
 	{
 		m_driver = player
+		m_driver_class <- player.GetPlayerClass();
 		m_driver_bot = player.IsFakeClient()
 		Ware_GetPlayerMiniData(player).kart <- this
 		
@@ -1678,6 +1804,9 @@ kart_routines <-
 		local hop_duration = 0.3
 		if (m_drifting)
 		{
+			if (m_particle_drift_restart > 0 && --m_particle_drift_restart == 0)
+				ToggleWheelParticles(true, false)
+			
 			if (!(m_buttons & IN_JUMP))
 			{
 				m_drifting = false
@@ -1697,7 +1826,8 @@ kart_routines <-
 					else
 						m_boost_counter += 2 * inv_dt.tointeger()
 				}
-				
+
+				local old_boost_stage = m_boost_stage
 				if (m_boost_counter >= 634)
 					m_boost_stage = 4
 				else if (m_boost_counter >= 498)
@@ -1707,7 +1837,22 @@ kart_routines <-
 				else if (m_boost_counter >= 165)
 					m_boost_stage = 1
 				else
-					m_boost_stage = 0				
+					m_boost_stage = 0	
+
+				if (old_boost_stage != m_boost_stage)
+				{
+					EmitSoundEx({
+						sound_name = SFX_KART_DRIFT_SPARKS,
+						pitch = 50 + (m_boost_stage * 9),
+						flags = SND_CHANGE_PITCH,
+						entity = m_prop
+					})
+					
+					local particle = Ware_MinigameScope.KartParticleDrift[m_boost_stage - 1]		
+					m_drift_particle = particle
+					ToggleWheelParticles(false, false)
+					m_particle_drift_restart = 5
+				}							
 			}
 			else
 			{
@@ -2071,12 +2216,14 @@ kart_routines <-
 			if (m_boost_type > BOOST_DRIFT)
 				return
 			EmitSoundOnClient("MK_Kart_Drift_Boost", m_driver)
+			ResponsePlay(RESPONSE_POSITIVE, m_driver)
 		}
 		else if (type == BOOST_SURFACE)
 		{
 			if (m_blooper_timer > 0.0) m_blooper_timer = 0.01 // reset
 			if (m_boost_timer == 0.0)
 			{
+				ResponsePlay(RESPONSE_POSITIVE, m_driver)
 				EmitSoundOnClient("MK_Boost", m_driver)
 			}
 		}
@@ -2084,6 +2231,7 @@ kart_routines <-
 		{
 			if (m_blooper_timer > 0.0) m_blooper_timer = 0.01 // reset
 			m_prop.EmitSound("MK_Item_Shroom_Use")
+			ResponsePlay(RESPONSE_POSITIVE, m_driver)
 		}
 		
 		m_boost_type = type
@@ -2111,6 +2259,9 @@ kart_routines <-
 		m_drifting = false
 		m_boost_stage = 0
 		m_prop.StopSound("MK_Kart_Drift")
+
+		// TODO: drifting into offroad stops particles
+		ToggleWheelParticles(false, true)
 	}
 	
 	RescueInit = function()
@@ -2129,6 +2280,7 @@ kart_routines <-
 		m_rescue_plane = m_map_next_plane
 
 		EntityEntFire(m_entity, "CallScriptFunction", "RescueStart", 1.0)
+		ResponsePlay(RESPONSE_NEGATIVE, m_driver)
 	}
 	
 	RescueStart = function()
@@ -2204,6 +2356,7 @@ kart_routines <-
 		{
 			case SPINOUT_SPIN:
 			{
+				ResponsePlay(RESPONSE_PAIN_SHARP, m_driver)
 				m_prop.EmitSound("MK_Kart_Spin")
 				m_prop.AcceptInput("SetAnimation", "spinout", null, null)
 				m_spin_out_timer = Time() + 1.0
@@ -2211,6 +2364,7 @@ kart_routines <-
 			}
 			case SPINOUT_SPIN_DOUBLE:
 			{
+				ResponsePlay(RESPONSE_PAIN_SEVERE, m_driver)
 				m_prop.EmitSound("MK_Kart_Spin")
 				m_prop.AcceptInput("SetAnimation", "spinout_double", null, null)
 				m_spin_out_timer = Time() + 2.0	
@@ -2218,6 +2372,7 @@ kart_routines <-
 			}		
 			case SPINOUT_TUMBLE_FORWARD:
 			{
+				ResponsePlay(RESPONSE_PAIN_SEVERE, m_driver)
 				m_prop.AcceptInput("SetAnimation", "tumble_forward", null, null)
 				m_spin_out_timer = Time() + 1.2	
 				m_velocity *= 0.4
@@ -2226,6 +2381,7 @@ kart_routines <-
 			}
 			case SPINOUT_TUMBLE_LEFT:
 			{
+				ResponsePlay(RESPONSE_PAIN_SEVERE, m_driver)
 				m_prop.EmitSound("MK_Item_Star_Hit")
 				m_prop.AcceptInput("SetAnimation", "tumble_right", null, null)			
 				m_spin_out_timer = Time() + 1.2
@@ -2239,6 +2395,7 @@ kart_routines <-
 			}
 			case SPINOUT_TUMBLE_RIGHT:
 			{
+				ResponsePlay(RESPONSE_PAIN_SEVERE, m_driver)
 				m_prop.EmitSound("MK_Item_Star_Hit")
 				m_prop.AcceptInput("SetAnimation", "tumble_left", null, null)
 				m_spin_out_timer = Time() + 1.2
@@ -2252,6 +2409,7 @@ kart_routines <-
 			}
 			case SPINOUT_LAUNCH_UP:
 			{
+				ResponsePlay(RESPONSE_PAIN_CRITICAL, m_driver)
 				m_prop.AcceptInput("SetAnimation", "tumble_high", null, null)
 				m_spin_out_timer = Time() + 2.5
 				m_velocity = Vector(0, 0, 800)
@@ -2261,6 +2419,7 @@ kart_routines <-
 			}		
 			case SPINOUT_ENGINE_FAIL:
 			{	
+				ResponsePlay(RESPONSE_NEGATIVE, m_driver)
 				m_prop.EmitSound("MK_Kart_Burnout")
 				DispatchParticleEffect("enginefail", 
 					m_origin + m_angles.Forward() * -60.0 + m_angles.Up() * 12.0, 
@@ -2279,6 +2438,33 @@ kart_routines <-
 		return true
 	}
 	
+	ToggleWheelParticles = function (active, kill)
+	{
+		if(active && !m_particle_wheel_left)
+		{
+			m_particle_wheel_left = Ware_MinigameScope.CreateDriftParticle(m_prop, 
+			m_origin - (m_angles.Forward() * 36.0) - (m_angles.Left() * 1) - (m_angles.Up() * 18.0),
+		 	m_angles)
+		}
+		if(m_particle_wheel_left)
+		{
+			SetPropInt(m_particle_wheel_left, "m_iEffectIndex", m_drift_particle)
+			SetPropBool(m_particle_wheel_left, "m_bActive", active)		
+			m_particle_wheel_left.SetDrawEnabled(active)
+		}
+
+
+		//SetPropBool(m_particle_wheel_right, "m_bActive", active)
+		
+		if(kill && m_particle_wheel_left)
+		{
+			m_particle_wheel_left.Destroy()
+			m_particle_wheel_left = null
+		}
+
+		//m_particle_wheel_right.SetDrawEnabled(active)
+	}
+
 	Shrink = function(timer)
 	{
 		if (m_mega_timer > 0.0)
@@ -2368,6 +2554,58 @@ kart_routines <-
 		}
 	}
 	
+
+	HitPlayer = function(player)
+	{
+		if (m_driver == player)
+			return
+		//if (m_spin_out_timer > 0.0)
+		//	return
+		time <- Time()
+		if (m_response_hit_timer >= time)
+			return
+		if (RandomInt(0, 1) == 1)
+		{
+			local player_class = player.GetPlayerClass() - 1
+			switch (m_driver_class)
+			{
+				case TF_CLASS_DEMOMAN:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_DEMOMAN_HIT, m_driver, player_class)
+					return
+				}
+				case TF_CLASS_ENGINEER:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_ENGINEER_HIT, m_driver, player_class)
+					return
+				}
+				case TF_CLASS_SNIPER:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SNIPER_HIT, m_driver, player_class)
+					return
+				}
+				case TF_CLASS_SOLDIER:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SOLDIER_HIT, m_driver, player_class)
+					return
+				}	
+				case TF_CLASS_SPY:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SPY_HIT, m_driver, player_class)
+					return
+				}	
+				case TF_CLASS_SCOUT:		
+				{
+					ResponsePlayIdx(RESPONSE_PLAYER_SCOUT_HIT, m_driver, player_class)
+					return
+				}
+			}
+		}
+
+		ResponsePlay(RESPONSE_PLAYER_HIT, m_driver)
+		m_response_hit_timer = time + 1.0
+	}
+
 	Touch_mk_itembox     = function(entity) { entity.GetScriptScope().Touch(this) }	
 	Touch_mk_banana      = function(entity) { entity.GetScriptScope().Touch(this) }	
 	Touch_mk_fib         = function(entity) { entity.GetScriptScope().Touch(this) }	
@@ -2436,6 +2674,7 @@ kart_routines <-
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "vehicle")
+				other.HitPlayer(m_driver)
 			}
 		}
 		else if (other.m_mega_timer > 0.0)
@@ -2443,6 +2682,7 @@ kart_routines <-
 			if (m_star_timer == 0.0 && m_mega_timer == 0.0 && Squish(5.0))
 			{
 				AddKillFeedMessage(m_driver, other.m_driver, "rocketpack_stomp")
+				other.HitPlayer(m_driver)
 			}
 		}
 		else if (other.m_star_timer > 0.0)
@@ -2451,6 +2691,7 @@ kart_routines <-
 				&& m_star_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
+				other.HitPlayer(m_driver)
 				AddKillFeedMessage(m_driver, other.m_driver, "wrench_golden")
 			}
 		}
@@ -2613,7 +2854,17 @@ kart_routines <-
 			return
 				
 		local idx = -m_item_idx
+		local response = Ware_MinigameScope.ItemResponse[idx]
 		SetItem(idx)
+
+		if (response == RESPONSE_ITEM_COMMON)
+			if (RandomInt(0, 3) == 1)
+				ResponsePlay(response, m_driver)
+		else if (response == RESPONSE_ITEM_RARE)
+			if (RandomInt(0, 2) == 1)
+				ResponsePlay(response, m_driver)
+		else if (response == RESPONSE_ITEM_GODLIKE)
+			ResponsePlay(response, m_driver)	
 	}
 	
 	SetItem = function(idx)
@@ -2730,6 +2981,7 @@ kart_routines <-
 			m_prop.SetModelScale(1.5, 1.0)	
 			if (m_driver)			
 				Ware_AddPlayerAttribute(m_driver, "voice pitch scale", 0.8, -1)			
+			ResponsePlay(RESPONSE_INVULNERABLE, m_driver)
 		}
 		m_mega_timer = Time() + 10.0		
 	}
@@ -3319,6 +3571,8 @@ local function ItemCreate(classname, model, owner_kart, type)
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_SPIN))
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
+					if(m_owner_kart)
+						m_owner_kart.HitPlayer(kart.m_driver)
 				}
 				
 				Destroy()			
@@ -3329,6 +3583,8 @@ local function ItemCreate(classname, model, owner_kart, type)
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
+					if(m_owner_kart)
+						m_owner_kart.HitPlayer(kart.m_driver)
 				}
 				
 				DispatchParticleEffect("drg_cow_explosion_sparkles", self.GetOrigin(), vec3_zero)
@@ -3372,6 +3628,8 @@ local function ItemCreate(classname, model, owner_kart, type)
 				{
 					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
 						m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
+					if(m_owner_kart)
+						m_owner_kart.HitPlayer(kart.m_driver)
 				}
 
 				Destroy()
