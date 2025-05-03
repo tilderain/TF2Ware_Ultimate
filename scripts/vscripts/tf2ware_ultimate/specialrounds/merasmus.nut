@@ -22,6 +22,11 @@ merasmus_killed <- false
 
 merasmus_color <- "71b149"
 
+function OnPlayerSpawn(player)
+{
+	Ware_GetPlayerSpecialRoundData(player).damage <- 0
+	Ware_GetPlayerSpecialRoundData(player).vo_timer <- Time() + 4.0
+}
 function OnStart()
 {
 	CreateTimer(@() SpawnMerasmus(), 0.25)
@@ -99,8 +104,6 @@ function OnUpdate()
 
 		foreach (player in Ware_Players) {
 		    local special = Ware_GetPlayerSpecialRoundData(player)
-			if(!"damage" in special)
-				special.damage <- 0
 		    playerDamageList.append({
 		        player = player,
 		        damage = special.damage
@@ -126,8 +129,6 @@ function OnUpdate()
 	{
 		if(!player.IsAlive()) continue
 		local special = Ware_GetPlayerSpecialRoundData(player)
-		if(!"vo_timer" in special)
-			special.vo_timer <- Time() + 10.0 + RandomInt(0,6)
 		if(special.vo_timer < Time())
 		{
 			local player_class = player.GetPlayerClass()
