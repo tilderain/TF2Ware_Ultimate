@@ -12,7 +12,7 @@ special_round <- Ware_SpecialRoundData
 		tf_merasmus_lifetime = 999999
 		tf_merasmus_chase_range = 10000000
 		tf_merasmus_chase_duration = 10000000
-		tf_merasmus_health_base = 200
+		tf_merasmus_health_base = merasmus_health_per_player * Ware_Players.len()
 		tf_merasmus_health_per_player = 0
 	}
 })
@@ -29,6 +29,7 @@ function OnStart()
 	{
 		local special = Ware_GetPlayerSpecialRoundData(player)
 		special.damage <- 0
+		special.vo_timer <- Time() + 4.0
 	}
 }
 
@@ -120,8 +121,24 @@ function OnUpdate()
 		    top3Players.append(playerDamageList[i].player)
 		}
 		GiveBonusPoints(top3Players)
-
 	}
+	foreach(player in Ware_Players)
+	{
+		if(!player.IsAlive()) continue
+		local special = Ware_GetPlayerSpecialRoundData(player)
+		if(!"vo_timer" in special)
+			special.vo_timer <- Time() + 10.0 + RandomInt(0,6)
+		if(special.vo_timer < Time())
+		{
+			local player_class = player.GetPlayerClass()
+			special.vo_timer <- Time() + 10.0 + RandomInt(0,6)
+
+			if(vos[player_class].len() == 0) continue
+			local scene = RandomElement(vos[player_class])
+			player.PlayScene(scene, 0.0)
+		}
+	}
+
 }
 
 function OnPrecache()
@@ -228,3 +245,142 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 		}
 	}
 }
+vos <-
+[
+	[], //nothing
+	["scenes/player/scout/low/4477.vcd"
+	"scenes/player/scout/low/4478.vcd"
+	"scenes/player/scout/low/4479.vcd"
+	"scenes/player/scout/low/4480.vcd"
+	"scenes/player/scout/low/4481.vcd"
+	"scenes/player/scout/low/4695.vcd"
+	"scenes/player/scout/low/4482.vcd"
+	"scenes/player/scout/low/4482.vcd"
+	"scenes/player/scout/low/4483.vcd"
+	"scenes/player/scout/low/4697.vcd"
+	"scenes/player/scout/low/4493.vcd"
+	"scenes/player/scout/low/4487.vcd"
+	"scenes/player/scout/low/4489.vcd"
+	"scenes/player/scout/low/4698.vcd"
+	"scenes/player/scout/low/4491.vcd"
+	"scenes/player/scout/low/4492.vcd"
+	"scenes/player/scout/low/4494.vcd"
+	"scenes/player/scout/low/4699.vcd"
+	"scenes/player/scout/low/4699.vcd"
+	"scenes/player/scout/low/4700.vcd"
+	"scenes/player/scout/low/4496.vcd"
+	"scenes/player/scout/low/4701.vcd"
+	"scenes/player/scout/low/4497.vcd"
+	"scenes/player/scout/low/4497.vcd"
+	"scenes/player/scout/low/4498.vcd"
+	"scenes/player/scout/low/4702.vcd"
+	"scenes/player/scout/low/4702.vcd"],
+	[],
+	//sniper??
+	["scenes/player/soldier/low/4566.vcd"
+	"scenes/player/soldier/low/4567.vcd"
+	"scenes/player/soldier/low/4516.vcd"
+	"scenes/player/soldier/low/4517.vcd"
+	"scenes/player/soldier/low/4506.vcd"
+	"scenes/player/soldier/low/4507.vcd"
+	"scenes/player/soldier/low/4509.vcd"
+	"scenes/player/soldier/low/4499.vcd"
+	"scenes/player/soldier/low/4511.vcd"
+	"scenes/player/soldier/low/4512.vcd"
+	"scenes/player/soldier/low/4513.vcd"
+	"scenes/player/soldier/low/4514.vcd"
+	"scenes/player/soldier/low/4515.vcd"
+	"scenes/player/soldier/low/4524.vcd"
+	"scenes/player/soldier/low/4502.vcd"
+	"scenes/player/soldier/low/4503.vcd"
+	"scenes/player/soldier/low/4504.vcd"
+	"scenes/player/soldier/low/4505.vcd"
+	"scenes/player/soldier/low/4500.vcd"
+	"scenes/player/soldier/low/4510.vcd"
+	"scenes/player/soldier/low/4521.vcd"
+	"scenes/player/soldier/low/4522.vcd"
+	"scenes/player/soldier/low/4522.vcd"
+	"scenes/player/soldier/low/4523.vcd"
+	"scenes/player/soldier/low/4523.vcd"
+	"scenes/player/soldier/low/4526.vcd"
+	"scenes/player/soldier/low/4526.vcd"
+	"scenes/player/soldier/low/4525.vcd"
+	"scenes/player/soldier/low/4525.vcd"
+	"scenes/player/soldier/low/4527.vcd"
+	"scenes/player/soldier/low/4527.vcd"
+	"scenes/player/soldier/low/4529.vcd"
+	"scenes/player/soldier/low/4529.vcd"
+	"scenes/player/soldier/low/4528.vcd"
+	"scenes/player/soldier/low/4528.vcd"
+	"scenes/player/soldier/low/4530.vcd"
+	"scenes/player/soldier/low/4530.vcd"
+	"scenes/player/soldier/low/4531.vcd"
+	"scenes/player/soldier/low/4531.vcd"
+	"scenes/player/soldier/low/4533.vcd"
+	"scenes/player/soldier/low/4533.vcd"
+	"scenes/player/soldier/low/4534.vcd"
+	"scenes/player/soldier/low/4534.vcd"
+	"scenes/player/soldier/low/4535.vcd"
+	"scenes/player/soldier/low/4535.vcd"
+	"scenes/player/soldier/low/4536.vcd"
+	"scenes/player/soldier/low/4536.vcd"
+	"scenes/player/soldier/low/4537.vcd"
+	"scenes/player/soldier/low/4537.vcd"
+	"scenes/player/soldier/low/4538.vcd"
+	"scenes/player/soldier/low/4538.vcd"
+	"scenes/player/soldier/low/4539.vcd"
+	"scenes/player/soldier/low/4539.vcd"],
+	["scenes/player/demoman/low/4597.vcd"
+	"scenes/player/demoman/low/4598.vcd"
+	"scenes/player/demoman/low/4599.vcd"
+	"scenes/player/demoman/low/4600.vcd"
+	"scenes/player/demoman/low/4581.vcd"
+	"scenes/player/demoman/low/4582.vcd"
+	"scenes/player/demoman/low/4583.vcd"
+	"scenes/player/demoman/low/4576.vcd"
+	"scenes/player/demoman/low/4576.vcd"
+	"scenes/player/demoman/low/5454.vcd"
+	"scenes/player/demoman/low/4577.vcd"
+	"scenes/player/demoman/low/4577.vcd"
+	"scenes/player/demoman/low/4578.vcd"
+	"scenes/player/demoman/low/4578.vcd"
+	"scenes/player/demoman/low/4579.vcd"
+	"scenes/player/demoman/low/4579.vcd"
+	"scenes/player/demoman/low/4580.vcd"
+	"scenes/player/demoman/low/4580.vcd"
+	"scenes/player/demoman/low/4575.vcd"],
+	["scenes/player/medic/low/4676.vcd"
+	"scenes/player/medic/low/4677.vcd"
+	"scenes/player/medic/low/4734.vcd"
+	"scenes/player/medic/low/4643.vcd"
+	"scenes/player/medic/low/4644.vcd"
+	"scenes/player/medic/low/4647.vcd"
+	"scenes/player/medic/low/4648.vcd"
+	"scenes/player/medic/low/4646.vcd"
+	"scenes/player/medic/low/4645.vcd"
+	"scenes/player/medic/low/4735.vcd"
+	"scenes/player/medic/low/4736.vcd"
+	"scenes/player/medic/low/4731.vcd"
+	"scenes/player/medic/low/4732.vcd"
+	"scenes/player/medic/low/4649.vcd"
+	"scenes/player/medic/low/4650.vcd"],
+	["scenes/player/heavy/low/4760.vcd"
+	"scenes/player/heavy/low/4761.vcd"
+	"scenes/player/heavy/low/4762.vcd"
+	"scenes/player/heavy/low/4763.vcd"
+	"scenes/player/heavy/low/5455.vcd"
+	"scenes/player/heavy/low/4741.vcd"
+	"scenes/player/heavy/low/4742.vcd"
+	"scenes/player/heavy/low/4737.vcd"
+	"scenes/player/heavy/low/4738.vcd"
+	"scenes/player/heavy/low/4739.vcd"
+	"scenes/player/heavy/low/4740.vcd"],
+
+	[], //pyro
+
+
+
+	[], //spy
+
+	[], //engie
+]
