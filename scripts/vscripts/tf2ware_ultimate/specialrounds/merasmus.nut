@@ -12,16 +12,116 @@ special_round <- Ware_SpecialRoundData
 		tf_merasmus_lifetime = 999999
 		tf_merasmus_chase_range = 10000000
 		tf_merasmus_chase_duration = 10000000
-		tf_merasmus_health_base = merasmus_health_per_player * Ware_Players.len()
+		tf_merasmus_health_base = 200
 		tf_merasmus_health_per_player = 0
 	}
 })
 
 merasmus <- null
+merasmus_killed <- false
+
+merasmus_color <- "71b149"
 
 function OnStart()
 {
 	CreateTimer(@() SpawnMerasmus(), 0.25)
+	foreach (player in Ware_Players)
+	{
+		local special = Ware_GetPlayerSpecialRoundData(player)
+		special.damage <- 0
+	}
+}
+
+function GiveBonusPoints(target, points = 1)
+{
+	local award = true
+
+	// even if there's no award, this is still tracked for the event	
+	local player_indices_awarded = ""
+	local awarded = target
+	if (typeof(awarded) == "instance")
+		awarded = [target]
+	foreach (player in awarded)
+		player_indices_awarded += player.entindex().tochar()
+	
+	if (award)
+	{
+		// account for multiple possible but we only got 1 player
+		if (typeof(target) == "array" && target.len() == 1)
+			target = target[0]
+		
+		if (typeof(target) == "instance")
+		{
+			local data = target.GetScriptScope().ware_data
+			data.score += points
+			data.bonus += points
+			
+			Ware_ChatPrint(null, "{color}{str}{color} was awarded an extra {str}!",
+				TF_COLOR_RED, GetPlayerName(target), TF_COLOR_DEFAULT, points == 1 ? "point" : format("%d points", points))
+		}
+		else
+		{
+			local text = ""
+			local params = [this, null, text]
+			foreach (player in target)
+			{
+				local data = player.GetScriptScope().ware_data
+				data.score += points
+				data.bonus += points
+
+				text += text == "" ? "The following players were each awarded an extra point: {player} " : " {player} "
+				params.append(player)
+			}
+			text += "{color}!"
+			params.append(TF_COLOR_DEFAULT)
+			params[2] = text
+
+			Ware_ChatPrint.acall(params)
+		}
+	}
+	
+	Ware_EventCallback("bonus_points", 
+	{
+		minigame_name      = "Kill Merasmus"
+		minigame_file_name = "merasmus"
+		players_awarded    = player_indices_awarded
+	})
+}
+
+function OnUpdate()
+{
+	if (merasmus && !merasmus.IsValid() && !merasmus_killed)
+	{
+		merasmus_killed = true
+
+		local playerDamageList = []
+
+		foreach (player in Ware_Players) {
+		    local special = Ware_GetPlayerSpecialRoundData(player)
+			if(!"damage" in special)
+				special.damage <- 0
+		    playerDamageList.append({
+		        player = player,
+		        damage = special.damage
+		    });
+		}
+
+		playerDamageList.sort(function(a, b) {
+		    return b.damage <=> a.damage
+		})
+
+		for (local i = 0; i < 3 && i < playerDamageList.len(); i++) {
+		    Ware_ChatPrint(null, "{player}{color} did {int} damage to {color}MERASMUS!", 
+				playerDamageList[i].player, TF_COLOR_DEFAULT, playerDamageList[i].damage, merasmus_color)
+		}
+
+		local top3Players = []
+		for (local i = 0; i < 3 && i < playerDamageList.len(); i++) {
+		    top3Players.append(playerDamageList[i].player)
+		}
+		GiveBonusPoints(top3Players)
+
+	}
 }
 
 function OnPrecache()
@@ -62,6 +162,11 @@ function OnTakeDamage(params)
 			params.damage = 20
 		if(params.damage > 200)
 			params.damage = 20
+		if(attacker && attacker.IsPlayer())
+		{
+			local special = Ware_GetPlayerSpecialRoundData(attacker)
+			special.damage <- special.damage + params.damage
+		}
 	}
 	else if (attacker && attacker.GetClassname() == "merasmus" && !Ware_Finished)
 	{
@@ -103,7 +208,7 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 {
 	if(merasmus && merasmus.IsValid())
 	{
-		Ware_ChatPrint(null, "{color}MERASMUS!{color} wins!", "71b149", TF_COLOR_DEFAULT)
+		Ware_ChatPrint(null, "{color}MERASMUS!{color} wins!", merasmus_color, TF_COLOR_DEFAULT)
 	}
 	else
 	{
