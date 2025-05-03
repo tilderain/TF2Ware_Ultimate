@@ -223,6 +223,29 @@ function OnGameEvent_teamplay_round_start(params)
 	}
 	
 	Ware_ChatPrint(null, "Theme: {color}{str}", COLOR_LIME, Ware_Theme.visual_name)
+
+	local sky_names = ["sky_borealis01"
+	"sky_day01_01"
+	"sky_day01_08"
+	"sky_day02_02"
+	"sky_day02_04"
+	"sky_day02_07"
+	"sky_day03_05"
+	"sky_day03_06b"
+	"sky_badlands_01"
+	"sky_dustbowl_01" 
+	"sky_goldrush_01"
+	"sky_gravel_01"
+	"sky_harvest_night_01"
+	"sky_hydro_01"
+	"sky_island_01" 
+	"sky_morningsnow_01"
+	"sky_night_01"
+	"sky_nightfall_01"
+	"sky_tf2_04"
+	"tf2ware_sky"]
+
+	SetSkyboxTexture(RandomElement(sky_names))
 	
 	Ware_ToggleTruce(true)
 
