@@ -24,7 +24,7 @@ function OnPrecache()
 function OnTeleport(players)
 {
 	Ware_TeleportPlayersRow(players, 
-		Ware_MinigameLocation.center + Vector(0, -900, 500), 
+		Ware_MinigameLocation.center + Vector(0, -900, 600), 
 		QAngle(0, 90, 0), 
 		1600.0, 
 		60.0, 120.0)
