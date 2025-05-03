@@ -78,6 +78,11 @@ game_over <- false
 
 shouldend <- false
 
+function OnPick()
+{
+	return Ware_Players.len() < 56
+}
+
 function OnStart()
 {
 	fog <- Ware_SpawnEntity("env_fog_controller",
@@ -104,7 +109,8 @@ function OnStart()
 	// spawn a podium for each player
 	// create a podium clip around each podium
 	local name = null
-	local add = 400
+	local addx = 400
+	local addy = 0
 	local the = Vector(0,0,0)
 
 	//Findbyname HomeRun_Podium
@@ -129,27 +135,32 @@ function OnStart()
 		local neworigin = Vector(0,0,0)
 		if(index>0)
 		{
+			if(index%5==0) 
+			{
+				addy -= 400
+				addx = 0
+			}
 			newbrush = Ware_SpawnEntity("func_brush", {
 				model = name,
-				origin = the + Vector(add, 0, 0),
+				origin = the + Vector(addx, addy, 0),
 			})
-			neworigin = the + Vector(add, 0, 0),
+			neworigin = the + Vector(addx, addy, 0),
 
 			newbrush = Ware_SpawnEntity("func_brush", {
 				model = clip,
-				origin = the + Vector(add, 0, 0),
+				origin = the + Vector(addx, addy, 0),
 				targetname = "HomeRun_PodiumClip",
 			})
-			player.SetOrigin( the + Vector(add, 0, 50) )
+			player.SetOrigin( the + Vector(addx, addy, 50) )
 			minidata.sandbag <- Ware_SpawnEntity("prop_physics_override", {
 				model = sandbag_model,
 				targetname = format("sandbag%d", index)
-				origin = the + Vector(add, 0, 0) + Vector(0, 150, 80),
+				origin = the + Vector(addx, addy, 0) + Vector(0, 150, 80),
 				//origin = player.GetOrigin() + Vector(0, 150, 60),
 				angles = QAngle(0, -90, 0),
 				massscale = 500
 			})
-			add += 400
+			addx += 400
 		}
 		else
 		{
@@ -260,8 +271,8 @@ function OnUpdate()
 			return
 		local camera = minidata.camera
 		local origin = minidata.sandbag.GetOrigin() + Vector(600, 0, 0)
-		//if(origin.x > -102000)
-		//	origin.x = -102000
+		if(origin.x > -8400)
+			origin.x = -8400
 		camera.KeyValueFromVector("origin", origin)
 	}
 
@@ -323,7 +334,7 @@ function OnUpdate()
 		}
 		else if(scope.flying)
 		{
-			local distance = sandbag.GetOrigin().y - Ware_MinigameLocation.center.y
+			local distance = sandbag.GetOrigin().y - scope.initOrigin.y
 			Ware_ShowText(scope.player, CHANNEL_MINIGAME, format("Distance: %.1fHU", distance), Ware_GetMinigameRemainingTime())
 
 			local nudgeTo = (scope.destY/60)
