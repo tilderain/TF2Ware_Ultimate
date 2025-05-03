@@ -76,7 +76,7 @@ function OnStart()
     local highest_scale = 1.0
     foreach(player in Ware_MinigamePlayers)
 	{
-		player.KeyValueFromVector("m_vecAbsVelocity", (Vector(0,200,0)))
+		player.SetAbsVelocity((Vector(0,200,0)))
         if (player.GetModelScale() > highest_scale)
             highest_scale = player.GetModelScale()
 	}
