@@ -11,7 +11,7 @@ const WARE_MUSIC_VERSION = 3
 // keep in sync with sourcemod plugin
 WARE_PLUGIN_VERSION <- [1, 2, 7]
 
-Ware_CfgPath <- "tf2ware_ultimate/%s.cfg"
+Ware_CfgPath <- "tf2ware_ultimate_custom/%s.cfg"
 
 function Ware_LoadConfigFile(file_name, scriptdata = true)
 {

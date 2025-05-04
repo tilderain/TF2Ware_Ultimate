@@ -1,4 +1,4 @@
-// auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
+// auto-generated file, do not edit. edit the matching file in the ""cfg"" folder instead
 buffer<-@"VERSION 2
 {
 	theme_name = ""_default""
@@ -54,6 +54,43 @@ buffer<-@"VERSION 2
 		""intro"":   2.2
 		""results"": 0.0
 		""victory"": 2.08
+	}
+},
+{
+	theme_name = ""3ds_wariowatch""
+	visual_name = ""Wario Watch (3DS)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 2.072
+		""intro"":   2.144
+		""results"": 0.0
+		""victory"": 2.028
+	}
+},
+{
+	theme_name = ""3ds_wariointerrupts""
+	visual_name = ""Wario Deluxe (3DS)"" // Wario Interrupts mode, though the actual Wario Deluxe is a song stage
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 2.081
+		""intro"":   2.081
+		""results"": 0.0
+		""victory"": 1.988
+	}
+},
+{
+	theme_name = ""ds_snapped"" // Shared among all stages in snapped. It's its own internal theme!
+	visual_name = ""WarioWare: Snapped! (DSiWare)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"":   2.455
+		""gameclear"": 3.608
+		""intro"":     2.455
+		""results"":   0.0
+		""victory"":   2.605
 	}
 },
 {
@@ -252,19 +289,398 @@ buffer<-@"VERSION 2
 	}
 },
 {
+	theme_name = ""switch_moveit_allmixedup""
+	visual_name = ""All Mixed Up (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":     3.989
+		""failure"":  2.026
+		""gameover"": 3.018
+		""intro"":    4.291
+		""results"":  0.0
+		""speedup"":  4.017
+		""victory"":  1.993
+	}
+},
+{
+	theme_name = ""switch_moveit_cricketandmantis""
+	visual_name = ""Young Cricket & Master Mantis (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      4.011
+		""failure"":   2.012
+		""gameclear"": 4.526
+		""gameover"":  2.341
+		""intro"":     4.142
+		""results"":   0.0
+		""speedup"":   4.143
+		""victory"":   2.012
+	}
+},
+{
+	theme_name = ""switch_moveit_jimmyt""
+	visual_name = ""Jimmy T. (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      4.064
+		""failure"":   2.052
+		""gameclear"": 4.097
+		""gameover"":  2.641
+		""intro"":     4.099
+		""results"":   0.0
+		""speedup"":   4.069
+		""victory"":   2.071
+	}
+},
+{
+	theme_name = ""wii_temple""
+	visual_name = ""Temple of Form (Wii)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 2.059
+		""intro"":   4.032
+		""victory"": 2.01
+	}
+},
+{
+	theme_name = ""wii_survival""
+	visual_name = ""Survival (Wii)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 2.104 // would be longer but bottlenecks victory
+		""intro"":   6.02
+		""victory"": 2.033
+	}
+},
+{
+	theme_name = ""wii_lifeline""
+	visual_name = ""Lifeline (Wii)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 2.039
+		""intro"":   8.032
+		""victory"": 2.039
+	}
+},
+{
+	theme_name = ""wii_bomb""
+	visual_name = ""Bomb (Wii)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 1.787
+		""intro"":   4.097
+		""victory"": 1.985
+	}
+},
+{
 	theme_name = ""switch_moveit_wario""
 	visual_name = ""Wario (Switch - Move It!)""
 	author = ""GeeNoVoid""
 	sounds = 
 	{
-		""boss"":     4.005
-		""failure"":  1.997
+		""boss"":      4.005
+		""failure"":   1.997
 		""gameclear"": 4.554
-		""gameover"": 3.36
-		""intro"":    4.146
-		""results"":  0.0
-		""speedup"":  4.016
-		""victory"":  2.03
+		""gameover"":  3.36
+		""intro"":     4.146
+		""results"":   0.0
+		""speedup"":   4.016
+		""victory"":   2.03
+	}
+},
+{
+	theme_name = ""switch_moveit_museum""
+	visual_name = ""Museum (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"":   1.998
+		""intro"":     4.081
+		""results"":   0.0
+		""victory"":   2.107
+	}
+},
+{
+	theme_name = ""switch_moveit_switchinggears""
+	visual_name = ""Switching Gears (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      6.025
+		""failure"":   2.018
+		""gameover"":  3.348
+		""intro"":     3.998
+		""results"":   0.0
+		""speedup"":   4.0
+		""victory"":   2.02
+	}
+},
+{
+	theme_name = ""switch_moveit_copycatmirror""
+	visual_name = ""Red (Switch - Move It!)"" // the Copycat Mirror gamemode, hosted by Red
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"":   1.998
+		""gameover"":  2.753
+		""intro"":     4.057
+		""results"":   0.0
+		""victory"":   2.006
+	}
+},
+{
+	theme_name = ""switch_moveit_listentothedoctor""
+	visual_name = ""Listen to the Doctor! (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":       4.173
+		""failure"":    3.145
+		""gameclear"":  4.086
+		""gameover"":   4.246
+		""intro"":      3.826
+		""results"":    0.0
+		""speedup"":    1.48
+		""victory"":    2.997
+	}
+},
+{
+	theme_name = ""switch_moveit_gothedistance""
+	visual_name = ""Go the Distance (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"":    2.009
+		""gameclear"":  3.445
+		""gameover"":   2.009
+		""intro"":      3.95
+		""results"":    0.0
+		""speedup"":    4.024
+		""victory"":    2.034
+	}
+},
+{
+	theme_name = ""n64dd_soundbomber""
+	visual_name = ""Sound Bomber (N64DD)"" // the proto-WarioWare minigame in Mario Artist: Polygon Studio
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      3.381
+		""failure"":   1.186
+		""gameclear"": 3.42
+		""gameover"":  2.463
+		""intro"":     1.675
+		""results"":   0.0
+		""speedup"":   3.432
+		""victory"":   1.670
+	}
+},
+{
+	theme_name = ""gc_elevator""
+	visual_name = ""Elevator (GameCube)"" // shared by ALL the singleplayer modes, which all happen to take place in elevators
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 1.733
+		""intro"":   1.73
+		""victory"": 1.78
+	}
+},
+{
+	theme_name = ""gc_wario""
+	visual_name = ""Wario (GameCube)"" 
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 1.731
+		""intro"":   1.764
+		""victory"": 1.731
+	}
+},
+{
+	theme_name = ""gc_crygor""
+	visual_name = ""Dr. Crygor (GameCube)"" 
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 1.715
+		""intro"":   1.767
+		""victory"": 1.717
+	}
+},
+{
+	theme_name = ""gc_dribbleandspitz""
+	visual_name = ""Dribble & Spitz (GameCube)"" 
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      4.073
+		""failure"":   1.778
+		""intro"":     1.589
+		""results"":   0.0
+		""victory"":   1.778
+	}
+},
+{
+	theme_name = ""gc_orbulon""
+	visual_name = ""Orbulon (GameCube)"" 
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 1.831
+		""intro"":   1.478
+		""victory"": 1.878
+	}
+},
+{
+	theme_name = ""switch_moveit_museum""
+	visual_name = ""Museum (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"":   1.998
+		""intro"":     4.081
+		""results"":   0.0
+		""victory"":   2.107
+	}
+},
+{
+	theme_name = ""switch_moveit_switchinggears""
+	visual_name = ""Switching Gears (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      6.025
+		""failure"":   2.018
+		""gameover"":  3.348
+		""intro"":     3.998
+		""results"":   0.0
+		""speedup"":   4.0
+		""victory"":   2.02
+	}
+},
+{
+	theme_name = ""switch_moveit_copycatmirror""
+	visual_name = ""Red (Switch - Move It!)"" // the Copycat Mirror gamemode, hosted by Red
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"":   1.998
+		""gameover"":  2.753
+		""intro"":     4.057
+		""results"":   0.0
+		""victory"":   2.006
+	}
+},
+{
+	theme_name = ""switch_moveit_listentothedoctor""
+	visual_name = ""Listen to the Doctor! (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":       4.173
+		""failure"":    3.145
+		""gameclear"":  4.086
+		""gameover"":   4.246
+		""intro"":      3.826
+		""results"":    0.0
+		""speedup"":    1.48
+		""victory"":    2.997
+	}
+},
+{
+	theme_name = ""switch_moveit_gothedistance""
+	visual_name = ""Go the Distance (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"":    2.009
+		""gameclear"":  3.445
+		""gameover"":   2.009
+		""intro"":      3.95
+		""results"":    0.0
+		""speedup"":    4.024
+		""victory"":    2.034
+	}
+},
+{
+	theme_name = ""n64dd_soundbomber""
+	visual_name = ""Sound Bomber (N64DD)"" // the proto-WarioWare minigame in Mario Artist: Polygon Studio
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      3.381
+		""failure"":   1.186
+		""gameclear"": 3.42
+		""gameover"":  2.463
+		""intro"":     1.675
+		""results"":   0.0
+		""speedup"":   3.432
+		""victory"":   1.670
+	}
+},
+{
+	theme_name = ""gc_elevator""
+	visual_name = ""Elevator (GameCube)"" // shared by ALL the singleplayer modes, which all happen to take place in elevators
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 1.733
+		""intro"":   1.73
+		""victory"": 1.78
+	}
+},
+{
+	theme_name = ""gc_wario""
+	visual_name = ""Wario (GameCube)"" 
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 1.731
+		""intro"":   1.764
+		""victory"": 1.731
+	}
+},
+{
+	theme_name = ""gc_crygor""
+	visual_name = ""Dr. Crygor (GameCube)"" 
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 1.715
+		""intro"":   1.767
+		""victory"": 1.717
+	}
+},
+{
+	theme_name = ""gc_dribbleandspitz""
+	visual_name = ""Dribble & Spitz (GameCube)"" 
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      4.073
+		""failure"":   1.778
+		""intro"":     1.589
+		""results"":   0.0
+		""victory"":   1.778
+	}
+},
+{
+	theme_name = ""gc_orbulon""
+	visual_name = ""Orbulon (GameCube)"" 
+	author = ""Trobby""
+	sounds = 
+	{
+		""failure"": 1.831
+		""intro"":   1.478
+		""victory"": 1.878
 	}
 },
 // these aren't rolled and should never be set as Ware_Theme, but rather Ware_SetupThemeSounds() checks for them
@@ -292,6 +708,20 @@ buffer<-@"VERSION 2
 		""gameover"":  3.684
 		""results"":   0.0
 		""speedup"":   4.388
+	}
+},
+{
+	theme_name = ""gc""
+	visual_name = ""WarioWare, Inc.: Mega Party Game$! (GameCube)""
+	author = ""Trobby""
+	internal = 1
+	sounds = 
+	{
+		""boss"":      3.542
+		""gameclear"": 4.462
+		""gameover"":  3.772
+		""results"":   0.0
+		""speedup"":   3.555
 	}
 },
 {
