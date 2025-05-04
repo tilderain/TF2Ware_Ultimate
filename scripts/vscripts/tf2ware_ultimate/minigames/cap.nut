@@ -50,7 +50,7 @@ function OnStart()
 	EntFire("control_point_3", "SetLocked", "0")
 	
 	//Prevent ui lingering
-	CreateTimer(@() MovePoint(), 11.975)
+	CreateTimer(@() MovePoint(), 11.900)
 }
 
 function PushLine(self, radius)
