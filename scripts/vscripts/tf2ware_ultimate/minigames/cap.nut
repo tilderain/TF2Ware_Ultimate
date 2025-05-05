@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name        = "Cap the Point"
 	author      = ["tilderain"]
 	description = "Help me cap!"
-	duration    = 12.0
+	duration    = 12.5
 	music       = "bloober"
 	allow_damage = true
 	friendly_fire = true
@@ -50,7 +50,7 @@ function OnStart()
 	EntFire("control_point_3", "SetLocked", "0")
 	
 	//Prevent ui lingering
-	CreateTimer(@() MovePoint(), 11.900)
+	CreateTimer(@() MovePoint(), 11.75)
 }
 
 function PushLine(self, radius)
@@ -151,7 +151,7 @@ function SpawnCap(org)
 		point_start_locked        = 0
 	})
 	
-	control_point_3_trigger = Ware_SpawnEntity("trigger_capture_area",
+	control_point_3_trigger = SpawnEntityFromTableSafe("trigger_capture_area",
 	{
 		targetname         = "control_point_3_trigger"
 		origin             = org
