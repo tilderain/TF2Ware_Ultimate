@@ -24,7 +24,7 @@ function OnPrecache()
 function OnTeleport(players)
 {
 	Ware_TeleportPlayersRow(players, 
-		Ware_MinigameLocation.center + Vector(0, -900, 600), 
+		Ware_MinigameLocation.center + Vector(0, -830, 600), 
 		QAngle(0, 90, 0), 
 		1600.0, 
 		60.0, 120.0)
@@ -99,7 +99,7 @@ function OnStart()
 		foreach (player in Ware_MinigamePlayers)
 		{
 			player.SetMoveType(MOVETYPE_WALK, 0)
-			player.SetAbsVelocity((Vector(0,175,0)))
+			player.SetAbsVelocity((Vector(0,160,0)))
 		}
 	}, 1.0)
 }
