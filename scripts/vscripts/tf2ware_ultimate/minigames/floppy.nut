@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name          = "Floppy Scout"
 	author        = "tilderain"
 	description   = "Get to the end!"
-	duration      = 9
+	duration      = 10.5
 	location      = "boxarena"
 	music         = "restnpeace"
 	thirdperson   = true
@@ -74,14 +74,14 @@ function OnStart()
 {
     Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null, { "air dash count" : 9999 })    
     local highest_scale = 1.0
+	
     foreach(player in Ware_MinigamePlayers)
 	{
-		player.SetAbsVelocity((Vector(0,200,0)))
+		player.SetMoveType(MOVETYPE_NONE, 0)
         if (player.GetModelScale() > highest_scale)
             highest_scale = player.GetModelScale()
 	}
 
-    
     local beam_height = 100.0 * highest_scale
 	local skip = RandomInt(-2, 0)
 
@@ -92,6 +92,16 @@ function OnStart()
 	SpawnPipewall(Ware_MinigameLocation.center + Vector(0,-300,0), skip)
 
 	goal_vectors = Ware_MinigameLocation.center + Vector(0,400,0)
+
+	Ware_CreateTimer(function()
+	{
+		// when hits 0, unfreeze players
+		foreach (player in Ware_MinigamePlayers)
+		{
+			player.SetMoveType(MOVETYPE_WALK, 0)
+			player.SetAbsVelocity((Vector(0,200,0)))
+		}
+	}, 1.0)
 }
 
 function OnUpdate()
