@@ -239,11 +239,14 @@ function OnStart()
 		}
 		else if (timer == -2)
 		{
+			return 1.0
+		}
+		else if (timer == -3)
+		{
 			Ware_SetGlobalAttribute("no_attack", 1, -1)
 			Ware_SetGlobalAttribute("no_jump", 1, -1)
 			foreach (player in Ware_MinigamePlayers)
 				player.AddFlag(FL_ATCONTROLS)
-		
 		}
 	}, 5.0)
 
