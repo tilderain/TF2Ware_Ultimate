@@ -1,5 +1,5 @@
-merasmus_health_per_player <- RemapValClamped(Ware_Players.len().tofloat(), 0.0, 12.0, 2500.0, 1500.0)
-//~25 hits per player at 12 players, 41 hits per player at 0 players
+merasmus_health_per_player <- RemapValClamped(Ware_Players.len().tofloat(), 0.0, 12.0, 3700.0, 2500.0)
+// 61 hits per player at 0 players, ~41 hits per player at 12 players
 
 special_round <- Ware_SpecialRoundData
 ({
@@ -12,7 +12,7 @@ special_round <- Ware_SpecialRoundData
 		tf_merasmus_lifetime = 999999
 		tf_merasmus_chase_range = 10000000
 		tf_merasmus_chase_duration = 10000000
-		tf_merasmus_health_base = 1500 + (merasmus_health_per_player * Ware_Players.len())
+		tf_merasmus_health_base = 1000 + (merasmus_health_per_player * Ware_Players.len())
 		tf_merasmus_health_per_player = 0
 	}
 })
@@ -22,7 +22,7 @@ merasmus_killed <- false
 
 merasmus_color <- "71b149"
 
-function OnPlayerSpawn(player)
+function OnPlayerConnect(player)
 {
 	Ware_GetPlayerSpecialRoundData(player).damage <- 0
 	Ware_GetPlayerSpecialRoundData(player).vo_timer <- Time() + 4.0
@@ -119,11 +119,32 @@ function OnUpdate()
 				playerDamageList[i].player, TF_COLOR_DEFAULT, playerDamageList[i].damage, merasmus_color)
 		}
 
-		local top3Players = []
-		for (local i = 0; i < 3 && i < playerDamageList.len(); i++) {
-		    top3Players.append(playerDamageList[i].player)
+		local win_threshold
+		if (Ware_Players.len() > 64)
+			win_threshold = 10
+		else if (Ware_Players.len() > 24)
+			win_threshold = 6
+		else if (Ware_Players.len() > 3)
+			win_threshold = 3
+		else
+			win_threshold = 1
+
+		local topPlayers = []
+		for (local i = 0; i < win_threshold && i < playerDamageList.len(); i++) {
+		    topPlayers.append(playerDamageList[i].player)
 		}
-		GiveBonusPoints(top3Players)
+		foreach(player in Ware_Players)
+		{
+			if(!(player in topPlayers))
+			{
+				local special = Ware_GetPlayerSpecialRoundData(player)
+				Ware_ChatPrint(player, "You did {int} damage to {color}MERASMUS!", 
+				special.damage, merasmus_color)
+			}
+		}
+		GiveBonusPoints(topPlayers.remove(0), 2)
+		if(topPlayers.len() > 0)
+			GiveBonusPoints(topPlayers)
 	}
 	foreach(player in Ware_Players)
 	{
@@ -183,7 +204,11 @@ function OnTakeDamage(params)
 		if(attacker && attacker.IsPlayer())
 		{
 			local special = Ware_GetPlayerSpecialRoundData(attacker)
-			special.damage += params.damage
+			if(params.damage > 0)
+			{
+				special.damage += params.damage
+				//Ware_ShowText(attacker, CHANNEL_MISC, format("Total: %d", special.damage), 1)
+			}
 		}
 	}
 	else if (attacker && attacker.GetClassname() == "merasmus" && !Ware_Finished)
