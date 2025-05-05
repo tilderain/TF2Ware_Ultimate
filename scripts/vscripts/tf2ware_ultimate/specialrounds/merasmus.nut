@@ -1,5 +1,5 @@
-merasmus_health_per_player <- RemapValClamped(Ware_Players.len().tofloat(), 0.0, 12.0, 3700.0, 2500.0)
-// 61 hits per player at 0 players, ~41 hits per player at 12 players
+merasmus_health_per_player <- RemapValClamped(Ware_Players.len().tofloat(), 0.0, 12.0, 2500.0, 1250.0)
+// 33 hits per player at 0 players, ~20 hits per player at 12 players
 
 special_round <- Ware_SpecialRoundData
 ({
@@ -12,7 +12,7 @@ special_round <- Ware_SpecialRoundData
 		tf_merasmus_lifetime = 999999
 		tf_merasmus_chase_range = 10000000
 		tf_merasmus_chase_duration = 10000000
-		tf_merasmus_health_base = 1000 + (merasmus_health_per_player * Ware_Players.len())
+		tf_merasmus_health_base = 1500 + (merasmus_health_per_player * Ware_Players.len())
 		tf_merasmus_health_per_player = 0
 	}
 })
