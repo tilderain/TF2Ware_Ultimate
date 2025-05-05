@@ -99,7 +99,7 @@ function OnStart()
 		foreach (player in Ware_MinigamePlayers)
 		{
 			player.SetMoveType(MOVETYPE_WALK, 0)
-			player.SetAbsVelocity((Vector(0,200,0)))
+			player.SetAbsVelocity((Vector(0,175,0)))
 		}
 	}, 1.0)
 }
@@ -111,7 +111,7 @@ function OnUpdate()
 
 		player.AddFlag(FL_ATCONTROLS)
 		local vel = player.GetAbsVelocity()
-		vel.y = 200
+		vel.y = 175
 		player.SetAbsVelocity(vel)
 		
 		player.RemoveFlag(FL_DUCKING)
