@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name          = "Floppy Scout"
 	author        = "tilderain"
 	description   = "Get to the end!"
-	duration      = 10.5
+	duration      = 10.6
 	location      = "boxarena"
 	music         = "restnpeace"
 	thirdperson   = true
@@ -99,7 +99,7 @@ function OnStart()
 		foreach (player in Ware_MinigamePlayers)
 		{
 			player.SetMoveType(MOVETYPE_WALK, 0)
-			player.SetAbsVelocity((Vector(0,160,0)))
+			player.SetAbsVelocity((Vector(0,150,0)))
 		}
 	}, 1.0)
 }
@@ -111,7 +111,7 @@ function OnUpdate()
 
 		player.AddFlag(FL_ATCONTROLS)
 		local vel = player.GetAbsVelocity()
-		vel.y = 175
+		vel.y = 150
 		player.SetAbsVelocity(vel)
 		
 		player.RemoveFlag(FL_DUCKING)
