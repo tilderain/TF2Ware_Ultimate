@@ -372,7 +372,7 @@ function OnEnd()
 {
 	local high_score = 0
 	local winners = []
-	local threshold = 30
+	local threshold = 28
 	local reached_threshold = false
 	foreach(player in Ware_MinigamePlayers)
 	{
