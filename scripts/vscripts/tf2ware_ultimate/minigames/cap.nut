@@ -1,11 +1,11 @@
 minigame <- Ware_MinigameData
 ({
-	name        = "Cap the Point"
-	author      = ["tilderain"]
-	description = "Help me cap!"
-	duration    = 12.5
-	music       = "bloober"
-	allow_damage = true
+	name          = "Cap the Point"
+	author        = ["tilderain"]
+	description   = "Cap the Point!"
+	duration      = 12.5
+	music         = "bloober"
+	allow_damage  = true
 	friendly_fire = true
 	convars = 
 	{
@@ -15,10 +15,6 @@ minigame <- Ware_MinigameData
 		mp_teams_unbalance_limit = 0
 	}
 })
-
-control_point_controller <- null
-control_point_3 <- null
-control_point_3_trigger <- null
 
 function OnStart()
 {
@@ -32,62 +28,68 @@ function OnStart()
 
 	SpawnCap(origin)
 
-	local heavy_team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
+	local team = RandomInt(TF_TEAM_RED, TF_TEAM_BLUE)
 	foreach (player in Ware_MinigamePlayers)
 	{
-		Ware_SetPlayerTeam(player, heavy_team)
+		Ware_SetPlayerTeam(player, team)
 		local minidata = Ware_GetPlayerMiniData(player)
-		local atk = 0.0
+		
 		local weapon = player.GetActiveWeapon()
-		if (weapon)
-			atk = GetPropFloat(weapon, "m_flNextSecondaryAttack")
-		minidata.lastAtk <- atk
-		if(VectorDistance(player.GetOrigin(), origin) < 200)
+		minidata.last_attack <- weapon ? GetPropFloat(weapon, "m_flNextSecondaryAttack") : 0.0
+		
+		if (VectorDistance(player.GetOrigin(), origin) < 200)
 			player.SetOrigin(player.GetOrigin() + Vector(0,0,25))
-		minidata.inCap <- false
+			
+		minidata.in_cap <- false
 	}
-
-	EntFire("control_point_3", "SetLocked", "0")
-	
-	//Prevent ui lingering
-	CreateTimer(@() MovePoint(), 11.75)
 }
 
-function PushLine(self, radius)
+function PushClosestTarget(player, radius)
 {
-	local player_origin = self.GetOrigin()
-	local player_team = self.GetTeam()
-	local start = self.GetCenter()
-	local forward = self.EyeAngles().Forward()
+	local start = player.EyePosition()
+	local forward = player.EyeAngles().Forward()
+
+	local closest_dist = radius
+	local closest_player
+	local closest_forward
+	
 	foreach (other in Ware_MinigamePlayers)
 	{
-		if(other == self)
+		if (other == player)
 			continue
-		forward.z = 0.0
-		forward.Norm()
 		
-		local otherOrg = other.GetOrigin() 
-		local mins = otherOrg + other.GetPlayerMins()
-		local maxs = otherOrg + other.GetPlayerMaxs()
+		local other_origin = other.GetOrigin() 
+		local mins = other_origin + other.GetPlayerMins()
+		local maxs = other_origin + other.GetPlayerMaxs()
 		
-		//DebugDrawLine(start, start + forward * radius, 255, 0, 0, false, 5.0)
+		//DebugDrawLine(start, start + forward * closest_dist, 255, 0, 0, false, 5.0)
 		//DebugDrawBox(vec3_zero, mins, maxs, 255, 0, 0, 20, 5.0)
 
-		local t = IntersectRayWithBox(start, forward, mins, maxs, 0.0, radius)
-		if (t >= 0.0)
+		local dist = IntersectRayWithBox(start, forward, mins, maxs, 0.0, closest_dist)
+		if (dist < 0.0)
+			continue
+			
+		if (dist <= closest_dist)
 		{
-			other.EmitSound( "Weapon_Hands.PushImpact" )
-			forward.z = 2.0
-			other.TakeDamage(5, DMG_CLUB, self)
-			other.ApplyAbsVelocityImpulse(forward*360)
+			closest_dist = dist
+			closest_player = other
+		
+			// inside
+			if (closest_dist < 0.00001)
+				break
 		}
 	}
-}
-
-function MovePoint()
-{
-	if(control_point_3_trigger)
-		control_point_3_trigger.SetOrigin(Vector(0,0,0))
+	
+	if (closest_player)
+	{
+		closest_player.EmitSound( "Weapon_Hands.PushImpact" )	
+		// using DMG_CLUB here caused pain voiceline scenes to take 5-10 ms to load.. WTF
+		closest_player.TakeDamage(5, DMG_GENERIC, player)
+		
+		forward.z = 1.5
+		forward.Norm()
+		closest_player.ApplyAbsVelocityImpulse(forward * 360.0)
+	}
 }
 
 function OnUpdate()
@@ -95,31 +97,29 @@ function OnUpdate()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
+		
 		Ware_DisablePlayerPrimaryFire(player)
 
 		local weapon = player.GetActiveWeapon()
-		local atk = 0.0
-		if (weapon)
-			atk = GetPropFloat(weapon, "m_flNextSecondaryAttack")
-		if("lastAtk" in minidata && minidata.lastAtk != atk)
+		local next_attack = weapon ? GetPropFloat(weapon, "m_flNextSecondaryAttack") : 0.0
+		if (next_attack > minidata.last_attack)
 		{
+			minidata.last_attack = next_attack
+			
 			local target = player // squirrel needs this to be happy
-			Ware_CreateTimer(@() PushLine(target, 128.0), 0.2)
-			minidata.lastAtk = atk
+			Ware_CreateTimer(@() target.IsValid() ? PushClosestTarget(target, 128.0) : null, 0.2)
 		}
-
 	}
-
 }
 
 //from https://github.com/potato-tf/OOAssets/blob/main/scripts/vscripts/rev_spacepost_pea.nut#L2891
-function SpawnCap(org)
+function SpawnCap(origin)
 {
 	obj_control_blucapture_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 13.0, 7.0, 12.0)
 
-	control_point_3 = Ware_SpawnEntity("team_control_point",
+	local control_point_3 = Ware_SpawnEntity("team_control_point",
 	{
-		origin                    = org
+		origin                    = origin
 		targetname                = "control_point_3"
 		team_timedpoints_3        = 0
 		team_timedpoints_2        = 0
@@ -144,20 +144,17 @@ function SpawnCap(org)
 		spawnflags                = 4
 		point_warn_sound          = "ControlPoint.CaptureWarn"
 		point_warn_on_cap         = 2
-		point_printname           = "The freaking point"
+		point_printname           = "the freaking point"
 		point_index               = 0
 		point_group               = 0
 		point_default_owner       = 0
 		point_start_locked        = 0
 	})
 	
-	control_point_3_trigger = SpawnEntityFromTableSafe("trigger_capture_area",
+	local control_point_3_trigger = Ware_SpawnEntity("trigger_capture_area",
 	{
 		targetname         = "control_point_3_trigger"
-		origin             = org
-		mins               = Vector(-150, -150, -100)
-		maxs               = Vector(150, 150, 250)
-		solid              = SOLID_BSP
+		origin             = origin
 		team_startcap_3    = 1
 		team_startcap_2    = 1
 		team_numcap_3      = 1
@@ -166,24 +163,29 @@ function SpawnCap(org)
 		team_cancap_2      = 1
 		area_time_to_cap   = obj_control_blucapture_rate
 		area_cap_point     = "control_point_3"
-		model         = "*1" //Use a random brush model because valve really wants you to have a brush model so scout can be a cocksucker
+		// this hack is needed for help voicelines to work
+		model         	   = "*2"
 	})
 	
 	local control_point_3_base = Ware_SpawnEntity("prop_dynamic",
 	{
-		origin        = org
-		model         = "models/props_gameplay/cap_point_base.mdl"
-		solid = SOLID_VPHYSICS
+		origin	= origin
+		model	= "models/props_gameplay/cap_point_base.mdl"
+		solid	= SOLID_VPHYSICS
 	})
 	
-	EntFire("control_point_3_trigger", "SetControlPoint", "control_point_3")
+	control_point_3_trigger.AcceptInput("SetControlPoint", "control_point_3", null, null)
+	
+	EntityAcceptInput(control_point_3_trigger, "SetControlPoint", "control_point_3")
+	
 	control_point_3_trigger.KeyValueFromFloat("area_time_to_cap", obj_control_blucapture_rate)
 	SetPropFloat(control_point_3_trigger, "m_flCapTime", obj_control_blucapture_rate)
 	
-	control_point_3_trigger.KeyValueFromString("mins", "-150 -150 -100")
-	control_point_3_trigger.KeyValueFromString("maxs", "150 150 250")
+	control_point_3_trigger.SetSize(Vector(-150, -150, -100), Vector(150, 150, 250))
+	control_point_3_trigger.SetSolid(SOLID_BBOX)
+	// this hack is needed for help voicelines to work
 	control_point_3_trigger.KeyValueFromInt("solid", SOLID_BSP)
-
+	
 	control_point_3_trigger.ValidateScriptScope()
 	control_point_3_trigger.GetScriptScope().OnStartTouch <- OnTriggerStartTouch
 	control_point_3_trigger.GetScriptScope().OnEndTouch <- OnTriggerEndTouch
@@ -193,11 +195,8 @@ function SpawnCap(org)
 	control_point_3_trigger.GetScriptScope().OnEndCap <- OnTriggerEndCap
 	control_point_3_trigger.ConnectOutput("OnEndCap", "OnEndCap")
 
-	EntFire("control_point_3", "SetLocked", "0")
-
-	control_point_controller = Ware_SpawnEntity("team_control_point_master",
+	Ware_SpawnEntity("team_control_point_master",
 	{
-		targetname                   = "control_point_controller"
 		team_base_icon_3             = "sprites/obj_icons/icon_base_blu"
 		team_base_icon_2             = "sprites/obj_icons/icon_base_red"
 		switch_teams                 = 0
@@ -207,31 +206,27 @@ function SpawnCap(org)
 		cpm_restrict_team_cap_win    = 1
 		caplayout                    = "0, 1 2"
 	})
+	
+	control_point_3.AcceptInput("SetLocked", "0", null, null)
 }
 
 function OnTriggerStartTouch()
 {
 	if (activator && activator.IsPlayer())
-	{
-		local minidata = Ware_GetPlayerMiniData(activator)
-		minidata.inCap = true
-	}
+		Ware_GetPlayerMiniData(activator).in_cap = true
 }
 
 function OnTriggerEndTouch()
 {
 	if (activator && activator.IsPlayer())
-	{
-		local minidata = Ware_GetPlayerMiniData(activator)
-		minidata.inCap = false
-	}
+		Ware_GetPlayerMiniData(activator).in_cap = false
 }
+
 function OnTriggerEndCap()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		local minidata = Ware_GetPlayerMiniData(player)
-		if(minidata.inCap)
+		if (Ware_GetPlayerMiniData(player).in_cap)
 			Ware_PassPlayer(player, true)
 	}
 }
