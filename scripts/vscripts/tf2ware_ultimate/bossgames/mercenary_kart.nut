@@ -2109,7 +2109,8 @@ kart_routines <-
 		if (m_driver)
 		{
 			m_driver.AddCond(TF_COND_SPEED_BOOST)
-			MakePlayerCheer(m_driver)
+			if (type != BOOST_SURFACE)
+				MakePlayerCheer(m_driver)
 		}
 	}
 
