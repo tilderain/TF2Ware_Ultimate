@@ -673,6 +673,9 @@ function Ware_TogglePlayerWearables(player, toggle)
 {
 	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
 	{
+        if (wearable.GetClassname() == "tf_viewmodel")
+            continue
+		
 		MarkForPurge(wearable)
 		Ware_ToggleWearable(wearable, toggle)
 	}
