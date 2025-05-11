@@ -57,9 +57,12 @@ function OnStart()
 	{
 		if (i++ < train_count)
 		{
-			local player = RemoveRandomElement(minigame_players)
-			SpawnTrain(player.GetOrigin())
-			return 0.08
+			if (minigame_players.len() > 0)
+			{
+				local player = RemoveRandomElement(minigame_players)
+				SpawnTrain(player.GetOrigin())
+				return 0.08
+			}
 		}
 	}, 1.0)
 	
