@@ -116,8 +116,8 @@ def generate_image(name, text, color):
     
     os.system(command)
     
-    #os.remove(name1)
-    #os.remove(name2)
+    os.remove(name1)
+    os.remove(name2)
 
 file_name = str(input("Input file name, e.g. 'flash_flood'\n"))
 the_text = str(input("Input text to display, e.g. 'FLASH FLOOD'\n"))
