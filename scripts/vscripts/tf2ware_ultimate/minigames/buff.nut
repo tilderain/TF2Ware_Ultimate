@@ -1,4 +1,5 @@
 mode <- 0
+
 minigame <- Ware_MinigameData
 ({
 	name           = "Buff"
@@ -23,9 +24,9 @@ function OnStart()
 		if (mode == 0)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SOLDIER)
-			Ware_GivePlayerWeapon(player, "Buff Banner", {"deploy time increased": 1})
+			Ware_GivePlayerWeapon(player, "Buff Banner", {"deploy time increased": 1, "increase buff duration" : 0})
 			local weapon = null
-			if(gun == 0)
+			if (gun == 0)
 			{
 				weapon = Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size bonus" : 100, "deploy time increased": 1})
 				weapon.SetClip1(69)
@@ -35,12 +36,6 @@ function OnStart()
 				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1})
 			}
 		}
-		/*else if (mode == 1)
-		{
-			//Flamethrower isn't damaging for some reason
-			Ware_SetPlayerClass(player, TF_CLASS_PYRO)
-			Ware_GivePlayerWeapon(player, "Phlogistinator", { "damage bonus" : 3})
-		}*/
 		player.SetHealth(1100)
 		player.SetRageMeter(0)
 	}
@@ -53,7 +48,6 @@ function OnUpdate()
 		if (player.IsRageDraining() && player.IsAlive())
 			Ware_PassPlayer(player, true)
 	}
-	
 }
 
 function OnCleanup()
