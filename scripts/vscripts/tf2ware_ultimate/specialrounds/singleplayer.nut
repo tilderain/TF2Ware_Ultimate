@@ -4,26 +4,17 @@ special_round <- Ware_SpecialRoundData
 	author           = ["Mecha the Slag", "tilderain"]
 	description      = "You're playing alone...?"
 	category         = ""
-    min_players = 2
-})
-
-// Toggles the visibility of all wearables (including weapons!) on a player
-function TogglePlayerWearables(player, toggle)
-{
-	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
+    min_players		 = 2
+	convars			 = 
 	{
-        if(wearable.GetClassname() == "tf_viewmodel")
-            continue
-		MarkForPurge(wearable)
-		Ware_ToggleWearable(wearable, toggle)
+		mp_show_voice_icons = 0
 	}
-}
-
+})
 
 function DisablePlayerVisibility(player)
 {
     player.AddCustomAttribute("voice pitch scale", 0, -1)
-    TogglePlayerWearables(player, false)
+    Ware_TogglePlayerWearables(player, false)
     player.AddHudHideFlags(HIDEHUD_TARGET_ID)
     SetPropInt(player, "m_nRenderMode", kRenderNone)
     player.RemoveCond(TF_COND_TELEPORTED)
@@ -42,7 +33,9 @@ function OnUpdate()
         player.RemoveCond(TF_COND_TELEPORTED)
         player.AddHudHideFlags(HIDEHUD_TARGET_ID)
         //Bad performance?
-        TogglePlayerWearables(player, false)
+        Ware_TogglePlayerWearables(player, false)
+		// hides medic bubbles
+		SetPropBool(player, "m_bSaveMeParity", false)
     }
 }
 
