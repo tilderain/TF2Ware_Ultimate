@@ -1,4 +1,4 @@
-mode <- RandomInt(0,1)
+mode <- RandomInt(0, 1)
 target_names <- ["Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy"]
 target_class <- RandomElement(target_names)
 
@@ -48,7 +48,8 @@ function OnStart()
 			})
 			prop.ValidateScriptScope()
 			local scope = prop.GetScriptScope()
-			scope.movingDown <- false
+			scope.moving_down <- false
+			scope.top_z <- prop.GetOrigin().z + 68.0
 
 			Ware_CreateTimer(@() MoveTarget(prop), 2)
 		}
@@ -82,15 +83,17 @@ function OnStart()
 function MoveTarget(prop)
 {
 	local scope = prop.GetScriptScope()
-	local zoff = scope.movingDown ? -6 : 6
-	prop.SetAbsOrigin(prop.GetOrigin() + Vector(0,0,zoff))
+	local zoff = scope.moving_down ? -6.0 : 6.0
+	prop.SetAbsOrigin(prop.GetOrigin() + Vector(0, 0, zoff))
 
-	if(prop.GetOrigin().z < -4000)
+	if (prop.GetOrigin().z < scope.top_z)
+	{
 		return 0.01
+	}
 	else
 	{
-		scope.movingDown = true
-		return 0.95
+		scope.moving_down = true
+		return 1.5
 	}
 		
 }
