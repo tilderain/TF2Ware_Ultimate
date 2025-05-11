@@ -1,24 +1,25 @@
 minigame <- Ware_MinigameData
 ({
-	name          = "Floppy Scout"
-	author        = "tilderain"
-	description   = "Get to the end!"
-	duration      = 10.6
-	location      = "boxarena"
-	music         = "restnpeace"
-	thirdperson   = true
+	name           = "Floppy Scout"
+	author         = "tilderain"
+	description    = "Get to the end!"
+	duration       = 11.0
+	end_delay      = 0.6
+	location       = "boxarena"
+	music          = "restnpeace"
+	thirdperson    = true
 	custom_overlay = "get_end"
 })
 
 goal_vectors <- null
 
 pipe_model <- "models/props_mining/generator_pipe01.mdl"
-
 kill_sound <- "Halloween.skeleton_break"
 
 function OnPrecache()
 {
 	PrecacheSprite(pipe_model)
+	PrecacheModel(pipe_model)
 }
 
 function OnTeleport(players)
@@ -32,10 +33,10 @@ function OnTeleport(players)
 
 function SpawnPipewall(org, skip)
 {
-	local add = RandomInt(-50,50)
-	for(local i=0; i<15; i++)
+	local add = RandomInt(-50, 50)
+	for (local i = 0; i < 15; i++)
     {
-        for(local j=-3; j<=2; j++)
+        for (local j = -3; j <= 2; j++)
         {
 			if(j==skip) continue
             local angles = QAngle(0,0,0)
@@ -49,33 +50,25 @@ function SpawnPipewall(org, skip)
                 model        = pipe_model
                 spawnflags   = SF_PHYSPROP_TOUCH
                 minhealthdmg = 999999 // Don't destroy on touch    
-                health = INT_MAX
-                modelscale = 1
-                angles = angles
-				rendercolor = "0 " + col.tostring() + " 0"
+                health       = INT_MAX
+                modelscale   = 1
+                angles       = angles
+				rendercolor  = "0 " + col.tostring() + " 0"
+				disableshadows = true
             })
             beam.SetMoveType(MOVETYPE_NONE, 0)
             beam.SetCollisionGroup(TFCOLLISION_GROUP_RESPAWNROOMS)
         }
     }
-	/*ylocal hurt = Ware_SpawnEntity("trigger_hurt",
-	{
-		origin     = org
-		damage     = 1000
-		damagetype = DMG_SLASH
-		spawnflags = SF_TRIGGER_ALLOW_CLIENTS
-	})
-	hurt.SetSolid(SOLID_BBOX)
-	hurt.SetSize(org + Vector(-200,-200,-800), org + Vector(200,200,800))
-	DebugDrawBox(vec3_zero, hurt.GetBoundingMinsOriented(), hurt.GetBoundingMaxsOriented(), 255, 0, 0, 20, 5.0)*/
 }
 
 function OnStart()
 {
-    Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null, { "air dash count" : 9999 })    
     local highest_scale = 1.0
 	
-    foreach(player in Ware_MinigamePlayers)
+    Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null, { "air dash count" : 9999 })    	
+	
+    foreach (player in Ware_MinigamePlayers)
 	{
 		player.SetMoveType(MOVETYPE_NONE, 0)
         if (player.GetModelScale() > highest_scale)
@@ -101,15 +94,15 @@ function OnStart()
 			player.SetMoveType(MOVETYPE_WALK, 0)
 			player.SetAbsVelocity((Vector(0,150,0)))
 		}
-	}, 1.0)
+	}, 2.0)
 }
 
 function OnUpdate()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{	
-
 		player.AddFlag(FL_ATCONTROLS)
+		
 		local vel = player.GetAbsVelocity()
 		vel.y = 150
 		player.SetAbsVelocity(vel)
@@ -172,4 +165,9 @@ function OnCleanup()
 	{	
 		player.RemoveFlag(FL_ATCONTROLS)
 	}
+}
+
+function OnCheckEnd()
+{
+	return Ware_GetAlivePlayers().len() == 0
 }
