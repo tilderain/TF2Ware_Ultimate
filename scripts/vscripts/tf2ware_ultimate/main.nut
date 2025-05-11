@@ -1926,11 +1926,13 @@ function Ware_FinishMinigameInternal()
 	local top_players = Ware_MinigameTopScorers
 	top_players.clear()	
 	
+	local calc_topscorers = true
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_topscorers.IsValid())
 	{
-		Ware_SpecialRound.cb_on_calculate_topscorers(top_players)
+		calc_topscorers = Ware_SpecialRound.cb_on_calculate_topscorers(top_players) == false
 	}
-	else
+	
+	if (calc_topscorers == true)
 	{
 		local top_score = 1
 		foreach (data in Ware_MinigamePlayersData)
@@ -2134,11 +2136,13 @@ function Ware_GameOverInternal()
 		special_round_file_name = Ware_SpecialRound ? Ware_SpecialRound.file_name : ""
 	})
 	
+	local declare_winners = true
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
 	{
-		Ware_SpecialRound.cb_on_declare_winners(top_players, top_score, winner_count)
+		declare_winners = Ware_SpecialRound.cb_on_declare_winners(top_players, top_score, winner_count) == false
 	}
-	else
+	
+	if (declare_winners == true)
 	{
 		if (winner_count > 1)
 		{
