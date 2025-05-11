@@ -1242,16 +1242,18 @@ function GetKart(player)
 	return null
 }
 
-local function MakePlayerComplain(complainer)
+local function MakePlayerComplain(target)
 {
-	local num = RandomBool() ? "3" : "5"
-	ClientCmd.AcceptInput("Command", format("voicemenu 2 %s", num), complainer, null)
+	local type = RandomBool() ? "TLK_PLAYER_JEERS" : "TLK_PLAYER_NEGATIVE"
+	EntityEntFire(target, "SpeakResponseConcept", type)
 }
-local function MakePlayerCheer(cheerer)
+
+local function MakePlayerCheer(target)
 {
-	local num = RandomBool() ? "2" : "4"
-	ClientCmd.AcceptInput("Command", format("voicemenu 2 %s", num), cheerer, null)
+	local type = RandomBool() ? "TLK_PLAYER_POSITIVE" : "TLK_PLAYER_CHEERS"
+	EntityEntFire(target, "SpeakResponseConcept", type)
 }
+
 local function AddKillFeedAndVoiceCommand(victim, attacker, icon)
 {
 	AddKillFeedMessage(victim, attacker, icon)
@@ -2105,7 +2107,10 @@ kart_routines <-
 		m_boost_type = type
 		m_boost_timer = Time() + duration
 		if (m_driver)
+		{
 			m_driver.AddCond(TF_COND_SPEED_BOOST)
+			MakePlayerCheer(m_driver)
+		}
 	}
 
 	BoostStop = function()
