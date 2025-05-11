@@ -169,6 +169,7 @@ Ware_ParticleSpawner      <- null
 
 Ware_RespawnRooms         <- []
 Ware_NavAreas             <- []
+Ware_NavSpawnAreas		  <- []
 
 Ware_MinigameRotation     <- []
 if (!("Ware_BossgameRotation" in this))
@@ -280,6 +281,7 @@ function Ware_SetupMap()
 	local areas = {}
 	NavMesh.GetAllAreas(areas)
 	Ware_NavAreas = areas.values()
+	Ware_NavSpawnAreas = Ware_NavAreas.filter(@(i, area) area.HasAttributeTF(TF_NAV_RESCUE_CLOSET))
 	
 	if (MAX_CLIENTS >= 64)
 	{
@@ -295,8 +297,7 @@ function Ware_SetupMap()
 
 function Ware_UpdateNav()
 {
-	// HACK this is not efficient, but the map only has 3 nav areas currently
-	foreach (area in Ware_NavAreas)
+	foreach (area in Ware_NavSpawnAreas)
 	{
 		// must remove this or skeleton pathfinding breaks
 		area.ClearAttributeTF(TF_NAV_SPAWN_ROOM_RED|TF_NAV_SPAWN_ROOM_BLUE)
