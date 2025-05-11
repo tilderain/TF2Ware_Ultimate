@@ -1,30 +1,42 @@
-mode <- RandomInt(0,1)
 minigame <- Ware_MinigameData
 ({
 	name        = "Time Jumps"
 	author      = ["tilderain"]
 	description = "Time your jumps to the top!"
-	duration    = mode == 0 ? 6.5 : 8.5
+	duration    = 6.5
 	end_delay   = 0.2
 	music       = "starlift"
+	thirdperson = true
 })
 
+jump_count <- 10
 target_height  <- 500.0
+wing_model <- "models/workshop/player/items/medic/sf14_purity_wings/sf14_purity_wings.mdl"
+
+function OnPrecache()
+{
+	PrecacheModel(wing_model)
+}
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null, { "air dash count" : 10 })
-	if(mode == 1)
+	local item_attributes =  { "air dash count" : jump_count }
+	foreach (player in Ware_MinigamePlayers)
 	{
-		target_height = 570.0
-		foreach(player in Ware_MinigamePlayers)
-			Ware_GivePlayerWeapon(player, "Force-a-Nature", { "air dash count" : 10 })
+		Ware_SetPlayerLoadout(player, TF_CLASS_SCOUT, "Wrap Assassin", item_attributes)
+		Ware_SetPlayerAmmo(player, TF_AMMO_GRENADES1, jump_count)
+		Ware_AddPlayerAttribute(player, "head scale", 1.5, -1)
+		
+		local wings = Ware_SpawnWearable(player, wing_model)
+		SetEntityParent(wings, player)
 	}
+	
 	Ware_ShowAnnotation(Ware_MinigameLocation.center + Vector(0, 0, target_height), "Goal!")
 }
 
 function OnUpdate()
 {
+	local time = Time()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		if (!player.IsAlive())
@@ -34,5 +46,13 @@ function OnUpdate()
 		
 		if (height > target_height)
 			Ware_PassPlayer(player, true)
+			
+		local weapon = player.GetActiveWeapon()
+		if (weapon)
+		{
+			local jump_remaining = Clamp(jump_count - GetPropInt(player, "m_Shared.m_iAirDash") + 1, 0, jump_count)
+			SetPropFloat(weapon, "m_flNextSecondaryAttack", time + 0.3)		
+			Ware_SetPlayerAmmo(player, TF_AMMO_GRENADES1, jump_remaining)
+		}
 	}
 }
