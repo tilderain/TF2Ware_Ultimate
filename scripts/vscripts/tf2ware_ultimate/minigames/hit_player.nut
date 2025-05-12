@@ -56,7 +56,8 @@ function OnUpdate()
 
 function OnTakeDamage(params)
 {
-	if (params.attacker != null && params.const_entity != params.attacker)
+	if (params.attacker != null && params.const_entity != params.attacker
+		&& params.const_entity.GetClassname() != "merasmus")
 		params.damage *= 100.0
 }
 
