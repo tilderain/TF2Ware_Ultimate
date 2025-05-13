@@ -246,26 +246,13 @@ function CheckWeaponFire(weapon, player)
 	}
 }
 
-function CheckFiring(player)
-{
-	for (local i = 0; i < MAX_WEAPONS; i++)
-	{
-		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
-		if (!weapon)
-			continue
-
-		if (weapon.GetSlot() != TF_SLOT_MELEE)
-		{
-			CheckWeaponFire(weapon, player)
-		}
-	}
-}
-
 function OnUpdate()
 {
 	foreach(player in Ware_MinigamePlayers)
 	{
-		CheckFiring(player)
+		local weapon = player.GetActiveWeapon()
+		if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY)
+			CheckWeaponFire(weapon, player)
 	}
 }
 
