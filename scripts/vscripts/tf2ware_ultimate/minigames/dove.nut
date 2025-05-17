@@ -93,7 +93,7 @@ function SpawnDove()
 	EntityAcceptInput(dove, "Disable")
 	
 	dove.SetSolid(SOLID_BBOX)
-	dove.SetSize(Vector(-16, -16, 0), Vector(16, 16, 32))
+	dove.SetSize(Vector(-16, -16, 0), Vector(16, 16, 16))
 	dove.ResetSequence(dove.LookupSequence("fly_cycle"))
 	dove.ValidateScriptScope()
 	local dove_scope = dove.GetScriptScope()
