@@ -1,3 +1,4 @@
+mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
 	name           = "Dove Hunt"
@@ -23,7 +24,10 @@ function OnPrecache()
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Huntsman")
+	if (mode == 0)
+		Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Huntsman")
+	else if (mode == 1)
+		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Direct Hit")
 
 	foreach (player in Ware_MinigamePlayers)
 		Ware_GetPlayerMiniData(player).points <- 0
