@@ -27,14 +27,21 @@ function OnStart()
 	if (mode == 0)
 		Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Huntsman")
 	else if (mode == 1)
-		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Direct Hit")
+		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Direct Hit", {"clip size penalty" : 0.25})
 
+	foreach (player in Ware_MinigamePlayers)
+	{		
+		local weapon = player.GetActiveWeapon()
+		if (weapon == null)
+			continue
+
+		weapon.SetClip1(1)
+	}
 	foreach (player in Ware_MinigamePlayers)
 		Ware_GetPlayerMiniData(player).points <- 0
 			
 	Ware_CreateTimer(@() SpawnDove(), 0.25)
 }
-
 
 function DoveThink()
 {
