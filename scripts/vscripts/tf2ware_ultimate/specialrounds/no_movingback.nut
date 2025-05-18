@@ -1,12 +1,18 @@
 special_round <- Ware_SpecialRoundData
 ({
-	name = "No Moving Back"
-	author = "ficool2"
-	description = "Forwards is the only option!"	
+	name = "No Moving Forward"
+	author = ["ficool2", "tilderain"]
+	description = "Enshittification is the only option!"	
 	category = ""
-	convars = 
-	{
-		tf_clamp_back_speed = 0.00001
-		tf_clamp_back_speed_min = 0
-	}	
 })
+
+function OnUpdate()
+{
+	foreach (player in Ware_MinigamePlayers)
+	{
+		if (GetPropInt(player, "m_nButtons") & IN_FORWARD)
+			player.AddFlag(FL_ATCONTROLS)
+		else
+			player.RemoveFlag(FL_ATCONTROLS)
+	}
+}
