@@ -9,7 +9,7 @@ minigame <- Ware_MinigameData
 	music          = "duckhunt"
 })
 
-spawn_rate <- RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 0.5, 0.05)
+spawn_rate <- null
 
 hit_sound  <- "tf2ware_ultimate/mp_hit_indication_3c.wav"
 
@@ -26,6 +26,7 @@ function OnPrecache()
 
 function OnStart()
 {
+	spawn_rate = RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 0.5, 0.05)
 	if (mode == 0)
 		Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Huntsman")
 	else if (mode == 1)
