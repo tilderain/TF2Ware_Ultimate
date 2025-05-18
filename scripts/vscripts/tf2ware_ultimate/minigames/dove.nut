@@ -94,7 +94,7 @@ function SpawnDove()
 	
 	dove.SetSolid(SOLID_BBOX)
 	if (mode == 0)
-		dove.SetSize(Vector(-12, -12, 0), Vector(12, 12, 8))
+		dove.SetSize(Vector(-14, -14, 0), Vector(14, 14, 8))
 	else if (mode == 1)
 		dove.SetSize(Vector(-16, -16, 0), Vector(16, 16, 8))
 	dove.ResetSequence(dove.LookupSequence("fly_cycle"))
