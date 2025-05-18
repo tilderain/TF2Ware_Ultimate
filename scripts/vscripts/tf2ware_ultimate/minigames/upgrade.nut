@@ -261,7 +261,7 @@ function OnTakeDamage(params)
 	if (params.const_entity.GetName() == "upgrade_robot")
 	{
 		local attacker = params.attacker
-		if (attacker && attacker.IsPlayer() && mission == MISSION_DAMAGE)
+		if (attacker && attacker.IsPlayer() && (mission == MISSION_DAMAGE || mission == MISSION_RATE))
 		{
 			if(attacker.InCond(TF_COND_CRITBOOSTED_USER_BUFF))
 				params.damage *= 3
