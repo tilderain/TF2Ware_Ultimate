@@ -85,6 +85,7 @@ type_color
 type_map
 type_time
 type_word
+uber
 vacc
 wanted
 watch_fall
