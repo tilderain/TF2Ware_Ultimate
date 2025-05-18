@@ -16,6 +16,8 @@ hit_sound  <- "tf2ware_ultimate/mp_hit_indication_3c.wav"
 bird <- null
 bird_model <- "models/props_forest/dove.mdl"
 
+required_amount <- 3
+
 function OnPrecache()
 {
 	PrecacheSound("tf2ware_ultimate/mp_hit_indication_3c.wav")
@@ -127,7 +129,7 @@ function OnTakeDamage(params)
 			Ware_PlaySoundOnClient(player, hit_sound)			
 			Ware_ShowText(player, CHANNEL_MINIGAME, "x", 0.25, "255 255 255", -1, -1)
 			
-			if (minidata.points >= 3)
+			if (minidata.points >= required_amount)
 				Ware_PassPlayer(player, true)		
 		}
 		DispatchParticleEffect("blood_impact_red_01", params.const_entity.GetOrigin(), vec3_zero)
@@ -144,4 +146,34 @@ function OnUpdate()
 		if (Ware_GetPlayerAmmo(player, TF_AMMO_PRIMARY) == 0)
 			SetPropInt(player, "m_nImpulse", 101)
 	}
+}
+
+function OnEnd()
+{
+    local highest_amount = required_amount - 1
+    local highest_players = []
+
+    foreach (player in Ware_MinigamePlayers)
+    {
+        local minidata = Ware_GetPlayerMiniData(player)
+        if (minidata.points > highest_amount)
+            highest_amount = minidata.points
+    }
+
+    foreach (player in Ware_MinigamePlayers)
+    {
+        local minidata = Ware_GetPlayerMiniData(player)
+        if (minidata.points == highest_amount)
+            highest_players.append(player)
+    }
+
+    if (highest_players.len() > 0)
+    {
+        foreach (player in highest_players)
+        {
+            Ware_ChatPrint(null, "{player} {color}killed the most doves with {int} shot!", 
+                player, TF_COLOR_DEFAULT, highest_amount)
+        }
+        Ware_GiveBonusPoints(highest_players)
+    }
 }
