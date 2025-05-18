@@ -14,7 +14,7 @@ minigame <- Ware_MinigameData
 
 function OnStart()
 {
-	local guns = ["Medi Gun", "Kritzkrieg", "Quick-Fix"]
+	local guns = ["Medi Gun", "Kritzkrieg"]
 	local gun = RandomElement(guns)
 	foreach (player in Ware_MinigamePlayers)
 	{
