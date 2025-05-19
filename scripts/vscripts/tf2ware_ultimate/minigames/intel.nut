@@ -86,6 +86,7 @@ function OnStart()
 	local order = [0,1,1]
 	local poses = [400, 0, -400]
 	Shuffle(order)
+	Shuffle(poses)
 
 	for (local i = 0; i <  order.len(); i++)
 	{
