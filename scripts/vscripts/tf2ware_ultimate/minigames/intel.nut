@@ -248,7 +248,7 @@ function SpawnLaser(pos, type)
 	if (type == 0)
 		vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
 	else
-		vel = Vector(vel.x * 0, 200, vel.z * 0)
+		vel = Vector(vel.x * 0, speed, vel.z * 0)
 	beam.SetAbsVelocity(vel)
 
 	lasers.append(beam)
@@ -278,7 +278,7 @@ function SpawnLaser(pos, type)
 	if (type == 0)
 		vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
 	else
-		vel = Vector(vel.x * 0, 200, vel.z * 0)
+		vel = Vector(vel.x * 0, speed, vel.z * 0)
 	beam.SetAbsVelocity(vel)
 
 	lasers.append(beam)
