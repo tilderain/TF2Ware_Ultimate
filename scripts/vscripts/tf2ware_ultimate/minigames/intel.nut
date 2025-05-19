@@ -6,7 +6,7 @@ minigame <- Ware_MinigameData
 	duration       = 15.0
 	end_delay	   = 0.5
 	location       = "pinball"
-	music          = "purple"
+	music          = "betusblues"
 	thirdperson = true
 })
 
