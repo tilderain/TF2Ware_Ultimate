@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Intel"
 	author         = "tilderain"
 	description    = "Capture the Intel!"
-	duration       = 14.0
+	duration       = 15.0
 	end_delay	   = 0.5
 	location       = "pinball"
 	music          = "purple"
@@ -81,13 +81,25 @@ function OnStart()
 	SetPropInt(GameRules, "m_nHudType", 1)
 
 	SpawnIntel()
-	
-	SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(0, 300, 100))
-	SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(0, -100, 100))
 
-	SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(400, -280, RandomBool() ? 40 : 80))
+	//spinner = 0
+	local order = [0,1,1]
+	local poses = [400, 0, -400]
+	Shuffle(order)
 
-	SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(-400, -280, RandomBool() ? 40 : 80))
+	for (local i = 0; i <  order.len(); i++)
+	{
+		if(i == 0)
+		{
+			SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(poses[i], 300, 100))
+			SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(poses[i], -100, 100))
+		}
+		else
+		{
+			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -280, RandomBool() ? 40 : 80))
+		}
+	}
+
 
 	local zone = Ware_SpawnEntity("func_capturezone",
 	{
