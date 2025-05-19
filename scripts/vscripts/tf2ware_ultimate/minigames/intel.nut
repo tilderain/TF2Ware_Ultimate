@@ -1,129 +1,129 @@
 minigame <- Ware_MinigameData
 ({
-	name           = "Hoop"
-	author         = "ficool2"
-	description    = "Jump through the hoops!"
-	duration       = 11.0
-	max_scale      = 1.0
-	location       = "dirtsquare"
-	music          = "challenge"
+	name           = "Intel"
+	author         = "tilderain"
+	description    = "Steal their stupid crap!"
+	duration       = 15.0
+	location       = "boxarena"
+	music          = "purple"
+	custom_overlay = "get_end"
 })
-
-hoop_model <- "models/props_halloween/hwn_jump_hoop01.mdl"
-hoop_sound <- "ui/hitsound_beepo.wav"
 
 hoops <- []
 
-point_a <- null
-point_b <- null
-point_c <- null
+show_anno <- false
+
+barrier <- null
+
+beam_model <- "sprites/laser.vmt"
+intel_pos <- null
+
+function SpawnIntel()
+{
+	local hoop = Ware_SpawnEntity("item_teamflag",
+	{
+		origin         = Ware_MinigameScope.intel_pos
+		TeamNum = 0
+	})
+
+	hoop.ValidateScriptScope()
+	hoop.GetScriptScope().OnCapture1 <- Ware_MinigameScope.OnCapture1
+	hoop.ConnectOutput("OnCapture1", "OnCapture1")
+	hoop.GetScriptScope().OnPickup1 <- Ware_MinigameScope.OnPickup1
+	hoop.ConnectOutput("OnPickup1", "OnPickup1")
+}
 
 function OnPrecache()
 {
-	PrecacheModel(hoop_model)
-	PrecacheSound(hoop_sound)
+	PrecacheSprite(beam_model)
 }
 
 function OnTeleport(players)
 {
-	local red_players  = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED)
-	local blue_players  = players.filter(@(i, player) player.GetTeam() == TF_TEAM_BLUE)
-	local width   = 1000.0
-	local spacing = 60.0
-	Ware_TeleportPlayersRow(blue_players, Ware_MinigameLocation.center + Vector(0, -800, 0), QAngle(0, 90, 0), width, spacing, spacing)
-	Ware_TeleportPlayersRow(red_players, Ware_MinigameLocation.center + Vector(0, 800, 0), QAngle(0, 270, 0), width, spacing, spacing)
-		
-	point_a = Ware_MinigameLocation.center + Vector(RandomFloat(-800, 800), 700, 0)
-	point_b = Ware_MinigameLocation.center + Vector(0, 0, RandomFloat(1000, 2000))
-	point_c = Ware_MinigameLocation.center + Vector(RandomFloat(-800, 800), RandomFloat(-1000, -600), 0)
-}
-
-function OnStart()
-{
-	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Stickybomb Jumper")
-	
-	local hoop_count = 3
-	foreach (player in Ware_MinigamePlayers)
-	{
-		local minidata = Ware_GetPlayerMiniData(player)
-		minidata.last_origin <- player.GetCenter()
-		minidata.hoops       <- array(hoop_count, false)
-	}
-	
-	for (local i = 0; i < hoop_count; i++)
-	{
-		local t
-		switch (i)
-		{
-			case 0: t = 0.15; break
-			case 1: t = 0.5; break
-			case 2: t = 0.8; break
-		}
-		
-		local origin = LerpQuadratic(point_a, point_b, point_c, t)
-		local prev_origin = LerpQuadratic(point_a, point_b, point_c, t - 0.01)
-		local dir = origin - prev_origin
-		dir.Norm()
-		
-		local scale = RandomFloat(0.7, 1.0)
-		local hoop = Ware_SpawnEntity("prop_dynamic_override",
-		{
-			origin         = origin
-			angles         = VectorAngles(dir)
-			model          = hoop_model
-			modelscale     = scale
-			disableshadows = true
-		})
-	
-		hoops.append
-		({
-			entity = hoop
-			origin = origin
-			radius = 315.0 * scale
-			normal = dir
-			dist   = dir.Dot(origin)
-		})
-	}
+	Ware_TeleportPlayersRow(players, 
+		Ware_MinigameLocation.center + Vector(0, -700, 0), 
+		QAngle(0, 90, 0), 
+		1600.0, 
+		60.0, 120.0)
 }
 
 function OnUpdate()
 {
-	foreach (player in Ware_MinigamePlayers)
+	foreach (mgr in TeamMgrs)
+		SetPropInt(mgr, "m_nFlagCaptures", 0)
+}
+
+function OnCapture1()
+{
+	if (activator && activator.IsPlayer())
+		Ware_PassPlayer(activator, true)
+}
+
+function OnPickup1()
+{
+	if(!Ware_MinigameScope.show_anno)
+		Ware_ShowAnnotation(Ware_MinigameScope.goal_pos, "Goal!")
+	Ware_MinigameScope.show_anno = true
+	if (activator && activator.IsPlayer())
 	{
-		local minidata = Ware_GetPlayerMiniData(player)
-		local origin = player.GetCenter()
-		foreach (i, hoop in hoops)
+		local minidata = Ware_GetPlayerMiniData(activator)
+		if(!("picked" in minidata))
 		{
-			local crossed_hoops = minidata.hoops
-			if (crossed_hoops[i])
-				continue
-				
-			local point = IntersectLinePlane(minidata.last_origin, origin, hoop.normal, hoop.dist)
-			if (point == null)
-				continue
-			
-			local dist = VectorDistance(point, hoop.origin)
-			if (dist > hoop.radius)
-				continue
-				
-			crossed_hoops[i] = true
-			local crossed_count = crossed_hoops.filter(@(i, crossed) crossed).len() 
-								
-			Ware_PlaySoundOnClient(player, hoop_sound, 1.0, 90 + crossed_count * 10)
-			
-			if (crossed_count == hoops.len())
-				Ware_PassPlayer(player, true)
+			Ware_MinigameScope.SpawnIntel()
+			//minidata.picked <- true
 		}
-		minidata.last_origin = origin
 	}
-	
-	//local points = (10).tofloat()
-	//local point_prev = point_a
-    //for (local i = 1.0; i <= points; i += 1.0) 
-	//{
-    //    local t = i / points
-    //    local point = LerpQuadratic(point_a, point_b, point_c, t)
-    //    DebugDrawLine(point_prev, point, 255, 0, 0, false, NDEBUG_TICK)
-    //    point_prev = point
-    //}	
+}
+
+function OnStart()
+{
+	goal_pos <- Ware_MinigameLocation.center + Vector(0,-850,50)
+	intel_pos = Ware_MinigameLocation.center + Vector(0,800,50)
+	Ware_SetGlobalLoadout(TF_CLASS_SCOUT)
+	SetPropInt(GameRules, "m_nHudType", 1)
+
+	SpawnIntel()
+
+	barrier = Ware_CreateEntity("func_capturezone")
+	barrier.SetOrigin(goal_pos)
+	barrier.SetSolid(SOLID_BBOX)
+	barrier.SetSize(Vector(-1000, -16, 0), Vector(1000, 16, 1000))
+	barrier.KeyValueFromInt("TeamNum", 3)
+	barrier.SetCollisionGroup(TFCOLLISION_GROUP_RESPAWNROOMS)
+	local beam_height = 100.0 
+
+	local beam = Ware_CreateEntity("env_beam")
+	beam.SetOrigin(Ware_MinigameLocation.center + Vector(-1000, 0, beam_height))
+	SetPropVector(beam, "m_vecEndPos", Ware_MinigameLocation.center + Vector(1000, 0, beam_height))
+	beam.SetModel(beam_model)
+	beam.KeyValueFromString("rendercolor", "255 255 0")
+	beam.KeyValueFromInt("renderamt", 100)
+	beam.DispatchSpawn()
+	SetPropFloat(beam, "m_fWidth", 7.0)
+	SetPropFloat(beam, "m_fEndWidth", 7.0)
+	EntityAcceptInput(beam, "TurnOn")
+
+	local trigger = Ware_SpawnEntity("trigger_multiple",
+	{
+		classname = "cow_mangler", // kill icon
+		origin = Ware_MinigameLocation.center + Vector(0, 0, beam_height),
+		spawnflags = SF_TRIGGER_ALLOW_CLIENTS
+	})
+	trigger.SetSolid(SOLID_BBOX)
+	trigger.SetSize(Vector(-1000, -8, -4), Vector(1000, 8, 4))
+	trigger.ValidateScriptScope()
+	trigger.GetScriptScope().OnStartTouch <- OnBeamTouch
+	trigger.ConnectOutput("OnStartTouch", "OnStartTouch")
+
+}
+
+function OnBeamTouch()
+{
+	//if (activator)
+	//	activator.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_PLASMA)
+}
+
+function OnCleanup()
+{
+	SetPropInt(GameRules, "m_nHudType", 0)
 }
