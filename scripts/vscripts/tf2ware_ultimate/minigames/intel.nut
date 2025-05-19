@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Intel"
 	author         = "tilderain"
 	description    = "Capture the Intel!"
-	duration       = 13.0
+	duration       = 14.0
 	end_delay	   = 0.5
 	location       = "pinball"
 	music          = "purple"
@@ -21,6 +21,8 @@ goal_pos <- null
 
 beam <- null
 beam_hurt <- null
+
+laser_count <- 0
 
 function OnPrecache()
 {
@@ -83,6 +85,10 @@ function OnStart()
 	SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(0, 300, 100))
 	SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(0, -100, 100))
 
+	SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(400, -280, RandomBool() ? 40 : 80))
+
+	SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(-400, -280, RandomBool() ? 40 : 80))
+
 	local zone = Ware_SpawnEntity("func_capturezone",
 	{
 		origin = goal_pos
@@ -122,6 +128,48 @@ function SpawnIntel()
 	flag.ConnectOutput("OnCapture1", "OnCapture1")
 	flag.GetScriptScope().OnPickup1 <- Ware_MinigameScope.OnPickup1
 	flag.ConnectOutput("OnPickup1", "OnPickup1")
+}
+
+function SpawnLaser(pos)
+{
+	local beam_height = 100.0
+	
+
+	local beam = Ware_SpawnEntity("func_tracktrain",
+	{
+		targetname = "test" + laser_count
+		origin = pos + Vector(0, 3000, 0)
+	})
+
+	local beam = Ware_SpawnEntity("env_laser",
+	{
+		origin = pos
+		texture = "sprites/laserbeam.spr"
+		TextureScroll = 35
+		width = 4
+		spawnflags = 48
+		rendercolor = "255 0 25"
+		damage = 3000
+		dissolvetype = 1
+		LaserTarget = "test" + laser_count
+	})
+	laser_count += 1
+}
+function OnTakeDamage(params)
+{
+	local victim = params.const_entity
+	if (victim.IsPlayer())
+	{
+		local inflictor = params.inflictor
+		if (inflictor && inflictor.GetClassname() == "env_laser")
+		{
+			victim.TakeDamageCustom(victim, victim, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_PLASMA)
+			// fix weapons being dissolved after respawn
+			params.damage_type = params.damage_type & ~(DMG_DISSOLVE)	
+			params.damage_stats = TF_DMG_CUSTOM_PLASMA
+			params.damage *= 2.0
+		}
+	}
 }
 
 function SpawnSpinner(pos)
