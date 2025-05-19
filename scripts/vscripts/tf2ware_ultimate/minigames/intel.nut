@@ -261,7 +261,7 @@ function SpawnLaser(pos, type)
 		width = 4
 		spawnflags = 48
 		rendercolor = "255 0 25"
-		damage = 3000
+		damage = 75
 		dissolvetype = 1
 		LaserTarget = "test" + laser_count
 	})
@@ -292,11 +292,10 @@ function OnTakeDamage(params)
 		local inflictor = params.inflictor
 		if (inflictor && inflictor.GetClassname() == "env_laser")
 		{
-			victim.TakeDamageCustom(victim, victim, null, Vector(), Vector(), 1000.0, DMG_GENERIC, TF_DMG_CUSTOM_PLASMA)
+			victim.TakeDamageCustom(victim, victim, null, Vector(), Vector(), 75.0, DMG_GENERIC, TF_DMG_CUSTOM_PLASMA)
 			// fix weapons being dissolved after respawn
 			params.damage_type = params.damage_type & ~(DMG_DISSOLVE)	
 			params.damage_stats = TF_DMG_CUSTOM_PLASMA
-			params.damage *= 2.0
 		}
 		else if (params.damage_type & DMG_SLASH) // prop touch
 		{
@@ -310,7 +309,7 @@ function OnTakeDamage(params)
 					null, 
 					Vector(RandomFloat(19999, -19999), RandomFloat(19999, -19999), -999999),
 					attacker.GetOrigin(), 
-					999.9, 
+					75, 
 					DMG_SAWBLADE
 				)
 				
