@@ -47,7 +47,7 @@ function OnTeleport(players)
 		30.0, 45.0)
 }
 xRange <- [-750, 750]
-yRange <- [-300, 400]
+yRange <- [-300, 375]
 zRange <- [0, 200]
 
 function OnUpdate() 
