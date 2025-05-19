@@ -60,9 +60,9 @@ function OnUpdate()
 		if(player.GetHealth() <= 0)
 			Ware_SuicidePlayer(player)
 
-		if(foods.len() < 64)
+		if(foods.len() < 100)
 		{	
-			if (RandomInt(0, 200) == 0)
+			if (dmg_tick % 300 == 0)
 			{
        			local start = player.EyePosition()
 				local forward = player.EyeAngles().Forward()
