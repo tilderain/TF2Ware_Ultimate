@@ -16,6 +16,7 @@ spinner_model <- "models/empty.mdl"
 beam_model <- "sprites/laser.vmt"
 fence_model <- "models/props_gameplay/security_fence_section01.mdl"
 screen_model <- "models/props_spytech/computer_screen_01.mdl"
+sawblade_model <- "models/props_forest/sawblade_moving.mdl"
 
 intel_pos <- null
 goal_pos <- null
@@ -33,6 +34,8 @@ function OnPrecache()
 	PrecacheSprite(beam_model)
 	PrecacheModel(fence_model)
 	PrecacheModel(screen_model)
+	PrecacheModel(sawblade_model)
+	PrecacheSound("SawMill.BladeImpact")
 }
 
 function OnTeleport(players)
@@ -44,6 +47,7 @@ function OnTeleport(players)
 		30.0, 45.0)
 }
 xRange <- [-750, 750]
+yRange <- [-300, 400]
 zRange <- [0, 200]
 
 function OnUpdate() 
@@ -64,7 +68,14 @@ function OnUpdate()
 		{
             vel.x = abs(vel.x)
         }
-
+        if (pos.y - minigameLocation.y > yRange[1]) 
+		{
+            vel.y = -abs(vel.y)
+        }
+		else if (pos.y - minigameLocation.y < yRange[0]) 
+		{
+            vel.y = abs(vel.y)
+        }
         if (pos.z - minigameLocation.z > zRange[1]) 
 		{
             vel.z = -abs(vel.z)
@@ -131,6 +142,7 @@ function OnStart()
 		else
 		{
 			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80))
+			SpawnSawblade(Ware_MinigameLocation.center_bottom + Vector(poses[i], 0, 40))
 		}
 	}
 
@@ -176,6 +188,41 @@ function SpawnIntel()
 	flag.ConnectOutput("OnPickup1", "OnPickup1")
 }
 
+function SpawnSawblade(pos)
+{
+	local beam = Ware_SpawnEntity("prop_dynamic",
+	{
+		origin = pos
+		model = sawblade_model
+		damage = 3000
+		defaultanim = "idle"
+		angles = QAngle(0, 90, 0)
+		disableshadows = true
+		spawnflags   = SF_PHYSPROP_TOUCH
+		minhealthdmg = 9999999 // don't destroy on touch			
+	})
+
+	local speed = RandomFloat(-200, 200)
+	if (fabs(speed) < 100) 
+		speed = 100
+	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
+	Ware_SlapEntity(beam, speed)
+	
+	local vel = beam.GetAbsVelocity()
+	vel = Vector(vel.x * 0, vel.y * 2, vel.z * 0)
+	beam.SetAbsVelocity(vel)
+
+	lasers.append(beam)
+	local hurt = Ware_SpawnEntity("trigger_multiple",
+	{
+		origin     = pos
+		spawnflags = SF_TRIGGER_ALLOW_CLIENTS
+	})
+	hurt.SetSolid(SOLID_OBB)
+	hurt.SetSize(Vector(-10,-55,-55), Vector(10,55,55))
+	SetEntityParent(hurt, beam)
+}
+
 function SpawnLaser(pos)
 {
 	local beam_height = 100.0
@@ -191,7 +238,7 @@ function SpawnLaser(pos)
 	Ware_SlapEntity(beam, speed)
 
 	local vel = beam.GetAbsVelocity()
-	vel = Vector(vel.x * 1, vel.y * 0, vel.z * 1)
+	vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
 	beam.SetAbsVelocity(vel)
 
 	lasers.append(beam)
@@ -214,7 +261,7 @@ function SpawnLaser(pos)
 	Ware_SlapEntity(beam, speed)
 	
 	vel = beam.GetAbsVelocity()
-	vel = Vector(vel.x * 1, vel.y * 0, vel.z * 1)
+	vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
 	beam.SetAbsVelocity(vel)
 
 	lasers.append(beam)
@@ -233,6 +280,37 @@ function OnTakeDamage(params)
 			params.damage_type = params.damage_type & ~(DMG_DISSOLVE)	
 			params.damage_stats = TF_DMG_CUSTOM_PLASMA
 			params.damage *= 2.0
+		}
+		else if (params.damage_type & DMG_SLASH) // prop touch
+		{
+			// the attacker is the player, so recover the true attacker from the damage position
+			local attacker = FindByClassnameNearest("prop_dynamic", params.damage_position, 0.0)
+			if (attacker)
+			{
+				victim.TakeDamageEx(
+					attacker, 
+					attacker,
+					null, 
+					Vector(RandomFloat(19999, -19999), RandomFloat(19999, -19999), -999999),
+					attacker.GetOrigin(), 
+					999.9, 
+					DMG_SAWBLADE
+				)
+				
+				victim.EmitSound("SawMill.BladeImpact")
+				
+				local ragdoll = GetPropEntity(victim, "m_hRagdoll")
+				if (ragdoll)
+				{
+					MarkForPurge(ragdoll)
+					SetPropFloat(victim, "m_flTorsoScale", -1)
+					SetPropFloat(ragdoll, "m_flTorsoScale", -1)
+				}
+				DispatchParticleEffect("env_sawblood", victim.GetCenter(), Vector())
+				attacker.SetSkin(1)
+
+				return false
+			}
 		}
 	}
 }
