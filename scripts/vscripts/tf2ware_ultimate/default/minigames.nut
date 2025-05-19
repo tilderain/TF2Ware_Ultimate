@@ -86,6 +86,7 @@ type_color
 type_map
 type_time
 type_word
+uber
 vacc
 upgrade
 wanted
