@@ -25,6 +25,7 @@ disguise
 dodge_laser
 dont_touch
 double_jump
+dove
 eat_plate
 extinguish
 flipper_ball
