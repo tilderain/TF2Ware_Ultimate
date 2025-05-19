@@ -3,10 +3,10 @@ minigame <- Ware_MinigameData
 	name           = "Uber"
 	author         = ["tilderain"]
 	description    = "Uber someone!"
-	duration       = 4.5
+	duration       = 5.5
 	music          = "farm"
 	min_players    = 2
-	convars         =
+	convars        =
 	{
 		mp_teams_unbalance_limit = 0
 	}
@@ -23,8 +23,9 @@ function OnStart()
 		Ware_GivePlayerWeapon(player, gun, {"ubercharge rate bonus" : 16})
 		player.SetHealth(1)
 	}
-	Ware_ChatPrint(null, "{color}HINT:{color} Uber builds faster healing someone with low health!", COLOR_GREEN, TF_COLOR_DEFAULT)
+	Ware_ChatPrint(null, "{color}HINT:{color} Uber builds faster when healing someone with low health!", COLOR_GREEN, TF_COLOR_DEFAULT)
 }
+
 function OnUpdate()
 {
 	foreach (medic in Ware_MinigamePlayers)
@@ -47,4 +48,3 @@ function OnEnd()
 		player.RemoveCond(TF_COND_INVULNERABLE)
 	}
 }
-
