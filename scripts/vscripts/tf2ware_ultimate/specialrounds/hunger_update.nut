@@ -58,7 +58,10 @@ function OnUpdate()
 		if(dmg_tick % 60 == 0)
 			player.SetHealth(player.GetHealth() - lastEat*4)
 		if(player.GetHealth() <= 0)
+		{
+			Ware_GetPlayerSpecialRoundData(player).lastEat <- Time()
 			Ware_SuicidePlayer(player)
+		}
 
 		if(foods.len() < 100)
 		{	
