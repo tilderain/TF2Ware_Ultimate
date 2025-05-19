@@ -141,7 +141,7 @@ function OnStart()
 		}
 		else
 		{
-			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80))
+			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0,1))
 			SpawnSawblade(Ware_MinigameLocation.center_bottom + Vector(poses[i], 0, 40))
 		}
 	}
@@ -223,22 +223,32 @@ function SpawnSawblade(pos)
 	SetEntityParent(hurt, beam)
 }
 
-function SpawnLaser(pos)
+function SpawnLaser(pos, type)
 {
 	local beam_height = 100.0
-	
+	local add_vec = Vector(0, 3000, 0)
+	if (type == 1)
+	{
+		pos.z = -7550
+		add_vec = Vector(500, 0, 0)
+	}
+
 	local beam = Ware_SpawnEntity("func_tracktrain",
 	{
 		targetname = "test" + laser_count
-		origin = pos + Vector(0, 3000, 0)
+		origin = pos + add_vec
 	})
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
 
 	local speed = RandomFloat(-50, 50)
-	Ware_SlapEntity(beam, speed)
+	if (type == 1)
+		speed = RandomFloat(-200, 200)
 
 	local vel = beam.GetAbsVelocity()
-	vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
+	if (type == 0)
+		vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
+	else
+		vel = Vector(vel.x * 0, 200, vel.z * 0)
 	beam.SetAbsVelocity(vel)
 
 	lasers.append(beam)
@@ -256,12 +266,19 @@ function SpawnLaser(pos)
 		LaserTarget = "test" + laser_count
 	})
 	laser_count += 1
-	speed = RandomFloat(-100, 50)
+
+	if (type == 0)
+		speed = RandomFloat(-50, 50)
+	else if (type == 1)
+		speed = RandomFloat(-200, 200)
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
 	Ware_SlapEntity(beam, speed)
 	
 	vel = beam.GetAbsVelocity()
-	vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
+	if (type == 0)
+		vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
+	else
+		vel = Vector(vel.x * 0, 200, vel.z * 0)
 	beam.SetAbsVelocity(vel)
 
 	lasers.append(beam)
