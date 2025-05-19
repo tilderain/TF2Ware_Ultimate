@@ -24,6 +24,8 @@ beam_hurt <- null
 
 laser_count <- 0
 
+lasers <- []
+
 function OnPrecache()
 {
 	PrecacheModel(spinner_model)
@@ -40,17 +42,47 @@ function OnTeleport(players)
 		700.0, 
 		30.0, 45.0)
 }
+xRange <- [-750, 750]
+zRange <- [0, 200]
 
-function OnUpdate()
+function OnUpdate() 
 {
-	foreach (mgr in TeamMgrs)
-		SetPropInt(mgr, "m_nFlagCaptures", 0)
+    local minigameLocation = Ware_MinigameLocation.center_bottom
+    local margin = 0.1
+
+    foreach (prop in lasers) 
+	{
+        local vel = prop.GetAbsVelocity()
+        local pos = prop.GetOrigin()
+
+        if (pos.x - minigameLocation.x > xRange[1]) 
+		{
+            vel.x = -abs(vel.x)
+        }
+		else if (pos.x - minigameLocation.x < xRange[0]) 
+		{
+            vel.x = abs(vel.x)
+        }
+
+        if (pos.z - minigameLocation.z > zRange[1]) 
+		{
+            vel.z = -abs(vel.z)
+        }
+		else if (pos.z - minigameLocation.z < zRange[0]) 
+		{
+            vel.z = abs(vel.z)
+        }
+
+        prop.SetAbsVelocity(vel)
+    }
 }
 
 function OnCapture1()
 {
 	if (activator && activator.IsPlayer())
 		Ware_PassPlayer(activator, true)
+	foreach (mgr in TeamMgrs)
+		SetPropInt(mgr, "m_nFlagCaptures", 0)
 }
 
 function OnPickup1()
@@ -88,7 +120,7 @@ function OnStart()
 	Shuffle(order)
 	Shuffle(poses)
 
-	for (local i = 0; i <  order.len(); i++)
+	for (local i = 0; i < order.len(); i++)
 	{
 		if(i == 0)
 		{
@@ -97,7 +129,7 @@ function OnStart()
 		}
 		else
 		{
-			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -280, RandomBool() ? 40 : 80))
+			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80))
 		}
 	}
 
@@ -153,6 +185,16 @@ function SpawnLaser(pos)
 		targetname = "test" + laser_count
 		origin = pos + Vector(0, 3000, 0)
 	})
+	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
+
+	local speed = RandomFloat(-50, 50)
+	Ware_SlapEntity(beam, speed)
+
+	local vel = beam.GetAbsVelocity()
+	vel = Vector(vel.x * 1, vel.y * 0, vel.z * 1)
+	beam.SetAbsVelocity(vel)
+
+	lasers.append(beam)
 
 	local beam = Ware_SpawnEntity("env_laser",
 	{
@@ -167,6 +209,16 @@ function SpawnLaser(pos)
 		LaserTarget = "test" + laser_count
 	})
 	laser_count += 1
+	speed = RandomFloat(-100, 50)
+	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
+	Ware_SlapEntity(beam, speed)
+	
+	vel = beam.GetAbsVelocity()
+	vel = Vector(vel.x * 1, vel.y * 0, vel.z * 1)
+	beam.SetAbsVelocity(vel)
+
+	lasers.append(beam)
+
 }
 function OnTakeDamage(params)
 {
