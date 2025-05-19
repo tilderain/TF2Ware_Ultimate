@@ -7,6 +7,7 @@ minigame <- Ware_MinigameData
 	end_delay	   = 0.5
 	location       = "pinball"
 	music          = "purple"
+	thirdperson = true
 })
 
 show_anno <- false
@@ -116,7 +117,7 @@ function OnStart()
 
 	//spinner = 0
 	local order = [0,1,1]
-	local poses = [400, 0, -400]
+	local poses = [500, 0, -500]
 	Shuffle(order)
 	Shuffle(poses)
 
@@ -179,7 +180,6 @@ function SpawnLaser(pos)
 {
 	local beam_height = 100.0
 	
-
 	local beam = Ware_SpawnEntity("func_tracktrain",
 	{
 		targetname = "test" + laser_count
