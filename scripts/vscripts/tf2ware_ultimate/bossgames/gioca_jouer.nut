@@ -48,7 +48,7 @@ micro_num <- 0        // microgame num
 min_score <- 16      // minimum score to win. Only the players with the highest score win, might change this to just check min_score, and increase min_score.
 micro_grace <- false // tracks grace period for certain microgames.
 
-micro_rotation <- [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+micro_rotation <- [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
 
 minigame <- Ware_MinigameData
 ({
@@ -125,8 +125,12 @@ function OnStart()
 	GiocaJouer_Countdown(83.05) // second round
 
 	Shuffle(micro_rotation)
-	micro_rotation.append(MICRO_RESET)
 
+	micro_rotation.append(MICRO_WAVE2)
+	micro_rotation.append(MICRO_WAVE3)
+	micro_rotation.append(MICRO_SUPER)
+	micro_rotation.append(MICRO_RESET)
+	
 	foreach(announcement in announcements)
 	{
 		local sound = announcement[0] //squirrel
