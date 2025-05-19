@@ -2,7 +2,7 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Uber"
 	author         = ["tilderain"]
-	description    = "Uber someone low health!"
+	description    = "Uber someone!"
 	duration       = 4.5
 	music          = "farm"
 	min_players    = 2
@@ -23,6 +23,7 @@ function OnStart()
 		Ware_GivePlayerWeapon(player, gun, {"ubercharge rate bonus" : 16})
 		player.SetHealth(1)
 	}
+	Ware_ChatPrint(null, "{color}HINT:{color} Uber builds faster healing someone with low health!", COLOR_GREEN, TF_COLOR_DEFAULT)
 }
 function OnUpdate()
 {
@@ -31,11 +32,9 @@ function OnUpdate()
 		if (medic.IsValid() && medic.IsAlive())
 		{
 			local weapon = medic.GetActiveWeapon()
-			if (weapon && weapon.GetClassname() == "tf_weapon_medigun")
+			if (weapon && weapon.GetClassname() == "tf_weapon_medigun" && GetPropBool(weapon, "m_bChargeRelease"))
 			{
-				local ubered = GetPropBool(weapon, "m_bChargeRelease")
-				if (ubered)
-					Ware_PassPlayer(medic, true)
+				Ware_PassPlayer(medic, true)
 			}
 		}
 	}
