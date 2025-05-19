@@ -207,11 +207,18 @@ Ware_DevCommands <-
 				target = Ware_FindPlayerByName(args[arg++])
 			if (target)
 			{
-				local points = args[arg].tointeger()
-				Ware_ChatPrint(player, "Gave {int} points to {player}", points, target)
-				if (target != player)
-					Ware_ChatPrint(target, "{str} has given you {int} points", Ware_DevCommandTitle(player), points)
-				Ware_GetPlayerData(target).score += points
+				local points = StringToInteger(args[arg])
+				if (points != null)
+				{
+					Ware_ChatPrint(player, "Gave {int} points to {player}", points, target)
+					if (target != player)
+						Ware_ChatPrint(target, "{str} has given you {int} points", Ware_DevCommandTitle(player), points)
+					Ware_GetPlayerData(target).score += points
+				}
+				else
+				{
+					Ware_ChatPrint(player, "Invalid score")
+				}
 			}
 			else
 			{
