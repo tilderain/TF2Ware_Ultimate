@@ -26,7 +26,6 @@ flamethrower_particle <- "flamethrower"
 
 function OnStart()
 {
-	local resist = RandomInt(0,2)
 	foreach (player in Ware_MinigamePlayers)
 	{
 		Ware_SetPlayerClass(player, TF_CLASS_MEDIC)
@@ -37,8 +36,6 @@ function OnStart()
 
 		//Doesn't work
 		//SetPropFloat(weapon, "m_flNextPrimaryAttack", 1e100)
-
-		Ware_CreateTimer(@() SetPropInt(weapon, "m_nChargeResistType", resist), 0.05)
 	}
 	
 	local pos = Ware_MinigameLocation.center
