@@ -65,7 +65,7 @@ function OnPickup1()
 		if (!("picked" in minidata))
 		{
 			Ware_MinigameScope.SpawnIntel()
-			//minidata.picked <- true
+			minidata.picked <- true
 		}
 	}
 }
@@ -189,4 +189,9 @@ function OnCleanup()
 		player.RemoveCond(TF_COND_CRITBOOSTED)
 		SetPropBool(player, "m_bGlowEnabled", false)
 	}
+}
+
+function OnCheckEnd()
+{
+	return Ware_GetAlivePlayers().len() == 0
 }
