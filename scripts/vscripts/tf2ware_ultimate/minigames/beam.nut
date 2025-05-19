@@ -124,6 +124,20 @@ function OnEnterUFO()
 
 function CreateUFO()
 {
+
+
+	/*local trigger_push = Ware_SpawnEntity("trigger_push", 
+    {
+        targetname = "ufo_lift_trigger_bottom"
+        origin     = pos
+        pushdir    = QAngle(-90, 0, 0)
+        speed      = 550
+        spawnflags = 1
+		StartDisabled = 0
+    })*/
+    trigger_push.SetSize(Vector(-20, -20, 0), Vector(20, 20, 50))
+    trigger_push.SetSolid(SOLID_BBOX)
+    EntFireByHandle(trigger_push, "Disable", "", 0.5, null, null)
 	ufo = FindByName(null, "ufo_tracktrain")
     ufo.SetOrigin(Ware_MinigameLocation.center + Vector(0,0, 1600))
 
