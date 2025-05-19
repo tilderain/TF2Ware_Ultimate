@@ -65,7 +65,7 @@ function OnUpdate()
 
 		if(foods.len() < 100)
 		{	
-			if ((dmg_tick % 500 == 0) || (RandomInt(0, 500) == 0))
+			if ((dmg_tick % 400 == 0) || (RandomInt(0, 400) == 0))
 			{
        			local start = player.EyePosition()
 				local forward = player.EyeAngles().Forward()
