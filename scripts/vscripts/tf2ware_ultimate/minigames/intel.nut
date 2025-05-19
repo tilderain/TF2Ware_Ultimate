@@ -202,14 +202,13 @@ function SpawnSawblade(pos)
 		minhealthdmg = 9999999 // don't destroy on touch			
 	})
 
-	local speed = RandomFloat(100, 200)
+	local speed = RandomFloat(200, 400)
 	if(RandomBool())
 		speed = -speed
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
-	Ware_SlapEntity(beam, speed)
 	
 	local vel = beam.GetAbsVelocity()
-	vel = Vector(vel.x * 0, vel.y * 2, vel.z * 0)
+	vel = Vector(vel.x * 0, speed, vel.z * 0)
 	beam.SetAbsVelocity(vel)
 
 	lasers.append(beam)
@@ -247,7 +246,7 @@ function SpawnLaser(pos, type)
 		speed = -speed
 	local vel = beam.GetAbsVelocity()
 	if (type == 0)
-		vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
+		vel = Vector(vel.x * 0, vel.y * 0, speed)
 	else
 		vel = Vector(vel.x * 0, speed, vel.z * 0)
 	beam.SetAbsVelocity(vel)
@@ -275,11 +274,10 @@ function SpawnLaser(pos, type)
 	if(RandomBool())
 		speed = -speed
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
-	Ware_SlapEntity(beam, speed)
-	
+
 	vel = beam.GetAbsVelocity()
 	if (type == 0)
-		vel = Vector(vel.x * 0, vel.y * 0, vel.z * 1)
+		vel = Vector(vel.x * 0, vel.y * 0, speed)
 	else
 		vel = Vector(vel.x * 0, speed, vel.z * 0)
 	beam.SetAbsVelocity(vel)
