@@ -2155,27 +2155,32 @@ function Ware_GameOverInternal()
 			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
 		}
 	}
-
-	function UpdateSpritePosition(target, sprite)
-	{
-		if(target && target.IsValid() && target.IsAlive())
-		{
-			sprite.KeyValueFromVector("origin", target.GetOrigin() + Vector(0,0,115))
-			return 0.015
-		}
-	}
+	
+	local sprite_offset = Vector(0, 0, 125.0)
 	foreach (player in top_players)
 	{
 		local sprite = SpawnEntityFromTableSafe("env_glow",
 		{
 			model       = SPRITE_WINNER
-			origin      = player.GetOrigin() + Vector(0,0,125)
+			origin      = player.GetOrigin() + sprite_offset
 			scale       = 0.5
 			rendermode  = kRenderTransColor
 		})
-		local target = player //squirrel
-		CreateTimer(@() UpdateSpritePosition(target, sprite), 0.015)
+		sprite.SetOwner(player)
+		sprite.ValidateScriptScope()
+		sprite.GetScriptScope().offset <- sprite_offset
+		AddThinkToEnt(sprite, "Ware_UpdateWinnerSprite")
 	}
+}
+
+function Ware_UpdateWinnerSprite()
+{
+	local owner = self.GetOwner()
+	if (owner && owner.IsAlive())
+		self.KeyValueFromVector("origin", owner.GetOrigin() + offset)
+	else
+		self.Kill()
+	return -1
 }
 
 function Ware_OnUpdate()
