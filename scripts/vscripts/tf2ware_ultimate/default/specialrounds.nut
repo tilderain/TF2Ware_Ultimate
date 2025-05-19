@@ -14,6 +14,7 @@ double_trouble
 extended_round
 fov
 hale
+hunger_update
 inclinity_problem
 //invisible  TODO need a better performance implementation
 low_gravity
