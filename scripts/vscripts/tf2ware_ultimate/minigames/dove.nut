@@ -1,4 +1,3 @@
-mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
 	name           = "Dove Hunt"
@@ -11,9 +10,6 @@ minigame <- Ware_MinigameData
 
 spawn_rate <- null
 
-hit_sound  <- "tf2ware_ultimate/mp_hit_indication_3c.wav"
-
-bird <- null
 bird_model <- "models/props_forest/dove.mdl"
 
 required_amount <- 3
@@ -27,47 +23,40 @@ function OnPrecache()
 function OnStart()
 {
 	spawn_rate = RemapValClamped(Ware_MinigamePlayers.len().tofloat(), 0.0, 32.0, 0.5, 0.05)
-	if (mode == 0)
-		Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Huntsman")
-	else if (mode == 1)
-		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Direct Hit", {"clip size penalty" : 0.25})
+	Ware_SetGlobalLoadout(TF_CLASS_SNIPER, "Huntsman")
 
 	foreach (player in Ware_MinigamePlayers)
-	{		
+	{
+		Ware_GetPlayerMiniData(player).points <- 0
+		
 		local weapon = player.GetActiveWeapon()
 		if (weapon == null)
 			continue
 
 		weapon.SetClip1(1)
 	}
-	foreach (player in Ware_MinigamePlayers)
-		Ware_GetPlayerMiniData(player).points <- 0
-			
+	
 	Ware_CreateTimer(@() SpawnDove(), 0.25)
 }
 
 function DoveThink()
 {
 	local time = Time()
-	if(spawn_time + 7.0 < Time()) 
+	if (spawn_time + 7.0 < Time()) 
 	{
 		self.Kill()
 		return
 	}
+	
 	// update at cl_interp minimum
 	local dt = 0.05
-	local my_origin = self.GetOrigin()
-
-	if (move_dir != null)
-	{
-		local move_speed = 400.0
-		
-		local dest = move_dir * move_speed * dt
-		local offset = Vector(0, 0, 32)
-		self.SetAbsOrigin(my_origin + dest)
-	}
 	
+	local move_speed = 300.0
+	local dest = move_dir * move_speed * dt
+	local offset = Vector(0, 0, 32)
+	self.SetAbsOrigin(self.GetOrigin() + dest)
 	self.StudioFrameAdvance()
+	
 	return dt
 }
 
@@ -78,7 +67,7 @@ function SpawnDove()
 	local origin = Vector(
 		RandomFloat(Ware_MinigameLocation.mins.x + 50.0, Ware_MinigameLocation.maxs.x - 50.0),
 		RandomFloat(Ware_MinigameLocation.mins.y + 50.0, Ware_MinigameLocation.maxs.y - 50.0),
-		Ware_MinigameLocation.center.z + 700 + RandomFloat(-400, 400))
+		Ware_MinigameLocation.center.z + RandomFloat(250, 500))
 
 	local angle = RandomFloat(-180, 180)
 	local vec_angle = Vector(cos(angle), sin(angle))
@@ -86,20 +75,17 @@ function SpawnDove()
 
 	local dove = Ware_SpawnEntity("base_boss",
 	{	
-		model  = bird_model
-		origin = origin
-		angles    = QAngle(0, yaw, 0)
+		model       = bird_model
+		origin      = origin
+		angles      = QAngle(0, yaw, 0)
 		defaultanim = "fly_cycle"
-		modelscale = 4
-		health = 9999
+		health      = 9999
 	})
+	dove.SetModelScale(RandomFloat(3.5, 4.5), 0.25)
 	EntityAcceptInput(dove, "Disable")
 	
 	dove.SetSolid(SOLID_BBOX)
-	if (mode == 0)
-		dove.SetSize(Vector(-14, -14, 0), Vector(14, 14, 8))
-	else if (mode == 1)
-		dove.SetSize(Vector(-16, -16, 0), Vector(16, 16, 8))
+	dove.SetSize(Vector(-14, -14, 0), Vector(14, 14, 8))
 	dove.ResetSequence(dove.LookupSequence("fly_cycle"))
 	dove.ValidateScriptScope()
 	local dove_scope = dove.GetScriptScope()
@@ -126,8 +112,7 @@ function OnTakeDamage(params)
 		{
 			local minidata = Ware_GetPlayerMiniData(player)
 			minidata.points++
-			
-			Ware_PlaySoundOnClient(player, hit_sound)			
+				
 			Ware_ShowText(player, CHANNEL_MINIGAME, "x", 0.25, "255 255 255", -1, -1)
 			
 			if (minidata.points >= required_amount)
