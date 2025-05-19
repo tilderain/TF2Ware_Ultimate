@@ -202,7 +202,7 @@ function SpawnSawblade(pos)
 		minhealthdmg = 9999999 // don't destroy on touch			
 	})
 
-	local speed = RandomFloat(200, 400)
+	local speed = RandomFloat(100, 400)
 	if(RandomBool())
 		speed = -speed
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
@@ -239,7 +239,7 @@ function SpawnLaser(pos, type)
 	})
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
 
-	local speed = RandomFloat(30, 50)
+	local speed = RandomFloat(30, 90)
 	if (type == 1)
 		speed = RandomFloat(100, 200)
 	if(RandomBool())
