@@ -71,7 +71,11 @@ microgame_info <-
 	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt"              1, 0.8], // MICRO_WAVE3
 	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          0.85, 0.5], // MICRO_SUPER
 	[ null,                          null,                                                 null, null], // MICRO_RESET
+	[ null,                          null,                                                 null, null],
+	[ null,                          null,                                                 null, null],
+
 ]
+
 
 function OnPrecache()
 {
@@ -281,6 +285,7 @@ function GiocaJouer_PassPlayerWithSpeed(player)
 			minidata.gj_passed += (timer - sub_time) * 75
 			ComboCheck(player)
 			ShowScores(player, minidata.gj_passed)
+			Ware_ShowText(player, CHANNEL_MISC, "NEXT: " + microgame_info[micro+1][0], 4, "128 128 128", -1, -0.65)
 		}
 	}
 
@@ -510,6 +515,7 @@ function OnMicroEnd()
 		{
 			ComboCheck(player)
 			ShowScores(player, minidata.gj_passed)
+			Ware_ShowText(player, CHANNEL_MISC, "NEXT: " + microgame_info[micro+2][0], 4, "128 128 128", -1, -0.65)
 		}
 
 
