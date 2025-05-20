@@ -288,6 +288,7 @@ function GiocaJouer_PassPlayerWithSpeed(player)
 			ComboCheck(player)
 			ShowScores(player, minidata.gj_passed)		
 			DisplayNextMicro(player, micro+1)
+		}
 	}
 
 }
