@@ -51,23 +51,23 @@ fail_sound <- "TF2Ware_Ultimate.Fail"
 microgame_info <-
 [
 	// description                   overlay                                        custom score scaling
-	[ "Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move"            1], // MICRO_SLEEP
-	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1], // MICRO_WAVE
-	[ "Jump!",                       "hud/tf2ware_ultimate/minigames/jump"                 1], // MICRO_HITCH
-	[ "Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch"               1], // MICRO_SNEEZE
-	[ "Move!",                       "hud/tf2ware_ultimate/minigames/move"                 1], // MICRO_WALK
-	[ "Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim"     1], // MICRO_SWIM
-	[ "Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left"              1], // MICRO_SKI
-	[ "Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray"    1], // MICRO_SPRAY
-	[ "Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab"              1], // MICRO_MACHO
-	[ "Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn"     1], // MICRO_HORN
-	[ "Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell"     1], // MICRO_BELL
-	[ "Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay"     1], // MICRO_OKAY
-	[ "Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic"           1], // MICRO_KISS
-	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise" 0.9], // MICRO_COMB
-	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1], // MICRO_WAVE2
-	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt"              1], // MICRO_WAVE3
-	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          0.85], // MICRO_SUPER
+	[ "Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move"            1, 1], // MICRO_SLEEP
+	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1, 1], // MICRO_WAVE
+	[ "Jump!",                       "hud/tf2ware_ultimate/minigames/jump"                 1, 1], // MICRO_HITCH
+	[ "Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch"               1, 1], // MICRO_SNEEZE
+	[ "Move!",                       "hud/tf2ware_ultimate/minigames/move"                 1, 1], // MICRO_WALK
+	[ "Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim"     1, 1], // MICRO_SWIM
+	[ "Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left"              1, 1], // MICRO_SKI
+	[ "Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray"    1, 1], // MICRO_SPRAY
+	[ "Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab"              1, 1], // MICRO_MACHO
+	[ "Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn"     1, 1], // MICRO_HORN
+	[ "Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell"     1, 1], // MICRO_BELL
+	[ "Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay"     1, 1], // MICRO_OKAY
+	[ "Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic"           1, 1], // MICRO_KISS
+	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise" 0.9, 0.8], // MICRO_COMB
+	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1, 0.8], // MICRO_WAVE2
+	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt"              1, 0.8], // MICRO_WAVE3
+	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          0.85, 0.75], // MICRO_SUPER
 	[ null,                          null,                                                 null], // MICRO_RESET
 ]
 
@@ -200,8 +200,9 @@ function GiocaJouer_PassPlayer(player, pass)
 function GetScoreThreshhold(gj_passed)
 {
 	local scores = [230, 205, 170, 140, 100]
+	local sel = micro_second_phase ? 3 : 2
 	for (local i = 0; i < scores.len(); i++) 
-		scores[i] = scores[i] * microgame_info[micro][2]
+		scores[i] = scores[i] * microgame_info[micro][sel]
 	for (local i = 0; i < scores.len(); i++) 
 		if(gj_passed > scores[i])
 			return i
