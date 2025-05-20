@@ -42,6 +42,7 @@ hit_balls
 hit_player
 hoop
 hot_potato
+intel
 jarate
 kamikaze
 kart
