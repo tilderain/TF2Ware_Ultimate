@@ -509,7 +509,7 @@ function OnUpdate()
 				break
 			case MICRO_MACHO:
 				if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_BELL:
 				if (GetPropBool(player, "m_Shared.m_bJumping") && (player.GetFlags() & FL_DUCKING))
