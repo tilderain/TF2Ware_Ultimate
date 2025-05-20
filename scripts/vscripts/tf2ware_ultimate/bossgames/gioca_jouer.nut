@@ -199,7 +199,7 @@ function GiocaJouer_PassPlayer(player, pass)
 
 function GetScoreThreshhold(gj_passed)
 {
-	local scores = [235, 200, 160, 120, 70]
+	local scores = [225, 190, 150, 120, 70]
 	for (local i = 0; i < scores.len(); i++) 
 		scores[i] = scores[i] * microgame_info[micro][2]
 	for (local i = 0; i < scores.len(); i++) 
