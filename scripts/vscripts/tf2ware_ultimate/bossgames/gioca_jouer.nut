@@ -343,7 +343,7 @@ function OnUpdate()
 			case MICRO_COMB:
 				if (player.InCond(TF_COND_DISGUISING) || player.InCond(TF_COND_DISGUISED))
 				{
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 					player.RemoveCond(TF_COND_DISGUISING)					
 					player.RemoveCond(TF_COND_DISGUISED)
 				}
