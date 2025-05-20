@@ -50,25 +50,25 @@ fail_sound <- "TF2Ware_Ultimate.Fail"
 
 microgame_info <-
 [
-	// description                   overlay                                             
-	[ "Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move"            ], // MICRO_SLEEP
-	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                ], // MICRO_WAVE
-	[ "Jump!",                       "hud/tf2ware_ultimate/minigames/jump"                 ], // MICRO_HITCH
-	[ "Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch"               ], // MICRO_SNEEZE
-	[ "Move!",                       "hud/tf2ware_ultimate/minigames/move"                 ], // MICRO_WALK
-	[ "Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim"     ], // MICRO_SWIM
-	[ "Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left"              ], // MICRO_SKI
-	[ "Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray"    ], // MICRO_SPRAY
-	[ "Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab"              ], // MICRO_MACHO
-	[ "Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn"     ], // MICRO_HORN
-	[ "Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell"     ], // MICRO_BELL
-	[ "Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay"     ], // MICRO_OKAY
-	[ "Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic"           ], // MICRO_KISS
-	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise" ], // MICRO_COMB
-	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                ], // MICRO_WAVE2
-	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt"              ], // MICRO_WAVE3
-	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          ], // MICRO_SUPER
-	[ null,                          null                                                  ], // MICRO_RESET
+	// description                   overlay                                        custom score scaling
+	[ "Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move"            1], // MICRO_SLEEP
+	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1], // MICRO_WAVE
+	[ "Jump!",                       "hud/tf2ware_ultimate/minigames/jump"                 1], // MICRO_HITCH
+	[ "Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch"               1], // MICRO_SNEEZE
+	[ "Move!",                       "hud/tf2ware_ultimate/minigames/move"                 1], // MICRO_WALK
+	[ "Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim"     1], // MICRO_SWIM
+	[ "Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left"              1], // MICRO_SKI
+	[ "Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray"    1], // MICRO_SPRAY
+	[ "Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab"              1], // MICRO_MACHO
+	[ "Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn"     1], // MICRO_HORN
+	[ "Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell"     1], // MICRO_BELL
+	[ "Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay"     1], // MICRO_OKAY
+	[ "Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic"           1], // MICRO_KISS
+	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise" 0.75], // MICRO_COMB
+	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1], // MICRO_WAVE2
+	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt"              1], // MICRO_WAVE3
+	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          0.75], // MICRO_SUPER
+	[ null,                          null,                                                 null], // MICRO_RESET
 ]
 
 function OnPrecache()
@@ -199,6 +199,8 @@ function GiocaJouer_PassPlayer(player, pass)
 function GetScoreTextAndColor(gj_passed)
 {
 	local scores = [235, 200, 160, 120, 70]
+	for (local i = 0; i < scores.len(); i++) 
+		scores[i] = scores[i] * microgame_info[micro][2]
 	local text
 	local color
 	if(gj_passed > scores[0]) {text = "PERFECT!!"; color = "253 61 181"}
@@ -214,6 +216,7 @@ function ShowScores(player, gj_passed)
 {
 	local scores = GetScoreTextAndColor(gj_passed)
 	local timer = micro_second_phase ? TIMER_SECOND / 2 : TIMER_FIRST / 2
+	//Ware_ShowText(player, CHANNEL_MINIGAME, scores[0], timer, scores[1], -1, -0.55)
 	Ware_ShowText(player, CHANNEL_MINIGAME, 
 		scores[0] + " +" + floor(gj_passed).tostring(),
 		timer, scores[1], -1, -0.55)
@@ -358,23 +361,23 @@ function OnUpdate()
 				break
 			case MICRO_HITCH:
 				if (GetPropBool(player, "m_Shared.m_bJumping"))
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_SNEEZE:
 				if (player.GetFlags() & FL_DUCKING)
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_WALK:
 				if (player.GetAbsVelocity().Length() > 75.0)
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_SWIM:
 				if (player.GetAbsVelocity().Length() > 75.0)
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_SKI:
 				if (GetPropInt(player, "m_nButtons") & IN_MOVELEFT)
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_SPRAY:
 				if (sprayed_players.find(player) != null)
@@ -382,11 +385,11 @@ function OnUpdate()
 				break
 			case MICRO_MACHO:
 				if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_BELL:
 				if (GetPropBool(player, "m_Shared.m_bJumping") && (player.GetFlags() & FL_DUCKING))
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_COMB:
 				if (player.InCond(TF_COND_DISGUISING) || player.InCond(TF_COND_DISGUISED))
@@ -457,8 +460,8 @@ function OnMicroEnd()
 				Ware_StripPlayer(player, true)
 				break
 		}
-
-		ShowScores(player, minidata.gj_passed)
+		if(!minidata.gj_is_pass)
+			ShowScores(player, minidata.gj_passed)
 
 		if (minidata.gj_passed>70)
 		{			
