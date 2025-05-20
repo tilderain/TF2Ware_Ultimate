@@ -331,7 +331,7 @@ function ComboCheck(player)
 function DisplayNextMicro(micro)
 {
 	if(micro > 16) return
-	Ware_ShowText(Ware_Players, CHANNEL_MISC, "NEXT: " + microgame_info[micro][0], 4, "128 128 128", -1, -0.70)
+	Ware_ShowText(Ware_Players, CHANNEL_MISC, "NEXT: " + microgame_info[micro_rotation[micro_num+1]][0], 4, "128 128 128", -1, -0.70)
 }
 
 function GiocaJouer_PassPlayerWithSpeed(player)
