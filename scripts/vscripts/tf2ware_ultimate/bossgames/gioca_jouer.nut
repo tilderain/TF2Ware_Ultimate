@@ -259,7 +259,7 @@ function GiocaJouer_PassPlayerWithSpeed(player)
 			minidata.gj_is_pass = true
 			local timer = micro_second_phase ? TIMER_SECOND*2 : TIMER_FIRST
 			local sub_time = (Time() - micro_time_start)
-			if (micro_second_phase) sub_time * 2
+			if (micro_second_phase) sub_time *= 2
 			minidata.gj_passed += (timer - sub_time) * 75
 			ComboCheck(player)
 			ShowScores(player, minidata.gj_passed)
