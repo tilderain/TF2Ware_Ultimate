@@ -30,6 +30,8 @@ micro_second_phase <- false
 TIMER_FIRST <- 3.5820886
 TIMER_SECOND <- 1.791044
 
+min_score <- 4000
+
 minigame <- Ware_MinigameData
 ({
 	name          = "Gioca Jouer"
@@ -94,6 +96,7 @@ function OnStart()
 	// TODO: incorporate into array somehow?
 	GiocaJouer_Countdown(5.43) // first round
 	GiocaJouer_Countdown(83.05) // second round
+	Ware_CreateTimer(@() PrintScorers(), 83.05)
 	
 	// set a timer for each microgame. each tick of
 	// the "clock" ends the previous microgame,
@@ -102,6 +105,67 @@ function OnStart()
 	{
 		Ware_CreateTimer(@() GiocaJouer_Clock(), 22.394 + (TIMER_FIRST * i))
 		Ware_CreateTimer(@() GiocaJouer_Clock(), 101.723 + (TIMER_SECOND * i))
+	}
+}
+
+function GetWinThreshhold()
+{
+
+	local win_threshold
+	if (Ware_Players.len() > 64)
+		win_threshold = 10
+	else if (Ware_Players.len() > 24)
+		win_threshold = 6
+	else if (Ware_Players.len() > 3)
+		win_threshold = 3
+	else
+		win_threshold = 1
+
+	return win_threshold
+}
+
+function GetScoreList()
+{
+	local playerScoreList = []
+	foreach (player in Ware_MinigamePlayers) 
+	{
+		local minidata = Ware_GetPlayerMiniData(player)
+	    playerScoreList.append
+		({
+	        player = player
+	        score = minidata.gj_score
+	    })
+	}
+
+	playerScoreList.sort(@(a, b) b.score <=> a.score)
+
+	return playerScoreList
+}
+
+function PrintScorers(printyou=true)
+{
+	local win_threshold = GetWinThreshhold()
+	local playerScoreList = GetScoreList()
+	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++) 
+	{
+	    Ware_ChatPrint(null, "{player}{color} has {int} points!", 
+			playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score)
+	}
+
+	local topPlayers = []
+	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++)
+	    topPlayers.append(playerScoreList[i].player)
+
+	if(!printyou) return
+
+	foreach (player in Ware_Players)
+	{
+		if (topPlayers.find(player) == null)
+		{
+			local minidata = Ware_GetPlayerMiniData(player)
+			Ware_ChatPrint(player, "You have {int} points!", 
+			minidata.gj_score)
+		}
 	}
 }
 
@@ -122,53 +186,6 @@ function GiocaJouer_Countdown(delay)
 			// kill the overlay
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, null)
 		}
-	}, delay * Ware_GetPitchFactor())
-
-	Ware_CreateTimer(function()
-	{
-		local playerScoreList = []
-		foreach (player in Ware_MinigamePlayers) 
-		{
-			local minidata = Ware_GetPlayerMiniData(player)
-		    playerScoreList.append
-			({
-		        player = player
-		        score = minidata.gj_score
-		    })
-		}
-
-		playerScoreList.sort(@(a, b) b.score <=> a.score)
-
-		local win_threshold
-		if (Ware_Players.len() > 64)
-			win_threshold = 10
-		else if (Ware_Players.len() > 24)
-			win_threshold = 6
-		else if (Ware_Players.len() > 3)
-			win_threshold = 3
-		else
-			win_threshold = 1
-
-		for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++) 
-		{
-		    Ware_ChatPrint(null, "{player}{color} has {int} points!", 
-				playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score)
-		}
-
-		local topPlayers = []
-		for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++)
-		    topPlayers.append(playerScoreList[i].player)
-
-		foreach (player in Ware_Players)
-		{
-			if (topPlayers.find(player) == null)
-			{
-				local minidata = Ware_GetPlayerMiniData(player)
-				Ware_ChatPrint(player, "You have {int} points!", 
-				minidata.gj_score)
-			}
-		}
-	
 	}, delay * Ware_GetPitchFactor())
 }
 
@@ -518,52 +535,41 @@ function OnMicroEnd()
 
 function OnEnd()
 {
-	local high_score = 0
 	local winners = []
-	local threshold = 28
-	local reached_threshold = false
-	foreach(player in Ware_MinigamePlayers)
+
+	local win_threshold = GetWinThreshhold()
+	local playerScoreList = GetScoreList()
+	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++) 
 	{
-		local minidata = Ware_GetPlayerMiniData(player)
-		local score = minidata.gj_score
-		
-		if (score >= threshold)
-		{
-			if (!reached_threshold)
-			{
-				reached_threshold = true
-				winners.clear()
-			}
-			winners.append(player)
-		}
-		else if (!reached_threshold && score > high_score)
-		{
-			high_score = score
-			winners.clear()
-			winners.append(player)
-		}
-		else if (score == high_score)
-		{
-			winners.append(player)
-		}
+	    Ware_ChatPrint(null, "{player}{color} has {int} points!", 
+			playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score)
 	}
-	
-	foreach(player in winners)
+
+	local winners = []
+	local low_score = min_score
+	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++)
 	{
-		Ware_PassPlayer(player, true)
-		Ware_ChatPrint(player, "You won! Your score was {color}{int}",	
-			COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score)
+		if(playerScoreList[i].score >= min_score)
+	    	winners.append(playerScoreList[i].player)
+		low_score = playerScoreList[i].score
 	}
-	
-	if(!reached_threshold)
+
+
+	if (winners.len() >= 1)
 	{
+		foreach(player in winners)
+		{
+			Ware_PassPlayer(player, true)
+			Ware_ChatPrint(player, "You won! Your score was {color}{int}",	
+				COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score)
+		}
 		foreach(player in Ware_MinigamePlayers)
 		{
 			if (!Ware_IsPlayerPassed(player))
 			{
-				Ware_ChatPrint(player, "You lose! Your score was {color}{int}{color}, but the winning score was {color}{int}",
+				Ware_ChatPrint(player, "You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
 					COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score, TF_COLOR_DEFAULT
-					COLOR_LIME, high_score)
+					COLOR_LIME, low_score)
 			}
 		}
 	}
@@ -575,7 +581,7 @@ function OnEnd()
 			{
 				Ware_ChatPrint(player, "You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
 					COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score, TF_COLOR_DEFAULT
-					COLOR_LIME, threshold)
+					COLOR_LIME, min_score)
 			}
 		}
 	}
