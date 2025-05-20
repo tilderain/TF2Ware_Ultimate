@@ -64,10 +64,10 @@ microgame_info <-
 	[ "Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell"     1], // MICRO_BELL
 	[ "Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay"     1], // MICRO_OKAY
 	[ "Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic"           1], // MICRO_KISS
-	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise" 0.75], // MICRO_COMB
+	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise" 0.9], // MICRO_COMB
 	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1], // MICRO_WAVE2
 	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt"              1], // MICRO_WAVE3
-	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          0.75], // MICRO_SUPER
+	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          0.9], // MICRO_SUPER
 	[ null,                          null,                                                 null], // MICRO_RESET
 ]
 
@@ -405,7 +405,7 @@ function OnUpdate()
 				break
 			case MICRO_SKI:
 				if (GetPropInt(player, "m_nButtons") & IN_MOVELEFT)
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_SPRAY:
 				if (sprayed_players.find(player) != null)
