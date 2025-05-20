@@ -156,7 +156,7 @@ function PrintScorers(printyou=true)
 	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++)
 	    topPlayers.append(playerScoreList[i].player)
 
-	if(!printyou) return
+	if (!printyou) return
 
 	foreach (player in Ware_Players)
 	{
@@ -206,7 +206,7 @@ function GiocaJouer_PassPlayer(player, pass)
 	local minidata = Ware_GetPlayerMiniData(player)
 	if ("gj_passed" in minidata)
 	{
-		if(pass)
+		if (pass)
 			minidata.gj_passed += micro_second_phase ? 2 : 1
 		//local text = pass ? "^" : "X"
 		//Ware_ShowText(player, CHANNEL_BACKUP, text, 0.25, "255 255 255", -1, -0.5)
@@ -221,7 +221,7 @@ function GetScoreThreshhold(gj_passed)
 	for (local i = 0; i < scores.len(); i++) 
 		scores[i] = scores[i] * microgame_info[micro][sel]
 	for (local i = 0; i < scores.len(); i++) 
-		if(gj_passed > scores[i])
+		if (gj_passed > scores[i])
 			return i
 	return 5
 }
@@ -231,11 +231,11 @@ function GetScoreTextAndColor(gj_passed)
 	local score = GetScoreThreshhold(gj_passed)
 	local text
 	local color
-	if(score == 0) {text = "PERFECT!!"; color = "253 61 181"}
-	else if(score == 1) {text = "GREAT!"; color = "0 255 255"}
-	else if(score == 2) {text = "GOOD"; color = "0 255 0"}
-	else if(score == 3) {text = "OK"; color = "255 255 255"}
-	else if(score == 4) {text = "BAD"; color = "200 200 200"}
+	if (score == 0) {text = "PERFECT!!"; color = "253 61 181"}
+	else if (score == 1) {text = "GREAT!"; color = "0 255 255"}
+	else if (score == 2) {text = "GOOD"; color = "0 255 0"}
+	else if (score == 3) {text = "OK"; color = "255 255 255"}
+	else if (score == 4) {text = "BAD"; color = "200 200 200"}
 	else {text = "AWFUL"; color = "255 0 0"}
 	return [text, color]
 }
@@ -248,7 +248,7 @@ function ShowScores(player, gj_passed)
 	local timer = micro_second_phase ? TIMER_SECOND / 2 : TIMER_FIRST / 2
 	Ware_ShowText(player, CHANNEL_MINIGAME, scores[0] + " +" + floor(gj_passed).tostring(), timer, scores[1], -1, -0.55)
 	//Ware_ShowText(player, CHANNEL_MINIGAME, scores[0], timer, scores[1], -1, -0.55)
-	if(minidata.gj_combo > 1)
+	if (minidata.gj_combo > 1)
 		Ware_ShowText(player, CHANNEL_BACKUP,
 			minidata.gj_combo + " COMBO",
 			timer, scores[1], -1, -0.60)
@@ -261,7 +261,7 @@ function ComboCheck(player)
 {
 	local minidata = Ware_GetPlayerMiniData(player)
 	local score = GetScoreThreshhold(minidata.gj_passed)
-	if(score == 0)
+	if (score == 0)
 		minidata.gj_combo += 1
 	else
 		minidata.gj_combo = 0
@@ -272,7 +272,7 @@ function GiocaJouer_PassPlayerWithSpeed(player)
 	local minidata = Ware_GetPlayerMiniData(player)
 	if ("gj_passed" in minidata && "gj_is_pass" in minidata)
 	{
-		if(!minidata.gj_is_pass)
+		if (!minidata.gj_is_pass)
 		{
 			minidata.gj_is_pass = true
 			local timer = micro_second_phase ? TIMER_SECOND*2 : TIMER_FIRST
@@ -506,7 +506,7 @@ function OnMicroEnd()
 				Ware_StripPlayer(player, true)
 				break
 		}
-		if(!minidata.gj_is_pass)
+		if (!minidata.gj_is_pass)
 		{
 			ComboCheck(player)
 			ShowScores(player, minidata.gj_passed)
@@ -549,7 +549,7 @@ function OnEnd()
 	local low_score = min_score
 	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++)
 	{
-		if(playerScoreList[i].score >= min_score)
+		if (playerScoreList[i].score >= min_score)
 	    	winners.append(playerScoreList[i].player)
 		low_score = playerScoreList[i].score
 	}
