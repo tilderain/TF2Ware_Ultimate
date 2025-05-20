@@ -68,7 +68,7 @@ microgame_info <-
 	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1, 0.8], // MICRO_WAVE2
 	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt"              1, 0.8], // MICRO_WAVE3
 	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          0.85, 0.5], // MICRO_SUPER
-	[ null,                          null,                                                 null], // MICRO_RESET
+	[ null,                          null,                                                 null, null], // MICRO_RESET
 ]
 
 function OnPrecache()
@@ -429,7 +429,7 @@ function OnUpdate()
 				}
 				break
 			case MICRO_SUPER:
-				if (player.GetOrigin().z > -6800.0)
+				if (player.GetOrigin().z > -6900.0)
 					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 		}
