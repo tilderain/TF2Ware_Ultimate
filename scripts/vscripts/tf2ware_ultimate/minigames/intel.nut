@@ -134,7 +134,7 @@ function OnStart()
 
 	for (local i = 0; i < order.len(); i++)
 	{
-		if(i == 0)
+		if(order[i] == 0)
 		{
 			SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(poses[i], 300, 100))
 			SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(poses[i], -100, 100))
@@ -142,6 +142,7 @@ function OnStart()
 		else
 		{
 			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0,1))
+			SpawnSawblade(Ware_MinigameLocation.center_bottom + Vector(poses[i], 0, 40))
 			SpawnSawblade(Ware_MinigameLocation.center_bottom + Vector(poses[i], 0, 40))
 		}
 	}
