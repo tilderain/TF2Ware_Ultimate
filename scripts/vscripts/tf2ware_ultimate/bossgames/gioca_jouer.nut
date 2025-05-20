@@ -572,6 +572,7 @@ function OnEnd()
 					COLOR_LIME, low_score)
 			}
 		}
+		Ware_GiveBonusPoints(winners[0])
 	}
 	else
 	{
