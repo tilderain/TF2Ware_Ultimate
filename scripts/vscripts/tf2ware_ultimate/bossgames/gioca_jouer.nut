@@ -92,6 +92,7 @@ function OnStart()
 		minidata.gj_passed <- 0
 		minidata.gj_is_pass <- false
 		minidata.gj_combo <- 0
+		minidata.gj_highest_chombo <- 0
 	}
 	// TODO: incorporate into array somehow?
 	GiocaJouer_Countdown(5.43) // first round
@@ -134,6 +135,7 @@ function GetScoreList()
 		({
 	        player = player
 	        score = minidata.gj_score
+			combo = minidata.gj_highest_chombo
 	    })
 	}
 
@@ -148,8 +150,8 @@ function PrintScorers(printyou=true)
 	local playerScoreList = GetScoreList()
 	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++) 
 	{
-	    Ware_ChatPrint(null, "{player}{color} has {int} points!", 
-			playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score)
+	    Ware_ChatPrint(null, "{player}{color} has {int} points, with a combo high of {int}! ", 
+			playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score,  playerScoreList[i].combo)
 	}
 
 	local topPlayers = []
@@ -262,7 +264,11 @@ function ComboCheck(player)
 	local minidata = Ware_GetPlayerMiniData(player)
 	local score = GetScoreThreshhold(minidata.gj_passed)
 	if (score == 0)
+	{
 		minidata.gj_combo += 1
+		if(minidata.gj_combo > minidata.gj_highest_chombo)
+			minidata.gj_highest_chombo = minidata.gj_combo
+	}
 	else
 		minidata.gj_combo = 0
 }
@@ -549,8 +555,8 @@ function OnEnd()
 	local playerScoreList = GetScoreList()
 	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++) 
 	{
-	    Ware_ChatPrint(null, "{player}{color} has {int} points!", 
-			playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score)
+	    Ware_ChatPrint(null, "{player}{color} has {int} points, with a combo high of {int}! ", 
+			playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score,  playerScoreList[i].combo)
 	}
 
 	local winners = []
