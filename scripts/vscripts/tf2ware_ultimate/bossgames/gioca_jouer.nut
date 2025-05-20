@@ -40,6 +40,9 @@ minigame <- Ware_MinigameData
 	location      = "boxarena"
 	music         = "giocajouer"
 	start_pass    = false
+	convars = {
+		tf_max_voice_speak_delay = -1
+	}
 })
 
 pass_sound <- "Halloween.PumpkinDrop"
@@ -138,7 +141,8 @@ function GiocaJouer_PassPlayer(player, pass)
 	local minidata = Ware_GetPlayerMiniData(player)
 	if ("gj_passed" in minidata)
 	{
-		minidata.gj_passed += pass ? 1 : 0
+		if(pass)
+			minidata.gj_passed += micro_second_phase ? 2 : 1
 		local text = pass ? "^" : "X"
 		Ware_ShowText(player, CHANNEL_BACKUP, text, 0.25, "255 255 255", -1, -0.5)
 	}
@@ -150,8 +154,8 @@ function GetScoreTextAndColor(gj_passed)
 	local text
 	local color
 	if(gj_passed > 235) {text = "PERFECT!!"; color = "253 61 181"}
-	else if(gj_passed > 215) {text = "GREAT!"; color = "0 255 255"}
-	else if(gj_passed > 170) {text = "GOOD"; color = "0 255 0"}
+	else if(gj_passed > 200) {text = "GREAT!"; color = "0 255 255"}
+	else if(gj_passed > 160) {text = "GOOD"; color = "0 255 0"}
 	else if(gj_passed > 120) {text = "OK"; color = "255 255 255"}
 	else if(gj_passed > 70) {text = "BAD"; color = "200 200 200"}
 	else {text = "AWFUL"; color = "255 0 0"}
@@ -161,7 +165,7 @@ function GetScoreTextAndColor(gj_passed)
 function ShowScores(player, gj_passed)
 {
 	local scores = GetScoreTextAndColor(gj_passed)
-	local timer = micro_second_phase ? TIMER_SECOND - 0.75 : TIMER_FIRST - 0.75
+	local timer = micro_second_phase ? TIMER_SECOND - 1 : TIMER_FIRST - 1
 	Ware_ShowText(player, CHANNEL_MINIGAME, 
 		scores[0] + " +" + floor(gj_passed).tostring(),
 		4, scores[1], -1, -0.55)
