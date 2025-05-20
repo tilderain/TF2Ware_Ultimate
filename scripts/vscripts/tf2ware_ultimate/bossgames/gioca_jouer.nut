@@ -122,6 +122,53 @@ function GiocaJouer_Countdown(delay)
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, null)
 		}
 	}, delay * Ware_GetPitchFactor())
+
+	Ware_CreateTimer(function()
+	{
+		local playerScoreList = []
+		foreach (player in Ware_MinigamePlayers) 
+		{
+			local minidata = Ware_GetPlayerMiniData(player)
+		    playerScoreList.append
+			({
+		        player = player
+		        score = minidata.gj_score
+		    })
+		}
+
+		playerScoreList.sort(@(a, b) b.score <=> a.score)
+
+		local win_threshold
+		if (Ware_Players.len() > 64)
+			win_threshold = 10
+		else if (Ware_Players.len() > 24)
+			win_threshold = 6
+		else if (Ware_Players.len() > 3)
+			win_threshold = 3
+		else
+			win_threshold = 1
+
+		for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++) 
+		{
+		    Ware_ChatPrint(null, "{player}{color} has {int} points!", 
+				playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score)
+		}
+
+		local topPlayers = []
+		for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++)
+		    topPlayers.append(playerScoreList[i].player)
+
+		foreach (player in Ware_Players)
+		{
+			if (topPlayers.find(player) == null)
+			{
+				local minidata = Ware_GetPlayerMiniData(player)
+				Ware_ChatPrint(player, "You have {int} points!", 
+				minidata.gj_score)
+			}
+		}
+	
+	}, delay * Ware_GetPitchFactor())
 }
 
 function GiocaJouer_Clock()
@@ -151,13 +198,14 @@ function GiocaJouer_PassPlayer(player, pass)
 
 function GetScoreTextAndColor(gj_passed)
 {
+	local scores = [235, 200, 160, 120, 70]
 	local text
 	local color
-	if(gj_passed > 235) {text = "PERFECT!!"; color = "253 61 181"}
-	else if(gj_passed > 200) {text = "GREAT!"; color = "0 255 255"}
-	else if(gj_passed > 160) {text = "GOOD"; color = "0 255 0"}
-	else if(gj_passed > 120) {text = "OK"; color = "255 255 255"}
-	else if(gj_passed > 70) {text = "BAD"; color = "200 200 200"}
+	if(gj_passed > scores[0]) {text = "PERFECT!!"; color = "253 61 181"}
+	else if(gj_passed > scores[1]) {text = "GREAT!"; color = "0 255 255"}
+	else if(gj_passed > scores[2]) {text = "GOOD"; color = "0 255 0"}
+	else if(gj_passed > scores[3]) {text = "OK"; color = "255 255 255"}
+	else if(gj_passed > scores[4]) {text = "BAD"; color = "200 200 200"}
 	else {text = "AWFUL"; color = "255 0 0"}
 	return [text, color]
 }
@@ -165,10 +213,10 @@ function GetScoreTextAndColor(gj_passed)
 function ShowScores(player, gj_passed)
 {
 	local scores = GetScoreTextAndColor(gj_passed)
-	local timer = micro_second_phase ? TIMER_SECOND - 1 : TIMER_FIRST - 1
+	local timer = micro_second_phase ? TIMER_SECOND / 2 : TIMER_FIRST / 2
 	Ware_ShowText(player, CHANNEL_MINIGAME, 
 		scores[0] + " +" + floor(gj_passed).tostring(),
-		4, scores[1], -1, -0.55)
+		timer, scores[1], -1, -0.55)
 }
 
 function GiocaJouer_PassPlayerWithSpeed(player)
