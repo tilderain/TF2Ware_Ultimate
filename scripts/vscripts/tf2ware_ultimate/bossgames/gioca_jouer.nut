@@ -489,7 +489,7 @@ function OnUpdate()
 				break
 			case MICRO_SNEEZE:
 				if (player.GetFlags() & FL_DUCKING)
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_WALK:
 				if (player.GetAbsVelocity().Length() > 75.0)
