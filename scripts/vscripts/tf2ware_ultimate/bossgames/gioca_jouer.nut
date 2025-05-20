@@ -287,7 +287,6 @@ function GiocaJouer_PassPlayerWithSpeed(player)
 			minidata.gj_passed += (timer - sub_time) * 75
 			ComboCheck(player)
 			ShowScores(player, minidata.gj_passed)		
-			DisplayNextMicro(player, micro+1)
 		}
 	}
 
@@ -322,6 +321,9 @@ function GiocaJouer_CheckTauntableMelee(player)
 
 function OnMicroStart()
 {
+
+	DisplayNextMicro(player, micro+1)
+
 	minigame.description = microgame_info[micro][0]
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
 
@@ -517,10 +519,9 @@ function OnMicroEnd()
 		{
 			ComboCheck(player)
 			ShowScores(player, minidata.gj_passed)
-			DisplayNextMicro(player, micro+2)
+
 		}
-
-
+			
 		if (minidata.gj_passed>70)
 		{			
 
