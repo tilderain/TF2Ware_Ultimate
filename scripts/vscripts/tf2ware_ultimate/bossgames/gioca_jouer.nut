@@ -322,8 +322,6 @@ function GiocaJouer_CheckTauntableMelee(player)
 function OnMicroStart()
 {
 
-	DisplayNextMicro(player, micro+1)
-
 	minigame.description = microgame_info[micro][0]
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
 
@@ -340,6 +338,7 @@ function OnMicroStart()
 	// start passed? and also any microgames that need setup
 	foreach(player in Ware_MinigamePlayers)
 	{
+		DisplayNextMicro(player, micro+1)
 		if (!player.IsAlive())
 			continue
 		
