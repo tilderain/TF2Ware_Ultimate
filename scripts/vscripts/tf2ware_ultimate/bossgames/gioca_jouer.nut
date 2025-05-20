@@ -248,8 +248,8 @@ function ShowScores(player, gj_passed)
 
 	local scores = GetScoreTextAndColor(gj_passed)
 	local timer = micro_second_phase ? TIMER_SECOND / 2 : TIMER_FIRST / 2
-	Ware_ShowText(player, CHANNEL_MINIGAME, scores[0] + " +" + floor(gj_passed).tostring(), timer, scores[1], -1, -0.55)
-	//Ware_ShowText(player, CHANNEL_MINIGAME, scores[0], timer, scores[1], -1, -0.55)
+	//Ware_ShowText(player, CHANNEL_MINIGAME, scores[0] + " +" + floor(gj_passed).tostring(), timer, scores[1], -1, -0.55)
+	Ware_ShowText(player, CHANNEL_MINIGAME, scores[0], timer, scores[1], -1, -0.55)
 	if (minidata.gj_combo > 1)
 		Ware_ShowText(player, CHANNEL_BACKUP,
 			minidata.gj_combo + " COMBO",
