@@ -199,7 +199,7 @@ function GiocaJouer_PassPlayer(player, pass)
 
 function GetScoreThreshhold(gj_passed)
 {
-	local scores = [225, 190, 150, 120, 70]
+	local scores = [230, 205, 170, 140, 100]
 	for (local i = 0; i < scores.len(); i++) 
 		scores[i] = scores[i] * microgame_info[micro][2]
 	for (local i = 0; i < scores.len(); i++) 
@@ -397,11 +397,11 @@ function OnUpdate()
 				break
 			case MICRO_WALK:
 				if (player.GetAbsVelocity().Length() > 75.0)
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_SWIM:
 				if (player.GetAbsVelocity().Length() > 75.0)
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayerWithSpeed(player, true)
 				break
 			case MICRO_SKI:
 				if (GetPropInt(player, "m_nButtons") & IN_MOVELEFT)
