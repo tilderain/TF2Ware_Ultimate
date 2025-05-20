@@ -22,7 +22,29 @@ MICRO_WAVE3  <- 15  // re-taunt
 MICRO_SUPER  <- 16  // rocket jump
 MICRO_RESET  <- 17  // Reset. If we consider "reset" a microgame then we dont have to make a separate reset function, and we get previous OnMicroEnd call for free.
 
+chrises <-
+[
+	"tf2ware_ultimate/gioca/sleep"
+	"tf2ware_ultimate/gioca/wave"
+	"tf2ware_ultimate/gioca/hitch"
+	"tf2ware_ultimate/gioca/sneeze"
+	"tf2ware_ultimate/gioca/walk"
+	"tf2ware_ultimate/gioca/swim"
+	"tf2ware_ultimate/gioca/ski"
+	"tf2ware_ultimate/gioca/spray"
+	"tf2ware_ultimate/gioca/macho"
+	"tf2ware_ultimate/gioca/horn"
+	"tf2ware_ultimate/gioca/ring"
+	"tf2ware_ultimate/gioca/ok"
+	"tf2ware_ultimate/gioca/kiss"
+	"tf2ware_ultimate/gioca/comb"
+	"tf2ware_ultimate/gioca/wave2nd"
+	"tf2ware_ultimate/gioca/wave3rd"
+	"tf2ware_ultimate/gioca/super"
+]
+
 micro <- null        // microgame tracker
+micro_num <- 0        // microgame num
 
 micro_time_start <- 0.0
 micro_second_phase <- false
@@ -32,6 +54,8 @@ TIMER_SECOND <- 1.791044
 
 min_score <- 4000
 
+micro_rotation <- [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
+
 minigame <- Ware_MinigameData
 ({
 	name          = "Gioca Jouer"
@@ -40,7 +64,7 @@ minigame <- Ware_MinigameData
 	duration      = 140.0
 	end_delay     = 1.0
 	location      = "boxarena"
-	music         = "giocajouer"
+	music         = "giocajourer-inst"
 	start_pass    = false
 	convars = {
 		tf_max_voice_speak_delay = -1
@@ -49,6 +73,15 @@ minigame <- Ware_MinigameData
 
 pass_sound <- "Halloween.PumpkinDrop"
 fail_sound <- "TF2Ware_Ultimate.Fail"
+
+announcements <-
+[
+	["tf2ware_ultimate/gioca/123.mp3", 5.511],
+	["tf2ware_ultimate/gioca/yaa.mp3", 80.727],
+	["tf2ware_ultimate/gioca/1232.mp3", 83.05],
+	["tf2ware_ultimate/gioca/superdance.mp3", 87.403],
+	["tf2ware_ultimate/gioca/alright.mp3", 132.380],
+]
 
 microgame_info <-
 [
@@ -76,12 +109,17 @@ microgame_info <-
 function OnPrecache()
 {
 	PrecacheScriptSound(pass_sound)
+	foreach(announcement in announcements)
+	{
+		PrecacheSound(announcement[0])
+	}
+	foreach(sound in chrises)
+	{
+		PrecacheSound(format("%s.mp3", sound))
+		PrecacheSound(format("%s2.mp3", sound))
+	}
 }
 
-function OnPick()
-{
-	return Ware_TimeScale == 1.0 // gioca doesnt really work at other timescales
-}
 
 function OnStart()
 {
@@ -98,6 +136,19 @@ function OnStart()
 	GiocaJouer_Countdown(5.43) // first round
 	GiocaJouer_Countdown(83.05) // second round
 	Ware_CreateTimer(@() PrintScorers(), 83.05)
+
+	Shuffle(micro_rotation)
+
+	micro_rotation.append(MICRO_WAVE2)
+	micro_rotation.append(MICRO_WAVE3)
+	micro_rotation.append(MICRO_SUPER)
+	micro_rotation.append(MICRO_RESET)
+	
+	foreach(announcement in announcements)
+	{
+		local sound = announcement[0] //squirrel
+		Ware_CreateTimer(@() Ware_PlaySoundOnAllClients(sound), announcement[1])
+	}
 	
 	// set a timer for each microgame. each tick of
 	// the "clock" ends the previous microgame,
@@ -181,24 +232,28 @@ function GiocaJouer_Countdown(delay)
 			// count up to 8
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%s", timer.tostring()))
 			timer++
-			return 0.489 * Ware_GetPitchFactor()
+			return 0.489
 		}
 		else
 		{
 			// kill the overlay
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, null)
 		}
-	}, delay * Ware_GetPitchFactor())
+	}, delay)
 }
 
 function GiocaJouer_Clock()
 {
 	if (micro == null)
+	{
 		micro = 0
+		if(micro_num > 0)
+			micro_num++
+	}
 	else
 	{
 		OnMicroEnd()
-		micro++
+		micro_num++
 	}
 	OnMicroStart()
 }
@@ -327,6 +382,7 @@ function GiocaJouer_CheckTauntableMelee(player)
 
 function OnMicroStart()
 {
+	micro = micro_rotation[micro_num%18]
 	DisplayNextMicro(micro+1)
 	minigame.description = microgame_info[micro][0]
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
@@ -340,7 +396,12 @@ function OnMicroStart()
 		micro_second_phase = true
 		return
 	}
-	
+
+	local sound = chrises[micro]
+	if(micro_num > 16) sound += "2"
+	sound += ".mp3"
+	Ware_PlaySoundOnAllClients(sound)
+
 	// start passed? and also any microgames that need setup
 	foreach(player in Ware_MinigamePlayers)
 	{
@@ -382,6 +443,10 @@ function OnMicroStart()
 	}
 	// do this one a minigame early bcuz original did it. otherwise move to MICRO_SUPER
 	else if (micro == MICRO_WAVE3)
+	{
+		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
+	}
+	else if (micro == MICRO_SUPER)
 	{
 		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
 	}
