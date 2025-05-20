@@ -401,7 +401,7 @@ function OnUpdate()
 				break
 			case MICRO_SWIM:
 				if (player.GetAbsVelocity().Length() > 75.0)
-					GiocaJouer_PassPlayerWithSpeed(player, true)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_SKI:
 				if (GetPropInt(player, "m_nButtons") & IN_MOVELEFT)
