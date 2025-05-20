@@ -10,10 +10,8 @@ minigame <- Ware_MinigameData
 	thirdperson = true
 })
 
-show_anno <- false
-
 spinner_model <- "models/empty.mdl"
-beam_model <- "sprites/laser.vmt"
+beam_model <- "sprites/laserbeam.vmt"
 fence_model <- "models/props_gameplay/security_fence_section01.mdl"
 screen_model <- "models/props_spytech/computer_screen_01.mdl"
 sawblade_model <- "models/props_forest/sawblade_moving.mdl"
@@ -22,11 +20,11 @@ intel_pos <- null
 goal_pos <- null
 
 beam <- null
-beam_hurt <- null
-
-laser_count <- 0
 
 lasers <- []
+laser_count <- 0
+
+show_anno <- false
 
 function OnPrecache()
 {
@@ -46,44 +44,33 @@ function OnTeleport(players)
 		700.0, 
 		30.0, 45.0)
 }
-xRange <- [-750, 750]
-yRange <- [-300, 375]
-zRange <- [0, 200]
+
+x_range <- [-750, 750]
+y_range <- [-300, 375]
+z_range <- [0, 200]
 
 function OnUpdate() 
 {
-    local minigameLocation = Ware_MinigameLocation.center_bottom
-    local margin = 0.1
-
+    local pos = Ware_MinigameLocation.center_bottom
     foreach (prop in lasers) 
 	{
         local vel = prop.GetAbsVelocity()
         local pos = prop.GetOrigin()
 
-        if (pos.x - minigameLocation.x > xRange[1]) 
-		{
-            vel.x = -abs(vel.x)
-        }
-		else if (pos.x - minigameLocation.x < xRange[0]) 
-		{
-            vel.x = abs(vel.x)
-        }
-        if (pos.y - minigameLocation.y > yRange[1]) 
-		{
-            vel.y = -abs(vel.y)
-        }
-		else if (pos.y - minigameLocation.y < yRange[0]) 
-		{
-            vel.y = abs(vel.y)
-        }
-        if (pos.z - minigameLocation.z > zRange[1]) 
-		{
-            vel.z = -abs(vel.z)
-        }
-		else if (pos.z - minigameLocation.z < zRange[0]) 
-		{
-            vel.z = abs(vel.z)
-        }
+        if (pos.x - pos.x > x_range[1]) 
+            vel.x = -fabs(vel.x)
+		else if (pos.x - pos.x < x_range[0]) 
+            vel.x = fabs(vel.x)
+
+        if (pos.y - pos.y > y_range[1]) 
+            vel.y = -fabs(vel.y)
+		else if (pos.y - pos.y < y_range[0]) 
+            vel.y = fabs(vel.y)
+			
+        if (pos.z - pos.z > z_range[1]) 
+            vel.z = -fabs(vel.z)
+		else if (pos.z - pos.z < z_range[0]) 
+            vel.z = fabs(vel.z)
 
         prop.SetAbsVelocity(vel)
     }
@@ -126,30 +113,28 @@ function OnStart()
 
 	SpawnIntel()
 
-	//spinner = 0
-	local order = [0,1,1]
+	local order = [0, 1, 1]
 	local poses = [500, 0, -500]
 	Shuffle(order)
 	Shuffle(poses)
 
 	for (local i = 0; i < order.len(); i++)
 	{
-		if(order[i] == 0)
+		if (order[i] == 0)
 		{
 			SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(poses[i], 300, 100))
 			SpawnSpinner(Ware_MinigameLocation.center_bottom + Vector(poses[i], -100, 100))
 		}
 		else
 		{
-			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0,1))
+			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0, 1))
 			SpawnSawblade(Ware_MinigameLocation.center_bottom + Vector(poses[i], 0, 40))
-			if(RandomBool())
-				SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0,1))
+			if (RandomBool())
+				SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0, 1))
 			else
 				SpawnSawblade(Ware_MinigameLocation.center_bottom + Vector(poses[i], 0, 40))
 		}
 	}
-
 
 	local zone = Ware_SpawnEntity("func_capturezone",
 	{
@@ -196,18 +181,18 @@ function SpawnSawblade(pos)
 {
 	local beam = Ware_SpawnEntity("prop_dynamic",
 	{
-		origin = pos
-		model = sawblade_model
-		damage = 3000
-		defaultanim = "idle"
-		angles = QAngle(0, 90, 0)
-		disableshadows = true
-		spawnflags   = SF_PHYSPROP_TOUCH
-		minhealthdmg = 9999999 // don't destroy on touch			
+		origin          = pos
+		model           = sawblade_model
+		damage          = 3000
+		defaultanim     = "idle"
+		angles          = QAngle(0, 90, 0)
+		spawnflags      = SF_PHYSPROP_TOUCH
+		disableshadows  = true		
+		minhealthdmg    = 9999999 // don't destroy on touch			
 	})
 
 	local speed = RandomFloat(100, 400)
-	if(RandomBool())
+	if (RandomBool())
 		speed = -speed
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
 	
@@ -238,15 +223,15 @@ function SpawnLaser(pos, type)
 
 	local beam = Ware_SpawnEntity("func_tracktrain",
 	{
-		targetname = "test" + laser_count
-		origin = pos + add_vec
+		targetname = "ware_laser_" + laser_count
+		origin     = pos + add_vec
 	})
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
 
 	local speed = RandomFloat(30, 90)
 	if (type == 1)
 		speed = RandomFloat(100, 200)
-	if(RandomBool())
+	if (RandomBool())
 		speed = -speed
 	local vel = beam.GetAbsVelocity()
 	if (type == 0)
@@ -259,23 +244,24 @@ function SpawnLaser(pos, type)
 
 	local beam = Ware_SpawnEntity("env_laser",
 	{
-		origin = pos
-		texture = "sprites/laserbeam.spr"
+		origin        = pos
+		texture       = beam_model
 		TextureScroll = 35
-		width = 4
-		spawnflags = 48
-		rendercolor = "255 0 25"
-		damage = 75
-		dissolvetype = 1
-		LaserTarget = "test" + laser_count
+		width         = 4
+		spawnflags    = 48
+		rendercolor   = "255 0 25"
+		damage        = 75
+		dissolvetype  = 1
+		LaserTarget   = "ware_laser_" + laser_count
 	})
-	laser_count += 1
+	
+	laser_count++
 
 	if (type == 0)
 		speed = RandomFloat(30, 50)
 	else if (type == 1)
 		speed = RandomFloat(100, 200)
-	if(RandomBool())
+	if (RandomBool())
 		speed = -speed
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
 
