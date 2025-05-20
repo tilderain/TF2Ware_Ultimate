@@ -1243,6 +1243,25 @@ function GetKart(player)
 	return null
 }
 
+local function MakePlayerComplain(target)
+{
+	local type = RandomBool() ? "TLK_PLAYER_JEERS" : "TLK_PLAYER_NEGATIVE"
+	EntityEntFire(target, "SpeakResponseConcept", type)
+}
+
+local function MakePlayerCheer(target)
+{
+	local type = RandomBool() ? "TLK_PLAYER_POSITIVE" : "TLK_PLAYER_CHEERS"
+	EntityEntFire(target, "SpeakResponseConcept", type)
+}
+
+local function AddKillFeedAndVoiceCommand(victim, attacker, icon)
+{
+	AddKillFeedMessage(victim, attacker, icon)
+	MakePlayerComplain(victim)
+	MakePlayerCheer(attacker)
+}
+
 kart_routines <- 
 {
 	Destroy = function()
@@ -2089,7 +2108,11 @@ kart_routines <-
 		m_boost_type = type
 		m_boost_timer = Time() + duration
 		if (m_driver)
+		{
 			m_driver.AddCond(TF_COND_SPEED_BOOST)
+			if (type != BOOST_SURFACE)
+				MakePlayerCheer(m_driver)	
+		}
 	}
 	
 	BoostStop = function()
@@ -2129,6 +2152,8 @@ kart_routines <-
 		m_rescue_plane = m_map_next_plane
 
 		EntityEntFire(m_entity, "CallScriptFunction", "RescueStart", 1.0)
+		
+		MakePlayerComplain(m_driver)
 	}
 	
 	RescueStart = function()
@@ -2435,14 +2460,14 @@ kart_routines <-
 			if (m_star_timer == 0.0 
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
-				AddKillFeedMessage(m_driver, other.m_driver, "vehicle")
+				AddKillFeedAndVoiceCommand(m_driver, other.m_driver, "vehicle")
 			}
 		}
 		else if (other.m_mega_timer > 0.0)
 		{
 			if (m_star_timer == 0.0 && m_mega_timer == 0.0 && Squish(5.0))
 			{
-				AddKillFeedMessage(m_driver, other.m_driver, "rocketpack_stomp")
+				AddKillFeedAndVoiceCommand(m_driver, other.m_driver, "rocketpack_stomp")
 			}
 		}
 		else if (other.m_star_timer > 0.0)
@@ -2451,7 +2476,7 @@ kart_routines <-
 				&& m_star_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
-				AddKillFeedMessage(m_driver, other.m_driver, "wrench_golden")
+				AddKillFeedAndVoiceCommand(m_driver, other.m_driver, "wrench_golden")
 			}
 		}
 		// collision penalties disabled for more than 12 players
@@ -3210,7 +3235,7 @@ local function ExplosionCreate(origin, radius, duration, inflictor, owner_kart, 
 				
 				if (kart.Spinout(spinout_type))
 				{
-					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, m_icon)
+					AddKillFeedAndVoiceCommand(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, m_icon)
 				}
 			}
 			else if (classname == "mk_bomb")
@@ -3318,7 +3343,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 			{
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_SPIN))
 				{
-					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
+					AddKillFeedAndVoiceCommand(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
 				}
 				
 				Destroy()			
@@ -3328,7 +3353,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 			{
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
-					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
+					AddKillFeedAndVoiceCommand(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
 				}
 				
 				DispatchParticleEffect("drg_cow_explosion_sparkles", self.GetOrigin(), vec3_zero)
@@ -3370,7 +3395,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 			{
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
-					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
+					AddKillFeedAndVoiceCommand(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
 						m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
 				}
 
@@ -4187,10 +4212,13 @@ item_shock <-
 				continue
 	
 			AddKillFeedMessage(other.m_driver, kart.m_driver, "spellbook_lightning")
+			MakePlayerComplain(other.m_driver)						 
 			other.Shrink(max_time - delta_time * other.m_position_idx.tofloat() / player_count)
 			
 			other.DropItems()
 		}
+		
+		MakePlayerCheer(kart.m_driver)
 	}	
 }
 
