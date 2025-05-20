@@ -23,7 +23,12 @@ MICRO_SUPER  <- 16  // rocket jump
 MICRO_RESET  <- 17  // Reset. If we consider "reset" a microgame then we dont have to make a separate reset function, and we get previous OnMicroEnd call for free.
 
 micro <- null        // microgame tracker
-micro_grace <- false // tracks grace period for certain microgames.
+
+micro_time_start <- 0.0
+micro_second_phase <- false
+
+TIMER_FIRST <- 3.5820886
+TIMER_SECOND <- 1.791044
 
 minigame <- Ware_MinigameData
 ({
@@ -79,7 +84,8 @@ function OnStart()
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.gj_score <- 0
-		minidata.gj_passed <- false
+		minidata.gj_passed <- 0
+		minidata.gj_is_pass <- false
 	}
 	// TODO: incorporate into array somehow?
 	GiocaJouer_Countdown(5.43) // first round
@@ -90,8 +96,8 @@ function OnStart()
 	// increments "micro", and starts the next one.
 	for (local i = 0; i < 18; i++)
 	{
-		Ware_CreateTimer(@() GiocaJouer_Clock(), 22.394 + (3.5820886 * i))
-		Ware_CreateTimer(@() GiocaJouer_Clock(), 101.723 + (1.791044 * i))
+		Ware_CreateTimer(@() GiocaJouer_Clock(), 22.394 + (TIMER_FIRST * i))
+		Ware_CreateTimer(@() GiocaJouer_Clock(), 101.723 + (TIMER_SECOND * i))
 	}
 }
 
@@ -130,9 +136,55 @@ function GiocaJouer_Clock()
 function GiocaJouer_PassPlayer(player, pass)
 {
 	local minidata = Ware_GetPlayerMiniData(player)
-	if ("gj_passed" in  minidata)
-		minidata.gj_passed = pass
+	if ("gj_passed" in minidata)
+	{
+		minidata.gj_passed += pass ? 1 : 0
+		local text = pass ? "^" : "X"
+		Ware_ShowText(player, CHANNEL_BACKUP, text, 0.25, "255 255 255", -1, -0.5)
+	}
+
 }
+
+function GetScoreTextAndColor(gj_passed)
+{
+	local text
+	local color
+	if(gj_passed > 235) {text = "PERFECT!!"; color = "253 61 181"}
+	else if(gj_passed > 215) {text = "GREAT!"; color = "0 255 255"}
+	else if(gj_passed > 170) {text = "GOOD"; color = "0 255 0"}
+	else if(gj_passed > 120) {text = "OK"; color = "255 255 255"}
+	else if(gj_passed > 70) {text = "BAD"; color = "200 200 200"}
+	else {text = "AWFUL"; color = "255 0 0"}
+	return [text, color]
+}
+
+function ShowScores(player, gj_passed)
+{
+	local scores = GetScoreTextAndColor(gj_passed)
+	local timer = micro_second_phase ? TIMER_SECOND - 0.75 : TIMER_FIRST - 0.75
+	Ware_ShowText(player, CHANNEL_MINIGAME, 
+		scores[0] + " +" + floor(gj_passed).tostring(),
+		4, scores[1], -1, -0.55)
+}
+
+function GiocaJouer_PassPlayerWithSpeed(player)
+{
+	local minidata = Ware_GetPlayerMiniData(player)
+	if ("gj_passed" in minidata && "gj_is_pass" in minidata)
+	{
+		if(!minidata.gj_is_pass)
+		{
+			minidata.gj_is_pass = true
+			local timer = micro_second_phase ? TIMER_SECOND*2 : TIMER_FIRST
+			local sub_time = (Time() - micro_time_start)
+			if (micro_second_phase) sub_time * 2
+			minidata.gj_passed += (timer - sub_time) * 75
+			ShowScores(player, minidata.gj_passed)
+		}
+	}
+
+}
+
 
 function GiocaJouer_CheckTauntableMelee(player)
 {
@@ -164,11 +216,14 @@ function OnMicroStart()
 {
 	minigame.description = microgame_info[micro][0]
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
+
+	micro_time_start = Time()
 	
 	// if we consider reset a microgame, we dont have to make a separate function
 	if (micro == MICRO_RESET)
 	{
 		micro = null
+		micro_second_phase = true
 		return
 	}
 	
@@ -185,8 +240,6 @@ function OnMicroStart()
 			case MICRO_SLEEP:
 			case MICRO_WALK:
 				GiocaJouer_PassPlayer(player, true)
-				micro_grace <- true
-				Ware_CreateTimer(function() {micro_grace <- false}, 1.0) // can't be more than about 2sec
 				break
 			case MICRO_SWIM:
 				player.AddCond(TF_COND_SWIMMING_CURSE)
@@ -242,14 +295,14 @@ function OnUpdate()
 		switch (micro)
 		{
 			case MICRO_SLEEP:
-				if (player.GetAbsVelocity().Length() > 5.0 && !micro_grace)
-					GiocaJouer_PassPlayer(player, false)
+				if (player.GetAbsVelocity().Length() < 5.0)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_WAVE:
 			case MICRO_WAVE2:
 			case MICRO_WAVE3:
 				if (player.IsTaunting())
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_HITCH:
 				if (GetPropBool(player, "m_Shared.m_bJumping"))
@@ -260,8 +313,8 @@ function OnUpdate()
 					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_WALK:
-				if (player.GetAbsVelocity().Length() < 75.0 && !micro_grace)
-					GiocaJouer_PassPlayer(player, false)
+				if (player.GetAbsVelocity().Length() > 75.0)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_SWIM:
 				if (player.GetAbsVelocity().Length() > 75.0)
@@ -273,7 +326,7 @@ function OnUpdate()
 				break
 			case MICRO_SPRAY:
 				if (sprayed_players.find(player) != null)
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_MACHO:
 				if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))
@@ -283,9 +336,17 @@ function OnUpdate()
 				if (GetPropBool(player, "m_Shared.m_bJumping") && (player.GetFlags() & FL_DUCKING))
 					GiocaJouer_PassPlayer(player, true)
 				break
+			case MICRO_COMB:
+				if (player.InCond(TF_COND_DISGUISING) || player.InCond(TF_COND_DISGUISED))
+				{
+					GiocaJouer_PassPlayer(player, true)
+					player.RemoveCond(TF_COND_DISGUISING)					
+					player.RemoveCond(TF_COND_DISGUISED)
+				}
+				break
 			case MICRO_SUPER:
 				if (player.GetOrigin().z > -6800.0)
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 		}
 	}
@@ -294,7 +355,7 @@ function OnUpdate()
 function OnPlayerHorn(player)
 {
 	if (micro == MICRO_HORN)
-		GiocaJouer_PassPlayer(player, true)
+		GiocaJouer_PassPlayerWithSpeed(player)
 }
 
 function OnPlayerVoiceline(player, voiceline)
@@ -305,11 +366,11 @@ function OnPlayerVoiceline(player, voiceline)
 		{
 			case MICRO_OKAY:
 				if (VCD_MAP[voiceline].find(".Cheers") != null)
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 			case MICRO_KISS:
 				if (VCD_MAP[voiceline].find(".Medic") != null)
-					GiocaJouer_PassPlayer(player, true)
+					GiocaJouer_PassPlayerWithSpeed(player)
 				break
 		}
 	}
@@ -339,22 +400,17 @@ function OnMicroEnd()
 				player.RemoveCond(TF_COND_HALLOWEEN_KART)
 				break
 			case MICRO_COMB:
-				if (player.InCond(TF_COND_DISGUISING) || player.InCond(TF_COND_DISGUISED))
-				{
-					GiocaJouer_PassPlayer(player, true)
-					player.RemoveCond(TF_COND_DISGUISING)					
-					player.RemoveCond(TF_COND_DISGUISED)
-				}
-				Ware_StripPlayer(player, true)
-				break
 			case MICRO_MACHO:
 			case MICRO_SUPER:
 				Ware_StripPlayer(player, true)
 				break
 		}
-		if (minidata.gj_passed)
-		{
-			minidata.gj_score++
+
+		ShowScores(player, minidata.gj_passed)
+
+		if (minidata.gj_passed>70)
+		{			
+
 			// TODO: move emitsound to when you pass the objective for each microgame.
 			// For microgames that start false, play it ONCE when you call GiocaJouer_PassPlayer(player, true)
 			// For microgames that start true, keep it here in OnEnd()
@@ -365,6 +421,10 @@ function OnMicroEnd()
 		{
 			EmitSoundOnClient(fail_sound, player)
 		}
+
+		minidata.gj_score += minidata.gj_passed
+		minidata.gj_passed = 0
+		minidata.gj_is_pass = false
 	}
 }
 
