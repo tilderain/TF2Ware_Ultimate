@@ -229,13 +229,23 @@ function ShowScores(player, gj_passed)
 	local scores = GetScoreTextAndColor(gj_passed)
 	local timer = micro_second_phase ? TIMER_SECOND / 2 : TIMER_FIRST / 2
 	Ware_ShowText(player, CHANNEL_MINIGAME, scores[0], timer, scores[1], -1, -0.55)
-	if(minidata.gj_combo > 0)
+	if(minidata.gj_combo > 1)
 		Ware_ShowText(player, CHANNEL_BACKUP,
 			minidata.gj_combo + " COMBO",
 			timer, scores[1], -1, -0.60)
 	/*Ware_ShowText(player, CHANNEL_BACKUP,
 		"+" + floor(gj_passed).tostring() + " " + minidata.gj_combo + " COMBO",
 		timer, scores[1], -1, -0.60)*/
+}
+
+function ComboCheck(player)
+{
+	local minidata = Ware_GetPlayerMiniData(player)
+	local score = GetScoreThreshhold(minidata.gj_passed)
+	if(score == 0)
+		minidata.gj_combo += 1
+	else
+		minidata.gj_combo = 0
 }
 
 function GiocaJouer_PassPlayerWithSpeed(player)
@@ -250,11 +260,7 @@ function GiocaJouer_PassPlayerWithSpeed(player)
 			local sub_time = (Time() - micro_time_start)
 			if (micro_second_phase) sub_time * 2
 			minidata.gj_passed += (timer - sub_time) * 75
-			local score = GetScoreThreshhold(minidata.gj_passed)
-			if(score == 0)
-				minidata.gj_combo += 1
-			else
-				minidata.gj_combo = 0
+			ComboCheck(player)
 			ShowScores(player, minidata.gj_passed)
 		}
 	}
@@ -482,7 +488,11 @@ function OnMicroEnd()
 				break
 		}
 		if(!minidata.gj_is_pass)
+		{
+			ComboCheck(player)
 			ShowScores(player, minidata.gj_passed)
+		}
+
 
 		if (minidata.gj_passed>70)
 		{			
