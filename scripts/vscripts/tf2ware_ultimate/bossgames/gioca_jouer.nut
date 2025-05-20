@@ -383,7 +383,7 @@ function GiocaJouer_CheckTauntableMelee(player)
 function OnMicroStart()
 {
 	micro = micro_rotation[micro_num%18]
-	//DisplayNextMicro(micro+1)
+	DisplayNextMicro(micro+1)
 	minigame.description = microgame_info[micro][0]
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
 
