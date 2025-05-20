@@ -273,10 +273,10 @@ function ComboCheck(player)
 		minidata.gj_combo = 0
 }
 
-function DisplayNextMicro(player, micro)
+function DisplayNextMicro(micro)
 {
 	if(micro > 16) return
-	Ware_ShowText(player, CHANNEL_MISC, "NEXT: " + microgame_info[micro][0], 4, "128 128 128", -1, -0.70)
+	Ware_ShowText(Ware_Players, CHANNEL_MISC, "NEXT: " + microgame_info[micro][0], 4, "128 128 128", -1, -0.70)
 }
 
 function GiocaJouer_PassPlayerWithSpeed(player)
@@ -327,7 +327,7 @@ function GiocaJouer_CheckTauntableMelee(player)
 
 function OnMicroStart()
 {
-
+	DisplayNextMicro(micro+1)
 	minigame.description = microgame_info[micro][0]
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
 
@@ -344,7 +344,6 @@ function OnMicroStart()
 	// start passed? and also any microgames that need setup
 	foreach(player in Ware_MinigamePlayers)
 	{
-		DisplayNextMicro(player, micro+1)
 		if (!player.IsAlive())
 			continue
 		
