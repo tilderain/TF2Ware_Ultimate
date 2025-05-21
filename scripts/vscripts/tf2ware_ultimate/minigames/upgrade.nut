@@ -2,8 +2,6 @@ MISSION_DAMAGE <- 0
 MISSION_RESIST <- 1
 MISSION_RATE   <- 2
 
-mission <- RandomInt(0, 2)
-
 minigame <- Ware_MinigameData
 ({
 	name		   = "Upgrade"
@@ -14,15 +12,11 @@ minigame <- Ware_MinigameData
 		"Upgrade and resist the damage!"
 		"Upgrade your firing speed!"
 	]
-	duration	   = mission != 1 ? 6.5 : 8.5
+	modes          = 3
+	duration	   = Ware_MinigameMode != 1 ? 6.5 : 8.5
 	location       = "warehouse"
-	music		   = mission != 1 ? "upgrademusic" : "upgraderesist"
-	custom_overlay =
-	[
-		"upgrade_damage"
-		"upgrade_resist"
-		"upgrade_rate"
-	]
+	music		   = Ware_MinigameMode != 1 ? "upgrademusic" : "upgraderesist"
+	custom_overlay = ["upgrade_damage", "upgrade_resist", "upgrade_rate"][Ware_MinigameMode]
 	fail_on_death  = true
 })
 
@@ -109,11 +103,11 @@ function OnStart()
 
 	SpawnFuncUpgrade(Ware_MinigameLocation.center)
 
-	if (mission == MISSION_DAMAGE || mission == MISSION_RATE)
+	if (Ware_MinigameMode == MISSION_DAMAGE || Ware_MinigameMode == MISSION_RATE)
 	{
 		Ware_PlaySoundOnAllClients(format("vo/mvm_get_to_upgrade%02d.mp3", RandomInt(1,11)))
 	}
-	else if (mission == MISSION_RESIST)
+	else if (Ware_MinigameMode == MISSION_RESIST)
 	{
 		Ware_PlaySoundOnAllClients(format("vo/mvm_sentry_buster_alerts%02d.mp3", RandomInt(1,3)))
 		Ware_PlaySoundOnAllClients(snd_intro, 0.25)
@@ -144,10 +138,10 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Original")
 
 	foreach (player in Ware_MinigamePlayers)
-		Ware_SetPlayerMission(player, mission)
+		Ware_SetPlayerMission(player, Ware_MinigameMode)
 		
 	// prevent ui lingering
-	local end_delay = mission != 1 ? 0.25 : 1.5
+	local end_delay = Ware_MinigameMode != 1 ? 0.25 : 1.5
 	Ware_CreateTimer(function() 
 	{
 		foreach (station in upgradestations)
@@ -208,7 +202,7 @@ function OnEnd()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (mission == MISSION_RESIST)
+		if (Ware_MinigameMode == MISSION_RESIST)
 		{
 			if (player.IsAlive())
 				Ware_PassPlayer(player, true)
@@ -233,7 +227,7 @@ function OnPlayerInventory(player)
 {
 	Ware_SetPlayerLoadout(player, TF_CLASS_SOLDIER, "Original")
 	
-	if (mission != MISSION_RESIST)
+	if (Ware_MinigameMode != MISSION_RESIST)
 	{
 		foreach (player in Ware_MinigamePlayers)
 		{
@@ -241,7 +235,7 @@ function OnPlayerInventory(player)
 				continue
 		
 			local weapon = player.GetActiveWeapon()		
-			if (mission == MISSION_DAMAGE)
+			if (Ware_MinigameMode == MISSION_DAMAGE)
 			{
 				if (player.InCond(TF_COND_CRITBOOSTED_USER_BUFF))
 				{
@@ -255,7 +249,7 @@ function OnPlayerInventory(player)
 					}
 				}
 			}
-			else if (mission == MISSION_RATE)
+			else if (Ware_MinigameMode == MISSION_RATE)
 			{
 				if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("fire rate bonus", 1.0) < 0.7)
 				{
