@@ -51,25 +51,25 @@ z_range <- [0, 200]
 
 function OnUpdate() 
 {
-    local pos = Ware_MinigameLocation.center_bottom
+    local location = Ware_MinigameLocation.center_bottom
     foreach (prop in lasers) 
 	{
         local vel = prop.GetAbsVelocity()
         local pos = prop.GetOrigin()
 
-        if (pos.x - pos.x > x_range[1]) 
+        if (pos.x - location.x > x_range[1]) 
             vel.x = -fabs(vel.x)
-		else if (pos.x - pos.x < x_range[0]) 
+		else if (pos.x - location.x < x_range[0]) 
             vel.x = fabs(vel.x)
 
-        if (pos.y - pos.y > y_range[1]) 
+        if (pos.y - location.y > y_range[1]) 
             vel.y = -fabs(vel.y)
-		else if (pos.y - pos.y < y_range[0]) 
+		else if (pos.y - location.y < y_range[0]) 
             vel.y = fabs(vel.y)
 			
-        if (pos.z - pos.z > z_range[1]) 
+        if (pos.z - location.z > z_range[1]) 
             vel.z = -fabs(vel.z)
-		else if (pos.z - pos.z < z_range[0]) 
+		else if (pos.z - location.z < z_range[0]) 
             vel.z = fabs(vel.z)
 
         prop.SetAbsVelocity(vel)
