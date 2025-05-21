@@ -27,6 +27,7 @@ Ware_BotMinigameBehaviors <-
 {
 	type_word = {}
 	catch_cubes = {}
+	basketball = {}
 }
 
 Ware_BotMinigameBehavior <- null
