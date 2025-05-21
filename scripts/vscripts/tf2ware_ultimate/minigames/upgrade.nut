@@ -2,7 +2,9 @@ MISSION_DAMAGE <- 0
 MISSION_RESIST <- 1
 MISSION_RATE   <- 2
 
-mission <- RandomInt(0, 2)
+mission <- RandomInt(0, 1)
+if(mission == 0 && RandomBool())
+	mission = 2
 
 minigame <- Ware_MinigameData
 ({
