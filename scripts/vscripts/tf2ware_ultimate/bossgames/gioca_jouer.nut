@@ -446,10 +446,6 @@ function OnMicroStart()
 	{
 		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
 	}
-	else if (micro == MICRO_SUPER)
-	{
-		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
-	}
 }
 
 function OnUpdate()
