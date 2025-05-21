@@ -12,13 +12,13 @@ dmg_tick <- 0
 
 items <-
 [
-	["Sandvich"              , "eat_plate_sandvich",      "Sandvich",         "models/items/plate.mdl"],
-	["Festive Sandvich"      , "eat_plate_sandvich_xmas", "Festive Sandvich", "models/items/plate_sandwich_xmas.mdl"],
-	["Robo-Sandvich"         , "eat_plate_sandvich_robo", "Robo-Sandvich",    "models/items/plate_robo_sandwich.mdl"],
-	["Dalokohs Bar"          , "eat_plate_chocolate",     "Chocolate Bar",    "models/workshop/weapons/c_models/c_chocolate/plate_chocolate.mdl"],
-	["Fishcake"              , "eat_plate_fishcake",      "Fishcake",         "models/workshop/weapons/c_models/c_fishcake/plate_fishcake.mdl"],
-	["Buffalo Steak Sandvich", "eat_plate_steak",         "Steak",            "models/workshop/weapons/c_models/c_buffalo_steak/plate_buffalo_steak.mdl"],
-	["Second Banana"         , "eat_plate_banana",        "Banana",           "models/items/banana/plate_banana.mdl"],
+	"models/items/plate.mdl",
+	"models/items/plate_sandwich_xmas.mdl",
+	"models/items/plate_robo_sandwich.mdl",
+	"models/workshop/weapons/c_models/c_chocolate/plate_chocolate.mdl",
+	"models/workshop/weapons/c_models/c_fishcake/plate_fishcake.mdl",
+	"models/workshop/weapons/c_models/c_buffalo_steak/plate_buffalo_steak.mdl",
+	"models/items/banana/plate_banana.mdl",
 ]
 
 function OnPrecache()
@@ -71,15 +71,16 @@ function OnUpdate()
 
        			local food = SpawnEntityFromTableSafe("item_healthkit_small",
 				{
-					origin = start + forward * 360.0
+					origin = start + forward * 100
+					spawnflags = 1 << 30 // SF_NORESPAWN
 				})
 
-       			food.SetModel(RandomElement(items)[3])
+       			food.SetModel(RandomElement(items))
 				for (local i = 0; i < 1; i++)
 					SetPropIntArray(food, "m_nModelIndexOverrides", 0, i)
 
 				food.SetMoveType(MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_BOUNCE)
-				food.SetAbsVelocity(Vector(0, 0, -100))
+				food.SetAbsVelocity(forward * 300)
 				food.SetSolid(SOLID_BBOX)
 
 				food.ValidateScriptScope()
