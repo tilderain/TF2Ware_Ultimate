@@ -15,6 +15,7 @@ beam_model <- "sprites/laserbeam.vmt"
 fence_model <- "models/props_gameplay/security_fence_section01.mdl"
 screen_model <- "models/props_spytech/computer_screen_01.mdl"
 sawblade_model <- "models/props_forest/sawblade_moving.mdl"
+cow_model <- "models/props_2fort/cow001_reference.mdl"
 
 intel_pos <- null
 goal_pos <- null
@@ -34,6 +35,7 @@ function OnPrecache()
 	PrecacheModel(screen_model)
 	PrecacheModel(sawblade_model)
 	PrecacheSound("SawMill.BladeImpact")
+	PrecacheModel(cow_model)
 }
 
 function OnTeleport(players)
@@ -150,6 +152,13 @@ function OnStart()
 		model  = screen_model
 	})
 	screen.SetModelScale(3, 0)
+
+	local cow = Ware_SpawnEntity("prop_dynamic",
+	{
+		origin = intel_pos + Vector(-64, 0, -44)
+		angles = QAngle(0, 180, 0)
+		model  = cow_model
+	})
 
 	for (local i = -2; i <= 2; i++)
 	{
