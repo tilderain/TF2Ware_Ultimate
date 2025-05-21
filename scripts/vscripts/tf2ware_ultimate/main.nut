@@ -159,6 +159,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceBossgameOnce <- false
 	Ware_DebugNextSpecialRound  <- ""
 	Ware_DebugNextSpecialRound2 <- []
+	Ware_DebugForceMode         <- null
 }
 Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
@@ -177,6 +178,7 @@ if (!("Ware_BossgameRotation" in this))
 if (!("Ware_SpecialRoundRotation" in this))
 	Ware_SpecialRoundRotation <- []
 
+Ware_MinigameMode         <- 0
 Ware_MinigameSavedConvars <- {}
 Ware_MinigameEvents       <- []
 Ware_MinigameOverlay2Set  <- false
@@ -381,6 +383,7 @@ function Ware_PrecacheNext()
 				{
 					min_players = minigame.min_players
 					max_players = minigame.max_players
+					modes       = minigame.modes
 				}					
 			}
 			else if ("special_round" in scope)
@@ -1366,8 +1369,17 @@ function Ware_ReloadMinigameRotation(is_boss)
 	else
 	{
 		if (Ware_Minigames.len() == 0)
-			Ware_Error("Minigame rotation is empty")			
-		Ware_MinigameRotation = clone(Ware_Minigames)
+			Ware_Error("Minigame rotation is empty")
+			
+		// Weight moded minigames more in rotation
+		foreach(minigame in Ware_Minigames)
+		{
+			local modes = Ware_MinigameCache[minigame].modes
+			local weight = Ware_MaxMinigameWeight == 0 ? modes : Min(modes, Ware_MaxMinigameWeight)
+			for(local i = 0; i < weight; i++)
+				Ware_MinigameRotation.append(minigame)
+		}
+		
 		return Ware_MinigameRotation
 	}	
 }
@@ -1485,6 +1497,21 @@ function Ware_StartMinigameInternal(is_boss)
 			}
 		}
 		
+		// Set mode before scope is assigned in case any params depend on it
+		local cache = is_boss ? Ware_BossgameCache : Ware_MinigameCache
+		local modes = minigame in cache ? cache[minigame].modes : 0
+		if (Ware_DebugForceMode != null)
+		{
+			// disallow modes above max mode
+			Ware_MinigameMode = Min(Ware_DebugForceMode, modes - 1)
+			if(modes > 1 && Ware_MinigameMode != Ware_DebugForceMode)
+				printf("[TF2Ware] Forced mode %d exceeds highest minigame mode. Using highest mode %d instead...\n", Ware_DebugForceMode, Ware_MinigameMode)
+		}
+		else if (modes > 1)
+			Ware_MinigameMode = RandomInt(0, modes - 1)
+		else
+			Ware_MinigameMode = 0	
+		
 		Ware_MinigameScope = Ware_LoadMinigame(minigame, player_count, is_boss, is_forced)
 		if (Ware_MinigameScope)
 		{		
@@ -1513,7 +1540,10 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_Minigame = Ware_MinigameScope.minigame
 	Ware_MinigameStartTime = time
 	
-	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
+	if(Ware_Minigame.modes > 1)
+		printf("[TF2Ware] Starting %s '%s' with mode %d\n", is_boss ? "bossgame" : "minigame", minigame, Ware_MinigameMode)
+	else
+		printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
 	
 	local player_indices_valid = ""
 	foreach (player in valid_players)
