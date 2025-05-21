@@ -4,13 +4,9 @@
 // TODO fix blooper rotation
 // TODO can't reverse up slopes
 // TODO fix $bbox for course model
-// TODO bonuspoint
 // TODO fix EmitSoundOnClient calls to be pitched (need to check every minigame)
-// TODO responses
-// TODO drift pfx
 // TODO add pinball pass sound
 // TODO convert all sounds to mp3
-// TODO place background behind results and make it support past 24 players
 
 minigame <- Ware_MinigameData
 ({
@@ -76,6 +72,8 @@ local team_battle            = Ware_SpecialRound && !Ware_SpecialRound.friendly_
 local item_map               = {}
 
 local gravity_rate           = Convars.GetFloat("sv_gravity")
+
+local kart_drift_pfx_index   = array(4)
 
 local kart_touch_swap        = null
 local kart_skip_tick         = 1
@@ -277,9 +275,13 @@ function OnPrecache()
 	PrecacheParticle("asplode_hoodoo_burning_debris")
 	PrecacheParticle("fireSmokeExplosion_track")
 	PrecacheParticle("enginefail")
-	PrecacheParticle("mk_lightning_parent")
 	PrecacheParticle("spell_skeleton_bits_green")
 	PrecacheParticle("spell_pumpkin_mirv_bits_red")
+	PrecacheParticle("mk_lightning_parent")
+	PrecacheParticle("sparks_blue")
+	PrecacheParticle("drift_blue")
+	PrecacheParticle("sparks_orange")
+	PrecacheParticle("drift_orange")
 	
 	PrecacheMaterial("tf2ware_ultimate/grey")
 }
@@ -957,6 +959,12 @@ function SetupMap()
 	local camera_link = Ware_CreateEntity("info_camera_link")
 	SetPropEntity(camera_link, "m_hCamera", map_camera)
 	SetPropEntity(camera_link, "m_hTargetEntity", network_dummy)
+	
+	// cache particle indices
+	kart_drift_pfx_index[0] = PrecacheParticle("sparks_blue")
+	kart_drift_pfx_index[1] = PrecacheParticle("drift_blue")
+	kart_drift_pfx_index[2] = PrecacheParticle("sparks_orange")
+	kart_drift_pfx_index[3] = PrecacheParticle("drift_orange")
 }
 
 function CreateItembox(origin)
@@ -1096,6 +1104,9 @@ function CreateKart(origin, angles)
 	kart.m_touch_timer        <- 0.0
 							  
 	kart.m_drifting           <- false
+	kart.m_drift_pfx          <- null
+	kart.m_drift_pfx_index    <- 0
+	kart.m_drift_pfx_restart  <- 0
 	kart.m_hop_timer          <- 0.0
 	kart.m_hop_height         <- 0.0
 	kart.m_engine_idle        <- false
@@ -1378,11 +1389,12 @@ kart_routines <-
 
 	Update = function(time, tick)
 	{
-		if ((m_id % kart_skip_tick) != (tick % kart_skip_tick))
-		{
-			m_entity.SetAbsVelocity(vec3_epsilon)
-			return
-		}
+		//if ((m_id % kart_skip_tick) != (tick % kart_skip_tick))
+		//{
+		//	m_entity.SetAbsVelocity(vec3_epsilon)
+		//	return
+		//}
+		
 		local dt = kart_skip_tick * TICKDT
 			
 		m_origin   = m_entity.GetOrigin()
@@ -1639,6 +1651,9 @@ kart_routines <-
 		local turn_amount = 0.0
 		if (m_drifting)
 		{
+			if (m_drift_pfx_restart > 0 && --m_drift_pfx_restart == 0)
+				ToggleWheelParticles(true, false)
+				
 			if (m_boost_side_move < 0.0)
 			{
 				if (m_side_move > 0.0)
@@ -1717,6 +1732,7 @@ kart_routines <-
 						m_boost_counter += 2 * inv_dt.tointeger()
 				}
 				
+				local old_boost_stage = m_boost_stage
 				if (m_boost_counter >= 634)
 					m_boost_stage = 4
 				else if (m_boost_counter >= 498)
@@ -1726,7 +1742,22 @@ kart_routines <-
 				else if (m_boost_counter >= 165)
 					m_boost_stage = 1
 				else
-					m_boost_stage = 0				
+					m_boost_stage = 0		
+
+				if (old_boost_stage != m_boost_stage)
+				{
+					EmitSoundEx
+					({
+						sound_name = "MK_Kart_Drift_Sparks"
+						pitch      = 50 + (m_boost_stage * 9)
+						flags      = SND_CHANGE_PITCH
+						entity     = m_prop
+					}) 
+
+					m_drift_pfx_index = kart_drift_pfx_index[m_boost_stage - 1]
+					ToggleWheelParticles(false, false)
+					m_drift_pfx_restart = 5
+				}
 			}
 			else
 			{
@@ -2134,6 +2165,8 @@ kart_routines <-
 		m_drifting = false
 		m_boost_stage = 0
 		m_prop.StopSound("MK_Kart_Drift")
+		
+		ToggleWheelParticles(false, true)
 	}
 	
 	RescueInit = function()
@@ -2303,6 +2336,38 @@ kart_routines <-
 		m_spin_out_type = type
 		return true
 	}
+	
+	ToggleWheelParticles = function(active, kill)
+	{
+		local pfx = m_drift_pfx
+		
+		if (active && !pfx)
+		{
+			pfx = SpawnEntityFromTableSafe("info_particle_system",
+			{
+				effect_name = "error"
+				origin       = m_origin - (m_angles.Forward() * 36.0) - (m_angles.Left() * 1) - (m_angles.Up() * 24.0)
+				angles       = m_angles
+				start_active = true
+			})
+			SetEntityParent(pfx, m_prop)
+		}
+		
+		if (pfx)
+		{
+			SetPropInt(pfx, "m_iEffectIndex", m_drift_pfx_index)
+			SetPropBool(pfx, "m_bActive", active)		
+			pfx.SetDrawEnabled(active)
+		}
+
+		if (kill && pfx)
+		{
+			EntityEntFire(pfx, "Kill", "", 0.5)
+			pfx = null
+		}
+		
+		m_drift_pfx = pfx
+	}	
 	
 	Shrink = function(timer)
 	{
