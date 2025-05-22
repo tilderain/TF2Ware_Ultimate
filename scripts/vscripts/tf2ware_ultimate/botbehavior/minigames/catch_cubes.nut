@@ -8,8 +8,10 @@ function OnUpdate(bot)
         SetPropInt(bot, "m_nButtons", IN_FORWARD)
         LookAt(bot, prop.GetOrigin(), 350.0, 600.0)
         local loco = bot.GetLocomotionInterface()
+        loco.FaceTowards(prop.GetOrigin())
         loco.Approach(prop.GetOrigin(), 999.0);
-
+        if (RandomInt(0,50) == 0)
+            loco.Jump()
     }
 }
 function NormalizeAngle(target)

@@ -1,15 +1,69 @@
 
+// Constants
+const GRENADE_SPEED = 1216.6;    // hammer units/s
+const GRAVITY = 800.0;           // hammer units/s²
+const ITERATIONS = 5;            // Number of prediction refinements
+
+function CalculateAimPosition(demomanOrigin, targetOrigin, targetVelocity) {
+    local predictedPosition = targetOrigin;
+    local timeOfFlight = 0.0;
+    
+    // Iteratively refine prediction
+    for (local i = 0; i < ITERATIONS; i++) {
+        local delta = predictedPosition - demomanOrigin;
+        local horizontalDistance = Vector(delta.x, delta.y, 0).Length();
+        
+        // Calculate required pitch angle
+        timeOfFlight = horizontalDistance / GRENADE_SPEED;
+        local verticalOffset = delta.z + targetVelocity.z * timeOfFlight;
+        
+        // Solve vertical motion equation: verticalOffset = v0*sinθ*t - 0.5*g*t²
+        local sinTheta = (verticalOffset + 0.5 * GRAVITY * timeOfFlight * timeOfFlight) / (GRENADE_SPEED * timeOfFlight);
+        sinTheta = Clamp(sinTheta, -1.0, 1.0);
+        
+        // Update prediction with new time of flight
+        timeOfFlight = horizontalDistance / (GRENADE_SPEED * cos(asin(sinTheta)));
+        predictedPosition = targetOrigin + targetVelocity * timeOfFlight;
+    }
+    
+    return predictedPosition;
+}
+
 function OnUpdate(bot)
 {
-    local prop = FindByClassnameNearest("trigger_multiple", bot.GetOrigin(), 1500)
+    local prop1 = FindByName(null, "boss4_goal")
+    local prop2 = FindByName(null, "boss4_goal2")
+
+    local y = bot.GetOrigin().y
+
+    local dist1 = fabs(prop1.GetOrigin().y - y)
+    local dist2 = fabs(prop2.GetOrigin().y - y)
+
+
+    local prop
+    prop = dist1 < dist2 ? prop1 : prop2
+    //if(prop.GetOrigin)
+    //local prop = FindByClassnameNearest("trigger_multiple", bot.GetOrigin(), 1500)
     if(prop)
     {
-        //Ware_ChatPrint(null, "aaa")
-        SetPropInt(bot, "m_nButtons", IN_FORWARD)
-        LookAt(bot, prop.GetOrigin() + Vector(0,-150,250), 10000, 10000)
+        //Ware_ChatPrint(null, "{int}", VectorDistance(prop.GetOrigin(), bot.GetOrigin()))
+        //SetPropInt(bot, "m_nButtons", IN_FORWARD)
+
+        local demomanPos = bot.EyePosition();
+        local hoopPos = prop.GetOrigin() + Vector(0,0,142.5);
+        local hoopVelocity = prop.GetAbsVelocity();  // Adjust based on actual hoop movement
+
+        //local dest = CalculateAimPosition(demomanPos, hoopPos, hoopVelocity)
+        local z = VectorDistance(prop.GetOrigin(), bot.EyePosition())
+        local dest = prop.GetOrigin() + Vector((prop.GetAbsVelocity().x * 0.925), 0, z/5.25)
+        LookAt(bot, dest, 2000, 99999)
         local loco = bot.GetLocomotionInterface()
+        loco.FaceTowards(dest)
         loco.Approach(prop.GetOrigin(), 999.0);
         bot.GetActiveWeapon().PrimaryAttack()
+
+        //if (RandomInt(0,50) == 0)
+        //    loco.Jump()
     }
 }
 function NormalizeAngle(target)
