@@ -30,10 +30,8 @@ function OnStart()
 		Ware_GetPlayerMiniData(player).points <- 0
 		
 		local weapon = player.GetActiveWeapon()
-		if (weapon == null)
-			continue
-
-		weapon.SetClip1(1)
+		if (weapon)
+			weapon.SetClip1(1)
 	}
 	
 	Ware_CreateTimer(@() SpawnDove(), 0.25)
@@ -41,7 +39,6 @@ function OnStart()
 
 function DoveThink()
 {
-	local time = Time()
 	if (spawn_time + 7.0 < Time()) 
 	{
 		self.Kill()
@@ -60,8 +57,6 @@ function DoveThink()
 	return dt
 }
 
-
-
 function SpawnDove()
 {
 	local origin = Vector(
@@ -74,12 +69,12 @@ function SpawnDove()
 	local yaw = atan2(vec_angle.y, vec_angle.x) * RAD2DEG
 
 	local dove = Ware_SpawnEntity("base_boss",
-	{	
+	{
 		model       = bird_model
 		origin      = origin
 		angles      = QAngle(0, yaw, 0)
 		defaultanim = "fly_cycle"
-		health      = 9999
+		health      = INT_MAX
 	})
 	dove.SetModelScale(RandomFloat(3.5, 4.5), 0.25)
 	EntityAcceptInput(dove, "Disable")
@@ -104,10 +99,9 @@ function SpawnDove()
 
 function OnTakeDamage(params)
 {
-	if (params.const_entity.GetClassname() == "base_boss")
+	if (params.const_entity.GetModelName() == bird_model)
 	{
 		local player = params.attacker
-
 		if (player && player.IsPlayer())
 		{
 			local minidata = Ware_GetPlayerMiniData(player)
@@ -118,6 +112,7 @@ function OnTakeDamage(params)
 			if (minidata.points >= required_amount)
 				Ware_PassPlayer(player, true)		
 		}
+		
 		DispatchParticleEffect("blood_impact_red_01", params.const_entity.GetOrigin(), vec3_zero)
 		params.const_entity.Kill()
 
@@ -157,7 +152,7 @@ function OnEnd()
     {
         foreach (player in highest_players)
         {
-            Ware_ChatPrint(null, "{player} {color}killed the most doves with {int} shot!", 
+            Ware_ChatPrint(null, "{player} {color}killed the most doves with {int} shots!", 
                 player, TF_COLOR_DEFAULT, highest_amount)
         }
         Ware_GiveBonusPoints(highest_players)
