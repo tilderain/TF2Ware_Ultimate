@@ -1583,6 +1583,8 @@ function Ware_StartMinigameInternal(is_boss)
 	foreach (player in valid_players)
 		player_indices_valid += player.entindex().tochar()
 	
+	Ware_BotLoadBehaviors()
+
 	Ware_EventCallback("minigame_start", 
 	{ 
 		name          = Ware_Minigame.name
