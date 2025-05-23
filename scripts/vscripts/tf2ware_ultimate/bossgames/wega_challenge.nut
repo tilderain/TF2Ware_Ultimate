@@ -66,6 +66,8 @@ material_wega <- "wega/wega.vmt"
 
 fog <- null
 
+sky_name <- ""
+
 function OnPrecache()
 {
 	PrecacheModel(model_hands)
@@ -83,6 +85,10 @@ function OnPrecache()
 
 function OnStart()
 {
+	// HACK: vis breaks in wega and exposes ceiling to the sky... so just make it black
+	sky_name = Convars.GetStr("sv_skyname")
+	SetSkyboxTexture("black_sky")
+	
 	fog = Ware_SpawnEntity("env_fog_controller",
 	{
 		fogenable	  = true
@@ -231,6 +237,11 @@ function OnEnd()
 		SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", null)
 		RestoreHUD(player)
 	}
+}
+
+function OnCleanup()
+{
+	SetSkyboxTexture(sky_name)
 }
 
 function OnCheckEnd()
