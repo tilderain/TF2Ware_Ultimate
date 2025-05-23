@@ -33,6 +33,8 @@ snd_spin <- "mvm/sentrybuster/mvm_sentrybuster_spin.wav"
 
 upgradestations <- []
 
+give_loadout <- true
+
 function OnPrecache()
 {
 	for (local i = 1; i <= 11; i++)
@@ -40,6 +42,10 @@ function OnPrecache()
 
 	for (local i = 1; i <= 7; i++)
 		PrecacheSound(format( "vo/mvm_sentry_buster_alerts%02d.mp3", i))
+		
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/upgrade_damage")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/upgrade_resist")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/upgrade_rate")
 
 	PrecacheModel(buster_mdl)
 
@@ -137,9 +143,6 @@ function OnStart()
 
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Original")
 
-	foreach (player in Ware_MinigamePlayers)
-		Ware_SetPlayerMission(player, Ware_MinigameMode)
-		
 	// prevent ui lingering
 	local end_delay = Ware_MinigameMode != 1 ? 0.25 : 1.5
 	Ware_CreateTimer(function() 
@@ -212,6 +215,8 @@ function OnEnd()
 	
 function OnCleanup()
 {
+	give_loadout = false
+	
 	foreach (player in Ware_MinigamePlayers)
 	{
 		player.GrantOrRemoveAllUpgrades(true, false)
@@ -225,6 +230,9 @@ function OnCleanup()
 
 function OnPlayerInventory(player)
 {
+	if (!give_loadout)
+		return
+	
 	Ware_SetPlayerLoadout(player, TF_CLASS_SOLDIER, "Original")
 	
 	if (Ware_MinigameMode != MISSION_RESIST)
