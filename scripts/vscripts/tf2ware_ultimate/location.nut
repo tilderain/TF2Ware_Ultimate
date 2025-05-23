@@ -769,7 +769,6 @@ Ware_Location.wega_challenge <-
 	cameras  = ["wega_camera"]
 	Teleport = function(players)
 	{
-		foreach (player in players)
-			Ware_TeleportPlayer(player, start, QAngle(0, 45, 0), vec3_zero)
+		Ware_TeleportPlayersRow(players, start, ang_zero, 192, 32, 32)
 	}
 }
