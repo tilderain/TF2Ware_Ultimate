@@ -179,6 +179,7 @@ if (!("Ware_SpecialRoundRotation" in this))
 	Ware_SpecialRoundRotation <- []
 
 Ware_MinigameMode         <- 0
+Ware_MinigamePlayedModes  <- {}
 Ware_MinigameSavedConvars <- {}
 Ware_MinigameEvents       <- []
 Ware_MinigameOverlay2Set  <- false
@@ -1511,13 +1512,45 @@ function Ware_StartMinigameInternal(is_boss)
 		{
 			// disallow modes above max mode
 			Ware_MinigameMode = Min(Ware_DebugForceMode, modes - 1)
-			if(modes > 1 && Ware_MinigameMode != Ware_DebugForceMode)
-				printf("[TF2Ware] Forced mode %d exceeds highest minigame mode. Using highest mode %d instead...\n", Ware_DebugForceMode, Ware_MinigameMode)
+			if (modes > 1 && Ware_MinigameMode != Ware_DebugForceMode)
+			{
+				printf("[TF2Ware] Forced mode %d exceeds highest minigame mode. Using highest mode %d instead...\n", 
+					Ware_DebugForceMode, Ware_MinigameMode)
+			}
 		}
 		else if (modes > 1)
-			Ware_MinigameMode = RandomInt(0, modes - 1)
+		{
+			// don't pick the same mode
+			local mode
+			if (minigame in Ware_MinigamePlayedModes)
+			{
+				local played_modes = Ware_MinigamePlayedModes[minigame]
+				local pick_modes = FillArray(0, modes - 1).filter(@(i, v) !(v in played_modes))
+				if (pick_modes.len() > 0)
+				{
+					mode = RandomElement(pick_modes)
+				}
+				else
+				{
+					// played all modes.. reset the list
+					played_modes.clear()
+				}
+			}
+			else
+			{
+				Ware_MinigamePlayedModes[minigame] <- {}
+			}
+
+			if (mode == null)
+				mode = RandomInt(0, modes - 1)
+				
+			Ware_MinigameMode = mode
+			Ware_MinigamePlayedModes[minigame][mode] <- true
+		}
 		else
+		{
 			Ware_MinigameMode = 0	
+		}
 		
 		Ware_MinigameScope = Ware_LoadMinigame(minigame, player_count, is_boss, is_forced)
 		if (Ware_MinigameScope)
@@ -1547,7 +1580,7 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_Minigame = Ware_MinigameScope.minigame
 	Ware_MinigameStartTime = time
 	
-	if(Ware_Minigame.modes > 1)
+	if (Ware_Minigame.modes > 1)
 		printf("[TF2Ware] Starting %s '%s' with mode %d\n", is_boss ? "bossgame" : "minigame", minigame, Ware_MinigameMode)
 	else
 		printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
