@@ -399,16 +399,7 @@ function OnGameEvent_player_spawn(params)
 	}
 	
 	local data = player.GetScriptScope().ware_data
-
-	// this is to fix persisting attributes if restarting mid-minigame
-	local melee = data.melee
-	if (melee && melee.IsValid())
-	{
-		foreach (attribute, value in data.melee_attributes)
-			melee.RemoveAttribute(attribute)
-	}
 	data.attributes.clear()
-	data.melee_attributes.clear()
 	
 	if (params.team & TF_TEAM_MASK)
 	{
@@ -421,10 +412,6 @@ function OnGameEvent_player_spawn(params)
 		if (!data.start_sound)
 			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 1.0)
 		
-		local melee = Ware_ParseLoadout(player)		
-		if (melee && !Ware_Finished)
-			Ware_ModifyMeleeAttributes(melee)
-			
 		EntityEntFire(player, "CallScriptFunction", "Ware_PlayerPostSpawn")
 		
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
@@ -452,7 +439,21 @@ function OnGameEvent_post_inventory_application(params)
 	local player = GetPlayerFromUserID(params.userid)
 	if (player == null)
 		return
-	
+		
+	// this is to fix persisting attributes if restarting mid-minigame
+	local data = player.GetScriptScope().ware_data
+	local melee = data.melee
+	if (melee && melee.IsValid())
+	{
+		foreach (attribute, value in data.melee_attributes)
+			melee.RemoveAttribute(attribute)
+	}
+	data.melee_attributes.clear()	
+		
+	local melee = Ware_ParseLoadout(player)		
+	if (melee && !Ware_Finished)
+		Ware_ModifyMeleeAttributes(melee)
+					
 	if (Ware_Minigame != null)
 		Ware_Minigame.cb_on_player_inventory(player)
 		
