@@ -247,6 +247,7 @@ function ClearSounds()
 			sound_name	= sound_wega_scream
 			entity		= wegaEntity
 			flags		= SND_STOP
+			filter_type = RECIPIENT_FILTER_GLOBAL
 		})
 	}
 }
