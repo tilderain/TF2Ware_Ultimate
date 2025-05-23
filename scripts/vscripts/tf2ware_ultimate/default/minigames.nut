@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 3
+buffer<-@"VERSION 4
 airblast
 airshot
 avoid_props
@@ -37,7 +37,6 @@ grapple_cutout
 grapple_player
 halloween_fight
 headshot
-heavy_medic
 hit_balls
 hit_player
 hoop
@@ -54,6 +53,7 @@ melee_arena
 merasmus
 most_bombs
 move
+needle_jump
 parachute
 pickup_can
 piggyback
@@ -88,8 +88,8 @@ type_map
 type_time
 type_word
 uber
-vacc
 upgrade
+vacc
 wanted
 watch_fall
 water_war

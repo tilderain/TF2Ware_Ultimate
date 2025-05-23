@@ -16,7 +16,6 @@ required_amount <- 3
 
 function OnPrecache()
 {
-	PrecacheSound("tf2ware_ultimate/mp_hit_indication_3c.wav")
 	PrecacheModel(bird_model)
 }
 
