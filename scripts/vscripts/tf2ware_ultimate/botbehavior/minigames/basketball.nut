@@ -191,8 +191,6 @@ function EstimateProjectileImpactPosition( eyepos, pitch, yaw, initVel )
 */
 function OnUpdate(bot)
 {
-    //Doesn't work
-    //bot.RemoveBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)
     local prop1 = FindByName(null, "boss4_goal")
     local prop2 = FindByName(null, "boss4_goal2")
 
@@ -226,7 +224,7 @@ function OnUpdate(bot)
         local loco = bot.GetLocomotionInterface()
         loco.FaceTowards(dest)
         loco.Approach(prop.GetCenter(), 999.0);
-        bot.GetActiveWeapon().PrimaryAttack()
+        bot.PressFireButton(-1)
 
         //if (RandomInt(0,50) == 0)
         //    loco.Jump()
