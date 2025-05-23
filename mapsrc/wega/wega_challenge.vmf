@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "8869"
-	"mapversion" "3"
+	"mapversion" "4"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -89,7 +89,7 @@ bgimages_plus
 world
 {
 	"id" "1"
-	"mapversion" "3"
+	"mapversion" "4"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -1055,7 +1055,8 @@ entity
 		"OnTrigger" "relay_musicDisable0.1-1"
 		"OnTrigger" "wega_musicStopSound0.2-1"
 		"OnTrigger" "relay_musicResetTimer0-1"
-		"OnTrigger" "antifall_brushKill0.5-1"
+		"OnTrigger" "antifall_brushDisable0.5-1"
+		"OnTrigger" "antifall_brushEnable0-1"
 	}
 	"origin" "-8880 -32 225"
 	editor

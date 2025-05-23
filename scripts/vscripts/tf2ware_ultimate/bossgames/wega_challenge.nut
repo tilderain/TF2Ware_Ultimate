@@ -201,7 +201,6 @@ function OnEnd()
 {
 	EntFire("uario_brush", "Kill")
 	EntFire("uario_path_*", "Kill")
-	EntFire("antifall_brush", "Kill")
 	EntFire("final_collectible", "Kill")
 	EntFire("wega_challenge_start", "Disable")
 	EntFire("wega_teleport", "Disable")
@@ -850,7 +849,7 @@ function Wega_entity_tick(wega)
 	local wegaOriginOffset = Vector(wega.GetOrigin().x, wega.GetOrigin().y, wega.GetOrigin().z - 80.0)
 	WegaTargetArray[id] = null
 
-	foreach (player in Ware_Players)
+	foreach (player in Ware_MinigamePlayers)
 	{
 		if (!player.IsAlive())
 			continue			
@@ -869,7 +868,7 @@ function Wega_entity_tick(wega)
 	
 	if (WegaTargetArray[id] == null)
 	{
-		foreach (player in Ware_Players)
+		foreach (player in Ware_MinigamePlayers)
 		{
 			if (!player.IsAlive())
 				continue
