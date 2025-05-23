@@ -46,7 +46,7 @@ function SpawnPipewall(org, skip)
 			
             local beam = Ware_SpawnEntity("prop_physics_override", 
             {
-                origin       = org + Vector(-880,0,add + 200) + Vector(i*120, 0, 300 + j*180)
+                origin       = org + Vector(-880,0,add + 230) + Vector(i*120, 0, 300 + j*180)
                 model        = pipe_model
                 spawnflags   = SF_PHYSPROP_TOUCH
                 minhealthdmg = 999999 // Don't destroy on touch    
@@ -92,7 +92,7 @@ function OnStart()
 		foreach (player in Ware_MinigamePlayers)
 		{
 			player.SetMoveType(MOVETYPE_WALK, 0)
-			player.SetAbsVelocity((Vector(0,150,0)))
+			player.SetAbsVelocity((Vector(0,160,0)))
 		}
 	}, 2.0)
 }
@@ -104,7 +104,7 @@ function OnUpdate()
 		player.AddFlag(FL_ATCONTROLS)
 		
 		local vel = player.GetAbsVelocity()
-		vel.y = 150
+		vel.y = 160
 		player.SetAbsVelocity(vel)
 		
 		player.RemoveFlag(FL_DUCKING)
