@@ -141,6 +141,9 @@ function OnStart()
 		Ware_CreateTimer(@() ExplodeBot(bot), 7.5)
 	}
 
+	// this is needed to prevent server crash with item whitelist enabled
+	Ware_TogglePlayerLoadouts(true)
+	
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Original")
 
 	// prevent ui lingering
@@ -216,6 +219,7 @@ function OnEnd()
 function OnCleanup()
 {
 	give_loadout = false
+	Ware_TogglePlayerLoadouts(false)
 	
 	foreach (player in Ware_MinigamePlayers)
 	{
