@@ -337,80 +337,82 @@ function Ware_PrecacheNext()
 
 	local PrecacheFile = function(folder, name)
 	{
+		local scope = {}	
 		local path = format("tf2ware_ultimate/%s/%s", folder, name)
 		try
 		{
-			local scope = {}
 			IncludeScript(path, scope)
-			if ("OnPrecache" in scope)
-				scope.OnPrecache()
-				
-			if ("minigame" in scope)
-			{
-				local minigame = scope.minigame
-				
-				local overlays = [], overlays2 = []
-				if (minigame.custom_overlay == null)
-					overlays = ["hud/tf2ware_ultimate/minigames/" + name]
-				else
-					overlays = Ware_GetOverlays(minigame.custom_overlay)
-				
-				if (minigame.custom_overlay2 != null)
-					overlays2 = Ware_GetOverlays(minigame.custom_overlay2)			
-				
-				foreach (overlay in overlays)
-				{
-					if (overlay)
-						PrecacheOverlay(overlay)
-				}
-				foreach (overlay in overlays2)
-				{
-					if (overlay)
-						PrecacheOverlay(overlay)
-				}
-				
-				AddAuthor(minigame.author, folder)
-				
-				if (minigame.music)
-				{
-					if (folder == "bossgames")
-						music_bossgame[minigame.music] <- true
-					else
-						music_minigame[minigame.music] <- true
-				}
-				
-				local cache = folder == "bossgames" ? Ware_BossgameCache : Ware_MinigameCache
-				cache[name] <-
-				{
-					min_players = minigame.min_players
-					max_players = minigame.max_players
-					modes       = minigame.modes
-				}					
-			}
-			else if ("special_round" in scope)
-			{
-				if ("category" in scope.special_round)
-				{
-					local category = scope.special_round.category
-					if (category == "")
-						category = "none"
-					if (!(category in Ware_SpecialRoundCategories))
-						Ware_SpecialRoundCategories[category] <- []
-					Ware_SpecialRoundCategories[category].append(name)
-				}
-				else
-				{
-					Ware_Error("Special round '%s' has no category entry", name)
-				}
-				
-				AddAuthor(scope.special_round.author, folder)
-			}
 		}
 		catch (e)
 		{
 			Ware_Error("Failed to precache '%s.nut'. Missing from disk or syntax error", path)
+			return true
+		}		
+			
+		if ("OnPrecache" in scope)
+			scope.OnPrecache()
+			
+		if ("minigame" in scope)
+		{
+			local minigame = scope.minigame
+			
+			local overlays = [], overlays2 = []
+			if (minigame.custom_overlay == null)
+				overlays = ["hud/tf2ware_ultimate/minigames/" + name]
+			else
+				overlays = Ware_GetOverlays(minigame.custom_overlay)
+			
+			if (minigame.custom_overlay2 != null)
+				overlays2 = Ware_GetOverlays(minigame.custom_overlay2)			
+			
+			foreach (overlay in overlays)
+			{
+				if (overlay)
+					PrecacheOverlay(overlay)
+			}
+			foreach (overlay in overlays2)
+			{
+				if (overlay)
+					PrecacheOverlay(overlay)
+			}
+			
+			AddAuthor(minigame.author, folder)
+			
+			if (minigame.music)
+			{
+				if (folder == "bossgames")
+					music_bossgame[minigame.music] <- true
+				else
+					music_minigame[minigame.music] <- true
+			}
+			
+			local cache = folder == "bossgames" ? Ware_BossgameCache : Ware_MinigameCache
+			cache[name] <-
+			{
+				min_players = minigame.min_players
+				max_players = minigame.max_players
+				modes       = minigame.modes
+			}					
 		}
-		
+		else if ("special_round" in scope)
+		{
+			if ("category" in scope.special_round)
+			{
+				local category = scope.special_round.category
+				if (category == "")
+					category = "none"
+				if (!(category in Ware_SpecialRoundCategories))
+					Ware_SpecialRoundCategories[category] <- []
+				Ware_SpecialRoundCategories[category].append(name)
+			}
+			else
+			{
+				Ware_Error("Special round '%s' has no category entry", name)
+			}
+			
+			AddAuthor(scope.special_round.author, folder)
+		}
+
 		return true
 	}
 	
