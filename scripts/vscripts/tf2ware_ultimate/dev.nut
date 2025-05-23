@@ -33,12 +33,50 @@ function Ware_DevCommandForceMinigame(player, text, is_boss, once)
 		Ware_ChatPrint(player, "{str} forced {str} '{str}'", Ware_DevCommandTitle(player), name, ROOT[gamename])	
 }
 
+function Ware_DevCommandRestart(player, text)
+{
+	SetConvarValue("mp_restartgame_immediate", 1)
+	// TODO these should be "host" or "admin" if a non-dev executes it
+	Ware_ChatPrint(null, "{str} has forced a restart", Ware_DevCommandTitle(player))
+}
+
+function Ware_DevCommandNextSpecial(player, text)
+{
+	local args = split(text, " ")
+	if (args.len() >= 1)
+	{
+		if (args.len() >= 2)
+		{
+			Ware_DebugNextSpecialRound = "double_trouble"
+			Ware_DebugNextSpecialRound2 = [args[0], args[1]]
+		}
+		else if (args[0] == "any")
+		{
+			Ware_ForceSpecialRound()
+		}
+		else
+		{
+			Ware_DebugNextSpecialRound = args[0]
+		}
+	}
+	else
+	{
+		Ware_DebugNextSpecialRound = ""
+	}
+	Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextSpecialRound)
+}
+
 Ware_DevCommands <-
 {
 	"nextminigame"  : function(player, text) { Ware_DevCommandForceMinigame(player, text, false, true)  }
 	"nextbossgame"  : function(player, text) { Ware_DevCommandForceMinigame(player, text, true, true)   }
+
 	"forceminigame" : function(player, text) { Ware_DevCommandForceMinigame(player, text, false, false) }
+	"m"             : function(player, text) { Ware_DevCommandForceMinigame(player, text, false, false) }
+
 	"forcebossgame" : function(player, text) { Ware_DevCommandForceMinigame(player, text, true, false)  }
+	"b"             : function(player, text) { Ware_DevCommandForceMinigame(player, text, true, false)  }
+
 	"nexttheme": function(player, text)
 	{
 		local args = split(text, " ")
@@ -69,31 +107,10 @@ Ware_DevCommands <-
 			Ware_DebugForceTheme = ""
 		Ware_ChatPrint(null, "{str} forced theme to '{str}'", Ware_DevCommandTitle(player), Ware_DebugForceTheme)
 	}
-	"nextspecial": function(player, text)
-	{
-		local args = split(text, " ")
-		if (args.len() >= 1)
-		{
-			if (args.len() >= 2)
-			{
-				Ware_DebugNextSpecialRound = "double_trouble"
-				Ware_DebugNextSpecialRound2 = [args[0], args[1]]
-			}
-			else if (args[0] == "any")
-			{
-				Ware_ForceSpecialRound()
-			}
-			else
-			{
-				Ware_DebugNextSpecialRound = args[0]
-			}
-		}
-		else
-		{
-			Ware_DebugNextSpecialRound = ""
-		}
-		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextSpecialRound)
-	}
+	
+	"nextspecial": function(player, text) { Ware_DevCommandNextSpecial(player, text) }
+	"s": function(player, text) { Ware_DevCommandNextSpecial(player, text) }
+
 	"forcemode": function(player, text)
 	{
 		local args = split(text, " ")
@@ -137,12 +154,10 @@ Ware_DevCommands <-
 		}
 		Ware_ChatPrint(player, "Values printed to console.")
 	}
-	"restart" : function(player, text)
-	{
-		SetConvarValue("mp_restartgame_immediate", 1)
-		// TODO these should be "host" or "admin" if a non-dev executes it
-		Ware_ChatPrint(null, "{str} has forced a restart", Ware_DevCommandTitle(player))
-	}
+
+	"restart" : function(player, text) { Ware_DevCommandRestart(player, text) }
+	"r" : function(player, text) { Ware_DevCommandRestart(player, text) }
+
 	"gameover" : function(player, text)
 	{
 		Ware_DebugGameOver = true
