@@ -88,6 +88,8 @@ function OnTeleport(players)
 function OnStart()
 {
 	ForceEnableUpgrades(2)
+	// this is needed to prevent server crash with item whitelist enabled
+	Ware_TogglePlayerLoadouts(true)
 	
 	killicon_dummy = Ware_CreateEntity("handle_dummy")
 	foreach (player in Ware_MinigamePlayers)
@@ -140,9 +142,6 @@ function OnStart()
 		Ware_CreateTimer(@() SetExplodeAnim(bot), 5.5)
 		Ware_CreateTimer(@() ExplodeBot(bot), 7.5)
 	}
-
-	// this is needed to prevent server crash with item whitelist enabled
-	Ware_TogglePlayerLoadouts(true)
 	
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Original")
 
@@ -219,15 +218,18 @@ function OnEnd()
 function OnCleanup()
 {
 	give_loadout = false
-	Ware_TogglePlayerLoadouts(false)
+	
+	// WARNING: the order of operations here is important or the server will CRASH
+	// upgrades must be removed first, then upgrades disabled, then loadouts re-enabled in that order
 	
 	foreach (player in Ware_MinigamePlayers)
 	{
-		player.GrantOrRemoveAllUpgrades(true, false)
+		player.GrantOrRemoveAllUpgrades(true, true)
 		player.SetCurrency(0)
 	}
-
-	ForceEnableUpgrades(0)
+	
+	ForceEnableUpgrades(0)	
+	Ware_TogglePlayerLoadouts(false)
 
 	Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP)
 }
