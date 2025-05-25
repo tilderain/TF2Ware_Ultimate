@@ -23,7 +23,7 @@ function OnStart()
 		if (mode == 0)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SOLDIER)
-			Ware_GivePlayerWeapon(player, "Buff Banner", {"deploy time increased": 1, "increase buff duration" : 0})
+			Ware_GivePlayerWeapon(player, "Buff Banner", {"deploy time increased": 1, "increase buff duration" : 0.1})
 			local weapon = null
 			if (gun == 0)
 			{
