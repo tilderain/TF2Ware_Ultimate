@@ -6,6 +6,7 @@
 music_wega <- "wexecution"
 music_urio <- "wexecution_urio_theme"
 
+//How many chunks squared, do not put 10 or above or you will hit the entity limit with high player count
 MaxSize <- 9
 
 //This is the TF2Ware part, the only part I will keep clean
