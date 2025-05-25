@@ -129,6 +129,7 @@ function OnStart()
 		else
 		{
 			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0, 1))
+			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0, 1))
 			SpawnSawblade(Ware_MinigameLocation.center_bottom + Vector(poses[i], 0, 40))
 		}
 	}
@@ -311,7 +312,7 @@ function OnTakeDamage(params)
 		local inflictor = params.inflictor
 		if (inflictor && inflictor.GetClassname() == "env_laser")
 		{
-			victim.TakeDamageCustom(victim, victim, null, Vector(), Vector(), 34.0, DMG_GENERIC, TF_DMG_CUSTOM_PLASMA)
+			victim.TakeDamageCustom(victim, victim, null, Vector(), Vector(), 6.0, DMG_GENERIC, TF_DMG_CUSTOM_PLASMA)
 			// fix weapons being dissolved after respawn
 			params.damage_type = params.damage_type & ~(DMG_DISSOLVE)	
 			params.damage_stats = TF_DMG_CUSTOM_PLASMA
