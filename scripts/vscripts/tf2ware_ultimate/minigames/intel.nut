@@ -3,8 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Intel"
 	author         = ["tilderain", "ficool2"]
 	description    = "Capture the Intel!"
-	duration       = 15.0
-	end_delay	   = 0.5
+	duration       = 22
 	location       = "pinball"
 	music          = "betusblues"
 	thirdperson = true
