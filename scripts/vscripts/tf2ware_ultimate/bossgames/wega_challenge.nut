@@ -6,7 +6,6 @@
 music_wega <- "wexecution"
 music_urio <- "wexecution_urio_theme"
 
-//How big is the arena (amount of chunks squared), If you put 10 or more it will crash due to entity limit
 MaxSize <- 9
 
 //This is the TF2Ware part, the only part I will keep clean
@@ -46,8 +45,8 @@ TriggerEnding <- true
 
 SpawnCenter <- Vector(-32, -13280, -12608)
 
-WegaArray <- array(0)
-WegaTargetArray <- array(0)
+WegaArray <- []
+WegaTargetArray <- []
 
 AggroClosest <- false
 AntiStall <- false
@@ -69,6 +68,8 @@ material_wega <- "wega/wega.vmt"
 
 fog <- null
 
+sky_name <- ""
+
 function OnPrecache()
 {
 	PrecacheModel(model_hands)
@@ -86,6 +87,10 @@ function OnPrecache()
 
 function OnStart()
 {
+	// HACK: vis breaks in wega and exposes ceiling to the sky... so just make it black
+	sky_name = Convars.GetStr("sv_skyname")
+	SetSkyboxTexture("black_sky")
+	
 	fog = Ware_SpawnEntity("env_fog_controller",
 	{
 		fogenable	  = true
@@ -102,9 +107,8 @@ function OnStart()
 	Ware_CreateTimer(function()
 	{
 		foreach (player in Ware_MinigamePlayers)
-		{
 			player.SetScriptOverlayMaterial(overlay_counter)
-		}
+		
 		AddWegas()
 	}, 7.0)
 
@@ -151,13 +155,12 @@ function OnUpdate()
 	{
 		Wega_player_tick(player)
 	}
-
+	
 	Ware_ShowText(Ware_Players, CHANNEL_MINIGAME, wegacount.tostring(), 0.5, "255 255 255", 0.1, 0.06)
 
-	local wegaEntity = null
-	while (wegaEntity = FindByName(wegaEntity, "multiplayer_wega_brush*"))
+	foreach (wega in WegaArray)
 	{
-		Wega_entity_tick(wegaEntity)
+		Wega_entity_tick(wega)
 	}
 
 	if (TriggerEnding && wegacount == 1)
@@ -206,7 +209,6 @@ function OnEnd()
 {
 	EntFire("uario_brush", "Kill")
 	EntFire("uario_path_*", "Kill")
-	EntFire("antifall_brush", "Kill")
 	EntFire("final_collectible", "Kill")
 	EntFire("wega_challenge_start", "Disable")
 	EntFire("wega_teleport", "Disable")
@@ -230,11 +232,18 @@ function OnEnd()
 		Ware_PlayMinigameMusic(null, music_urio, SND_STOP)
 	}
 
+	WegaArray.clear()
+	
 	foreach (player in Ware_MinigamePlayers)
 	{
 		SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", null)
 		RestoreHUD(player)
 	}
+}
+
+function OnCleanup()
+{
+	SetSkyboxTexture(sky_name)
 }
 
 function OnCheckEnd()
@@ -244,15 +253,14 @@ function OnCheckEnd()
 
 function ClearSounds()
 {
-	local wegaEntity = null
-	while (wegaEntity = FindByName(wegaEntity, "multiplayer_wega_brush*"))
+	foreach (wegaEntity in WegaArray)
 	{
 		EmitSoundEx
 		({
 			sound_name	= sound_wega_scream
 			entity		= wegaEntity
-			sound_level = 70.0
 			flags		= SND_STOP
+			filter_type = RECIPIENT_FILTER_GLOBAL
 		})
 	}
 }
@@ -374,12 +382,12 @@ ChunkList <-
 	Chunk("models/wega/floor_0.mdl", [0, 2, 3, 5, 6, 7, 8, 11, 12], [], [2, 3, 4, 5, 6, 8], [0, 2, 3, 6, 7, 8], [15, 19, 10, 12, 14])
 	Chunk("models/wega/floor_1.mdl", [], [1, 3, 6, 7, 8, 9, 10], [], [1, 3, 6, 7, 9, 10], [6, 8, 16, 18])
 	Chunk("models/wega/floor_2.mdl", [3, 6, 8], [4, 6, 7, 8], [0, 3, 4, 6, 7, 8], [3, 6, 8], [0, 24, 35, 37, 45, 47])
-	Chunk("models/wega/floor_3.mdl", [0, 3, 6, 7, 8], [0, 1, 2, 4, 6, 7, 8, 9, 10], [0, 3, 4, 6, 7, 8], [0, 1, 2, 4, 6, 7, 8, 9, 10], [1, 3, 21, 61, 63])
-	Chunk("models/wega/floor_4.mdl", [0, 2, 3, 5, 6, 7, 8, 10, 11, 12], [2, 4, 6, 7, 8], [], [2, 4, 5, 6], [5, 6, 7, 10, 12, 16, 17])
-	Chunk("models/wega/floor_5.mdl", [6, 7], [0, 3, 6, 7, 8], [0, 3, 4, 6, 7, 8], [0, 6, 7, 8], [0, 2, 10, 12, 14, 24])
-	Chunk("models/wega/floor_6.mdl", [0, 2, 3, 5, 6, 7, 8], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [0, 2, 3, 4, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 21, 23, 37])
+	Chunk("models/wega/floor_3.mdl", [0, 3, 6, 7, 8], [0, 1, 2, 4, 6, 7, 8, 9, 10], [0, 3, 4, 6, 7, 8], [0, 1, 2, 4, 6, 7, 8, 9, 10], [1, 3, 21, 23, 61, 63])
+	Chunk("models/wega/floor_4.mdl", [0, 2, 3, 5, 6, 7, 8, 10, 11, 12], [2, 4, 6, 7, 8], [], [2, 4, 5, 6], [5, 6, 7, 10, 12, 15, 16, 17])
+	Chunk("models/wega/floor_5.mdl", [6, 7], [0, 3, 6, 7, 8], [0, 3, 4, 6, 7, 8], [0, 6, 7, 8], [0, 2, 10, 12, 14, 22, 24])
+	Chunk("models/wega/floor_6.mdl", [0, 2, 3, 5, 6, 7, 8], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [0, 2, 3, 4, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 21, 22, 23,37])
 	Chunk("models/wega/floor_7.mdl", [0, 2, 3, 6, 7, 8], [1, 3, 6, 7, 8, 9, 10], [0, 3, 4, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [22])
-	Chunk("models/wega/floor_8.mdl", [0, 2, 3, 6, 7, 8, 11, 12], [3, 5, 6, 7, 8, 9, 10], [0, 3, 4, 5, 6, 7, 8, 11, 12], [2, 3, 4, 5, 6, 7, 8, 9, 10], [0, 2, 4, 10, 14, 20, 24])
+	Chunk("models/wega/floor_8.mdl", [0, 2, 3, 6, 7, 8, 11, 12], [3, 5, 6, 7, 8, 9, 10], [0, 3, 4, 5, 6, 7, 8, 11, 12], [2, 3, 4, 5, 6, 7, 8, 9, 10], [0, 2, 4, 10, 14, 20, 22, 24])
 	Chunk("models/wega/floor_9.mdl", [], [1, 3, 6, 7, 8], [], [1, 3, 6, 7], [32, 37, 42])
 	Chunk("models/wega/floor_10.mdl", [], [1, 3, 6, 7, 8], [], [1, 3, 6, 7], [2, 7, 12, 17, 22])
 	Chunk("models/wega/floor_11.mdl", [0], [], [0, 4], [], [61, 62, 63])
@@ -671,12 +679,13 @@ function Generate()
 					solid = SOLID_VPHYSICS
 				})
 
-				for (local i = 0; i < ChunkList[CellArray[x][y]].doll_locations.len(); i++)
+				local chunk = ChunkList[CellArray[x][y]]
+				foreach (position in chunk.doll_locations)
 				{
 					local prop = Ware_SpawnEntity("prop_dynamic",
 					{
 						targetname = "wega_challenge_doll"
-						origin = Vector(x*CellWidth,y*CellWidth,0) + DollPositions[ChunkList[CellArray[x][y]].doll_locations[i]] + SpawnCenter,
+						origin = Vector(x*CellWidth,y*CellWidth,0) + DollPositions[position] + SpawnCenter,
 						model = model_wega_doll
 						DefaultAnim = "idle"
 					})
@@ -687,8 +696,8 @@ function Generate()
 					{
 						EmitSoundEx
 						({
-							sound_name = this.sound_collect,
-							entity = player,
+							sound_name  = this.sound_collect
+							entity      = player
 							filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
 						})
 						self.Kill()						
@@ -733,8 +742,7 @@ wegacount <- 0
 
 function PrepareObjective()
 {
-	local wega = null
-	while (wega = FindByClassname(wega, "prop_dynamic"))
+	for (local wega; wega = FindByClassname(wega, "prop_dynamic");)
 	{
 		if (wega.GetModelName() == model_wega_doll)
 		{
@@ -764,6 +772,7 @@ function CreateWega(location)
 		filter_type = RECIPIENT_FILTER_GLOBAL
 	})
 
+	WegaArray.append(wega)
 	WegaTargetArray.append(null)
 
 	return wega
@@ -773,11 +782,11 @@ function AddWegas()
 {
 	CreateWega(Vector(-1*CellWidth,-1*CellWidth,0) + SpawnCenter)
 
-	//How many wegas?
+	// How many wegas?
 	local playerCount = Ware_MinigamePlayers.len() 
 	local extraWegas = 0
 
-	//Multi only
+	// Multi only
 	if (playerCount > 1)
 	{
 		extraWegas = ceil(sqrt(playerCount*4))
@@ -785,7 +794,7 @@ function AddWegas()
 		if (extraWegas + 1 > playerCount)
 			extraWegas = playerCount - 1
 	}
-	//Above 20
+	// Above 20
 	if (playerCount > 20)
 	{
 		extraWegas = ceil(playerCount / 2.5)
@@ -816,9 +825,7 @@ function AddWegas()
 		}
 	}
 
-	local wegaEntity = null
-	local i = 0
-	while (wegaEntity = FindByName(wegaEntity, "multiplayer_wega_brush*"))
+	foreach (i, wegaEntity in WegaArray)
 	{
 		wegaEntity.ValidateScriptScope()
 		wegaEntity.GetScriptScope().id <- i
@@ -832,9 +839,9 @@ function AddWegas()
 		{
 			EmitSoundEx
 			({
-				sound_name = this.sound_stalker_scream,
-				entity = victim,
-				filter_type = Constants.EScriptRecipientFilter.RECIPIENT_FILTER_SINGLE_PLAYER
+				sound_name  = this.sound_stalker_scream
+				entity      = victim
+				filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
 			})
 			victim.SetScriptOverlayMaterial(this.overlay_wega_jumpscare)
 			Ware_CreateTimer(function()
@@ -843,9 +850,6 @@ function AddWegas()
 				victim.SetScriptOverlayMaterial("")
 			}, 1.5)
 		}
-
-		i++
-		WegaArray.append(wegaEntity)
 	}
 }
 
@@ -859,17 +863,16 @@ function Wega_entity_tick(wega)
 	local wegaOriginOffset = Vector(wega.GetOrigin().x, wega.GetOrigin().y, wega.GetOrigin().z - 80.0)
 	WegaTargetArray[id] = null
 
-	foreach (player in Ware_Players)
+	foreach (player in Ware_MinigamePlayers)
 	{
 		if (!player.IsAlive())
-			continue
-
-		local distance = (wegaOriginOffset - player.GetOrigin()).Length()
+			continue			
 
 		// player already being chased by another one?
 		if (!AggroClosest && WegaTargetArray.find(player) != null)
 			continue
 
+		local distance = VectorDistance(wegaOriginOffset, player.GetOrigin())
 		if (distance < playerDistance)
 		{
 			playerDistance = distance
@@ -879,13 +882,12 @@ function Wega_entity_tick(wega)
 	
 	if (WegaTargetArray[id] == null)
 	{
-		foreach (player in Ware_Players)
+		foreach (player in Ware_MinigamePlayers)
 		{
 			if (!player.IsAlive())
 				continue
 
-			local distance = (wegaOriginOffset - player.GetOrigin()).Length()
-
+			local distance = VectorDistance(wegaOriginOffset, player.GetOrigin())
 			if (distance < playerDistance)
 			{
 				playerDistance = distance
@@ -906,8 +908,7 @@ function Wega_entity_tick(wega)
 
 	ScreenShake(wegaOriginOffset, 8.0, 100, 0.05, 800, 0, true)
 
-	local caughtPlayer = null
-	while (caughtPlayer = FindByClassnameWithin(caughtPlayer, "player", wegaOriginOffset, 60.0))
+	for (local caughtPlayer; caughtPlayer = FindByClassnameWithin(caughtPlayer, "player", wegaOriginOffset, 60.0);)
 	{
 		if (!caughtPlayer.IsAlive())
 			continue
@@ -916,18 +917,16 @@ function Wega_entity_tick(wega)
 			continue
 
 		Ware_AddPlayerAttribute(caughtPlayer, "move speed penalty", 0.0, -1)
-		wega.GetScriptScope().Jumpscare(caughtPlayer)
+		scope.Jumpscare(caughtPlayer)
 	}
-
-	return -1
 }
 
 function ShouldSwitchTargets(player, otherId)
 {
-	local distance = (self.GetOrigin() - player.GetOrigin()).Length()
+	local distance = VectorDistance(self.GetOrigin(), player.GetOrigin())
 	local currentDistance = 999999999.0
 	if (currentTarget != null)
-		currentDistance = (self.GetOrigin() - currentTarget.GetOrigin()).Length()
+		currentDistance = VectorDistance(self.GetOrigin(), currentTarget.GetOrigin())
 	if (distance < currentDistance)
 	{
 		WegaTargetArray[otherId] = currentTarget
@@ -962,12 +961,9 @@ function Wega_player_tick(player)
 				Ware_ShowScreenOverlay(player, null)
 				Ware_PassPlayer(player, true)
 				RestoreHUD(player)
-
 			}, 0.1)
 		}
 	}
-
-	return 0.05
 
 }
 
@@ -1003,4 +999,22 @@ function EnableWegaHUD(player)
 function RestoreHUD(player)
 {
 	player.RemoveHudHideFlags(Mask_Wega)
+}
+
+// for debugging
+function CollectDolls()
+{
+	local wegaDolls = []
+	for (local wegaDoll; wegaDoll = FindByName(wegaDoll, "wega_challenge_doll*");)
+	{
+		if (wegaDoll.GetName() == "wega_challenge_doll")
+			wegaDolls.append(wegaDoll)
+	}
+	
+	foreach (wegaDoll in wegaDolls)
+	{
+		wegaDoll.Kill()
+		if (--wegacount <= 1)
+			break
+	}
 }
