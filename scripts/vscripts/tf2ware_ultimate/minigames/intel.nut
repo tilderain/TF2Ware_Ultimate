@@ -251,10 +251,23 @@ function SpawnLaser(pos, type)
 		origin        = pos
 		texture       = beam_model
 		TextureScroll = 35
-		width         = 4
+		width         = 6
 		spawnflags    = 48
 		rendercolor   = "255 0 25"
 		damage        = 75
+		dissolvetype  = 1
+		LaserTarget   = "ware_laser_" + laser_count
+	})
+
+	local beam2 = Ware_SpawnEntity("env_laser",
+	{
+		origin        = pos
+		texture       = beam_model
+		TextureScroll = 35
+		width         = 3
+		spawnflags    = 48
+		rendercolor   = "255 255 255"
+		damage        = 0
 		dissolvetype  = 1
 		LaserTarget   = "ware_laser_" + laser_count
 	})
@@ -278,7 +291,18 @@ function SpawnLaser(pos, type)
 
 	lasers.append(beam)
 
+	beam2.SetMoveType(MOVETYPE_NOCLIP, 0)
+
+	vel = beam2.GetAbsVelocity()
+	if (type == 0)
+		vel = Vector(vel.x * 0, vel.y * 0, speed)
+	else
+		vel = Vector(vel.x * 0, speed, vel.z * 0)
+	beam2.SetAbsVelocity(vel)
+
+	lasers.append(beam2)
 }
+
 function OnTakeDamage(params)
 {
 	local victim = params.const_entity
@@ -287,7 +311,7 @@ function OnTakeDamage(params)
 		local inflictor = params.inflictor
 		if (inflictor && inflictor.GetClassname() == "env_laser")
 		{
-			victim.TakeDamageCustom(victim, victim, null, Vector(), Vector(), 75.0, DMG_GENERIC, TF_DMG_CUSTOM_PLASMA)
+			victim.TakeDamageCustom(victim, victim, null, Vector(), Vector(), 34.0, DMG_GENERIC, TF_DMG_CUSTOM_PLASMA)
 			// fix weapons being dissolved after respawn
 			params.damage_type = params.damage_type & ~(DMG_DISSOLVE)	
 			params.damage_stats = TF_DMG_CUSTOM_PLASMA
