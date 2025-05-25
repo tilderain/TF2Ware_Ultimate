@@ -130,10 +130,6 @@ function OnStart()
 		{
 			SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0, 1))
 			SpawnSawblade(Ware_MinigameLocation.center_bottom + Vector(poses[i], 0, 40))
-			if (RandomBool())
-				SpawnLaser(Ware_MinigameLocation.center_bottom + Vector(poses[i], -265, RandomBool() ? 40 : 80), RandomInt(0, 1))
-			else
-				SpawnSawblade(Ware_MinigameLocation.center_bottom + Vector(poses[i], 0, 40))
 		}
 	}
 
