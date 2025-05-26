@@ -230,6 +230,7 @@ function SpawnLaser(pos, type)
 	{
 		targetname = "ware_laser_" + laser_count
 		origin     = pos + add_vec
+		target     = "dummytarget"
 	})
 	beam.SetMoveType(MOVETYPE_NOCLIP, 0)
 
