@@ -237,38 +237,28 @@ function OnPlayerInventory(player)
 {
 	if (!give_loadout)
 		return
+
+	if (!player.IsAlive())
+		return
 	
 	Ware_SetPlayerLoadout(player, TF_CLASS_SOLDIER, "Original")
 	
 	if (Ware_MinigameMode != MISSION_RESIST)
 	{
-		foreach (player in Ware_MinigamePlayers)
+		local weapon = player.GetActiveWeapon()		
+		if (Ware_MinigameMode == MISSION_DAMAGE)
 		{
-			if (!player.IsAlive())
-				continue
-		
-			local weapon = player.GetActiveWeapon()		
-			if (Ware_MinigameMode == MISSION_DAMAGE)
+			if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("damage bonus", 1.0) > 1.5)
 			{
-				if (player.InCond(TF_COND_CRITBOOSTED_USER_BUFF))
-				{
-					Ware_PassPlayer(player, true)
-				}
-				else
-				{
-					if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("damage bonus", 1.0) > 1.5)
-					{
-						Ware_PassPlayer(player, true)
-					}
-				}
+				Ware_PassPlayer(player, true)
 			}
-			else if (Ware_MinigameMode == MISSION_RATE)
+		}
+		else if (Ware_MinigameMode == MISSION_RATE)
+		{
+			if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("fire rate bonus", 1.0) < 0.7)
 			{
-				if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("fire rate bonus", 1.0) < 0.7)
-				{
-					Ware_PassPlayer(player, true)
-				}				
-			}
+				Ware_PassPlayer(player, true)
+			}				
 		}
 	}
 }
