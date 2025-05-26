@@ -222,7 +222,7 @@ function OnCleanup()
 	
 	foreach (player in Ware_MinigamePlayers)
 	{
-		player.GrantOrRemoveAllUpgrades(true, true)
+		player.GrantOrRemoveAllUpgrades(true, false)
 		player.SetCurrency(0)
 	}
 	give_loadout = false
