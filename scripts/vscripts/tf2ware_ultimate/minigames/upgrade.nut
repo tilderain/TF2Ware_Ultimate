@@ -13,7 +13,7 @@ minigame <- Ware_MinigameData
 		"Upgrade your firing speed!"
 	]
 	modes          = 3
-	duration	   = Ware_MinigameMode != 1 ? 6.5 : 8.5
+	duration	   = Ware_MinigameMode != 1 ? 7.5 : 10.5
 	location       = "warehouse"
 	music		   = Ware_MinigameMode != 1 ? "upgrademusic" : "upgraderesist"
 	custom_overlay = ["upgrade_damage", "upgrade_resist", "upgrade_rate"][Ware_MinigameMode]
@@ -121,8 +121,8 @@ function OnStart()
 		Ware_PlaySoundOnAllClients(snd_intro, 0.25)
 		Ware_PlaySoundOnAllClients(snd_loop, 0.20)
 		
-		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 5.5)
-		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.35), 5.5)
+		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 7.5)
+		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.35), 7.5)
 
    		local bot = Ware_SpawnEntity("prop_dynamic_override",
    		{
@@ -139,8 +139,8 @@ function OnStart()
 		//bot.SetMoveType(MOVETYPE_NONE, 0)
 		bot.ValidateScriptScope()
 
-		Ware_CreateTimer(@() SetExplodeAnim(bot), 5.5)
-		Ware_CreateTimer(@() ExplodeBot(bot), 7.5)
+		Ware_CreateTimer(@() SetExplodeAnim(bot), 7.5)
+		Ware_CreateTimer(@() ExplodeBot(bot), 9.5)
 	}
 	
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Original")
