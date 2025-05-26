@@ -217,8 +217,6 @@ function OnEnd()
 	
 function OnCleanup()
 {
-	give_loadout = false
-	
 	// WARNING: the order of operations here is important or the server will CRASH
 	// upgrades must be removed first, then upgrades disabled, then loadouts re-enabled in that order
 	
@@ -227,6 +225,7 @@ function OnCleanup()
 		player.GrantOrRemoveAllUpgrades(true, true)
 		player.SetCurrency(0)
 	}
+	give_loadout = false
 	
 	ForceEnableUpgrades(0)	
 	Ware_TogglePlayerLoadouts(false)
