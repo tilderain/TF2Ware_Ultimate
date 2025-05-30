@@ -144,7 +144,7 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 {
 	if (merasmus && merasmus.IsValid())
 	{
-		Ware_ChatPrint(null, "{color}MERASMUS!{color} wins!", merasmus_color, TF_COLOR_DEFAULT)
+		Ware_ChatPrint(null, "{color}MERASMUS{color} wins!", merasmus_color, TF_COLOR_DEFAULT)
 	}
 	else
 	{
