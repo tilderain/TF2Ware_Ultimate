@@ -26,6 +26,8 @@ laser_count <- 0
 
 show_anno <- false
 
+first <- true
+
 function OnPrecache()
 {
 	PrecacheModel(spinner_model)
@@ -80,7 +82,16 @@ function OnUpdate()
 function OnCapture1()
 {
 	if (activator && activator.IsPlayer())
+	{
 		Ware_PassPlayer(activator, true)
+		if (Ware_MinigameScope.first)
+		{
+			Ware_ChatPrint(null, "{player} {color}capped the intel first!", activator, TF_COLOR_DEFAULT)
+			Ware_GiveBonusPoints(activator)
+			Ware_MinigameScope.first = false
+		}
+	}
+
 	foreach (mgr in TeamMgrs)
 		SetPropInt(mgr, "m_nFlagCaptures", 0)
 }
