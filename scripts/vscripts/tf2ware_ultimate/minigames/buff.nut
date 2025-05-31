@@ -9,11 +9,15 @@ minigame <- Ware_MinigameData
 	allow_damage   = true
 	modes          = 2
 	collisions 	   = true
+	location       = "boxingring"
 })
+
+local buffs = ["Buff Banner", "Concheror", "Battalion's Backup"]
 
 function OnStart()
 {
 	local gun =	RandomInt(0,1)
+	local buff = RandomElement(buffs)
 	foreach (player in Ware_MinigamePlayers)
 	{
 		player.RemoveHudHideFlags(HIDEHUD_CLOAK_AND_FEIGN)
@@ -23,7 +27,7 @@ function OnStart()
 		if (Ware_MinigameMode == 0)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SOLDIER)
-			Ware_GivePlayerWeapon(player, "Buff Banner", {"deploy time increased": 1, "increase buff duration" : 0.1})
+			Ware_GivePlayerWeapon(player, buff, {"deploy time increased": 1, "increase buff duration" : 0.1})
 			local weapon = null
 			if (gun == 0)
 			{
