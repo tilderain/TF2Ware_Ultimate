@@ -1,5 +1,3 @@
-mode <- 0
-
 minigame <- Ware_MinigameData
 ({
 	name           = "Buff"
@@ -9,6 +7,8 @@ minigame <- Ware_MinigameData
 	music          = "woody"
 	min_players    = 2
 	allow_damage   = true
+	modes          = 2
+	collisions 	   = true
 })
 
 function OnStart()
@@ -20,7 +20,7 @@ function OnStart()
 		//Makes the flag apply if already soldier
 		player.Regenerate(true)
 		Ware_StripPlayer(player, false)
-		if (mode == 0)
+		if (Ware_MinigameMode == 0)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SOLDIER)
 			Ware_GivePlayerWeapon(player, "Buff Banner", {"deploy time increased": 1, "increase buff duration" : 0.1})
@@ -35,8 +35,13 @@ function OnStart()
 				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1, "damage bonus": 1.66})
 			}
 		}
-		player.SetHealth(1850)
+		else if (Ware_MinigameMode == 1)
+		{
+			Ware_SetPlayerClass(player, TF_CLASS_PYRO)
+			Ware_GivePlayerWeapon(player, "Phlogistinator")
+		}
 		player.SetRageMeter(0)
+		player.SetHealth(1850)
 	}
 }
 
