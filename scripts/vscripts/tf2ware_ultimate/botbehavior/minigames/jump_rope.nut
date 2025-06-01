@@ -4,7 +4,7 @@ function OnUpdate(bot)
     bot.SetAutoJump(99999,99999)
     local prop = FindByName(null, "jumprope_door")
     bot.RemoveBotAttribute(AUTO_JUMP)
-    if(prop)
+    if (prop)
     {
         local pcen = prop.GetCenter()
         local porg = prop.GetOrigin()

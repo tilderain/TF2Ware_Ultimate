@@ -204,7 +204,7 @@ function OnUpdate(bot)
     prop = dist1 < dist2 ? prop1 : prop2
     //if(prop.GetOrigin)
     //local prop = FindByClassnameNearest("trigger_multiple", bot.GetOrigin(), 1500)
-    if(prop)
+    if (prop)
     {
         //Ware_ChatPrint(null, "{int}", VectorDistance(prop.GetOrigin(), bot.GetOrigin()))
         //SetPropInt(bot, "m_nButtons", IN_FORWARD)
