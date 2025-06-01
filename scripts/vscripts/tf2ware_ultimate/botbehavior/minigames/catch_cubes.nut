@@ -4,8 +4,6 @@ function OnUpdate(bot)
     local prop = FindByClassnameNearest("prop_physics", bot.GetOrigin(), 1000)
     if(prop)
     {
-        //Ware_ChatPrint(null, "aaa")
-        SetPropInt(bot, "m_nButtons", IN_FORWARD)
         BotLookAt(bot, prop.GetOrigin(), 350.0, 600.0)
         local loco = bot.GetLocomotionInterface()
         loco.FaceTowards(prop.GetOrigin())
