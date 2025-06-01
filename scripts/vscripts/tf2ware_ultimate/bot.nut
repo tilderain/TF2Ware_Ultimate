@@ -29,6 +29,7 @@ Ware_BotMinigameBehaviors <-
 	catch_cubes = {}
 	basketball = {}
 	jump_rope = {}
+	boxing = {}
 }
 
 Ware_BotMinigameBehavior <- null
