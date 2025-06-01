@@ -31,6 +31,7 @@ Ware_BotMinigameBehaviors <-
 	jump_rope = {}
 	boxing = {}
 	dove = {}
+	bullseye = {}
 }
 
 Ware_BotMinigameBehavior <- null
