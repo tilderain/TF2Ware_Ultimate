@@ -1,4 +1,5 @@
 //todo survive first jump
+//todo leave arena ??
 function OnUpdate(bot)
 {
     bot.SetAutoJump(99999,99999)

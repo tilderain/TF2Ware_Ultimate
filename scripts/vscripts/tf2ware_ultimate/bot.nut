@@ -50,6 +50,8 @@ Ware_BotMinigameBehaviors <-
 	stay_ground = {}
 	stand_near = {}
 	spycrab = {}
+	flipper_ball = {}
+	piggyback = {}
 }
 
 Ware_BotMinigameBehavior <- null
