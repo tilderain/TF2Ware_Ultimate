@@ -44,6 +44,9 @@ Ware_BotMinigameBehaviors <-
 	touch_sky = {}
 	time_jump = {}
 	taunt_kill = {}
+	sumo = {}
+	stun = {}
+	street_fighter = {}
 }
 
 Ware_BotMinigameBehavior <- null

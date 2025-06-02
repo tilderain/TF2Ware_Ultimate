@@ -1,5 +1,4 @@
 
-//todo nearest
 function OnUpdate(bot)
 {
 	local prop
@@ -29,7 +28,7 @@ function OnUpdate(bot)
 			//Ware_ChatPrint(null, "{int}", dist2)
 			if (dist < 50 || dist2 > 200)
 				data.dest = null
-			if (VectorDistance(bot.GetCenter(), data.prop.GetCenter()) < 80)
+			if (VectorDistance(bot.GetCenter(), data.prop.GetCenter()) < 900)
 				bot.Taunt(TAUNT_BASE_WEAPON, 0)
 			break
 		}

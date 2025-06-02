@@ -1,10 +1,12 @@
+//todo nearest
 function OnUpdate(bot)
 {
 	local prop
 
-	for (prop; prop = Entities.FindByClassname(prop, "player");)
+	local arr = Shuffle(Ware_MinigamePlayers)
+	foreach (prop in arr)
 	{
-		if (prop && prop.IsPlayer())
+		if (prop && prop.IsPlayer() && prop.IsAlive())
 		{
 			local dest = prop.GetCenter() + Vector(RandomFloat(-33,33), RandomFloat(-33,33), 0)
 

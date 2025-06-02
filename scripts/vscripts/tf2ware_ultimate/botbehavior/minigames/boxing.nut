@@ -9,7 +9,7 @@ function OnUpdate(bot)
 	local arr = Shuffle(Ware_MinigamePlayers)
 	if (!("dest" in data) || data.dest == null)
 	{
-		if(!("prop" in data) || data.prop == null || !data.prop.IsValid() || !data.prop.IsAlive())
+		if (!("prop" in data) || data.prop == null || !data.prop.IsValid() || !data.prop.IsAlive())
 		{
 			foreach (prop in arr)
 			{
