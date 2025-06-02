@@ -1,4 +1,4 @@
-
+//todo survive first jump
 function OnUpdate(bot)
 {
     bot.SetAutoJump(99999,99999)
@@ -19,9 +19,27 @@ function OnUpdate(bot)
         local dist = 200 + (speed/1.8)
         //Ware_ChatPrint(null, "{int}", dist)
         //Ware_ChatPrint(null, "{int}", VectorDistance(bot.GetOrigin(), pcen))
-        if (VectorDistance(bot.GetOrigin(), pcen) < dist || Ware_GetMinigameTime() > 45)
-        //if(pcen.z < -4770 + (speed / 4))
-            loco.Jump()
+        if (VectorDistance(bot.GetOrigin(), pcen) < dist)
+            if(pcen.z < -4770 + (speed / 4))
+            {
+               loco.Jump()
+            }
+
+        if(bot.GetFlags() & FL_ONGROUND)
+        {
+            bot.RemoveFlag(FL_DUCKING)
+        }
+        else
+        {
+            bot.AddFlag(FL_DUCKING)
+        }
+        
             
     }
+}
+
+
+function OnEnd(bot)
+{
+	bot.RemoveFlag(FL_DUCKING)
 }
