@@ -18,12 +18,17 @@ minigame <- Ware_MinigameData
 	duration       = 4.0
 	music          = "sillytime"
 	custom_overlay = building_mode[1]
+	allow_damage   = true
+	convars        = 
+	{
+		tf_fastbuild = 1
+	}
 })
 
 function OnPrecache()
 {
 	foreach (mode in building_modes)
-		PrecacheOverlay("hud/tf2ware_ultimate/minigames/" + building_mode[1])
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/" + mode[1])
 }
 
 function OnStart()
@@ -60,4 +65,10 @@ function OnGameEvent_player_builtobject(params)
 	}
 	
 	Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0);
+}
+
+function OnTakeDamage(params)
+{
+	if (params.const_entity.IsPlayer())
+		return false
 }
