@@ -37,6 +37,9 @@ Ware_BotMinigameBehaviors <-
 	type_color = {}
 	type_time = {}
 	type_map = {}
+	watch_fall = {}
+	wanted = {}
+	trivia = {}
 }
 
 Ware_BotMinigameBehavior <- null
