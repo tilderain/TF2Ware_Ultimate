@@ -504,7 +504,7 @@ function OnGameEvent_player_death(params)
 			player.GetScriptScope().ware_data.suicided = true
 	}
 		
-	if (Ware_Minigame.fail_on_death == true)
+	if (Ware_Minigame.fail_on_death == true && !Ware_MinigameEnded)
 	{
 		if (player)
 			Ware_PassPlayer(player, false)
