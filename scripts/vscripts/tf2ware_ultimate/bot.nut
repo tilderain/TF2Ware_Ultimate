@@ -47,6 +47,9 @@ Ware_BotMinigameBehaviors <-
 	sumo = {}
 	stun = {}
 	street_fighter = {}
+	stay_ground = {}
+	stand_near = {}
+	spycrab = {}
 }
 
 Ware_BotMinigameBehavior <- null
