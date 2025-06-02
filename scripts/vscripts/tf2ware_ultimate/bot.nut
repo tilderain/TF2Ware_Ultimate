@@ -202,3 +202,32 @@ function BotLookAt(bot, target_pos, min_rate, max_rate)
         
     bot.SnapEyeAngles(cur_eye_ang)
 }
+
+//AI generated, please improve (?)
+function BotCalculateAimPosition(demomanOrigin, targetOrigin, targetVelocity, projectile_speed) {
+    local predictedPosition = targetOrigin
+    local timeOfFlight = 0.0
+
+    local ITERATIONS = 5            // Number of prediction refinements
+    local GRAVITY = 800.0           // hammer units/s²
+
+    // Iteratively refine prediction
+    for (local i = 0; i < ITERATIONS; i++) {
+        local delta = predictedPosition - demomanOrigin
+        local horizontalDistance = Vector(delta.x, delta.y, 0).Length()
+        
+        // Calculate required pitch angle
+        timeOfFlight = horizontalDistance / projectile_speed
+        local verticalOffset = delta.z + targetVelocity.z * timeOfFlight
+        
+        // Solve vertical motion equation: verticalOffset = v0*sinθ*t - 0.5*g*t²
+        local sinTheta = (verticalOffset + 0.5 * GRAVITY * timeOfFlight * timeOfFlight) / (projectile_speed * timeOfFlight)
+        sinTheta = Clamp(sinTheta, -1.0, 1.0)
+        
+        // Update prediction with new time of flight
+        timeOfFlight = horizontalDistance / (projectile_speed * cos(asin(sinTheta)))
+        predictedPosition = targetOrigin + targetVelocity * timeOfFlight
+    }
+    
+    return predictedPosition
+}
