@@ -33,6 +33,7 @@ Ware_BotMinigameBehaviors <-
 	dove = {}
 	bullseye = {}
 	swim_up = {}
+	water_war = {}
 }
 
 Ware_BotMinigameBehavior <- null
