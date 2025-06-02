@@ -210,12 +210,12 @@ function OnUpdate(bot)
         //SetPropInt(bot, "m_nButtons", IN_FORWARD)
 
         local demomanPos = bot.EyePosition()
-        local hoopPos = prop.GetCenter() + Vector(0,0,142.5)
+        local hoopPos = prop.GetCenter() + Vector(0,0,0)
         local hoopVelocity = prop.GetAbsVelocity()  // Adjust based on actual hoop movement
 
-        //local dest = CalculateAimPosition(demomanPos, hoopPos, hoopVelocity)
+        local dest = BotCalculateAimPosition(demomanPos, hoopPos, hoopVelocity, 1200)
         local z = VectorDistance(prop.GetCenter(), bot.EyePosition())
-        local dest = prop.GetCenter() + Vector((prop.GetAbsVelocity().x * 1.1), 0, z/5.4)
+        //local dest = prop.GetCenter() + Vector((prop.GetAbsVelocity().x * 1.1), 0, z/5.4)
 
         //local lol = FindGrenadeAim(bot, prop)
         //if(lol)

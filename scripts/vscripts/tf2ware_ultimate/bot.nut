@@ -32,6 +32,7 @@ Ware_BotMinigameBehaviors <-
 	boxing = {}
 	dove = {}
 	bullseye = {}
+	swim_up = {}
 }
 
 Ware_BotMinigameBehavior <- null
@@ -204,30 +205,89 @@ function BotLookAt(bot, target_pos, min_rate, max_rate)
 }
 
 //AI generated, please improve (?)
+const GRAVITY = 800.0;
+
 function BotCalculateAimPosition(demomanOrigin, targetOrigin, targetVelocity, projectile_speed) {
-    local predictedPosition = targetOrigin
-    local timeOfFlight = 0.0
-
-    local ITERATIONS = 5            // Number of prediction refinements
-    local GRAVITY = 800.0           // hammer units/s²
-
-    // Iteratively refine prediction
-    for (local i = 0; i < ITERATIONS; i++) {
-        local delta = predictedPosition - demomanOrigin
-        local horizontalDistance = Vector(delta.x, delta.y, 0).Length()
+    // Initial time estimate (straight-line distance / speed)
+    local delta = targetOrigin - demomanOrigin;
+    local t = delta.Length() / projectile_speed;
+    local MAX_ITER = 15;
+    local TOLERANCE = 0.01;
+    
+    // Iterative prediction to account for target movement
+    for (local i = 0; i < MAX_ITER; i++) {
+        // Predict target position at current time
+        local predictedPos = targetOrigin + targetVelocity * t;
+        local toTarget = predictedPos - demomanOrigin;
         
-        // Calculate required pitch angle
-        timeOfFlight = horizontalDistance / projectile_speed
-        local verticalOffset = delta.z + targetVelocity.z * timeOfFlight
+        // Calculate horizontal distance and vertical difference
+        local horizontal = Vector(toTarget.x, toTarget.y, 0);
+        local horizontalDist = horizontal.Length();
+        local verticalDiff = toTarget.z;
         
-        // Solve vertical motion equation: verticalOffset = v0*sinθ*t - 0.5*g*t²
-        local sinTheta = (verticalOffset + 0.5 * GRAVITY * timeOfFlight * timeOfFlight) / (projectile_speed * timeOfFlight)
-        sinTheta = Clamp(sinTheta, -1.0, 1.0)
+        // FIXED: Proper vertical velocity calculation
+        // v0z = (verticalDiff - 0.5 * GRAVITY * t^2) / t
+        // This accounts for gravity pulling DOWN while we need to aim UP
+        local v0z = (verticalDiff - 0.5 * GRAVITY * t * t) / t;
+        local v0xy = (horizontalDist > 0) ? horizontalDist / t : 0;
         
-        // Update prediction with new time of flight
-        timeOfFlight = horizontalDistance / (projectile_speed * cos(asin(sinTheta)))
-        predictedPosition = targetOrigin + targetVelocity * timeOfFlight
+        // Calculate current total speed
+        local calculatedSpeed = sqrt(v0xy * v0xy + v0z * v0z);
+        
+        if (calculatedSpeed > 0) {
+            // Adjust time based on speed difference
+            local tNew = t * projectile_speed / calculatedSpeed;
+            
+            // Check for convergence
+            if (fabs(tNew - t) < TOLERANCE) {
+                t = tNew;
+                break;
+            }
+            t = tNew;
+        } else {
+            // Fallback: use straight-line time
+            t = horizontalDist / projectile_speed;
+            break;
+        }
     }
     
-    return predictedPosition
+    // Ensure minimum time value
+    t = Max(t, 0.001);
+    
+    // Final target prediction
+    local predictedPos = targetOrigin + targetVelocity * t;
+    local toTarget = predictedPos - demomanOrigin;
+    
+    // Calculate horizontal components
+    local horizontal = Vector(toTarget.x, toTarget.y, 0);
+    local horizontalDist = horizontal.Length();
+    local horizontalDir = Vector(0, 0, 0);
+    
+    if (horizontalDist > 0) {
+        // Correct vector normalization
+        horizontalDir = Vector(
+            horizontal.x / horizontalDist,
+            horizontal.y / horizontalDist,
+            0
+        );
+    }
+    
+    // FIXED: Correct vertical velocity calculation
+    // Use subtraction for gravity compensation
+    local v0z = (toTarget.z - 0.5 * GRAVITY * t * t) / t;
+    
+    // Calculate horizontal speed
+    local v0xy = (horizontalDist > 0) ? horizontalDist / t : 0;
+    
+    // Construct final launch vector
+    local launchVec = Vector(
+        horizontalDir.x * v0xy,
+        horizontalDir.y * v0xy,
+        v0z
+    );
+    
+    // Return point far along launch vector
+	    DebugDrawLine(demomanOrigin, demomanOrigin + launchVec * 10000, 0, 0, 255, true, 0.125)
+
+    return demomanOrigin + launchVec * 10000;
 }
