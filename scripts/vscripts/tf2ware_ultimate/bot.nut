@@ -40,6 +40,10 @@ Ware_BotMinigameBehaviors <-
 	watch_fall = {}
 	wanted = {}
 	trivia = {}
+	treasure_hunt = {}
+	touch_sky = {}
+	time_jump = {}
+	taunt_kill = {}
 }
 
 Ware_BotMinigameBehavior <- null
