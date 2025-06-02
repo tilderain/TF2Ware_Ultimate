@@ -49,7 +49,7 @@ function OnUpdate(bot)
     local loco = bot.GetLocomotionInterface()
     loco.FaceTowards(dest)
     loco.Approach(dest, 999.0)
-    if (bot.GetFlags() & FL_ONGROUND && bot.GetAbsVelocity().Length() > 200.0)
+    if (bot.GetFlags() & FL_ONGROUND && bot.GetAbsVelocity().Length() > 150.0)
         loco.Jump()
     bot.RemoveFlag(FL_DUCKING)
     

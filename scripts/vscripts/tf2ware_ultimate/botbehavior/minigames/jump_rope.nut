@@ -32,6 +32,7 @@ function OnUpdate(bot)
         }
         else
         {
+            //This doesn't actually decresae their hitbox probably
             bot.AddFlag(FL_DUCKING)
         }
         
