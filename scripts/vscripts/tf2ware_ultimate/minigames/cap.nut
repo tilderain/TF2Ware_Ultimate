@@ -7,6 +7,7 @@ minigame <- Ware_MinigameData
 	music         = "bloober"
 	allow_damage  = true
 	friendly_fire = true
+	end_delay     = 0.4
 	convars = 
 	{
 		tf_avoidteammates = 1
@@ -15,6 +16,8 @@ minigame <- Ware_MinigameData
 		mp_teams_unbalance_limit = 0
 	}
 })
+
+capped <- false
 
 function OnStart()
 {
@@ -229,6 +232,8 @@ function OnTriggerEndCap()
 		if (Ware_GetPlayerMiniData(player).in_cap)
 			Ware_PassPlayer(player, true)
 	}
+	
+	capped = true
 }
 
 function OnCleanup()
@@ -239,4 +244,9 @@ function OnCleanup()
 	{
 		SendGlobalGameEvent("intro_finish", { player = pl.entindex() })
 	}
+}
+
+function OnCheckEnd()
+{
+	return capped
 }
