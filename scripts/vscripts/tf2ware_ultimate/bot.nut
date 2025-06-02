@@ -34,6 +34,9 @@ Ware_BotMinigameBehaviors <-
 	bullseye = {}
 	swim_up = {}
 	water_war = {}
+	type_color = {}
+	type_time = {}
+	type_map = {}
 }
 
 Ware_BotMinigameBehavior <- null
