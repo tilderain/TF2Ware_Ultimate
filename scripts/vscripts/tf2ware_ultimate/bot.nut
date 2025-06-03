@@ -52,6 +52,21 @@ Ware_BotMinigameBehaviors <-
 	spycrab = {}
 	flipper_ball = {}
 	piggyback = {}
+	airblast = {}
+	airshot = {}
+	avoid_props = {}
+	avoid_trains = {}
+	backstab = {}	
+	bombs = {}
+	break_barrel = {}
+	break_box = {}
+	bumpers = {}
+	caber_king = {}
+	cap = {}
+	catch_money = {}
+	count_bombs = {}
+	change_class = {}
+	destroy_barrels = {}
 }
 
 Ware_BotMinigameBehavior <- null
@@ -224,89 +239,75 @@ function BotLookAt(bot, target_pos, min_rate, max_rate)
 }
 
 //AI generated, please improve (?)
-const GRAVITY = 800.0;
-
 function BotCalculateAimPosition(demomanOrigin, targetOrigin, targetVelocity, projectile_speed) {
-    // Initial time estimate (straight-line distance / speed)
+    const GRAVITY = 800.0;
+    // Calculate initial time estimate (straight-line distance / speed)
     local delta = targetOrigin - demomanOrigin;
     local t = delta.Length() / projectile_speed;
-    local MAX_ITER = 15;
-    local TOLERANCE = 0.01;
-    
-    // Iterative prediction to account for target movement
+    local MAX_ITER = 10;
+    local TOLERANCE = 0.1;
+
     for (local i = 0; i < MAX_ITER; i++) {
-        // Predict target position at current time
+        // Predict target position at time t
         local predictedPos = targetOrigin + targetVelocity * t;
         local toTarget = predictedPos - demomanOrigin;
         
-        // Calculate horizontal distance and vertical difference
-        local horizontal = Vector(toTarget.x, toTarget.y, 0);
-        local horizontalDist = horizontal.Length();
+        // Calculate horizontal distance and height difference
+        local horizontalDist = Vector(toTarget.x, toTarget.y, 0).Length();
         local verticalDiff = toTarget.z;
         
-        // FIXED: Proper vertical velocity calculation
-        // v0z = (verticalDiff - 0.5 * GRAVITY * t^2) / t
-        // This accounts for gravity pulling DOWN while we need to aim UP
-        local v0z = (verticalDiff - 0.5 * GRAVITY * t * t) / t;
-        local v0xy = (horizontalDist > 0) ? horizontalDist / t : 0;
+        // Solve for actual time using projectile motion equations
+        local a = 0.25 * GRAVITY * GRAVITY;
+        local b = GRAVITY * verticalDiff - projectile_speed * projectile_speed;
+        local c = horizontalDist * horizontalDist + verticalDiff * verticalDiff;
         
-        // Calculate current total speed
-        local calculatedSpeed = sqrt(v0xy * v0xy + v0z * v0z);
-        
-        if (calculatedSpeed > 0) {
-            // Adjust time based on speed difference
-            local tNew = t * projectile_speed / calculatedSpeed;
-            
-            // Check for convergence
-            if (fabs(tNew - t) < TOLERANCE) {
-                t = tNew;
-                break;
-            }
-            t = tNew;
-        } else {
-            // Fallback: use straight-line time
+        // Quadratic equation: a*t^4 + b*t^2 + c = 0
+        local discriminant = b*b - 4*a*c;
+        if (discriminant < 0) {
+            // No valid trajectory, use direct prediction
             t = horizontalDist / projectile_speed;
             break;
         }
+        
+        local t1_sq = (-b + sqrt(discriminant)) / (2*a);
+        local t2_sq = (-b - sqrt(discriminant)) / (2*a);
+        
+        // Choose smallest positive real solution
+        local new_t = t;
+        if (t1_sq > 0) {
+            new_t = sqrt(t1_sq);
+            if (t2_sq > 0) {
+                local t2 = sqrt(t2_sq);
+                if (t2 < new_t) new_t = t2;
+            }
+        }
+        else if (t2_sq > 0) {
+            new_t = sqrt(t2_sq);
+        }
+        else {
+            // No valid time solution
+            break;
+        }
+        
+        // Check for convergence
+        if (fabs(new_t - t) < TOLERANCE) {
+            t = new_t;
+            break;
+        }
+        t = new_t;
     }
-    
-    // Ensure minimum time value
-    t = Max(t, 0.001);
-    
-    // Final target prediction
-    local predictedPos = targetOrigin + targetVelocity * t;
-    local toTarget = predictedPos - demomanOrigin;
-    
-    // Calculate horizontal components
-    local horizontal = Vector(toTarget.x, toTarget.y, 0);
-    local horizontalDist = horizontal.Length();
-    local horizontalDir = Vector(0, 0, 0);
-    
-    if (horizontalDist > 0) {
-        // Correct vector normalization
-        horizontalDir = Vector(
-            horizontal.x / horizontalDist,
-            horizontal.y / horizontalDist,
-            0
-        );
-    }
-    
-    // FIXED: Correct vertical velocity calculation
-    // Use subtraction for gravity compensation
-    local v0z = (toTarget.z - 0.5 * GRAVITY * t * t) / t;
-    
-    // Calculate horizontal speed
-    local v0xy = (horizontalDist > 0) ? horizontalDist / t : 0;
-    
-    // Construct final launch vector
-    local launchVec = Vector(
-        horizontalDir.x * v0xy,
-        horizontalDir.y * v0xy,
-        v0z
-    );
-    
-    // Return point far along launch vector
-	    DebugDrawLine(demomanOrigin, demomanOrigin + launchVec * 10000, 0, 0, 255, true, 0.125)
 
+    // Final target prediction
+    local finalPos = targetOrigin + targetVelocity * t;
+    local launchVec = finalPos - demomanOrigin;
+    
+    // Calculate initial velocity components
+    launchVec.x /= t;
+    launchVec.y /= t;
+    launchVec.z = launchVec.z / t + 0.5 * GRAVITY * t;
+    
+	DebugDrawLine(demomanOrigin, demomanOrigin + launchVec * 10000, 0, 0, 255, true, 0.125)
+
+    // Return point along launch vector
     return demomanOrigin + launchVec * 10000;
 }

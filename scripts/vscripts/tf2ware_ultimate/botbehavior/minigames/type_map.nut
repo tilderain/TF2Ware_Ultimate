@@ -12,7 +12,7 @@ function OnStart(bot)
 		if (RandomFloat(0, 1) > chance)
 			word = Ware_BotTryWordTypo(bot, RandomElement(arr), chance)
 		else
-			word = RandomElement(["idk", "lol", "wtf", "your mom", "penis"])
+			word = RandomElement(["idk", "lol", "wtf", "your mom", "penis", "2fort", "dustbowl", "invasion", "balls", "gravel", "powerhouse", "steel", "well", "Nuketown"])
 		Say(bot, word, false)
 	}, delay)
 }
