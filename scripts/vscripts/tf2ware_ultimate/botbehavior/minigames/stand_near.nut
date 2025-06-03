@@ -1,5 +1,5 @@
 
-//todo nearest
+//todo nearest/ mode
 function OnUpdate(bot)
 {
 	local prop

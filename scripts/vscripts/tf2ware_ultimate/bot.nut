@@ -67,6 +67,16 @@ Ware_BotMinigameBehaviors <-
 	count_bombs = {}
 	change_class = {}
 	destroy_barrels = {}
+	math = {}
+	pop_jack = {}
+	projectile_jump = {}
+	needle_jump = {}
+	halloween_fight = {}
+	melee_arena = {}
+	hit_balls = {}
+	hit_player = {}
+	headshot = {}
+	sniper_war = {}
 }
 
 Ware_BotMinigameBehavior <- null
