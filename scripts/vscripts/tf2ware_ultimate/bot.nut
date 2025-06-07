@@ -83,6 +83,9 @@ Ware_BotMinigameBehaviors <-
 	dont_touch = {}
 	eat_plate = {}
 	shark = {}
+	ghost = {}
+	grapple_player = {}
+	grapple_cutout = {}
 }
 
 Ware_BotMinigameBehavior <- null
