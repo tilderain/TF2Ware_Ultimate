@@ -207,23 +207,19 @@ function OnUpdate(bot)
     if (prop)
     {
         //Ware_ChatPrint(null, "{int}", VectorDistance(prop.GetOrigin(), bot.GetOrigin()))
-        //SetPropInt(bot, "m_nButtons", IN_FORWARD)
 
         local demomanPos = bot.EyePosition()
-        local hoopPos = prop.GetCenter() + Vector(0,0,0)
+        local hoopPos = prop.GetOrigin() + Vector(0,0,90)
         local hoopVelocity = prop.GetAbsVelocity()  // Adjust based on actual hoop movement
 
-        //local dest = BotCalculateAimPosition(demomanPos, hoopPos, hoopVelocity, 1200)
+        local dest = BotCalculateAimPosition(GetWeaponShootPosition(bot), hoopPos, hoopVelocity, 1216.0, 0.5)
         local z = VectorDistance(prop.GetCenter(), bot.EyePosition())
-        local dest = prop.GetCenter() + Vector((prop.GetAbsVelocity().x * 1.1), 0, z/5.4)
+        //local dest = prop.GetCenter() + Vector((prop.GetAbsVelocity().x * 1.1), 0, z/5.4)
 
-        //local lol = FindGrenadeAim(bot, prop)
-        //if(lol)
-        //    bot.SetAbsAngles(QAngle(lol[1], lol[0], 0)) // 30° pitch, 180° yaw
         BotLookAt(bot, dest, 2000, 99999)
         local loco = bot.GetLocomotionInterface()
         loco.FaceTowards(dest)
-        loco.Approach(prop.GetCenter(), 999.0)
+        loco.Approach(dest, 999.0)
         bot.PressFireButton(-1)
 
         //if (RandomInt(0,50) == 0)

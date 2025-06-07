@@ -249,75 +249,205 @@ function BotLookAt(bot, target_pos, min_rate, max_rate)
 }
 
 //AI generated, please improve (?)
-function BotCalculateAimPosition(demomanOrigin, targetOrigin, targetVelocity, projectile_speed) {
-    const GRAVITY = 800.0;
-    // Calculate initial time estimate (straight-line distance / speed)
-    local delta = targetOrigin - demomanOrigin;
-    local t = delta.Length() / projectile_speed;
-    local MAX_ITER = 10;
-    local TOLERANCE = 0.1;
+function BotCalculateAimPosition(launchOrigin, targetPos, targetVel, launchSpeed, gravity_multiplier) {
+    local base_gravity = 800.000061;
+    local g = -base_gravity * gravity_multiplier;
+    local iterations = 3;
+    local T = (targetPos - launchOrigin).Length() / launchSpeed;
+    local gravityVec = Vector(0, 0, g); // Corrected to use positive g for downward gravity
 
-    for (local i = 0; i < MAX_ITER; i++) {
-        // Predict target position at time t
-        local predictedPos = targetOrigin + targetVelocity * t;
-        local toTarget = predictedPos - demomanOrigin;
-        
-        // Calculate horizontal distance and height difference
-        local horizontalDist = Vector(toTarget.x, toTarget.y, 0).Length();
-        local verticalDiff = toTarget.z;
-        
-        // Solve for actual time using projectile motion equations
-        local a = 0.25 * GRAVITY * GRAVITY;
-        local b = GRAVITY * verticalDiff - projectile_speed * projectile_speed;
-        local c = horizontalDist * horizontalDist + verticalDiff * verticalDiff;
-        
-        // Quadratic equation: a*t^4 + b*t^2 + c = 0
-        local discriminant = b*b - 4*a*c;
-        if (discriminant < 0) {
-            // No valid trajectory, use direct prediction
-            t = horizontalDist / projectile_speed;
-            break;
-        }
-        
-        local t1_sq = (-b + sqrt(discriminant)) / (2*a);
-        local t2_sq = (-b - sqrt(discriminant)) / (2*a);
-        
-        // Choose smallest positive real solution
-        local new_t = t;
-        if (t1_sq > 0) {
-            new_t = sqrt(t1_sq);
-            if (t2_sq > 0) {
-                local t2 = sqrt(t2_sq);
-                if (t2 < new_t) new_t = t2;
+    if (gravity_multiplier == 0.0) {
+    	// Handle zero gravity (projectile moves in straight line)
+		local finalPos = null;
+
+    	T = (targetPos - launchOrigin).Length() / launchSpeed;
+    	for (local i = 0; i < iterations; i++) {
+    	    finalPos = targetPos + targetVel * T;
+    	    T = (finalPos - launchOrigin).Length() / launchSpeed;
+    	}
+    	finalPos = targetPos + targetVel * T;
+	
+
+    	DebugDrawLine(launchOrigin, finalPos, 0, 0, 255, true, 0.125);
+        return finalPos;
+    } 
+    else {
+        // Gravity-affected trajectory
+        local lastValidT = T;
+        local lastValidPos = targetPos + targetVel * T;
+        local hadValidSolution = false;
+
+        for (local i = 0; i < iterations; i++) {
+            local predictedPos = targetPos + targetVel * T;
+            local toTarget = predictedPos - launchOrigin;
+            
+            local gSquared = g * g;
+            local b = launchSpeed * launchSpeed - toTarget.z * g; // Corrected b calculation
+            local discriminant = b * b - gSquared * toTarget.LengthSqr();
+            
+            if (discriminant >= 0) {
+                hadValidSolution = true;
+                lastValidT = T;
+                lastValidPos = predictedPos;
+                local discRoot = sqrt(discriminant);
+                T = sqrt((b - discRoot) * 2.0 / gSquared);
+            }
+            else {
+                // Use last valid solution if available
+                if (hadValidSolution) {
+                    T = lastValidT;
+                }
+                break;
             }
         }
-        else if (t2_sq > 0) {
-            new_t = sqrt(t2_sq);
-        }
-        else {
-            // No valid time solution
-            break;
-        }
+
+        // Calculate vertical drop compensation
+        local verticalDrop = 0.5 * -g * lastValidT * lastValidT;
+        local finalPos = lastValidPos + Vector(0, 0, verticalDrop);
         
-        // Check for convergence
-        if (fabs(new_t - t) < TOLERANCE) {
-            t = new_t;
-            break;
-        }
-        t = new_t;
+        DebugDrawLine(launchOrigin, finalPos, 0, 0, 255, true, 0.125);
+        return finalPos;
     }
+}
 
-    // Final target prediction
-    local finalPos = targetOrigin + targetVelocity * t;
-    local launchVec = finalPos - demomanOrigin;
-    
-    // Calculate initial velocity components
-    launchVec.x /= t;
-    launchVec.y /= t;
-    launchVec.z = launchVec.z / t + 0.5 * GRAVITY * t;
-    
-	DebugDrawLine(demomanOrigin, demomanOrigin + launchVec * 10000, 0, 0, 255, true, 0.125)
+function GetWeaponShootPosition(player)
+{
+	local weapon = player.GetActiveWeapon()
+	local offset = null
 
-    // Return point along launch vector
-    return demomanOrigin + launchVec * 10000;
+	switch (NetProps.GetPropInt(weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex"))
+	{
+	case 441: // The Cow Mangler
+		offset = Vector(23.5, 8.0, player.GetFlags() & Constants.FPlayer.FL_DUCKING ? 8.0 : -3.0)
+		break
+	case 513: // The Original
+		offset = Vector(23.5, 0.0, player.GetFlags() & Constants.FPlayer.FL_DUCKING ? 8.0 : -3.0)
+		break
+	case 18: // Rocket Launcher
+	case 127: // The Direct Hit
+	case 1104: // The Air Strike
+	case 205: // Rocket Launcher (Renamed/Strange)
+	case 228: // The Black Box
+	case 237: // Rocket Jumper
+	case 414: // The Liberty Launcher
+	case 658: // Festive Rocket Launcher
+	case 730: // The Beggar's Bazooka
+	case 800: // Silver Botkiller Rocket Launcher Mk.I
+	case 809: // Gold Botkiller Rocket Launcher Mk.I
+	case 889: // Rust Botkiller Rocket Launcher Mk.I
+	case 898: // Blood Botkiller Rocket Launcher Mk.I
+	case 907: // Carbonado Botkiller Rocket Launcher Mk.I
+	case 916: // Diamond Botkiller Rocket Launcher Mk.I
+	case 965: // Silver Botkiller Rocket Launcher Mk.II
+	case 974: // Gold Botkiller Rocket Launcher Mk.II
+	case 1085: // Festive Black Box
+	case 15006: // Woodland Warrior
+	case 15014: // Sand Cannon
+	case 15028: // American Pastoral
+	case 15043: // Smalltown Bringdown
+	case 15052: // Shell Shocker
+	case 15057: // Aqua Marine
+	case 15081: // Autumn
+	case 15104: // Blue Mew
+	case 15105: // Brain Candy
+	case 15129: // Coffin Nail
+	case 15130: // High Roller's
+	case 15150: // Warhawk
+	case 39: // The Flare Gun
+	case 351: // The Detonator
+	case 595: // The Manmelter
+	case 740: // The Scorch Shot
+	case 1081: // Festive Flare Gun
+		offset = Vector(23.5, 12.0, player.GetFlags() & Constants.FPlayer.FL_DUCKING ? 8.0 : -3.0)
+		break
+	case 56: // Hunstman
+	case 1005: // Festive Huntsman
+	case 1092: // The Fortified Compound
+	case 997: // Rescue Ranger
+	case 305: // Crusader's Crossbow
+	case 1079: // Festive Crusader's Crossbow
+		offset = Vector(23.5, 12.0, -3.0)
+		break
+	case 442: // The Righteous Bison
+	case 588: // The Pomson 6000
+		offset = Vector(23.5, 8.0, player.GetFlags() & Constants.FPlayer.FL_DUCKING ? 8.0 : -3.0)
+		break
+	case 222: // The Mad Milk
+	case 1121: // Mutated Milk
+	case 1180: // Gas Passer
+	case 58: // Jarate
+	case 751: // Festive Jarate
+	case 1105: // The Self-Aware Beauty Mark
+	case 19: // Grenade Launcher
+	case 206: // Grenade Launcher (Renamed/Strange)
+	case 308: // The Loch-n-Load
+	case 996: // The Loose Cannon
+	case 1007: // Festive Grenade Launcher
+	case 1151: // The Iron Bomber
+	case 15077: // Autumn
+	case 15079: // Macabre Web
+	case 15091: // Rainbow
+	case 15092: // Sweet Dreams
+	case 15116: // Coffin Nail
+	case 15117: // Top Shelf
+	case 15142: // Warhawk
+	case 15158: // Butcher Bird
+	case 20: // Stickybomb Launcher
+	case 207: // Stickybomb Launcher (Renamed/Strange)
+	case 130: // The Scottish Resistance
+	case 265: // Sticky Jumper
+	case 661: // Festive Stickybomb Launcher
+	case 797: // Silver Botkiller Stickybomb Launcher Mk.I
+	case 806: // Gold Botkiller Stickybomb Launcher Mk.I
+	case 886: // Rust Botkiller Stickybomb Launcher Mk.I
+	case 895: // Blood Botkiller Stickybomb Launcher Mk.I
+	case 904: // Carbonado Botkiller Stickybomb Launcher Mk.I
+	case 913: // Diamond Botkiller Stickybomb Launcher Mk.I
+	case 962: // Silver Botkiller Stickybomb Launcher Mk.II
+	case 971: // Gold Botkiller Stickybomb Launcher Mk.II
+	case 1150: // The Quickiebomb Launcher
+	case 15009: // Sudden Flurry
+	case 15012: // Carpet Bomber
+	case 15024: // Blasted Bombardier
+	case 15038: // Rooftop Wrangler
+	case 15045: // Liquid Asset
+	case 15048: // Pink Elephant
+	case 15082: // Autumn
+	case 15083: // Pumpkin Patch
+	case 15084: // Macabre Web
+	case 15113: // Sweet Dreams
+	case 15137: // Coffin Nail
+	case 15138: // Dressed to Kill
+	case 15155: // Blitzkrieg
+		offset = Vector(16.0, 8.0, -6.0)
+		break
+	case 17: // Syringe Gun
+	case 204: // Syringe Gun (Renamed/Strange)
+	case 36: // The Blutsauger
+	case 412: // The Overdose
+		offset = Vector(16.0, 6.0, -8.0)
+		break
+	case 812: // The Flying Guillotine
+	case 833: // The Flying Guillotine (Genuine)
+		offset = Vector(32.0, 0.0, 15.0)
+		break
+	case 528: // The Short Curcuit
+		offset = Vector(40.0, 15.0, -10.0)
+		break
+	case 44: // Sandman
+	case 648: // The Wrap Assassin
+		return player.GetOrigin() + player.GetModelScale() *
+				(player.EyeAngles().Forward() * 32.0 + Vector(0.0, 0.0, 50.0))
+	default:
+		return player.EyePosition()
+	}
+
+	if (Convars.GetClientConvarValue("cl_flipviewmodels", player.entindex()) == "1")
+		offset.y *= -1
+
+	local eye_angles = player.EyeAngles()
+	return player.EyePosition() +
+			eye_angles.Up() * offset.z +
+			eye_angles.Left() * offset.y +
+			eye_angles.Forward() * offset.x
 }

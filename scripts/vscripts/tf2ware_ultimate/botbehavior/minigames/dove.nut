@@ -19,10 +19,11 @@ function OnUpdate(bot)
 	if (prop)
 	{
     	local loco = bot.GetLocomotionInterface()
-        local dest = BotCalculateAimPosition(bot.EyePosition(), prop.GetCenter(), prop.GetAbsVelocity(), 1800)
+        local dest = BotCalculateAimPosition(GetWeaponShootPosition(bot), prop.GetCenter(), prop.GetAbsVelocity(), 1800, 0.5)
         
     	loco.FaceTowards(dest)
 		BotLookAt(bot, dest, 99999.0, 99999.0)
+        
     	loco.Approach(prop.GetCenter(), 999.0)
 		if (RandomInt(0,4) == 0)
 			bot.PressFireButton(-1)

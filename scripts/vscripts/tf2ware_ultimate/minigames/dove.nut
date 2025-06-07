@@ -92,6 +92,7 @@ function SpawnDove()
 	local dove_scope = dove.GetScriptScope()
 
 	dove_scope.move_dir <- vec_angle
+	dove.SetAbsVelocity(vec_angle * 300)
 	dove_scope.spawn_time <- Time()
 
 	dove_scope.DoveThink <- DoveThink.bindenv(dove_scope)
