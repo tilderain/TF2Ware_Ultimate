@@ -86,6 +86,8 @@ Ware_BotMinigameBehaviors <-
 	ghost = {}
 	grapple_player = {}
 	grapple_cutout = {}
+	shoot_gifts = {}
+	shoot_barrel = {}
 }
 
 Ware_BotMinigameBehavior <- null
