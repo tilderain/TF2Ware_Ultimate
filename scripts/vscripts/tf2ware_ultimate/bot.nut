@@ -77,6 +77,9 @@ Ware_BotMinigameBehaviors <-
 	hit_player = {}
 	headshot = {}
 	sniper_war = {}
+	dodge_laser = {}
+	dont_touch = {}
+	eat_plate = {}
 }
 
 Ware_BotMinigameBehavior <- null
