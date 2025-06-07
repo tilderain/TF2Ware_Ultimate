@@ -1,4 +1,3 @@
-//todo fix
 function OnUpdate(bot)
 {
     local prop
@@ -35,6 +34,8 @@ function OnUpdate(bot)
         BotLookAt(bot, prop.GetOrigin(), 9999.0, 9999.0)
         local loco = bot.GetLocomotionInterface()
         loco.FaceTowards(prop.GetOrigin())
+
+        DebugDrawLine(botOrigin, dest, 0, 0, 255, true, 0.125)
 
         // Only move if too close to prop
         if(VectorDistance2D(botOrigin, propOrigin) < escape_dist)

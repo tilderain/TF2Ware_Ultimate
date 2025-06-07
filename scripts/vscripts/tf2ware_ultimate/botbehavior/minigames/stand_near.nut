@@ -1,35 +1,49 @@
-
-//todo nearest/ mode
 function OnUpdate(bot)
 {
-	local prop
-	local data = Ware_GetPlayerMiniData(bot)
-	local arr = Shuffle(Ware_MinigamePlayers)
-	foreach (prop in arr)
-	{
-		if (prop && prop.IsPlayer() && prop.IsAlive() && (prop.GetTeam() != bot.GetTeam()))
-		{
-			if (!("dest" in data) || data.dest == null)
-			{
-				local dest = prop.GetCenter()
-				data.dest <- dest
-				data.prop <- prop
-				//DebugDrawLine(bot.GetOrigin(), data.dest,	255, 0, 0, true, 1)
-			}
-			BotLookAt(bot, data.prop.GetCenter(), 9999.0, 9999.0)
-        	local loco = bot.GetLocomotionInterface()
-        	loco.FaceTowards(data.prop.GetCenter())
-        	loco.Approach(data.dest, 999.0)
-        	//if (RandomInt(0,50) == 0)
-        	//    loco.Jump()
-			local dist = VectorDistance(data.dest, bot.GetCenter())
-			local dist2 = VectorDistance(data.prop.GetCenter(), data.dest)
-			//Ware_ChatPrint(null, "{int}", dist2)
-			if (dist < 50 || dist2 > 200)
-				data.dest = null
-			if (RandomInt(0,10) == 0)
-				bot.PressFireButton(-1)
-			break
-		}
-	}
+    local prop
+    local lowest_dist = 999999
+    local botOrigin = bot.GetOrigin()
+    for (local other; other = FindByClassnameWithin(other, "player", bot.GetOrigin(), 1500);)
+    {
+        if (other != bot && other.IsValid() && other.IsAlive())
+        {
+            local otherOrigin = other.GetOrigin()
+            local dist = VectorDistance2D(botOrigin, otherOrigin)
+            //Ware_ChatPrint(null, "{int} {int}", botOrigin, escapeDir)
+            if (dist < lowest_dist)
+            {
+                lowest_dist = dist
+                prop = other
+            }
+        }
+    }
+
+    if (prop)
+    {
+        local propOrigin = prop.GetOrigin()
+        local escape_dist = 200
+        // Calculate direction from prop to bot and extend it further
+        local escapeDir = botOrigin - propOrigin
+        escapeDir.z = 0
+		escapeDir.Norm()
+
+		local dest = prop.GetOrigin()
+		if (Ware_MinigameMode == 1)
+        	dest = botOrigin + escapeDir * escape_dist  // Move 200 units further away from prop
+
+        //Ware_ChatPrint(null, "{int} {int}", botOrigin, escapeDir)
+
+        BotLookAt(bot, dest, 9999.0, 9999.0)
+        local loco = bot.GetLocomotionInterface()
+        loco.FaceTowards(dest)
+
+		DebugDrawLine(botOrigin, dest, 0, 0, 255, true, 0.125)
+
+        // Only move if too close to prop
+        if(Ware_MinigameMode == 0 || (Ware_MinigameMode == 1 && VectorDistance2D(botOrigin, propOrigin) < escape_dist))
+            loco.Approach(dest, 999.0)
+
+        if (RandomInt(0,10) == 0)
+            bot.PressFireButton(-1)
+    }
 }
