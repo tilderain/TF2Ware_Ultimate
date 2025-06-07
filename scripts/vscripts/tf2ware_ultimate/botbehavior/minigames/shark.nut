@@ -34,12 +34,15 @@ function OnUpdate(bot)
         
         // Calculate direction from prop to bot and extend it further
         local escapeDir = botOrigin - propOrigin
+        escapeDir.x = -fabs(escapeDir.x)
+        if (escapeDir.x < -400) escapeDir.x = -400
+        //Ware_ChatPrint(null, "{int}", escapeDir.x)
+
         escapeDir.z = 0
 		escapeDir.Norm()
         local dest = botOrigin + escapeDir * escape_dist  // Move 200 units further away from prop
-        dest.x = Ware_Location.beach.center.x
+        //dest.x = Ware_Location.beach.center.x
         
-        //Ware_ChatPrint(null, "{int} {int}", botOrigin, escapeDir)
 
 
         local loco = bot.GetLocomotionInterface()
@@ -48,7 +51,9 @@ function OnUpdate(bot)
         if (mission == 0 && VectorDistance2D(botOrigin, propOrigin) < escape_dist)
             dest = dest // Nothing
         else if (mission == 0)
-            dest = Ware_Location.beach.center
+        {
+            dest = Vector(botOrigin.x - 5000, Ware_Location.beach.center.y, Ware_Location.beach.center.z)
+        }
         else
             dest = propOrigin
 
