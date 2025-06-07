@@ -1,3 +1,4 @@
+//todo fix
 function OnUpdate(bot)
 {
     local prop = FindByClassnameNearest("player", bot.GetOrigin(), 1000)
