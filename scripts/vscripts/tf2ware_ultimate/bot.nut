@@ -194,13 +194,13 @@ function Ware_BotRoam(bot)
 
 		if(!passed)
 		{
-			if (RandomInt(0,500) == 0)
+			if (RandomInt(0,2000) == 0)
 				ForceTaunt(bot, 31413) //mourning
 		}
 		else
 		{
 			local taunts = [0, 167, 463, 1118, 1157]
-			if (RandomInt(0,500) == 0)
+			if (RandomInt(0,1000) == 0)
 				ForceTaunt(bot, RandomElement(taunts))
 		}
         //if (RandomInt(0,50) == 0)
