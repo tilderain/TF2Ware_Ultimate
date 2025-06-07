@@ -250,63 +250,70 @@ function BotLookAt(bot, target_pos, min_rate, max_rate)
 
 //AI generated, please improve (?)
 function BotCalculateAimPosition(launchOrigin, targetPos, targetVel, launchSpeed, gravity_multiplier) {
-    local base_gravity = 800.000061;
-    local g = -base_gravity * gravity_multiplier;
-    local iterations = 3;
-    local T = (targetPos - launchOrigin).Length() / launchSpeed;
-    local gravityVec = Vector(0, 0, g); // Corrected to use positive g for downward gravity
+    local base_gravity = 800.000061
+    local g = -base_gravity * gravity_multiplier
+    local iterations = 3
+    local T = (targetPos - launchOrigin).Length() / launchSpeed
+    local gravityVec = Vector(0, 0, g) // Corrected to use positive g for downward gravity
 
-    if (gravity_multiplier == 0.0) {
+    if (gravity_multiplier == 0.0) 
+	{
     	// Handle zero gravity (projectile moves in straight line)
-		local finalPos = null;
+		local finalPos = null
 
-    	T = (targetPos - launchOrigin).Length() / launchSpeed;
-    	for (local i = 0; i < iterations; i++) {
-    	    finalPos = targetPos + targetVel * T;
-    	    T = (finalPos - launchOrigin).Length() / launchSpeed;
+    	T = (targetPos - launchOrigin).Length() / launchSpeed
+    	for (local i = 0; i < iterations; i++) 
+		{
+    	    finalPos = targetPos + targetVel * T
+    	    T = (finalPos - launchOrigin).Length() / launchSpeed
     	}
-    	finalPos = targetPos + targetVel * T;
+    	finalPos = targetPos + targetVel * T
 	
 
-    	DebugDrawLine(launchOrigin, finalPos, 0, 0, 255, true, 0.125);
-        return finalPos;
+    	DebugDrawLine(launchOrigin, finalPos, 0, 0, 255, true, 0.125)
+        return finalPos
     } 
-    else {
+    else 
+	{
         // Gravity-affected trajectory
-        local lastValidT = T;
-        local lastValidPos = targetPos + targetVel * T;
-        local hadValidSolution = false;
+        local lastValidT = T
+        local lastValidPos = targetPos + targetVel * T
+        local hadValidSolution = false
 
-        for (local i = 0; i < iterations; i++) {
-            local predictedPos = targetPos + targetVel * T;
-            local toTarget = predictedPos - launchOrigin;
+        for (local i = 0; i < iterations; i++) 
+		{
+            local predictedPos = targetPos + targetVel * T
+            local toTarget = predictedPos - launchOrigin
             
-            local gSquared = g * g;
-            local b = launchSpeed * launchSpeed - toTarget.z * g; // Corrected b calculation
-            local discriminant = b * b - gSquared * toTarget.LengthSqr();
+            local gSquared = g * g
+            local b = launchSpeed * launchSpeed - toTarget.z * g // Corrected b calculation
+            local discriminant = b * b - gSquared * toTarget.LengthSqr()
             
-            if (discriminant >= 0) {
-                hadValidSolution = true;
-                lastValidT = T;
-                lastValidPos = predictedPos;
-                local discRoot = sqrt(discriminant);
-                T = sqrt((b - discRoot) * 2.0 / gSquared);
+            if (discriminant >= 0) 
+			{
+                hadValidSolution = true
+                lastValidT = T
+                lastValidPos = predictedPos
+                local discRoot = sqrt(discriminant)
+                T = sqrt((b - discRoot) * 2.0 / gSquared)
             }
-            else {
+            else 
+			{
                 // Use last valid solution if available
-                if (hadValidSolution) {
-                    T = lastValidT;
+                if (hadValidSolution) 
+				{
+                    T = lastValidT
                 }
-                break;
+                break
             }
         }
 
         // Calculate vertical drop compensation
-        local verticalDrop = 0.5 * -g * lastValidT * lastValidT;
-        local finalPos = lastValidPos + Vector(0, 0, verticalDrop);
+        local verticalDrop = 0.5 * -g * lastValidT * lastValidT
+        local finalPos = lastValidPos + Vector(0, 0, verticalDrop)
         
-        DebugDrawLine(launchOrigin, finalPos, 0, 0, 255, true, 0.125);
-        return finalPos;
+        DebugDrawLine(launchOrigin, finalPos, 0, 0, 255, true, 0.125)
+        return finalPos
     }
 }
 
