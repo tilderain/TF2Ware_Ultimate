@@ -55,22 +55,3 @@ function OnUpdate(bot)
     
 }
 
-function ForceTaunt(player, taunt_id)
-{
-  	if (player.IsTaunting()) return
-
-	local weapon = Entities.CreateByClassname("tf_weapon_bat")
-	local active_weapon = player.GetActiveWeapon()
-	player.StopTaunt(true) // both are needed to fully clear the taunt
-	player.RemoveCond(7)
-	weapon.DispatchSpawn()
-	NetProps.SetPropInt(weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", taunt_id)
-	NetProps.SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
-	NetProps.SetPropBool(weapon, "m_bForcePurgeFixedupStrings", true)
-	NetProps.SetPropEntity(player, "m_hActiveWeapon", weapon)
-	NetProps.SetPropInt(player, "m_iFOV", 0) // fix sniper rifles
-	player.HandleTauntCommand(0)
-	NetProps.SetPropEntity(player, "m_hActiveWeapon", active_weapon)
-	weapon.Kill()
-}
-

@@ -6,10 +6,12 @@ class Ware_BotData
 	{
 		me = entity
 		minigame_timers = []
+		roam_dest = null
 	}
 	
 	me = null
 	minigame_timers = null
+	roam_dest = null
 }
 
 if (!("Ware_Bots" in this))
@@ -135,8 +137,82 @@ function Ware_BotUpdate()
 	else
 	{
 		// TODO roam around
+		foreach (bot in Ware_Bots)
+			Ware_BotRoam(bot)
 	}
 }	
+
+
+function ForceTaunt(player, taunt_id)
+{
+  	if (player.IsTaunting()) return
+
+	local weapon = Entities.CreateByClassname("tf_weapon_bat")
+	local active_weapon = player.GetActiveWeapon()
+	player.StopTaunt(true) // both are needed to fully clear the taunt
+	player.RemoveCond(7)
+	weapon.DispatchSpawn()
+	NetProps.SetPropInt(weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", taunt_id)
+	NetProps.SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
+	NetProps.SetPropBool(weapon, "m_bForcePurgeFixedupStrings", true)
+	NetProps.SetPropEntity(player, "m_hActiveWeapon", weapon)
+	NetProps.SetPropInt(player, "m_iFOV", 0) // fix sniper rifles
+	player.HandleTauntCommand(0)
+	NetProps.SetPropEntity(player, "m_hActiveWeapon", active_weapon)
+	weapon.Kill()
+}
+
+
+function Ware_BotRoam(bot)
+{
+	local bot_data = bot.GetScriptScope().bot_data
+	local data = Ware_GetPlayerMiniData(bot)
+
+	local arr = Shuffle(Ware_MinigamePlayers)
+	if (bot_data.roam_dest == null)
+	{
+		foreach (prop in arr)
+		{
+			if (prop && prop.IsPlayer())
+			{
+				local dest = prop.GetCenter() + Vector(RandomFloat(-33,33), RandomFloat(-33,33), 0)
+				bot_data.roam_dest = dest
+				//DebugDrawLine(bot.GetOrigin(), data.dest,	255, 0, 0, true, 1)
+				break
+			}
+		}
+	}
+	if (bot_data.roam_dest)
+	{
+		BotLookAt(bot, bot_data.roam_dest, 9999.0, 9999.0)
+        local loco = bot.GetLocomotionInterface()
+        loco.FaceTowards(bot_data.roam_dest)
+        loco.Approach(bot_data.roam_dest, 999.0)
+		if (RandomInt(0,500) == 0)
+			bot.PressFireButton(-1)
+		local passed = Ware_GetPlayerData(bot).passed
+
+		if(!passed)
+		{
+			if (RandomInt(0,500) == 0)
+				ForceTaunt(bot, 31413) //mourning
+		}
+		else
+		{
+			local taunts = [0, 167, 463, 1118, 1157]
+			if (RandomInt(0,500) == 0)
+				ForceTaunt(bot, RandomElement(taunts))
+		}
+        //if (RandomInt(0,50) == 0)
+        //    loco.Jump()
+		local dist = VectorDistance(bot_data.roam_dest, bot.GetCenter())
+		//Ware_ChatPrint(null, "{int}", dist2)
+		if (dist < 50)
+			bot_data.roam_dest = null
+	}
+
+}
+
 
 function Ware_BotOnMinigameStart()
 {
