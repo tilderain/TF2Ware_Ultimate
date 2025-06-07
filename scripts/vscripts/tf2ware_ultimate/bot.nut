@@ -80,6 +80,7 @@ Ware_BotMinigameBehaviors <-
 	dodge_laser = {}
 	dont_touch = {}
 	eat_plate = {}
+	shark = {}
 }
 
 Ware_BotMinigameBehavior <- null
