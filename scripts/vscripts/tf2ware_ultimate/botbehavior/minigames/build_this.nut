@@ -7,12 +7,12 @@ function OnStart(bot)
 	local chance = 0.3
 	local delay = RandomFloat(0.5, 1)
 	
-	local type = Ware_MinigameScope.building_mode[2]
-	if(RandomFloat(0,1) < chance)
-		type = RandomInt(0,2)
-
 	Ware_BotCreateMinigameTimer(bot, function()
 	{	
+		local type = Ware_MinigameScope.building_mode[2]
+		if(RandomFloat(0,1) < chance)
+			type = RandomInt(0,2)
+			
 		for (local i = 0; i < MAX_WEAPONS; i++)
 		{
 			local weapon = NetProps.GetPropEntityArray(bot, "m_hMyWeapons", i)
