@@ -1,3 +1,27 @@
+
+
+function ClosestPointOnOBB(point, origin, angles, mins, maxs)
+{
+    // Get orthogonal basis vectors from wall angles
+    local forward = angles.Forward()
+    local right = angles.Left()
+    local up = angles.Up()
+    
+    // Transform point to wall's local space
+    local localPoint = point - origin
+    local localX = localPoint.Dot(forward)
+    local localY = localPoint.Dot(right)
+    local localZ = localPoint.Dot(up)
+    
+    // Clamp local coordinates to OBB bounds
+    localX = Clamp(localX, mins.x, maxs.x)
+    localY = Clamp(localY, mins.y, maxs.y)
+    localZ = Clamp(localZ, mins.z, maxs.z)
+    
+    // Transform clamped point back to world space
+    return origin + forward * localX + right * localY + up * localZ
+}
+
 function OnUpdate(bot)
 {
     local prop
@@ -31,66 +55,96 @@ function OnUpdate(bot)
         local dest = botOrigin
         local walls = Ware_MinigameLocation.walls  // Access wall array
         local closestWall = null
-        local minWallDist = 800  // Distance threshold for wall following
+        local minWallDist = 200  // Distance threshold for wall following
 
         // Mission 0: Enhanced wall-following behavior with repulsion
         if (mission == 0)
         {
             local repulsion = Vector(0, 0, 0)
+            local closestPointOnWall = null  // Track closest point for wall following
+
             // Find nearest wall within range and compute repulsion
             foreach (wall in walls)
             {
                 if (!wall.IsValid()) continue
-                
+
+                // Get wall properties for OBB calculation
                 local wallOrigin = wall.GetOrigin()
-                local wallDist = VectorDistance2D(botOrigin, wallOrigin)
-                
-                if (wallDist < 700)
+                local wallAngles = wall.GetAbsAngles()
+                local wallMins = wall.GetBoundingMinsOriented()
+                local wallMaxs = wall.GetBoundingMaxsOriented()
+
+                // Calculate closest point on wall's OBB to bot
+                local closestPoint = ClosestPointOnOBB(botOrigin, wallOrigin, wallAngles, wallMins, wallMaxs)
+                local wallDist = VectorDistance2D(botOrigin, closestPoint)
+
+
+                // Apply repulsion if bot is near the wall
+                if (wallDist < 100)
                 {
-                    local dir = botOrigin - wallOrigin
+                    local dir = botOrigin - closestPoint
                     dir.z = 0
-                    dir.Norm()
-                    // FIX: Use positive repulsion strength only
-                    repulsion += dir * (700 - wallDist)
+                    if (dir.LengthSqr() > 0.001) {
+                        dir.Norm()
+                        repulsion += dir * (100 - wallDist)
+                    }
                 }
-                
+
+                // Update closest wall for wall-following
                 if (wallDist < minWallDist)
                 {
                     minWallDist = wallDist
                     closestWall = wall
+                    closestPointOnWall = closestPoint
                 }
             }
 
             // Calculate movement direction if near a wall
-            if (closestWall)
+            if (closestWall && minWallDist < 200)
             {
-                local wallToBot = botOrigin - closestWall.GetOrigin()
-                wallToBot.z = 0
-                wallToBot.Norm()
-                
-                // Get perpendicular direction (tangent to wall)
-                local wallParallel = Vector(-wallToBot.y, wallToBot.x, 0)
-                
+                DebugDrawLine(botOrigin, closestPointOnWall, 0, 255, 0, true, 0.125)
+                // FIX: Use wall's actual orientation vectors
+                local wallAngles = closestWall.GetAbsAngles()
+                local wallForward = wallAngles.Forward()
+                local wallRight = wallAngles.Left()
+
+                // Determine primary wall axis (longest dimension)
+                local wallMins = closestWall.GetBoundingMinsOriented()
+                local wallMaxs = closestWall.GetBoundingMaxsOriented()
+                local wallSize = wallMaxs - wallMins
+
+                // Use longest axis for wall-following direction
+                local wallParallel = wallSize.x > wallSize.y ? wallForward : wallRight
+
+                // Flatten to horizontal and normalize
+                wallParallel = Vector(wallParallel.x, wallParallel.y, 0)
+                if (wallParallel.LengthSqr() > 0.0001) {
+                    wallParallel.Norm()
+                } else {
+                    wallParallel = Vector(1, 0, 0)  // Fallback if invalid vector
+                }
+
                 // Choose direction away from enemy
-                if (escapeDir.Dot(wallParallel) < 0)
-                    wallParallel = wallParallel * -1
+                if (escapeDir.Dot(wallParallel) < 0) {
+                    wallParallel = wallParallel.Scale(-1)  // Correct way to invert vector
+                }
 
                 // Blend wall-following direction with repulsion
                 local moveDir = wallParallel
                 if (repulsion.LengthSqr() > 0.1) // Significant repulsion detected
                 {
                     repulsion.Norm()
-                    // Blend: 70% wall-following, 30% repulsion
-                    moveDir = (wallParallel * 0.7 + repulsion * 0.3)
+                    // Blend: 80% wall-following, 20% repulsion
+                    moveDir = wallParallel.Scale(0.8) + repulsion.Scale(0.2)
                     moveDir.Norm()
                 }
 
-                dest = botOrigin + moveDir * escape_dist
+                dest = botOrigin + moveDir.Scale(escape_dist)
                 DebugDrawLine(botOrigin, dest, 255, 0, 0, true, 0.125)  // Red: Wall path
             }
             else
             {
-                dest = botOrigin + escapeDir * escape_dist  // Default flee direction
+                dest = botOrigin + escapeDir.Scale(escape_dist)  // Default flee direction
             }
         }
         // Mission 1: Maintain original fleeing behavior
