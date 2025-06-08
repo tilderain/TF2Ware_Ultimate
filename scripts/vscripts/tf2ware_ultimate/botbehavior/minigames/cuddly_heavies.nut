@@ -130,7 +130,7 @@ function OnUpdate(bot)
             // Calculate movement direction if near a wall
             if (closestWall && minWallDist < 200)
             {
-                DebugDrawLine(botOrigin, closestPointOnWall, 0, 255, 0, true, 0.125)
+                //DebugDrawLine(botOrigin, closestPointOnWall, 0, 255, 0, true, 0.125)
                 // Get wall's actual orientation vectors
                 local wallAngles = closestWall.GetAbsAngles()
                 local wallForward = wallAngles.Forward()
@@ -195,49 +195,22 @@ function OnUpdate(bot)
                 {
                     // Use corner escape vector
                     moveDir = cornerEscapeVec
-                    DebugDrawLine(botOrigin, botOrigin + moveDir.Scale(150), 255, 0, 0, true, 0.125)
+                    //DebugDrawLine(botOrigin, botOrigin + moveDir.Scale(150), 255, 0, 0, true, 0.125)
                 }
                 else 
                 {
                     // WALL FOLLOWING: Use wall-parallel direction
                     moveDir = wallParallel
-                    DebugDrawLine(botOrigin, botOrigin + moveDir.Scale(150), 0, 0, 255, true, 0.125)
+                    //DebugDrawLine(botOrigin, botOrigin + moveDir.Scale(150), 0, 0, 255, true, 0.125)
                 }
-                // 3. Apply minimum repulsion nudge to prevent wall sticking
-                if (repulsionStrength > 1) {
-                    local repulsionNorm = repulsion * 1
-                    repulsionNorm.Norm()
-                    moveDir = (moveDir * 0.9) + (repulsionNorm * 0.1)
-                    moveDir.Norm()
-                }
-    
-                // 4. SIMPLE MOMENTUM SYSTEM (only for non-repulsion moves)
-                if (repulsionStrength <= 50) {
-                    if (!("lastMoveDir" in bot.GetScriptScope())) {
-                        bot.GetScriptScope().lastMoveDir <- moveDir
-                    }
-                    local lastMoveDir = bot.GetScriptScope().lastMoveDir
-    
-                    // Strong momentum blend
-                    moveDir = (moveDir * 0.6) + (lastMoveDir * 0.4)
-                    moveDir.Norm()
-    
-                    // Store for next frame
-                    bot.GetScriptScope().lastMoveDir = moveDir
-                } else {
-                    // Reset momentum during repulsion escape
-                    if ("lastMoveDir" in bot.GetScriptScope()) {
-                        bot.GetScriptScope().lastMoveDir = moveDir
-                    }
-                }
-    
+
                 // 5. SET DESTINATION
                 dest = botOrigin + moveDir.Scale(escape_dist)
-                DebugDrawLine(botOrigin, dest, 255, 165, 0, true, 0.125) // Orange: Final path
+                //DebugDrawLine(botOrigin, dest, 255, 165, 0, true, 0.125) // Orange: Final path
     
                 // 6. IMPROVED STUCK ESCAPE WITH CORNER DETECTION
                 local velocity = bot.GetAbsVelocity().Length2D()
-                if (velocity < 50) 
+                if (velocity > 80) 
                 {
                     local escapeVec = null
     
@@ -262,22 +235,13 @@ function OnUpdate(bot)
     
                     escapeVec.Norm()
                     dest = botOrigin + escapeVec * (escape_dist * 1.5)
-                    DebugDrawLine(botOrigin, dest, 255, 255, 0, true, 0.125)
-    
-                    // Add jump to escape
-                    if (RandomInt(0,3) == 0) {
-                    //    bot.PressJumpButton(0.1)
-                    }
-    
+                    //DebugDrawLine(botOrigin, dest, 255, 255, 0, true, 0.125)
+
                 }
     
                 }
                 else 
                 {
-                    // Reset direction memory when not near walls
-                    if ("lastMoveDir" in bot.GetScriptScope()) {
-                        bot.GetScriptScope().lastMoveDir = escapeDir
-                    }
                     dest = botOrigin + escapeDir.Scale(escape_dist)
                 }
         }
