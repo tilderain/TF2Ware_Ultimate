@@ -91,6 +91,7 @@ Ware_BotMinigameBehaviors <-
 	cuddly_heavies = {}
 	flood = {}
 	falling_platforms = {}
+	wild_west = {}
 }
 
 Ware_BotMinigameBehavior <- null

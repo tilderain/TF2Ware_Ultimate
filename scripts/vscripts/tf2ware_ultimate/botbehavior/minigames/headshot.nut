@@ -1,6 +1,4 @@
 
-//TODO: takedamage switch prop
-
 function OnUpdate(bot)
 {
 	local prop
