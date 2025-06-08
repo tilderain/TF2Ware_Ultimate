@@ -29,20 +29,41 @@ function OnUpdate(bot)
     local botOrigin = bot.GetOrigin()
     local mission = Ware_GetPlayerMission(bot)
 
+    local data = Ware_GetPlayerMiniData(bot)
+
     // Find nearest enemy player
-    for (local other; other = FindByClassnameWithin(other, "player", bot.GetOrigin(), 4000);)
+    if (mission == 0)
     {
-        if (other != bot && other.IsValid() && other.IsAlive() && other.GetTeam() != bot.GetTeam())
+        for (local other; other = FindByClassnameWithin(other, "player", bot.GetOrigin(), 4000);)
         {
-            local otherOrigin = other.GetOrigin()
-            local dist = VectorDistance2D(botOrigin, otherOrigin)
-            if (dist < lowest_dist)
+            if (other != bot && other.IsValid() && other.IsAlive() && other.GetTeam() != bot.GetTeam())
             {
-                lowest_dist = dist
-                prop = other
+                local otherOrigin = other.GetOrigin()
+                local dist = VectorDistance2D(botOrigin, otherOrigin)
+                if (dist < lowest_dist)
+                {
+                    lowest_dist = dist
+                    prop = other
+                }
             }
         }
     }
+    else
+    {
+        if((!("prop" in data) || data.prop == null))
+        {
+            local arr = Shuffle(Ware_MinigamePlayers)
+            foreach (other in arr)
+            {
+                if (other != bot && other.IsValid() && other.IsAlive() && other.GetTeam() != bot.GetTeam())
+                {
+                    data.prop <- other
+                }
+            }
+        }
+        prop = data.prop
+    }
+
 
     if (prop && bot.IsAlive())
     {
@@ -264,6 +285,11 @@ function OnUpdate(bot)
         else if (mission == 1)
         {
             dest = propOrigin + (prop.GetAbsVelocity() * 0.5)
+
+            if (!prop.IsValid() || !prop.IsAlive())
+            {
+                data.prop = null
+            }
         }
 
         // Execute movement and aiming
