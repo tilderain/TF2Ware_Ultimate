@@ -4,17 +4,8 @@ function OnUpdate(bot)
 
 	if (prop && prop.IsValid())
 	{
-    	local loco = bot.GetLocomotionInterface()
-        local dest = prop.GetOrigin()
-        
-    	loco.FaceTowards(dest)
-		BotLookAt(bot, dest, 99999.0, 99999.0)
-    	loco.Approach(prop.GetCenter(), 999.0)
-			bot.PressFireButton(-1)
-
+        Ware_BotShootTarget(bot, prop.GetOrigin(), true, true)
 		if(RandomInt(0,50) == 0)
 			EntityEntFire(bot, "SpeakResponseConcept", "TLK_PLAYER_NICESHOT")
-    	//if (RandomInt(0,50) == 0)
-    	//    loco.Jump()
 	}
 }

@@ -3,17 +3,6 @@ function OnUpdate(bot)
     local prop = FindByClassnameNearest("prop_physics_multiplayer", bot.GetOrigin(), 2000)
 
 	if (prop)
-	{
-    	local loco = bot.GetLocomotionInterface()
-        local dest = prop.GetOrigin()
-        
-    	loco.FaceTowards(dest)
-		BotLookAt(bot, dest, 99999.0, 99999.0)
-    	loco.Approach(prop.GetCenter(), 999.0)
-
-		if (RandomInt(0,4) == 0)
-			bot.PressFireButton(-1)
-    	//if (RandomInt(0,50) == 0)
-    	//    loco.Jump()
-	}
+    	Ware_BotShootTarget(bot, prop.GetOrigin(), true, true)
+	
 }

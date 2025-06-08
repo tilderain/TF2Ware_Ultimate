@@ -548,3 +548,57 @@ function GetWeaponShootPosition(player)
 			eye_angles.Left() * offset.y +
 			eye_angles.Forward() * offset.x
 }
+
+
+function Ware_BotAvoidProp(bot, prop, dist)
+{
+    local botOrigin = bot.GetOrigin()
+
+    if (prop)
+    {
+        local escape_dist = dist
+        local propOrigin = prop.GetOrigin()
+        
+        // Calculate direction from prop to bot and extend it further
+        local escapeDir = botOrigin - propOrigin
+        escapeDir.z = 0
+		escapeDir.Norm()
+        local dest = botOrigin + escapeDir * escape_dist  // Move 200 units further away from prop
+        
+        //Ware_ChatPrint(null, "{int} {int}", botOrigin, escapeDir)
+
+        BotLookAt(bot, dest, 9999.0, 9999.0)
+        local loco = bot.GetLocomotionInterface()
+        loco.FaceTowards(dest)
+
+        DebugDrawLine(botOrigin, dest, 0, 0, 255, true, 0.125)
+
+        // Only move if too close to prop
+        if(VectorDistance2D(botOrigin, propOrigin) < escape_dist)
+            loco.Approach(dest, 999.0)
+
+        if (RandomInt(0,10) == 0)
+            bot.PressFireButton(-1)
+    }
+}
+
+
+function Ware_BotShootTarget(bot, dest, shoot = true, approach = false, jump = false)
+{
+    if (dest)
+    {
+        local loco = bot.GetLocomotionInterface()
+        loco.FaceTowards(dest)
+		BotLookAt(bot, dest, 9999.0, 9999.0)
+		
+		if (approach)
+        	loco.Approach(dest, 999.0)
+		if (shoot && RandomInt(0,4) == 0)
+			bot.PressFireButton(-1)
+		if (jump && RandomInt(0,50) == 0)
+            loco.Jump()
+
+		DebugDrawLine(bot.GetOrigin(), dest, 0, 0, 255, true, 0.125)
+
+    }
+}
