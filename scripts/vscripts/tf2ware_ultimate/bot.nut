@@ -88,6 +88,9 @@ Ware_BotMinigameBehaviors <-
 	grapple_cutout = {}
 	shoot_gifts = {}
 	shoot_barrel = {}
+	cuddly_heavies = {}
+	flood = {}
+	falling_platforms = {}
 }
 
 Ware_BotMinigameBehavior <- null
