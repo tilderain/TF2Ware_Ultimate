@@ -252,6 +252,12 @@ function Ware_BotOnMinigameEnd()
 		foreach (timer in bot_data.minigame_timers)
 			KillTimer(timer)		
 		bot_data.minigame_timers.clear()
+
+		if ("OnEnd" in Ware_BotMinigameBehavior)	
+		{
+			foreach (bot in Ware_Bots)
+				Ware_BotMinigameBehavior.OnStart(bot)
+		}
 	}
 }
 
