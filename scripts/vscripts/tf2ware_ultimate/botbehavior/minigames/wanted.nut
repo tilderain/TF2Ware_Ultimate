@@ -9,7 +9,7 @@ function OnUpdate(bot)
         
     	loco.FaceTowards(dest)
 		BotLookAt(bot, dest, 99999.0, 99999.0)
-    	loco.Approach(prop.GetCenter(), 999.0)
+    	//loco.Approach(prop.GetCenter(), 999.0)
 			bot.PressFireButton(-1)
     	//if (RandomInt(0,50) == 0)
     	//    loco.Jump()
