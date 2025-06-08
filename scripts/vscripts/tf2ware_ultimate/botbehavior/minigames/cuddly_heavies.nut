@@ -62,7 +62,9 @@ function OnUpdate(bot)
         {
             local repulsion = Vector(0, 0, 0)
             local closestPointOnWall = null
-            local nearWallCount = 0 // Track how many walls are close
+            local nearWalls = []
+            local repulsionNorm = null
+            local repulsionStrength = 0
 
             foreach (wall in walls)
             {
@@ -82,12 +84,12 @@ function OnUpdate(bot)
                 // Apply repulsion if bot is near the wall
                 if (wallDist < 50)
                 {
-                    nearWallCount++ // Increment close wall counter
                     local dir = botOrigin - closestPoint
                     dir.z = 0
                     if (dir.LengthSqr() > 0.001) {
                         dir.Norm()
                         repulsion += dir * (50 - wallDist)
+                        nearWalls.append({wall = wall, point = closestPoint, normal = dir})
                     }
                 }
 
@@ -99,24 +101,28 @@ function OnUpdate(bot)
                     closestPointOnWall = closestPoint
                 }
             }
+            repulsionStrength = repulsion.Length()
+            if (repulsionStrength > 0) {
+                repulsionNorm = repulsion * (1.0 / repulsionStrength)
+            }
 
             // Calculate movement direction if near a wall
-            if (closestWall && minWallDist < 100)
+            if (closestWall && minWallDist < 200)
             {
                 DebugDrawLine(botOrigin, closestPointOnWall, 0, 255, 0, true, 0.125)
-                // FIX: Use wall's actual orientation vectors
+                // Get wall's actual orientation vectors
                 local wallAngles = closestWall.GetAbsAngles()
                 local wallForward = wallAngles.Forward()
                 local wallRight = wallAngles.Left()
-
+    
                 // Determine primary wall axis (longest dimension)
                 local wallMins = closestWall.GetBoundingMinsOriented()
                 local wallMaxs = closestWall.GetBoundingMaxsOriented()
                 local wallSize = wallMaxs - wallMins
-
+    
                 // Use longest axis for wall-following direction
                 local wallParallel = wallSize.x > wallSize.y ? wallForward : wallRight
-
+    
                 // Flatten to horizontal and normalize
                 wallParallel = Vector(wallParallel.x, wallParallel.y, 0)
                 if (wallParallel.LengthSqr() > 0.0001) {
@@ -124,32 +130,135 @@ function OnUpdate(bot)
                 } else {
                     wallParallel = Vector(1, 0, 0)  // Fallback if invalid vector
                 }
-
+    
                 // Choose direction away from enemy
                 if (escapeDir.Dot(wallParallel) < 0) {
-                    wallParallel = wallParallel.Scale(-1)  // Correct way to invert vector
+                    wallParallel = wallParallel.Scale(-1)  // Invert direction if needed
                 }
-
-                // Blend wall-following direction with repulsion
-                local moveDir = wallParallel
-                if (repulsion.LengthSqr() > 0.1)
+    
+                // DECISIVE CORNER ESCAPE - PHYSICS BASED
+    
+                local moveDir = null
+                local isCorner = false
+                local cornerEscapeVec = Vector(0,0,0)
+    
+                // 1. Detect corner situations (2+ walls close together)
+                if (nearWalls.len() >= 2) 
                 {
-                    local repulsionLen = repulsion.Length()
-                    repulsion.Norm()
-
-                    // Increase repulsion influence when near multiple walls (e.g., corners)
-                    local repulsionFactor = nearWallCount >= 2 ? 0.5 : 0.2
-                    moveDir = wallParallel.Scale(1.0 - repulsionFactor) + repulsion.Scale(repulsionFactor)
+                    isCorner = true
+    
+                    // Calculate combined escape direction from all nearby walls
+                    foreach (wallData in nearWalls) 
+                    {
+                        // Get wall's forward vector (long axis)
+                        local wallAng = wallData.wall.GetAbsAngles()
+                        local wallForward = wallAng.Forward()
+                        wallForward.z = 0
+                        if (wallForward.LengthSqr() > 0.001) wallForward.Norm()
+    
+                        // Add perpendicular to wall normal (tangential escape)
+                        local tangent = Vector(-wallData.normal.y, wallData.normal.x, 0)
+                        cornerEscapeVec += tangent
+                    }
+    
+                    // Choose direction away from enemy
+                    if (cornerEscapeVec.Dot(escapeDir) < 0) {
+                        cornerEscapeVec = cornerEscapeVec.Scale(-1)
+                    }
+    
+                    cornerEscapeVec.Norm()
+                }
+    
+                // 2. DECISIVE CORNER ESCAPE
+                if (isCorner && cornerEscapeVec.LengthSqr() > 0.1) 
+                {
+                    // Use corner escape vector
+                    moveDir = cornerEscapeVec
+                    DebugDrawLine(botOrigin, botOrigin + moveDir.Scale(150), 255, 0, 0, true, 0.125)
+                }
+                else 
+                {
+                    // WALL FOLLOWING: Use wall-parallel direction
+                    moveDir = wallParallel
+                    DebugDrawLine(botOrigin, botOrigin + moveDir.Scale(150), 0, 0, 255, true, 0.125)
+                }
+                // 3. Apply minimum repulsion nudge to prevent wall sticking
+                if (repulsionStrength > 1) {
+                    local repulsionNorm = repulsion * 1
+                    repulsionNorm.Norm()
+                    moveDir = (moveDir * 0.9) + (repulsionNorm * 0.1)
                     moveDir.Norm()
                 }
-
+    
+                // 4. SIMPLE MOMENTUM SYSTEM (only for non-repulsion moves)
+                if (repulsionStrength <= 50) {
+                    if (!("lastMoveDir" in bot.GetScriptScope())) {
+                        bot.GetScriptScope().lastMoveDir <- moveDir
+                    }
+                    local lastMoveDir = bot.GetScriptScope().lastMoveDir
+    
+                    // Strong momentum blend
+                    moveDir = (moveDir * 0.6) + (lastMoveDir * 0.4)
+                    moveDir.Norm()
+    
+                    // Store for next frame
+                    bot.GetScriptScope().lastMoveDir = moveDir
+                } else {
+                    // Reset momentum during repulsion escape
+                    if ("lastMoveDir" in bot.GetScriptScope()) {
+                        bot.GetScriptScope().lastMoveDir = moveDir
+                    }
+                }
+    
+                // 5. SET DESTINATION
                 dest = botOrigin + moveDir.Scale(escape_dist)
-                DebugDrawLine(botOrigin, dest, 255, 0, 0, true, 0.125)
-            }
-            else
-            {
-                dest = botOrigin + escapeDir.Scale(escape_dist)
-            }
+                DebugDrawLine(botOrigin, dest, 255, 165, 0, true, 0.125) // Orange: Final path
+    
+                // 6. IMPROVED STUCK ESCAPE WITH CORNER DETECTION
+                local velocity = bot.GetAbsVelocity().Length2D()
+                if (velocity < 50) 
+                {
+                    local escapeVec = null
+    
+                    if (isCorner) {
+                        // Use pre-calculated corner escape vector
+                        escapeVec = cornerEscapeVec
+                    }
+                    else if (nearWalls.len() > 0) {
+                        // Single wall escape - use tangent to closest wall
+                        local closestWallData = nearWalls[0]
+                        escapeVec = Vector(-closestWallData.normal.y, closestWallData.normal.x, 0)
+    
+                        // Ensure escape points away from walls
+                        if ((botOrigin + escapeVec*50 - closestWallData.point).Length2D() < 40) {
+                            escapeVec = escapeVec.Scale(-1)
+                        }
+                    }
+                    else {
+                        // Fallback: use enemy escape direction
+                        escapeVec = escapeDir
+                    }
+    
+                    escapeVec.Norm()
+                    dest = botOrigin + escapeVec * (escape_dist * 1.5)
+                    DebugDrawLine(botOrigin, dest, 255, 255, 0, true, 0.125)
+    
+                    // Add jump to escape
+                    if (RandomInt(0,3) == 0) {
+                    //    bot.PressJumpButton(0.1)
+                    }
+    
+                }
+    
+                }
+                else 
+                {
+                    // Reset direction memory when not near walls
+                    if ("lastMoveDir" in bot.GetScriptScope()) {
+                        bot.GetScriptScope().lastMoveDir = escapeDir
+                    }
+                    dest = botOrigin + escapeDir.Scale(escape_dist)
+                }
         }
         // Mission 1: Maintain original fleeing behavior
         else if (mission == 1)
