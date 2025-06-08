@@ -93,6 +93,7 @@ Ware_BotMinigameBehaviors <-
 	falling_platforms = {}
 	wild_west = {}
 	limbo = {}
+	pickup_can = {}
 }
 
 Ware_BotMinigameBehavior <- null
