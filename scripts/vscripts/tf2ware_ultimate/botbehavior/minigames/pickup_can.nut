@@ -3,9 +3,10 @@ function OnUpdate(bot)
     local prop
     local lowest_dist = 999999
     local botOrigin = bot.GetOrigin()
+	local time = Time()
     for (local can; can = FindByClassnameWithin(can, "prop_physics", bot.GetOrigin(), 2000);)
     {
-		if (can.GetOwner() == null)
+		if (can.GetOwner() == null && can.GetScriptScope().GraceHolderTime < time)
         {
             local otherOrigin = can.GetOrigin()
             local dist = VectorDistance2D(botOrigin, otherOrigin)
@@ -28,7 +29,7 @@ function OnUpdate(bot)
 		local drop = false
 		local length = bot.GetAbsVelocity().Length()
 		//Ware_ChatPrint(null, "{int}", length)
-		if (length < 15)
+		if (length < 20)
 			drop = true
 		Ware_BotShootTarget(bot, trash.GetOrigin() + Vector(0, 0, 50), drop, true)
 	}
