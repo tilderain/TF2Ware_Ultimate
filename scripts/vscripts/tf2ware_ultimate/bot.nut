@@ -92,6 +92,7 @@ Ware_BotMinigameBehaviors <-
 	flood = {}
 	falling_platforms = {}
 	wild_west = {}
+	limbo = {}
 }
 
 Ware_BotMinigameBehavior <- null
