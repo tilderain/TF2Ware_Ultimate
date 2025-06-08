@@ -94,6 +94,7 @@ Ware_BotMinigameBehaviors <-
 	wild_west = {}
 	limbo = {}
 	pickup_can = {}
+	build_this = {}
 }
 
 Ware_BotMinigameBehavior <- null
@@ -551,7 +552,7 @@ function GetWeaponShootPosition(player)
 }
 
 
-function Ware_BotAvoidProp(bot, prop, dist)
+function Ware_BotAvoidProp(bot, prop, dist, look = true, attack = true)
 {
     local botOrigin = bot.GetOrigin()
 
@@ -568,9 +569,14 @@ function Ware_BotAvoidProp(bot, prop, dist)
         
         //Ware_ChatPrint(null, "{int} {int}", botOrigin, escapeDir)
 
-        BotLookAt(bot, dest, 9999.0, 9999.0)
+		if(look)
+		{
+			loco.FaceTowards(dest)
+			BotLookAt(bot, dest, 9999.0, 9999.0)
+		}
+
         local loco = bot.GetLocomotionInterface()
-        loco.FaceTowards(dest)
+
 
         DebugDrawLine(botOrigin, dest, 0, 0, 255, true, 0.125)
 
@@ -578,7 +584,7 @@ function Ware_BotAvoidProp(bot, prop, dist)
         if(VectorDistance2D(botOrigin, propOrigin) < escape_dist)
             loco.Approach(dest, 999.0)
 
-        if (RandomInt(0,10) == 0)
+        if (attack && RandomInt(0,10) == 0)
             bot.PressFireButton(-1)
     }
 }
@@ -599,7 +605,7 @@ function Ware_BotShootTarget(bot, dest, shoot = true, approach = false, jump = f
 		if (jump && RandomInt(0,50) == 0)
             loco.Jump()
 
-		DebugDrawLine(bot.GetOrigin(), dest, 0, 0, 255, true, 0.125)
+		//DebugDrawLine(bot.GetOrigin(), dest, 0, 0, 255, true, 0.125)
 
     }
 }
