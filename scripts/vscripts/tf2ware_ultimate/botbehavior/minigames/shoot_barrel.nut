@@ -2,11 +2,10 @@ function OnUpdate(bot)
 {
     local prop = Ware_MinigameScope.barrel
 
-	if (prop)
+	if (prop && prop.IsValid())
 	{
     	local loco = bot.GetLocomotionInterface()
-		if (prop) //may die midscript
-        	local dest = prop.GetOrigin()
+        local dest = prop.GetOrigin()
         
     	loco.FaceTowards(dest)
 		BotLookAt(bot, dest, 99999.0, 99999.0)
