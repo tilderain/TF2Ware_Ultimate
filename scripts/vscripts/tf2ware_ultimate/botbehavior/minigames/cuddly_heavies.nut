@@ -47,7 +47,7 @@ function OnUpdate(bot)
     if (prop && bot.IsAlive())
     {
         local propOrigin = prop.GetOrigin()
-        local escape_dist = 400
+        local escape_dist = 650
         local escapeDir = botOrigin - propOrigin
         escapeDir.z = 0
         escapeDir.Norm()
@@ -55,15 +55,15 @@ function OnUpdate(bot)
         local dest = botOrigin
         local walls = Ware_MinigameLocation.walls  // Access wall array
         local closestWall = null
-        local minWallDist = 200  // Distance threshold for wall following
+        local minWallDist = 100  // Distance threshold for wall following
 
         // Mission 0: Enhanced wall-following behavior with repulsion
         if (mission == 0)
         {
             local repulsion = Vector(0, 0, 0)
-            local closestPointOnWall = null  // Track closest point for wall following
+            local closestPointOnWall = null
+            local nearWallCount = 0 // Track how many walls are close
 
-            // Find nearest wall within range and compute repulsion
             foreach (wall in walls)
             {
                 if (!wall.IsValid()) continue
@@ -80,13 +80,14 @@ function OnUpdate(bot)
 
 
                 // Apply repulsion if bot is near the wall
-                if (wallDist < 100)
+                if (wallDist < 50)
                 {
+                    nearWallCount++ // Increment close wall counter
                     local dir = botOrigin - closestPoint
                     dir.z = 0
                     if (dir.LengthSqr() > 0.001) {
                         dir.Norm()
-                        repulsion += dir * (100 - wallDist)
+                        repulsion += dir * (50 - wallDist)
                     }
                 }
 
@@ -100,7 +101,7 @@ function OnUpdate(bot)
             }
 
             // Calculate movement direction if near a wall
-            if (closestWall && minWallDist < 200)
+            if (closestWall && minWallDist < 100)
             {
                 DebugDrawLine(botOrigin, closestPointOnWall, 0, 255, 0, true, 0.125)
                 // FIX: Use wall's actual orientation vectors
@@ -131,20 +132,23 @@ function OnUpdate(bot)
 
                 // Blend wall-following direction with repulsion
                 local moveDir = wallParallel
-                if (repulsion.LengthSqr() > 0.1) // Significant repulsion detected
+                if (repulsion.LengthSqr() > 0.1)
                 {
+                    local repulsionLen = repulsion.Length()
                     repulsion.Norm()
-                    // Blend: 80% wall-following, 20% repulsion
-                    moveDir = wallParallel.Scale(0.8) + repulsion.Scale(0.2)
+
+                    // Increase repulsion influence when near multiple walls (e.g., corners)
+                    local repulsionFactor = nearWallCount >= 2 ? 0.5 : 0.2
+                    moveDir = wallParallel.Scale(1.0 - repulsionFactor) + repulsion.Scale(repulsionFactor)
                     moveDir.Norm()
                 }
 
                 dest = botOrigin + moveDir.Scale(escape_dist)
-                DebugDrawLine(botOrigin, dest, 255, 0, 0, true, 0.125)  // Red: Wall path
+                DebugDrawLine(botOrigin, dest, 255, 0, 0, true, 0.125)
             }
             else
             {
-                dest = botOrigin + escapeDir.Scale(escape_dist)  // Default flee direction
+                dest = botOrigin + escapeDir.Scale(escape_dist)
             }
         }
         // Mission 1: Maintain original fleeing behavior
