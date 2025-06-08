@@ -31,7 +31,7 @@ function OnUpdate(bot)
         //if (RandomInt(0,50) == 0)
         //    loco.Jump()
 
-		if (bot.GetOrigin().z > -6500 && !data.above)
+		if (bot.GetOrigin().z > -6650 && !data.above)
 		{
 			data.above = true
 			loco.Jump()
