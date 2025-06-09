@@ -66,6 +66,7 @@ function OnUpdate(bot)
     }
 
 
+  
     if (prop && bot.IsAlive())
     {
         local propOrigin = prop.GetOrigin()
@@ -79,9 +80,37 @@ function OnUpdate(bot)
         local closestWall = null
         local minWallDist = 200  // Distance threshold for wall following
 
-        // Mission 0: Enhanced wall-following behavior with repulsion
+        local propOrigin = prop.GetOrigin()
+        local approachDist = 650
+        local dest = botOrigin
+
+        // Calculate approach vector to enemy
+        local approachVec = propOrigin - botOrigin
+        approachVec.z = 0
+        
+        // Initialize dodge direction if not set
+        if (!("dodgeSide" in data))
+            data.dodgeSide <- (bot.GetEntityIndex() % 2 == 0) ? 1 : -1
+
+        // Calculate dodge angle (30 degrees)
+        local angle = 110 * data.dodgeSide * (3.14159 / 180.0)
+        local cosA = cos(angle)
+        local sinA = sin(angle)
+        
+        // Rotate approach vector to create dodge direction
+        local dodgeDir = Vector(
+            approachVec.x * cosA - approachVec.y * sinA,
+            approachVec.x * sinA + approachVec.y * cosA,
+            0
+        )
+        dodgeDir.Norm()
+
+        // Mission-specific movement
         if (mission == 0)
         {
+            // Set destination using dodge direction
+            dest = botOrigin + dodgeDir * approachDist
+            
             local repulsion = Vector(0, 0, 0)
             local closestPointOnWall = null
             local nearWalls = []
@@ -237,7 +266,8 @@ function OnUpdate(bot)
                 }
     
                 // 5. SET DESTINATION
-                dest = botOrigin + moveDir.Scale(escape_dist)
+                if (nearWalls.len() == 1)
+                    dest = botOrigin + moveDir.Scale(escape_dist)
                 DebugDrawLine(botOrigin, dest, 255, 165, 0, true, 0.125) // Orange: Final path
     
                 // 6. IMPROVED STUCK ESCAPE WITH CORNER DETECTION
@@ -283,7 +313,7 @@ function OnUpdate(bot)
                     if ("lastMoveDir" in bot.GetScriptScope()) {
                         bot.GetScriptScope().lastMoveDir = escapeDir
                     }
-                    dest = botOrigin + escapeDir.Scale(escape_dist)
+                    //dest = botOrigin + escapeDir.Scale(escape_dist)
                 }
         }
         // Mission 1: Maintain original fleeing behavior
