@@ -1,8 +1,8 @@
 function OnStart(bot)
 {
 	// TODO scale by difficulty
-	local chance = 0.3
-	local delay = RandomFloat(1.5, 5.0)
+	local chance = 0.15
+	local delay = RandomFloat(1.5, 3.5)
 	
 	Ware_BotCreateMinigameTimer(bot, function()
 	{	
