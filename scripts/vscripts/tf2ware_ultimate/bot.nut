@@ -95,6 +95,7 @@ Ware_BotMinigameBehaviors <-
 	limbo = {}
 	pickup_can = {}
 	build_this = {}
+	typing = {}
 }
 
 Ware_BotMinigameBehavior <- null
