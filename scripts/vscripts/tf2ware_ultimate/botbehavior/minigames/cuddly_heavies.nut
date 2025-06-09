@@ -93,7 +93,7 @@ function OnUpdate(bot)
             data.dodgeSide <- (bot.GetEntityIndex() % 2 == 0) ? 1 : -1
 
         // Calculate dodge angle (30 degrees)
-        local angle = 110 * data.dodgeSide * (3.14159 / 180.0)
+        local angle = 120 * data.dodgeSide * (3.14159 / 180.0)
         local cosA = cos(angle)
         local sinA = sin(angle)
         
