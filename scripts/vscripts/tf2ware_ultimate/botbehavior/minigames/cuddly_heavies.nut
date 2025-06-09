@@ -44,6 +44,7 @@ function OnUpdate(bot)
                 {
                     lowest_dist = dist
                     prop = other
+                    data.corner <- 0
                 }
             }
         }
@@ -76,7 +77,7 @@ function OnUpdate(bot)
         local dest = botOrigin
         local walls = Ware_MinigameLocation.walls  // Access wall array
         local closestWall = null
-        local minWallDist = 100  // Distance threshold for wall following
+        local minWallDist = 200  // Distance threshold for wall following
 
         // Mission 0: Enhanced wall-following behavior with repulsion
         if (mission == 0)
@@ -103,13 +104,13 @@ function OnUpdate(bot)
 
 
                 // Apply repulsion if bot is near the wall
-                if (wallDist < 50)
+                if (wallDist < 100)
                 {
                     local dir = botOrigin - closestPoint
                     dir.z = 0
                     if (dir.LengthSqr() > 0.001) {
                         dir.Norm()
-                        repulsion += dir * (50 - wallDist)
+                        repulsion += dir * (100 - wallDist)
                         nearWalls.append({wall = wall, point = closestPoint, normal = dir})
                     }
                 }
@@ -160,13 +161,12 @@ function OnUpdate(bot)
                 // DECISIVE CORNER ESCAPE - PHYSICS BASED
     
                 local moveDir = null
-                local isCorner = false
                 local cornerEscapeVec = Vector(0,0,0)
     
                 // 1. Detect corner situations (2+ walls close together)
                 if (nearWalls.len() >= 2) 
                 {
-                    isCorner = true
+                    data.corner += 2
     
                     // Calculate combined escape direction from all nearby walls
                     foreach (wallData in nearWalls) 
@@ -189,9 +189,14 @@ function OnUpdate(bot)
     
                     cornerEscapeVec.Norm()
                 }
+                else
+                {
+                    if(data.corner > 0)
+                        data.corner--
+                }
     
                 // 2. DECISIVE CORNER ESCAPE
-                if (isCorner && cornerEscapeVec.LengthSqr() > 0.1) 
+                if (data.corner > 0 && cornerEscapeVec.LengthSqr() > 0.1) 
                 {
                     // Use corner escape vector
                     moveDir = cornerEscapeVec
@@ -237,11 +242,11 @@ function OnUpdate(bot)
     
                 // 6. IMPROVED STUCK ESCAPE WITH CORNER DETECTION
                 local velocity = bot.GetAbsVelocity().Length2D()
-                if (velocity < 50 || isCorner) 
+                if (data.corner > 0) 
                 {
                     local escapeVec = null
     
-                    if (isCorner) {
+                    if (data.corner > 0) {
                         // Use pre-calculated corner escape vector
                         escapeVec = cornerEscapeVec
                     }
@@ -293,7 +298,7 @@ function OnUpdate(bot)
         }
 
         // Execute movement and aiming
-        BotLookAt(bot, dest, 400.0, 400.0)
+        BotLookAt(bot, dest, 100.0, 100.0)
         local loco = bot.GetLocomotionInterface()
         loco.FaceTowards(dest)
         DebugDrawLine(botOrigin, dest, 0, 0, 255, true, 0.125)  // Blue: Default path
