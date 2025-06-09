@@ -7,11 +7,27 @@ class Ware_BotData
 		me = entity
 		minigame_timers = []
 		roam_dest = null
+
+		path = []				
+		path_index = 0
+		path_target_pos = null
+		path_update_time_next = 0.0
+		path_update_time_delay = 0.0 
+		path_update_force = false	
+		path_areas = {}
 	}
 	
 	me = null
 	minigame_timers = null
 	roam_dest = null
+
+	path = null
+	path_index = null
+	path_target_pos = null
+	path_update_time_next = null
+	path_update_time_delay = null
+	path_update_force = null	
+	path_areas = null
 }
 
 if (!("Ware_Bots" in this))
@@ -665,3 +681,133 @@ function Ware_BotShootShuffledPlayers(bot)
 
 }
 
+::BotPathPoint <- class
+{
+	constructor(area, pos, how)
+	{
+		this.area = area
+		this.pos = pos
+		this.how = how
+	}
+
+	area = null
+	pos = null
+	how = null
+}
+
+function BotUpdatePath(bot, target)
+{
+	local bot_data = bot.GetScriptScope().bot_data
+
+	BotResetPath(bot)
+	bot_data.path_target_pos = target
+	local pos_start = bot.GetOrigin() + Vector(0, 0, 1)
+	local pos_end = bot_data.path_target_pos + Vector(0, 0, 1)
+	
+	local area_start = NavMesh.GetNavArea(pos_start, 128.0)
+	local area_end = NavMesh.GetNavArea(pos_end, 128.0)
+	if (area_start == null)
+		area_start = NavMesh.GetNearestNavArea(pos_start, 512.0, false, false)
+	if (area_end == null)
+		area_end = NavMesh.GetNearestNavArea(pos_end, 512.0, false, false)
+	if (area_start == null || area_end == null)
+		return false
+	if (area_start == area_end)
+	{
+		bot_data.path.append(BotPathPoint(area_end, pos_end, NUM_TRAVERSE_TYPES))
+		return true
+	}
+	
+	if (!NavMesh.GetNavAreasFromBuildPath(area_start, area_end, pos_end, 0.0, TEAM_ANY, false, bot_data.path_areas))
+		return false
+	if (bot_data.path_areas.len() == 0)
+		return false
+	local area_target = bot_data.path_areas["area0"]
+	local area = area_target
+	local area_count = bot_data.path_areas.len()
+	for (local i = 0; i < area_count && area != null; i++)
+	{
+		bot_data.path.append(BotPathPoint(area, area.GetCenter(), area.GetParentHow()))
+		area = area.GetParent()
+	}
+	
+	bot_data.path.append(BotPathPoint(area_start, bot.GetOrigin(), NUM_TRAVERSE_TYPES))
+	bot_data.path.reverse()
+	
+	local path_count = bot_data.path.len()
+	for (local i = 1; i < path_count; i++)
+	{
+		local path_from = bot_data.path[i - 1]
+		local path_to = bot_data.path[i]
+		
+		path_to.pos = path_from.area.ComputeClosestPointInPortal(path_to.area, path_to.how, path_from.pos)
+	}
+	bot_data.path.append(BotPathPoint(area_end, pos_end, NUM_TRAVERSE_TYPES))
+}
+function BotAdvancePath(bot)
+{
+	local bot_data = bot.GetScriptScope().bot_data
+	local path_len = bot_data.path.len()
+	if (path_len == 0)
+		return false
+
+	local pos = bot.GetOrigin()
+    local loco = bot.GetLocomotionInterface()
+    //loco.FaceTowards(path[0].pos)
+    //loco.Approach(path[0].pos, 999.0)
+    for (local i = bot_data.path_index;i < path_len; i++)
+    {
+		local p = bot_data.path[i]
+        DebugDrawLine(pos, p.pos, 0, 255, 0, true, 0.125)
+        pos = p.pos
+    }
+
+	if (bot_data.path_index >= path_len)
+	{
+		BotResetPath(bot)
+		return false
+	}
+	if ((bot_data.path[bot_data.path_index].pos - bot.GetOrigin()).Length2D() < 32.0)
+	{
+		bot_data.path_index++
+		if (bot_data.path_index >= path_len)
+		{
+			BotResetPath(bot)
+			return false
+		}
+	}
+	return true
+}
+function BotResetPath(bot)
+{
+	local bot_data = bot.GetScriptScope().bot_data
+	bot_data.path_areas.clear()
+	bot_data.path.clear()
+	bot_data.path_index = 0
+	bot_data.path_target_pos = null
+}
+function BotMove(bot, target)
+{
+	local bot_data = bot.GetScriptScope().bot_data
+	if (bot_data.path_update_force)
+	{
+		BotUpdatePath(bot, target)
+		bot_data.path_update_force = false
+	}
+	else if (bot_data.path_update_time_next <= Time())
+	{
+		if (bot_data.path_target_pos == null)
+		{
+			BotUpdatePath(bot, target)
+			bot_data.path_update_time_next = Time() + 1.0 //PATH_UPDATE_INTERVAL
+		}
+	}
+	if (BotAdvancePath(bot))
+	{
+		local path_pos = bot_data.path[bot_data.path_index].pos
+
+		local loco = bot.GetLocomotionInterface()
+		loco.FaceTowards(path_pos)
+		loco.Approach(path_pos, 1.0)
+	}
+}
