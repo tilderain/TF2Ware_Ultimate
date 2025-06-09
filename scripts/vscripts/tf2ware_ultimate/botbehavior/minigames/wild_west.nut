@@ -1,4 +1,4 @@
-//todo better reaction time 
+//todo better standoff
 function OnUpdate(bot)
 {
 	local data = Ware_GetPlayerMiniData(bot)
@@ -22,7 +22,7 @@ function OnUpdate(bot)
 	{
 		KillWeapon(weapon)
 	}
-	if (prop)
+	if (prop && bot.IsAlive())
 	{
 		local loco = bot.GetLocomotionInterface()
 		loco.FaceTowards(prop.EyePosition())
@@ -30,10 +30,13 @@ function OnUpdate(bot)
 
         //loco.Approach(prop.EyePosition(), 999.0)
 
-		if (bot.GetCustomAttribute("no attack", 1) == 0)
-			bot.PressFireButton(-1)
-        //if (RandomInt(0,50) == 0)
-        //    loco.Jump()
+		//if (bot.GetCustomAttribute("no attack", 1) == 0)
+		//{
+			if(weapon && weapon.IsValid())
+				weapon.PrimaryAttack()
+			//bot.PressFireButton(-1)
+		//}
+
 	}
 
 }
