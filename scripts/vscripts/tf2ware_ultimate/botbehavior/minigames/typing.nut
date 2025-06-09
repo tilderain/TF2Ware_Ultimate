@@ -10,7 +10,7 @@ function OnStart(bot)
 		if(Ware_MinigameScope.word_typing && "score" in minidata)
 		{
 			local w = Ware_MinigameScope.word_rotation[minidata.score]
-			local word = Ware_BotTryWordTypo(bot, w, chance)
+			local word = Ware_BotTryWordTypo(bot, w.tostring(), chance)
 
 			//todo disable visibility
 			Say(bot, word, false)
