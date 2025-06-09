@@ -15,6 +15,9 @@ class Ware_BotData
 		path_update_time_delay = 0.0 
 		path_update_force = false	
 		path_areas = {}
+		stuck = false
+		stuck_time = 0.0
+		stuck_reset_time = 1e30
 	}
 	
 	me = null
@@ -28,6 +31,11 @@ class Ware_BotData
 	path_update_time_delay = null
 	path_update_force = null	
 	path_areas = null
+
+	stuck				= null
+	stuck_time			= null
+	stuck_reset_time	= null
+	stuck_pos			= null
 }
 
 if (!("Ware_Bots" in this))
@@ -272,9 +280,9 @@ function Ware_BotOnMinigameEnd()
 
 		if ("OnEnd" in Ware_BotMinigameBehavior)	
 		{
-			foreach (bot in Ware_Bots)
-				Ware_BotMinigameBehavior.OnStart(bot)
+			Ware_BotMinigameBehavior.OnEnd(bot)
 		}
+		BotResetPath(bot)
 	}
 }
 
@@ -767,7 +775,7 @@ function BotAdvancePath(bot)
 		BotResetPath(bot)
 		return false
 	}
-	if ((bot_data.path[bot_data.path_index].pos - bot.GetOrigin()).Length2D() < 32.0)
+	if ((bot_data.path[bot_data.path_index].pos - bot.GetOrigin()).Length() < 32.0)
 	{
 		bot_data.path_index++
 		if (bot_data.path_index >= path_len)
@@ -789,25 +797,69 @@ function BotResetPath(bot)
 function BotMove(bot, target)
 {
 	local bot_data = bot.GetScriptScope().bot_data
+	local time = Time()
+	local cur_pos = bot.GetOrigin()
+
 	if (bot_data.path_update_force)
 	{
 		BotUpdatePath(bot, target)
 		bot_data.path_update_force = false
 	}
-	else if (bot_data.path_update_time_next <= Time())
+	else if (bot_data.path_update_time_next <= time)
 	{
 		if (bot_data.path_target_pos == null)
 		{
 			BotUpdatePath(bot, target)
-			bot_data.path_update_time_next = Time() + 1.0 //PATH_UPDATE_INTERVAL
+			bot_data.path_update_time_next = time + 1.0 //PATH_UPDATE_INTERVAL
 		}
 	}
 	if (BotAdvancePath(bot))
 	{
-		local path_pos = bot_data.path[bot_data.path_index].pos
+		local path_pos = bot_data.path[bot_data.path_index].pos	
+		local strafe_dir = Vector(0.0, 0.0, 0.0)
+		local strafe_length = 0.0
+		
+		if (bot_data.stuck)
+		{
+			local cur_eye_ang = bot.EyeAngles()
+			local cur_eye_fwd = cur_eye_ang.Forward()
+
+			strafe_dir = cur_eye_fwd.Cross(Vector(0.0, 0.0, 1.0))
+			strafe_length = RandomFloat(24.0, 32.0)
+			if (RandomInt(0, 1) > 0)
+				strafe_length *= -1.0
+		}
+			
+		local path_pos = bot_data.path[bot_data.path_index].pos + strafe_dir * strafe_length
 
 		local loco = bot.GetLocomotionInterface()
 		loco.FaceTowards(path_pos)
 		loco.Approach(path_pos, 1.0)
+
+
+		if (bot_data.stuck_time < time)
+		{
+			if (bot_data.stuck_time > 0.0 && (bot_data.stuck_pos - cur_pos).Length2DSqr() < 676.0) // 26
+			{
+				bot_data.stuck = true;
+				
+				if (bot_data.stuck_reset_time < time)
+				{
+					BotResetPath(bot)
+				}
+				else if (bot_data.stuck_reset_time == 1e30)
+				{
+					bot_data.stuck_reset_time = time + 2.5
+				}
+			}
+			else
+			{
+				bot_data.stuck = false;
+				bot_data.stuck_reset_time = 1e30
+			}
+			
+			bot_data.stuck_pos = cur_pos
+			bot_data.stuck_time = time + 1.0
+		}	
 	}
 }
