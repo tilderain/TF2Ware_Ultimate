@@ -32,7 +32,7 @@ function OnUpdate(bot)
 
 		//if (bot.GetCustomAttribute("no attack", 1) == 0)
 		//{
-			if(weapon && weapon.IsValid())
+			if(weapon && weapon.IsValid() && RandomInt(0,10) == 0)
 				weapon.PrimaryAttack()
 			//bot.PressFireButton(-1)
 		//}
