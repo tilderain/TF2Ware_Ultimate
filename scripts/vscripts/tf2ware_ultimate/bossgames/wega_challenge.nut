@@ -810,13 +810,13 @@ function AddWegas()
 		switch (rnd)
 		{
 			case 1:
-				CreateWega(Vector((buffer)*CellWidth,-2*CellWidth,0) + SpawnCenter)
+				CreateWega(Vector((buffer)*CellWidth,-1*CellWidth,0) + SpawnCenter)
 				break
 			case 2:
 				CreateWega(Vector(-1*CellWidth,-1*CellWidth,0) + SpawnCenter)
 				break
 			case 3:
-				CreateWega(Vector(-2*CellWidth,(buffer)*CellWidth,0) + SpawnCenter)
+				CreateWega(Vector(-1*CellWidth,(buffer)*CellWidth,0) + SpawnCenter)
 				break
 			case 4:
 				CreateWega(Vector((buffer)*CellWidth,(buffer)*CellWidth,0) + SpawnCenter)
