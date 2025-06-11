@@ -308,6 +308,8 @@ function OnTeleport(players)
 	
 	foreach (player in players)
 	{
+		Ware_SetPlayerClass(player, RandomInt(TF_CLASS_FIRST, TF_CLASS_LAST))
+		
 		local origin = player.GetOrigin() + kart_base_offset
 		local angles = player.GetAbsAngles()
 		
@@ -341,7 +343,6 @@ function OnStart()
 	
 	foreach (player in Ware_Players)
 	{
-		Ware_SetPlayerClass(player, RandomInt(TF_CLASS_FIRST, TF_CLASS_LAST))
 		TogglePlayerViewcontrol(player, camera, true)
 		player.AddHudHideFlags(HIDEHUD_MISCSTATUS|HIDEHUD_HEALTH)
 	}
