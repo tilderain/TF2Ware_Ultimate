@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 3
+buffer<-@"VERSION 4
 {
 	theme_name = ""_default""
 	visual_name = ""TF2Ware Ultimate""
