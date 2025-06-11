@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "8869"
-	"mapversion" "4"
+	"mapversion" "5"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -89,7 +89,7 @@ bgimages_plus
 world
 {
 	"id" "1"
-	"mapversion" "4"
+	"mapversion" "5"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -5265,6 +5265,7 @@ entity
 	"defaultwelcome" "0"
 	"fov" "0"
 	"match_summary" "0"
+	"StartDisabled" "1"
 	"targetname" "wega_camera"
 	"origin" "-4640 -4832 1538.6"
 	editor
