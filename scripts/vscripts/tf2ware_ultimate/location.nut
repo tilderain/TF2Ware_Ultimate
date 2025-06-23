@@ -765,6 +765,7 @@ Ware_Location.waluigi_pinball <-
 
 Ware_Location.wega_challenge <-
 {
+	center = Vector(-482, -13730, -12580)
 	start   = Vector(-32, -13280, -12580)
 	cameras  = ["wega_camera"]
 	Teleport = function(players)
