@@ -29,7 +29,6 @@ function OnUpdate()
 {
     foreach (player in Ware_Players)
     {
-        EntFire("tf_ragdoll", "Kill")
         player.RemoveCond(TF_COND_TELEPORTED)
         player.AddHudHideFlags(HIDEHUD_TARGET_ID)
         //Bad performance?
@@ -37,6 +36,8 @@ function OnUpdate()
 		// hides medic bubbles
 		SetPropBool(player, "m_bSaveMeParity", false)
     }
+	
+	EntFire("tf_ragdoll", "Kill")
 }
 
 function OnPlayerInventory(player)
