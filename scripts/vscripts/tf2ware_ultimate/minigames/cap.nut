@@ -19,6 +19,15 @@ minigame <- Ware_MinigameData
 
 capped <- false
 
+cap_model <- "models/props_gameplay/cap_point_base.mdl"
+hologram_model <- "models/effects/cappoint_hologram.mdl"
+
+function OnPrecache()
+{
+	PrecacheModel(cap_model)
+	PrecacheModel(hologram_model)
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Shortstop")
@@ -135,9 +144,9 @@ function SpawnCap(origin)
 		team_overlay_3            = "sprites/obj_icons/icon_obj_c"
 		team_overlay_2            = "sprites/obj_icons/icon_obj_c"
 		team_overlay_0            = "sprites/obj_icons/icon_obj_c"
-		team_model_3              = "models/effects/cappoint_hologram.mdl"
-		team_model_2              = "models/effects/cappoint_hologram.mdl"
-		team_model_0              = "models/effects/cappoint_hologram.mdl"
+		team_model_3              = hologram_model
+		team_model_2              = hologram_model
+		team_model_0              = hologram_model
 		team_icon_3               = "sprites/obj_icons/icon_obj_blu_mannhattan"
 		team_icon_2               = "sprites/obj_icons/icon_obj_red"
 		team_icon_0               = "sprites/obj_icons/icon_obj_neutral"
@@ -173,7 +182,7 @@ function SpawnCap(origin)
 	local control_point_3_base = Ware_SpawnEntity("prop_dynamic",
 	{
 		origin	= origin
-		model	= "models/props_gameplay/cap_point_base.mdl"
+		model	= cap_model
 		solid	= SOLID_VPHYSICS
 	})
 	
