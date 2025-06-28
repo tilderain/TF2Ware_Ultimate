@@ -1383,9 +1383,8 @@ function Ware_ReloadMinigameRotation(is_boss)
 			if (minigame in Ware_MinigameCache)
 			{
 				local modes = Ware_MinigameCache[minigame].modes
-				// The idea was to make minigames with many modes appear more often
-				// However this turned out to create less variety in practice, so this is now removed
-				local weight = Min(modes, 1)
+				// cap max count so minigames with a lot of modes (simon says) don't appear too much
+				local weight = Min(modes, 3)
 				for (local i = 0; i < weight; i++)
 					Ware_MinigameRotation.append(minigame)
 			}
