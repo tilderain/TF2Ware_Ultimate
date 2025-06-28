@@ -16,12 +16,16 @@ function OnPrecache()
 
 function OnMinigameStart()
 {
-	// Swapping positions right at the start or right at the end doesn't feel right
-	local duration = Ware_Minigame.duration
-	local min = Max(1.0, duration/10.0)
-	local max = duration - Max(2.0, duration/5.0)
-	local randomFloat = ceil(RandomFloat(min, max) * 10) / 10.0
-	Ware_CreateTimer(@() SwapPlayerPositions(), randomFloat)
+	local swaps = Ware_Minigame.boss ? 3 : 1
+	for (local i = 0; i < swaps; i++)
+	{
+		// Swapping positions right at the start or right at the end doesn't feel right
+		local duration = Ware_Minigame.duration
+		local min = Max(1.0, duration/10.0)
+		local max = duration - Max(2.0, duration/5.0)
+		local randomFloat = ceil(RandomFloat(min, max) * 10) / 10.0
+		Ware_CreateTimer(@() SwapPlayerPositions(), randomFloat)
+	}
 }
 
 function SwapPlayerPositions()
