@@ -390,7 +390,6 @@ function RacePrepare()
 		local kart = GetKart(player)
 		if (kart)
 		{
-			player.RemoveHudHideFlags(HIDEHUD_HEALTH)
 			TogglePlayerViewcontrol(player, kart.m_camera, true)
 			
 			kart.m_engine_noises = (i % engine_sound_limiter) == 0 || player == Ware_ListenHost
@@ -1360,7 +1359,7 @@ kart_routines <-
 		SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
 		SetPropInt(player, "m_nRenderMode", kRenderNormal)		
 		player.SetForceLocalDraw(false)	
-		player.RemoveHudHideFlags(HIDEHUD_MISCSTATUS)
+		player.RemoveHudHideFlags(HIDEHUD_HEALTH|HIDEHUD_MISCSTATUS)
 		player.SetCustomModel("")
 			
 		if (player.IsAlive())
