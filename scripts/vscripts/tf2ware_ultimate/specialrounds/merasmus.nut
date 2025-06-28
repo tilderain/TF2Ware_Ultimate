@@ -85,6 +85,15 @@ function SpawnMerasmus()
 		modelscale = 1,
 		targetname = "merasmus_special"
 	})
+	
+	merasmus.ValidateScriptScope()
+	merasmus.GetScriptScope().MerasmusThink <- function()
+	{
+		// make merasmus not look jittery
+		self.FlagForUpdate(true)
+		return 0.05
+	}
+	AddThinkToEnt(merasmus, "MerasmusThink")
 }
 
 function OnMinigameStart()
