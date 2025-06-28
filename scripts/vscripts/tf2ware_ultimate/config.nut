@@ -1,7 +1,7 @@
 // whenever new entries are added, these should be incremented so it's automatically added to server configs
 const WARE_MINIGAME_VERSION     = 4
 const WARE_BOSSGAME_VERSION     = 1
-const WARE_SPECIALROUND_VERSION = 5
+const WARE_SPECIALROUND_VERSION = 6
 const WARE_THEME_VERSION        = 4
 
 // everytime any mp3 sound is changed AND the map is *publicly* updated
@@ -206,6 +206,9 @@ function Ware_LoadConfigSpecialRounds()
 					AppendElementIfUnique(lines, "merasmus")
 					AppendElementIfUnique(lines, "singleplayer")
 					AppendElementIfUnique(lines, "swap_madness")
+					break
+				case 6:
+					AppendElementIfUnique(lines, "no_text")
 					break
 			}
 		}
