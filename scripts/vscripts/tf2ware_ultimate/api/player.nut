@@ -331,7 +331,7 @@ function Ware_StripPlayer(player, give_default_melee)
 				{								
 					// force switch fixes
 					local classname = active_weapon.GetClassname()
-					if (classname == "tf_weapon_minigun")
+					if (classname == "tf_weapon_minigun" || classname == "tf_weapon_buff_item")
 					{
 						SetPropEntity(player, "m_hActiveWeapon", null)
 					}
