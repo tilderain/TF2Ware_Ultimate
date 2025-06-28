@@ -62,6 +62,7 @@ function OnCleanup()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
+		player.SetRageMeter(0)
 		SetPropBool(player, "m_Shared.m_bRageDraining", false)
 		player.AddHudHideFlags(HIDEHUD_CLOAK_AND_FEIGN)
 	}
