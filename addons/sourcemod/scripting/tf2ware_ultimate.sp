@@ -11,7 +11,7 @@
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
 // if changing this, change it in VScript's config.nut too
-#define PLUGIN_VERSION "1.2.7"
+#define PLUGIN_VERSION "1.3.0"
 
 // unused event repurposed for vscript <-> sourcemod communication
 #define PROXY_EVENT "tf_map_time_remaining"
@@ -42,6 +42,7 @@ float g_AntiFloodValue = 0.0;
 
 ConVar host_timescale;
 ConVar vscript_perf_warning_spew_ms;
+ConVar datacachesize;
 ConVar sv_cheats;
 ConVar sm_flood_time;
 
@@ -353,6 +354,12 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
 
 public void OnPluginStart()
 {
+	// tf2ware exhausts more than 256mb of model data
+	// this has been the culprit of random server crashes on map load
+	datacachesize = FindConVar("datacachesize");
+	if (datacachesize.IntValue < 512)
+		datacachesize.IntValue = 512;
+	
 	g_CheatCommands = new ArrayList(ByteCountToCells(64));
 	g_CheatCommandsArgs = new ArrayList(ByteCountToCells(64));
 	Enable();
