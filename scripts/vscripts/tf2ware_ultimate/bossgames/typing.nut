@@ -13,6 +13,7 @@ minigame <- Ware_MinigameData
 	location       = "typing"
 	music          = null
 	custom_overlay = ""
+	manual_timer   = true
 })
 
 sound_boss_start       <- "TF2Ware_Ultimate.TypingBossStart"

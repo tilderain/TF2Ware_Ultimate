@@ -1758,7 +1758,19 @@ function Ware_StartMinigameInternal(is_boss)
 		@() Ware_FinishMinigameInternal(), 
 		Ware_Minigame.duration + Ware_Minigame.end_delay
 	)
-	
+
+	if (!Ware_Minigame.manual_timer)
+	{
+		local timer = Ware_SpawnEntity("team_round_timer",
+		{
+			timer_length   = Ware_Minigame.duration,
+			auto_countdown = false,
+			show_in_hud    = true,
+			show_time_remaining = true,
+		})
+		EntityAcceptInput(timer, "Resume")
+	}
+
 	Ware_CriticalZone = false
 }
 

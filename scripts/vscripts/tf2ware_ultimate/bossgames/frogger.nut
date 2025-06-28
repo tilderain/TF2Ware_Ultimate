@@ -11,6 +11,7 @@ minigame <- Ware_MinigameData
 	custom_overlay = "get_end"
 	start_pass     = false
 	thirdperson    = true
+	manual_timer   = true
 })
 
 first <- true

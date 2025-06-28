@@ -16,6 +16,7 @@ minigame <- Ware_MinigameData
 	music          = "beepblockskyway"
 	fail_on_death  = true
 	start_freeze   = 0.5
+	manual_timer   = true
 	convars =
 	{
 		tf_avoidteammates = 0

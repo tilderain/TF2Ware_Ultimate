@@ -22,6 +22,7 @@ class Ware_MinigameData
 		boss		    = false
 		show_scores     = true
 		end_delay       = 0.0
+		manual_timer	= false
 		convars         = []
 		entities        = []
 		cleanup_names   = {}
@@ -88,6 +89,8 @@ class Ware_MinigameData
 	thirdperson	    = null
 	// Delay after the minigame "ends" before showing results, default is 0.0
 	end_delay		= null
+	// Stops the automatic minigame timer from appearing at the top.
+	manual_timer	= null
 	// Show player scores on scoreboard while minigame is active, default is true\
 	show_scores     = null
 	// Custom text overlay to show rather than the default implied from name
