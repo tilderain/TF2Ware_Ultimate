@@ -46,19 +46,20 @@ function OnMedTouch()
 
 function OnUpdate()
 {
+	local time = Time()
 	foreach (player in Ware_Players)
 	{
 		if (!player.IsAlive()) 
 			continue
 
-		local last_eat = Time() - Ware_GetPlayerSpecialRoundData(player).last_eat 
+		local last_eat = time - Ware_GetPlayerSpecialRoundData(player).last_eat 
 		
 		if (dmg_tick % 60 == 0)
-			player.SetHealth(player.GetHealth() - last_eat * 4)
+			player.SetHealth(player.GetHealth() - last_eat)
 		
 		if (player.GetHealth() <= 0)
 		{
-			Ware_GetPlayerSpecialRoundData(player).last_eat <- Time()
+			Ware_GetPlayerSpecialRoundData(player).last_eat <- time
 			Ware_SuicidePlayer(player)
 		}
 
