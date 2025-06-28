@@ -57,7 +57,7 @@ PlayersCount <- 1
 model_hands <- "models/wega/hands.mdl"
 model_wega_doll <- "models/wega/wega.mdl"
 
-sound_collect <- "tf2ware_ultimate/baseball_hit.mp3"
+sound_collect <- Ware_FixupMP3("tf2ware_ultimate/v%d/baseball_hit.mp3")
 sound_stalker_scream <- "npc/stalker/go_alert2a.wav"
 sound_wega_scream <- "tf2ware_ultimate/wega_scream.wav"
 

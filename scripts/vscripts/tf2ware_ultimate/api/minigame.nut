@@ -195,7 +195,7 @@ function Ware_GetMinigameRemainingTime()
 // This is done automatically if specified in the minigame's "music" setting
 function Ware_PrecacheMinigameMusic(name, is_boss)
 {
-	PrecacheSound(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSIC_VERSION, is_boss ? "bossgame" : "minigame", name))
+	PrecacheSound(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MP3_VERSION, is_boss ? "bossgame" : "minigame", name))
 }
 
 // Sets the value of a convar

@@ -435,12 +435,12 @@ function Ware_PrecacheNext()
 	foreach (theme in Ware_Themes)
 	{
 		foreach (key, value in theme.sounds)
-			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSIC_VERSION, theme.theme_name, key))
+			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, theme.theme_name, key))
 	}
 	foreach (theme in Ware_InternalThemes)
 	{
 		foreach (key, value in theme.sounds)
-			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MUSIC_VERSION, theme.theme_name, key))
+			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, theme.theme_name, key))
 	}
 
 	foreach (author, credits in authors)
@@ -1098,7 +1098,7 @@ function Ware_BeginSpecialRoundInternal()
 			
 			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, special_round.name, TF_COLOR_DEFAULT, special_round.description)
 			
-			Ware_PlaySoundOnAllClients("tf2ware_ultimate/pass.mp3")
+			Ware_PlaySoundOnAllClients(Ware_FixupMP3("tf2ware_ultimate/v%d/pass.mp3"))
 			
 			CreateTimer(function()
 			{	

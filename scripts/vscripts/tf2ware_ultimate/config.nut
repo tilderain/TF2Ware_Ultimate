@@ -4,10 +4,13 @@ const WARE_BOSSGAME_VERSION     = 1
 const WARE_SPECIALROUND_VERSION = 5
 const WARE_THEME_VERSION        = 4
 
-// everytime music is changed AND the map is *publicly* updated
-// this must be incremented to prevent caching errors
-// deprecated: this is bumped automatically when uploading to workshop
-const WARE_MUSIC_VERSION = 3
+// everytime any mp3 sound is changed AND the map is *publicly* updated
+// this must be incremented to prevent mp3 caching errors due to an engine bug
+// DEPRECATED: this is bumped automatically when uploading to workshop
+// a workaround for this issue has since been found, which involves not compressing mp3 files via a hacked bsppack
+// too late for us though, we need to preserve backwards compatibility with clients who have the bugged sound cache
+// see https://github.com/ficool2/bsphack
+const WARE_MP3_VERSION = 3
 
 // keep in sync with sourcemod plugin
 WARE_PLUGIN_VERSION <- [1, 2, 7]

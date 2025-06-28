@@ -14,11 +14,11 @@ train_model <- "models/props_vehicles/train_enginecar.mdl"
 
 train_rain <- 
 [
-	"tf2ware_ultimate/train_rain/train_rain_3.mp3"
-	"tf2ware_ultimate/train_rain/train_rain_5.mp3"
-	"tf2ware_ultimate/train_rain/train_rain_6.mp3"
-	"tf2ware_ultimate/train_rain/train_rain_10.mp3"
-	"tf2ware_ultimate/train_rain/train_rain_17.mp3"
+	Ware_FixupMP3("tf2ware_ultimate/v%d/train_rain/train_rain_3.mp3")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/train_rain/train_rain_5.mp3")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/train_rain/train_rain_6.mp3")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/train_rain/train_rain_10.mp3")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/train_rain/train_rain_17.mp3")
 ]
 
 horn_sound <- "TF2Ware_Ultimate.KartHorn"

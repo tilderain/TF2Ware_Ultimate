@@ -34,9 +34,9 @@ interrupt_timer  <- FLT_MAX
 if (RandomInt(0, 9) == 0)
 	minigame.music = "beepblockskyway-twelve"
 
-beep_sound <- "tf2ware_ultimate/beep_block_beep.mp3"
-swap_sound <- "tf2ware_ultimate/beep_block_door.mp3"
-hurryup_sound <- "tf2ware_ultimate/hurryup.mp3"
+beep_sound <- Ware_FixupMP3("tf2ware_ultimate/v%d/beep_block_beep.mp3")
+swap_sound <- Ware_FixupMP3("tf2ware_ultimate/v%d/beep_block_door.mp3")
+hurryup_sound <- Ware_FixupMP3("tf2ware_ultimate/v%d/hurryup.mp3")
 tele_sound <- "Building_Teleporter.Send"
 
 // brushes
@@ -183,7 +183,7 @@ function BeepBlock_Interrupt()
 	Ware_PlaySoundOnAllClients(hurryup_sound)
 	
 	Ware_CreateTimer(function() {
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSIC_VERSION, minigame.music),
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MP3_VERSION, minigame.music),
 		1.0, 100 * Ware_GetPitchFactor() * tempo_increase)
 		
 		BeepBlock_SetTempo(tempo * tempo_increase)
