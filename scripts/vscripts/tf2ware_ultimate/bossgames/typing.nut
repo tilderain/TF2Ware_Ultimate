@@ -88,6 +88,11 @@ function OnPrecache()
 		Ware_PrecacheMinigameMusic("typing-" + choice, true)
 }
 
+function OnPick()
+{
+	return !Ware_IsSpecialRoundSet("no_text")
+}
+
 function OnStart()
 {
 	Ware_ToggleChatFlood(false)
