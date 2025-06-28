@@ -242,7 +242,7 @@ function OnTriggerEndCap()
 			Ware_PassPlayer(player, true)
 	}
 	
-	capped = true
+	Ware_MinigameScope.capped = true
 }
 
 function OnCleanup()
