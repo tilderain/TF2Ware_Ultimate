@@ -12,7 +12,7 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Mercenary kart"
 	author         = "ficool2"
-	description    = "Complete 3 laps faster than your opponents!"
+	description    = "Complete 2 laps faster than your opponents!"
 	duration       = 360.0
 	location       = "waluigi_pinball"
 	music          = null
