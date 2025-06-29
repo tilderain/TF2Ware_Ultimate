@@ -1735,7 +1735,6 @@ function Ware_StartMinigameInternal(is_boss)
 	
 	Ware_MinigamePreEndTimer = CreateTimer(function() 
 	{ 
-		Ware_MinigameEnded = true
 		if ("OnEnd" in Ware_MinigameScope) 
 			Ware_MinigameScope.OnEnd()
 			
@@ -1755,6 +1754,8 @@ function Ware_StartMinigameInternal(is_boss)
 			
 		if (Ware_Minigame.suicide_on_end)
 			Ware_SuicideFailedPlayers()
+				
+		Ware_MinigameEnded = true			
 	}, Ware_Minigame.duration)
 	
 	Ware_MinigameEndTimer = CreateTimer
