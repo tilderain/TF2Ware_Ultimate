@@ -1763,7 +1763,7 @@ function Ware_StartMinigameInternal(is_boss)
 	{
 		local timer = Ware_SpawnEntity("team_round_timer",
 		{
-			timer_length   = Ware_Minigame.duration,
+			timer_length   = Ware_Minigame.duration + Ware_Minigame.end_delay,
 			auto_countdown = false,
 			show_in_hud    = true,
 			show_time_remaining = true,
