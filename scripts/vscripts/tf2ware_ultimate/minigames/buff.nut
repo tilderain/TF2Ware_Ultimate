@@ -38,19 +38,21 @@ function OnStart()
 			{
 				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1, "damage bonus": 1.25})
 			}
+			player.SetHealth(1850)
 		}
 		else if (Ware_MinigameMode == 1)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_PYRO)
 			Ware_GivePlayerWeapon(player, "Phlogistinator")
+			player.SetHealth(1250)
 		}
 		else if (Ware_MinigameMode == 2)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SNIPER)
 			Ware_GivePlayerWeapon(player, "Cleaner's Carbine")
+			player.SetHealth(1250)
 		}
 		player.SetRageMeter(0)
-		player.SetHealth(1250)
 	}
 }
 
