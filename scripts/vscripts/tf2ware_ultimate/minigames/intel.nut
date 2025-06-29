@@ -6,7 +6,8 @@ minigame <- Ware_MinigameData
 	duration       = 22.0
 	location       = "pinball"
 	music          = "betusblues"
-	thirdperson = true
+	thirdperson    = true
+	allow_damage   = true
 })
 
 spinner_model <- "models/empty.mdl"
@@ -321,6 +322,10 @@ function OnTakeDamage(params)
 	local victim = params.const_entity
 	if (victim.IsPlayer())
 	{
+		local attacker = params.attacker
+		if (attacker && attacker.IsPlayer() && attacker != victim)
+			return false
+		
 		local inflictor = params.inflictor
 		if (inflictor && inflictor.GetClassname() == "env_laser")
 		{
@@ -363,6 +368,15 @@ function OnTakeDamage(params)
 	}
 }
 
+function SpinnerTouch()
+{
+	if (activator)
+	{
+		BurnPlayer(activator, 1.0, 7.5)
+		activator.TakeDamage(DMG_BURN, 50, self)
+	}
+}
+
 function SpawnSpinner(pos)
 {
 	local spin = RandomBool() ? -70.0 : 70.0
@@ -384,7 +398,9 @@ function SpawnSpinner(pos)
 	})
 	hurt.SetSolid(SOLID_OBB)
 	hurt.SetSize(Vector(-hurt_size, -hurt_width, -hurt_size), Vector(hurt_size, hurt_width, hurt_size))
-	EntityOutputs.AddOutput(hurt, "OnStartTouch", "!activator", "CallScriptFunction", "TriggerHurtDisintegrate", 0.0, -1)
+	hurt.ValidateScriptScope()
+	hurt.GetScriptScope().SpinnerTouch <- SpinnerTouch
+	hurt.ConnectOutput("OnStartTouch", "SpinnerTouch")
 	SetEntityParent(hurt, spinner)
 	
 	hurt = Ware_SpawnEntity("trigger_multiple",
@@ -394,7 +410,9 @@ function SpawnSpinner(pos)
 	})
 	hurt.SetSolid(SOLID_OBB)
 	hurt.SetSize(Vector(-hurt_size, -hurt_size, -hurt_width), Vector(hurt_size, hurt_size, hurt_width))
-	EntityOutputs.AddOutput(hurt, "OnStartTouch", "!activator", "CallScriptFunction", "TriggerHurtDisintegrate", 0.0, -1)
+	hurt.ValidateScriptScope()
+	hurt.GetScriptScope().SpinnerTouch <- SpinnerTouch
+	hurt.ConnectOutput("OnStartTouch", "SpinnerTouch")
 	SetEntityParent(hurt, spinner)
 	
 	for (local i = -5; i <= 5; i++)
