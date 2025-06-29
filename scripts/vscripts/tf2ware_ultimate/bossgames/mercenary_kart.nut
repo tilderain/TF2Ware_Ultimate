@@ -469,9 +469,11 @@ function RaceStart()
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, "hud/tf2ware_ultimate/go")
 	CreateTimer(@() Ware_ShowScreenOverlay(Ware_Players, null), 1.5)
 	
+	local show_hud = !Ware_IsSpecialRoundSet("no_text")
 	foreach (kart in karts)	
 	{
-		SetPropEntity(kart.m_hud, "m_hBuilder", kart.m_driver)
+		if (show_hud)
+			SetPropEntity(kart.m_hud, "m_hBuilder", kart.m_driver)
 		kart.m_position_timer = time + 3.0
 	}
 }
