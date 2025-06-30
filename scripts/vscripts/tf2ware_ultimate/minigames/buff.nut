@@ -7,7 +7,7 @@ minigame <- Ware_MinigameData
 	music          = "woody"
 	min_players    = 2
 	allow_damage   = true
-	modes          = 3
+	modes          = 4
 	collisions 	   = true
 	location       = "boxingring"
 })
@@ -52,6 +52,12 @@ function OnStart()
 			Ware_GivePlayerWeapon(player, "Cleaner's Carbine")
 			player.SetHealth(1250)
 		}
+		else if (Ware_MinigameMode == 3)
+		{
+			Ware_SetPlayerClass(player, TF_CLASS_SCOUT)
+			Ware_GivePlayerWeapon(player, "Soda Popper")
+			player.SetHealth(1250)
+		}
 		player.SetRageMeter(0)
 	}
 }
@@ -60,7 +66,7 @@ function OnUpdate()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (player.IsRageDraining() && player.IsAlive() || player.InCond(TF_COND_ENERGY_BUFF))
+		if (player.IsRageDraining() || player.InCond(TF_COND_ENERGY_BUFF) || player.InCond(TF_COND_SODAPOPPER_HYPE))
 			Ware_PassPlayer(player, true)
 	}
 }
