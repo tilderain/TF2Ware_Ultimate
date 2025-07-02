@@ -14,7 +14,8 @@ function OnStart(bot)
 		else
 			word = RandomElement(["idk", "lol", "wtf", "your mom", "penis", "2FORT", 
 			"dustbowl", "invasion", "balls", "gravel", "powerhouse", "steel", "well", "Nuketown",
-			"best map", "hydro my beloved", "2fort duh", "drywater", "duysbton3w;l", "UPWARD", "control points", "dustbol", "map name"])
+			"best map", "hydro my beloved", "2fort duh", "drywater", "duysbton3w;l", "UPWARD", "control points", "dustbol", "map name",
+			"DUBSTOLWL", "carnival", "dust2", "d1_trainstation_01"])
 		Say(bot, word, false)
 	}, delay)
 }
